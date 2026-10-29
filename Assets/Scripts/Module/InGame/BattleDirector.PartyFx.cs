@@ -360,7 +360,7 @@ namespace Game.Module.InGame
             _inyeonFlash = InyeonFlashSeconds;
             var t = RentDamageText();
             // 데미지 숫자 크기로 띄우면 화면을 가로지른다(2026-10-29 판 검수) — 곁다리 작은 글자로
-            if (t != null) t.ShowMinor(_host.Position + new Vector2(0f, 84f), $"인연 · {InyeonName(_host.Key)}", InyeonGold);
+            if (t != null) t.ShowMinor(_host.Position + new Vector2(0f, 84f), Tf("ui.party.inyeon.title", InyeonName(_host.Key)), InyeonGold);
         }
 
         /// <summary>이 보조와 이은 실의 색 · 짙기 — 인연 짝이면 금빛.</summary>

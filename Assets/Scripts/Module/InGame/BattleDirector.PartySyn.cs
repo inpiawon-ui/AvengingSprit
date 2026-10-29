@@ -27,6 +27,17 @@ namespace Game.Module.InGame
             _ => null,
         };
 
+        /// <summary>
+        /// 태그(속성 · 조직의 한국어 내부 이름)의 언어팩 id — 화면에 보일 때만 `ui.party.tag.{id}` 로 번역한다.
+        /// 내부 이름은 사전 키 · switch 로 쓰이므로 바꾸지 않는다.
+        /// </summary>
+        private static string TagId(string tag) => tag switch
+        {
+            "파워" => "force", "무기" => "blade", "마법" => "magic",
+            "갱단" => "gang", "코만도 부대" => "commando", "무도가" => "martial",
+            "괴물" => "monster", "마도" => "mystic", _ => null,
+        };
+
         private static string AttrName(Affinity a) => a switch
         {
             Affinity.Force => "파워", Affinity.Blade => "무기", Affinity.Magic => "마법", _ => null,
@@ -88,22 +99,22 @@ namespace Game.Module.InGame
                     if (o != null) _tagCount[o] = _tagCount.TryGetValue(o, out int n) ? n + 1 : 1;
                 }
 
-                if (force >= 2) { bool st = force >= 3; syn.Def += st ? 0.20f : 0.10f; lines.Add($"파워 {force}인 · 받는 피해 −{(st ? 20 : 10)}%"); }
-                if (blade >= 2) { bool st = blade >= 3; syn.AtkSpd += st ? 0.25f : 0.12f; lines.Add($"무기 {blade}인 · 공속 +{(st ? 25 : 12)}%"); }
-                if (magic >= 2) { bool st = magic >= 3; syn.Cd += st ? 0.25f : 0.12f; lines.Add($"마법 {magic}인 · 스킬 쿨 −{(st ? 25 : 12)}%"); }
+                if (force >= 2) { bool st = force >= 3; syn.Def += st ? 0.20f : 0.10f; lines.Add(Tf("ui.party.syn.force", force, st ? 20 : 10)); }
+                if (blade >= 2) { bool st = blade >= 3; syn.AtkSpd += st ? 0.25f : 0.12f; lines.Add(Tf("ui.party.syn.blade", blade, st ? 25 : 12)); }
+                if (magic >= 2) { bool st = magic >= 3; syn.Cd += st ? 0.25f : 0.12f; lines.Add(Tf("ui.party.syn.magic", magic, st ? 25 : 12)); }
 
                 foreach (var kv in _tagCount)
                 {
                     if (kv.Value < 2) continue;
                     bool st = kv.Value >= 3;
-                    string lv = st ? "3인" : "2인";
+                    int lv = st ? 3 : 2;
                     switch (kv.Key)
                     {
-                        case "갱단": syn.Crit += st ? 20f : 10f; lines.Add($"갱단 {lv} · 치명 +{(st ? 20 : 10)}%"); break;
-                        case "코만도 부대": syn.Hp += st ? 0.30f : 0.15f; lines.Add($"코만도 {lv} · 최대 체력 +{(st ? 30 : 15)}%"); break;
-                        case "무도가": syn.Dodge += st ? 16 : 8; lines.Add($"무도가 {lv} · 회피 +{(st ? 16 : 8)}%"); break;
-                        case "괴물": syn.KillHeal += st ? 0.04f : 0.02f; lines.Add($"괴물 {lv} · 처치 회복 {(st ? 4 : 2)}%"); break;
-                        case "마도": syn.SubCd += st ? 0.30f : 0.15f; lines.Add($"마도 {lv} · 보조 스킬 간격 −{(st ? 30 : 15)}%"); break;
+                        case "갱단": syn.Crit += st ? 20f : 10f; lines.Add(Tf("ui.party.syn.gang", lv, st ? 20 : 10)); break;
+                        case "코만도 부대": syn.Hp += st ? 0.30f : 0.15f; lines.Add(Tf("ui.party.syn.commando", lv, st ? 30 : 15)); break;
+                        case "무도가": syn.Dodge += st ? 16 : 8; lines.Add(Tf("ui.party.syn.martial", lv, st ? 16 : 8)); break;
+                        case "괴물": syn.KillHeal += st ? 0.04f : 0.02f; lines.Add(Tf("ui.party.syn.monster", lv, st ? 4 : 2)); break;
+                        case "마도": syn.SubCd += st ? 0.30f : 0.15f; lines.Add(Tf("ui.party.syn.mystic", lv, st ? 30 : 15)); break;
                     }
                 }
             }
@@ -191,29 +202,30 @@ namespace Game.Module.InGame
             name = desc = chip = string.Empty;
             icon = null;
             if (!IsPartyCard(key)) return false;
-            chip = "파티";
+            chip = Tx("ui.party.card.chip");
             if (key.StartsWith("party.sublv."))
             {
                 int slot = int.Parse(key.Substring("party.sublv.".Length));
                 if (slot >= _subs.Count || _subs[slot].U == null) return false;
                 string k = _subs[slot].U.Key;
                 int lv = _subLv.TryGetValue(k, out int v) ? v : 0;
-                name = $"보조 {slot + 1} 「{HostName(k)}」 스킬 Lv {lv + 1} → {lv + 2}";
-                desc = "보조 스킬 · 평타 위력 +25% · 스킬 간격 −8%\n교체해도 이 호스트에 남는다";
+                name = Tf("ui.party.card.sublv.name", slot + 1, HostName(k), lv + 1, lv + 2);
+                desc = Tx("ui.party.card.sublv.desc");
                 icon = UnitGet(k, "s") ?? UnitGet(k);
                 return true;
             }
             if (key == "party.subpow")
             {
-                name = "보조 위력 +10%";
-                desc = $"보조 둘의 평타 · 스킬이 함께 세진다\n지금 {Mathf.RoundToInt(PartyRule.SubPower * (1f + _subPowCard) * 100)}% → {Mathf.RoundToInt(PartyRule.SubPower * (1f + _subPowCard + 0.1f) * 100)}%";
+                name = Tx("ui.party.card.subpow.name");
+                desc = Tf("ui.party.card.subpow.desc", Mathf.RoundToInt(PartyRule.SubPower * (1f + _subPowCard) * 100),
+                          Mathf.RoundToInt(PartyRule.SubPower * (1f + _subPowCard + 0.1f) * 100));
                 icon = _subs.Count > 0 && _subs[0].U != null ? UnitGet(_subs[0].U.Key, "s") : null;
                 return true;
             }
             if (key == "party.ghost")
             {
-                name = "유령 HP +10";
-                desc = $"바로 회복 · 지금 {_ghostHp} → {Mathf.Min(GhostHpMax, _ghostHp + 10)}";
+                name = Tx("ui.party.card.ghost.name");
+                desc = Tf("ui.party.card.ghost.desc", _ghostHp, Mathf.Min(GhostHpMax, _ghostHp + 10));
                 icon = UnitGet("ghost", "s") ?? UnitGet("ghost");
                 return true;
             }
@@ -259,12 +271,12 @@ namespace Game.Module.InGame
             string sub = HostName(_subs[slot].U.Key), main = HostName(_host.Key);
             var opts = new List<PartyOption>
             {
-                new PartyOption($"메인과 바꾸기 · 유령 HP −{PartyRule.CostMainSwap}  (남은 {left}회)",
-                                $"{sub} 이(가) 메인 · {main} 은(는) 보조 {slot + 1} 로 · 새 메인은 체력 가득",
+                new PartyOption(Tf("ui.party.choice.main_swap", PartyRule.CostMainSwap, left),
+                                Tf("ui.party.swap.desc", sub, main, slot + 1),
                                 left > 0 && _ghostHp > PartyRule.CostMainSwap, () => PartySwapWithSub(slot)),
-                new PartyOption("그만두기", string.Empty, true, null),
+                new PartyOption(Tx("ui.party.cancel"), string.Empty, true, null),
             };
-            ShowPartyPopup($"보조 {slot + 1} 「{sub}」 을(를) 메인으로?", $"남은 유령 HP {_ghostHp}", opts, -1f);
+            ShowPartyPopup(Tf("ui.party.swap.title", slot + 1, sub), Tf("ui.party.ghost_left", _ghostHp), opts, -1f);
         }
 
         private void PartySwapWithSub(int slot)

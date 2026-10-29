@@ -70329,6 +70329,7 @@ GameObject:
   - component: {fileID: 8724918833645224282}
   - component: {fileID: 3102930688185630990}
   - component: {fileID: 551759366918074182}
+  - component: {fileID: 163950192192704851}
   m_Layer: 0
   m_Name: PartyGhostLabel
   m_TagString: Untagged
@@ -70455,6 +70456,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &163950192192704851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9124603272337822392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5b366a1eaaa8144bec2a9662fedafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
+  _key: ui.party.hud.ghost_hp
 --- !u!1 &9132867748109305966
 GameObject:
   m_ObjectHideFlags: 0

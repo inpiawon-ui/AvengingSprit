@@ -12018,3 +12018,549 @@ MonoBehaviour:
     _en: Blood Feast
     _zhHant: "\u8840\u4E4B\u76DB\u5BB4"
     _zhHans: "\u8840\u4E4B\u76DB\u5BB4"
+  - _key: ui.party.choice.title
+    _ko: "{0} \u2014 \uC5B4\uB5BB\uAC8C \uD560\uAE4C?"
+    _ja: "{0} \u2014 \u3069\u3046\u3059\u308B\uFF1F"
+    _en: "{0} \u2014 What now?"
+    _zhHant: "{0} \u2014 \u8981\u600E\u9EBC\u505A\uFF1F"
+    _zhHans: "{0} \u2014 \u8981\u600E\u4E48\u505A\uFF1F"
+  - _key: ui.party.ghost_left
+    _ko: "\uB0A8\uC740 \uC720\uB839 HP {0}"
+    _ja: "\u6B8B\u308A\u30B4\u30FC\u30B9\u30C8HP {0}"
+    _en: 'Ghost HP left: {0}'
+    _zhHant: "\u5269\u9918\u5E7D\u9748HP {0}"
+    _zhHans: "\u5269\u4F59\u5E7D\u7075HP {0}"
+  - _key: ui.party.choice.main_swap
+    _ko: "\uBA54\uC778\uACFC \uBC14\uAFB8\uAE30 \xB7 \uC720\uB839 HP \u2212{0}  (\uB0A8\uC740
+      {1}\uD68C)"
+    _ja: "\u30E1\u30A4\u30F3\u3068\u4EA4\u4EE3\u30FB\u30B4\u30FC\u30B9\u30C8HP \u2212{0}\uFF08\u6B8B\u308A{1}\u56DE\uFF09"
+    _en: "Swap with Main \xB7 Ghost HP \u2212{0} ({1} left)"
+    _zhHant: "\u8207\u4E3B\u63A7\u4EA4\u63DB \xB7 \u5E7D\u9748HP \u2212{0}\uFF08\u5269{1}\u6B21\uFF09"
+    _zhHans: "\u4E0E\u4E3B\u63A7\u4EA4\u6362 \xB7 \u5E7D\u7075HP \u2212{0}\uFF08\u5269{1}\u6B21\uFF09"
+  - _key: ui.party.choice.main_swap_desc
+    _ko: "{0} \uB300\uC2E0 {1} \uC774(\uAC00) \uBA54\uC778 \xB7 {0} \uC740(\uB294)
+      \uC0AC\uB77C\uC9C4\uB2E4"
+    _ja: "{0}\u306E\u4EE3\u308F\u308A\u306B{1}\u304C\u30E1\u30A4\u30F3\u30FB{0}\u306F\u6D88\u3048\u308B"
+    _en: "{1} becomes Main instead of {0} \xB7 {0} disappears"
+    _zhHant: "{1}\u53D6\u4EE3{0}\u6210\u70BA\u4E3B\u63A7 \xB7 {0}\u6703\u6D88\u5931"
+    _zhHans: "{1}\u53D6\u4EE3{0}\u6210\u4E3A\u4E3B\u63A7 \xB7 {0}\u4F1A\u6D88\u5931"
+  - _key: ui.party.choice.sub1_swap
+    _ko: "\uBCF4\uC870 1 \uACFC \uBC14\uAFB8\uAE30 \xB7 \uC720\uB839 HP \u2212{0} 
+      (\uB0A8\uC740 {1}\uD68C)"
+    _ja: "\u30B5\u30D61\u3068\u4EA4\u4EE3\u30FB\u30B4\u30FC\u30B9\u30C8HP \u2212{0}\uFF08\u6B8B\u308A{1}\u56DE\uFF09"
+    _en: "Swap with Sub 1 \xB7 Ghost HP \u2212{0} ({1} left)"
+    _zhHant: "\u8207\u526F\u624B1\u4EA4\u63DB \xB7 \u5E7D\u9748HP \u2212{0}\uFF08\u5269{1}\u6B21\uFF09"
+    _zhHans: "\u4E0E\u526F\u624B1\u4EA4\u6362 \xB7 \u5E7D\u7075HP \u2212{0}\uFF08\u5269{1}\u6B21\uFF09"
+  - _key: ui.party.choice.sub2_swap
+    _ko: "\uBCF4\uC870 2 \uC640 \uBC14\uAFB8\uAE30 \xB7 \uC720\uB839 HP \u2212{0} 
+      (\uB0A8\uC740 {1}\uD68C)"
+    _ja: "\u30B5\u30D62\u3068\u4EA4\u4EE3\u30FB\u30B4\u30FC\u30B9\u30C8HP \u2212{0}\uFF08\u6B8B\u308A{1}\u56DE\uFF09"
+    _en: "Swap with Sub 2 \xB7 Ghost HP \u2212{0} ({1} left)"
+    _zhHant: "\u8207\u526F\u624B2\u4EA4\u63DB \xB7 \u5E7D\u9748HP \u2212{0}\uFF08\u5269{1}\u6B21\uFF09"
+    _zhHans: "\u4E0E\u526F\u624B2\u4EA4\u6362 \xB7 \u5E7D\u7075HP \u2212{0}\uFF08\u5269{1}\u6B21\uFF09"
+  - _key: ui.party.choice.sub_swap_desc
+    _ko: "{0} \uB300\uC2E0 {1} \xB7 6\uCD08\uB9C8\uB2E4 \uC2A4\uD0AC \uC790\uB3D9
+      \xB7 \uD3C9\uD0C0 30% \xB7 {0} \uC740(\uB294) \uC0AC\uB77C\uC9C4\uB2E4"
+    _ja: "{0}\u306E\u4EE3\u308F\u308A\u306B{1}\u30FB6\u79D2\u3054\u3068\u306B\u30B9\u30AD\u30EB\u81EA\u52D5\u30FB\u901A\u5E38\u653B\u648330%\u30FB{0}\u306F\u6D88\u3048\u308B"
+    _en: "{1} replaces {0} \xB7 Auto skill every 6s \xB7 30% attack \xB7 {0} disappears"
+    _zhHant: "{1}\u53D6\u4EE3{0} \xB7 \u6BCF6\u79D2\u81EA\u52D5\u65BD\u653E\u6280\u80FD
+      \xB7 \u666E\u653B30% \xB7 {0}\u6703\u6D88\u5931"
+    _zhHans: "{1}\u53D6\u4EE3{0} \xB7 \u6BCF6\u79D2\u81EA\u52A8\u65BD\u653E\u6280\u80FD
+      \xB7 \u666E\u653B30% \xB7 {0}\u4F1A\u6D88\u5931"
+  - _key: ui.party.choice.sub_add
+    _ko: "\uBCF4\uC870 {0} \uC5D0 \uB123\uAE30 \xB7 \uC720\uB839 HP \u2212{1}"
+    _ja: "\u30B5\u30D6{0}\u306B\u5165\u308C\u308B\u30FB\u30B4\u30FC\u30B9\u30C8HP
+      \u2212{1}"
+    _en: "Add to Sub {0} \xB7 Ghost HP \u2212{1}"
+    _zhHant: "\u653E\u5165\u526F\u624B{0} \xB7 \u5E7D\u9748HP \u2212{1}"
+    _zhHans: "\u653E\u5165\u526F\u624B{0} \xB7 \u5E7D\u7075HP \u2212{1}"
+  - _key: ui.party.choice.sub_add_desc
+    _ko: "{0} \xB7 6\uCD08\uB9C8\uB2E4 \uC2A4\uD0AC \uC790\uB3D9 \xB7 \uD3C9\uD0C0
+      30% \xB7 \uCCB4\uB825 \uC5C6\uC74C"
+    _ja: "{0}\u30FB6\u79D2\u3054\u3068\u306B\u30B9\u30AD\u30EB\u81EA\u52D5\u30FB\u901A\u5E38\u653B\u648330%\u30FBHP\u306A\u3057"
+    _en: "{0} \xB7 Auto skill every 6s \xB7 30% attack \xB7 No HP"
+    _zhHant: "{0} \xB7 \u6BCF6\u79D2\u81EA\u52D5\u65BD\u653E\u6280\u80FD \xB7 \u666E\u653B30%
+      \xB7 \u7121HP"
+    _zhHans: "{0} \xB7 \u6BCF6\u79D2\u81EA\u52A8\u65BD\u653E\u6280\u80FD \xB7 \u666E\u653B30%
+      \xB7 \u65E0HP"
+  - _key: ui.party.choice.leave
+    _ko: "\uB194\uB450\uAE30"
+    _ja: "\u653E\u3063\u3066\u304A\u304F"
+    _en: Leave It
+    _zhHant: "\u4E0D\u7406\u6703"
+    _zhHans: "\u4E0D\u7406\u4F1A"
+  - _key: ui.party.choice.leave_desc
+    _ko: "\uADF8\uB300\uB85C \uB454\uB2E4 \u2014 \uACC4\uC18D \uC2F8\uC6B0\uB2E4
+      \uC8FD\uB294\uB2E4"
+    _ja: "\u305D\u306E\u307E\u307E\u306B\u3059\u308B \u2014 \u6226\u3044\u7D9A\u3051\u3066\u5012\u308C\u308B"
+    _en: "Leave it \u2014 it fights on until it falls"
+    _zhHant: "\u7DAD\u6301\u539F\u6A23 \u2014 \u7E7C\u7E8C\u6230\u9B25\u76F4\u5230\u5012\u4E0B"
+    _zhHans: "\u7EF4\u6301\u539F\u6837 \u2014 \u7EE7\u7EED\u6218\u6597\u76F4\u5230\u5012\u4E0B"
+  - _key: ui.party.death.title
+    _ko: "\uBA54\uC778 \u300C{0}\u300D \uC4F0\uB7EC\uC9D0 \u2014 \uC720\uB839 HP
+      \u2212{1}"
+    _ja: "\u30E1\u30A4\u30F3\u300C{0}\u300D\u30C0\u30A6\u30F3 \u2014 \u30B4\u30FC\u30B9\u30C8HP
+      \u2212{1}"
+    _en: "Main \"{0}\" down \u2014 Ghost HP \u2212{1}"
+    _zhHant: "\u4E3B\u63A7\u300C{0}\u300D\u5012\u4E0B \u2014 \u5E7D\u9748HP \u2212{1}"
+    _zhHans: "\u4E3B\u63A7\u300C{0}\u300D\u5012\u4E0B \u2014 \u5E7D\u7075HP \u2212{1}"
+  - _key: ui.party.death.sub
+    _ko: "\uB0A8\uC740 \uC720\uB839 HP {0} \xB7 {1:0}\uCD08 \uC548\uC5D0 \uACE0\uB978\uB2E4
+      \xB7 \uC2DC\uAC04\uC774 \uC9C0\uB098\uBA74 \uAC8C\uC784 \uC624\uBC84"
+    _ja: "\u6B8B\u308A\u30B4\u30FC\u30B9\u30C8HP {0}\u30FB{1:0}\u79D2\u4EE5\u5185\u306B\u9078\u3076\u30FB\u6642\u9593\u5207\u308C\u3067\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
+    _en: "Ghost HP left: {0} \xB7 Choose within {1:0}s or it's Game Over"
+    _zhHant: "\u5269\u9918\u5E7D\u9748HP {0} \xB7 {1:0}\u79D2\u5167\u9078\u64C7 \xB7
+      \u8D85\u6642\u5373\u904A\u6232\u7D50\u675F"
+    _zhHans: "\u5269\u4F59\u5E7D\u7075HP {0} \xB7 {1:0}\u79D2\u5185\u9009\u62E9 \xB7
+      \u8D85\u65F6\u5373\u6E38\u620F\u7ED3\u675F"
+  - _key: ui.party.death.new
+    _ko: "A. \uADFC\uCC98 \uD638\uC2A4\uD2B8\uC5D0 \uC0C8\uB85C \uBE59\uC758 \xB7
+      \u2212{0}"
+    _ja: "A. \u8FD1\u304F\u306E\u30DB\u30B9\u30C8\u306B\u6191\u4F9D\u3057\u76F4\u3059\u30FB\u2212{0}"
+    _en: "A. Possess a nearby host \xB7 \u2212{0}"
+    _zhHant: "A. \u91CD\u65B0\u9644\u8EAB\u9644\u8FD1\u5BBF\u4E3B \xB7 \u2212{0}"
+    _zhHans: "A. \u91CD\u65B0\u9644\u8EAB\u9644\u8FD1\u5BBF\u4E3B \xB7 \u2212{0}"
+  - _key: ui.party.death.new_desc
+    _ko: "\uC720\uB839\uC73C\uB85C \uB5A0\uC11C \uB2E4\uB978 \uD638\uC2A4\uD2B8\uB97C
+      \uD130\uCE58\uD558\uBA74 \uBC14\uB85C \uBA54\uC778 \xB7 \uBCF4\uC870\uB294
+      \uADF8\uB300\uB85C \xB7 \uB5A0 \uC788\uB294 \uB3D9\uC548 \uC720\uB839 HP \uAC00
+      \uC0CC\uB2E4"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u3067\u6F02\u3044\u3001\u5225\u306E\u30DB\u30B9\u30C8\u3092\u30BF\u30C3\u30C1\u3059\u308B\u3068\u5373\u30E1\u30A4\u30F3\u30FB\u30B5\u30D6\u306F\u305D\u306E\u307E\u307E\u30FB\u6F02\u3046\u9593\u30B4\u30FC\u30B9\u30C8HP\u304C\u6E1B\u308B"
+    _en: "Float as a ghost and tap another host to make it Main \xB7 Subs stay \xB7
+      Ghost HP drains while floating"
+    _zhHant: "\u4EE5\u5E7D\u9748\u6F02\u6D6E\uFF0C\u89F8\u78B0\u5176\u4ED6\u5BBF\u4E3B\u5373\u6210\u70BA\u4E3B\u63A7
+      \xB7 \u526F\u624B\u4E0D\u8B8A \xB7 \u6F02\u6D6E\u671F\u9593\u5E7D\u9748HP\u6703\u6D41\u5931"
+    _zhHans: "\u4EE5\u5E7D\u7075\u6F02\u6D6E\uFF0C\u89E6\u78B0\u5176\u4ED6\u5BBF\u4E3B\u5373\u6210\u4E3A\u4E3B\u63A7
+      \xB7 \u526F\u624B\u4E0D\u53D8 \xB7 \u6F02\u6D6E\u671F\u95F4\u5E7D\u7075HP\u4F1A\u6D41\u5931"
+  - _key: ui.party.death.promote
+    _ko: "B. \uBCF4\uC870 {0} \u300C{1}\u300D \uC744(\uB97C) \uBA54\uC778\uC73C\uB85C
+      \xB7 \u2212{2}"
+    _ja: "B. \u30B5\u30D6{0}\u300C{1}\u300D\u3092\u30E1\u30A4\u30F3\u306B\u30FB\u2212{2}"
+    _en: "B. Make Sub {0} \"{1}\" Main \xB7 \u2212{2}"
+    _zhHant: "B. \u8B93\u526F\u624B{0}\u300C{1}\u300D\u6210\u70BA\u4E3B\u63A7 \xB7
+      \u2212{2}"
+    _zhHans: "B. \u8BA9\u526F\u624B{0}\u300C{1}\u300D\u6210\u4E3A\u4E3B\u63A7 \xB7
+      \u2212{2}"
+  - _key: ui.party.death.promote_desc
+    _ko: "\uADF8 \uC790\uB9AC\uC5D0\uC11C \uBC14\uB85C \uBA54\uC778 \xB7 \uBCF4\uC870
+      \uCE78 \uD558\uB098\uAC00 \uBE48\uB2E4"
+    _ja: "\u305D\u306E\u5834\u3067\u3059\u3050\u30E1\u30A4\u30F3\u30FB\u30B5\u30D6\u67A0\u304C1\u3064\u7A7A\u304F"
+    _en: "Becomes Main on the spot \xB7 One Sub slot opens"
+    _zhHant: "\u7576\u5834\u6210\u70BA\u4E3B\u63A7 \xB7 \u7A7A\u51FA\u4E00\u500B\u526F\u624B\u4F4D"
+    _zhHans: "\u5F53\u573A\u6210\u4E3A\u4E3B\u63A7 \xB7 \u7A7A\u51FA\u4E00\u4E2A\u526F\u624B\u4F4D"
+  - _key: ui.party.death.revive
+    _ko: "C. \uADF8 \uC790\uB9AC\uC5D0\uC11C {0} \uBD80\uD65C \xB7 \u2212{1}"
+    _ja: "C. \u305D\u306E\u5834\u3067{0}\u3092\u5FA9\u6D3B\u30FB\u2212{1}"
+    _en: "C. Revive {0} on the spot \xB7 \u2212{1}"
+    _zhHant: "C. \u7576\u5834\u5FA9\u6D3B{0} \xB7 \u2212{1}"
+    _zhHans: "C. \u5F53\u573A\u590D\u6D3B{0} \xB7 \u2212{1}"
+  - _key: ui.party.death.revive_desc
+    _ko: "\uBCF4\uC870 \uADF8\uB300\uB85C \xB7 \uCCB4\uB825 \uAC00\uB4DD"
+    _ja: "\u30B5\u30D6\u306F\u305D\u306E\u307E\u307E\u30FBHP\u5168\u56DE\u5FA9"
+    _en: "Subs stay \xB7 Full HP"
+    _zhHant: "\u526F\u624B\u4E0D\u8B8A \xB7 HP\u5168\u6EFF"
+    _zhHans: "\u526F\u624B\u4E0D\u53D8 \xB7 HP\u5168\u6EE1"
+  - _key: ui.party.timer
+    _ko: "\uB0A8\uC740 \uC2DC\uAC04 {0:0.0}\uCD08"
+    _ja: "\u6B8B\u308A {0:0.0}\u79D2"
+    _en: '{0:0.0}s left'
+    _zhHant: "\u5269\u9918 {0:0.0}\u79D2"
+    _zhHans: "\u5269\u4F59 {0:0.0}\u79D2"
+  - _key: ui.party.sub_strike
+    _ko: "\uC5F0\uC0AC"
+    _ja: "\u9023\u5C04"
+    _en: Rapid Fire
+    _zhHant: "\u9023\u5C04"
+    _zhHans: "\u8FDE\u5C04"
+  - _key: ui.party.swap.title
+    _ko: "\uBCF4\uC870 {0} \u300C{1}\u300D \uC744(\uB97C) \uBA54\uC778\uC73C\uB85C?"
+    _ja: "\u30B5\u30D6{0}\u300C{1}\u300D\u3092\u30E1\u30A4\u30F3\u306B\uFF1F"
+    _en: Make Sub {0} "{1}" Main?
+    _zhHant: "\u8B93\u526F\u624B{0}\u300C{1}\u300D\u6210\u70BA\u4E3B\u63A7\uFF1F"
+    _zhHans: "\u8BA9\u526F\u624B{0}\u300C{1}\u300D\u6210\u4E3A\u4E3B\u63A7\uFF1F"
+  - _key: ui.party.swap.desc
+    _ko: "{0} \uC774(\uAC00) \uBA54\uC778 \xB7 {1} \uC740(\uB294) \uBCF4\uC870 {2}
+      \uB85C \xB7 \uC0C8 \uBA54\uC778\uC740 \uCCB4\uB825 \uAC00\uB4DD"
+    _ja: "{0}\u304C\u30E1\u30A4\u30F3\u30FB{1}\u306F\u30B5\u30D6{2}\u3078\u30FB\u65B0\u30E1\u30A4\u30F3\u306FHP\u5168\u56DE\u5FA9"
+    _en: "{0} becomes Main \xB7 {1} moves to Sub {2} \xB7 New Main at full HP"
+    _zhHant: "{0}\u6210\u70BA\u4E3B\u63A7 \xB7 {1}\u79FB\u81F3\u526F\u624B{2} \xB7
+      \u65B0\u4E3B\u63A7HP\u5168\u6EFF"
+    _zhHans: "{0}\u6210\u4E3A\u4E3B\u63A7 \xB7 {1}\u79FB\u81F3\u526F\u624B{2} \xB7
+      \u65B0\u4E3B\u63A7HP\u5168\u6EE1"
+  - _key: ui.party.cancel
+    _ko: "\uADF8\uB9CC\uB450\uAE30"
+    _ja: "\u3084\u3081\u308B"
+    _en: Cancel
+    _zhHant: "\u53D6\u6D88"
+    _zhHans: "\u53D6\u6D88"
+  - _key: ui.party.close
+    _ko: "\uB2EB\uAE30"
+    _ja: "\u9589\u3058\u308B"
+    _en: Close
+    _zhHant: "\u95DC\u9589"
+    _zhHans: "\u5173\u95ED"
+  - _key: ui.party.card.chip
+    _ko: "\uD30C\uD2F0"
+    _ja: "\u30D1\u30FC\u30C6\u30A3"
+    _en: Party
+    _zhHant: "\u968A\u4F0D"
+    _zhHans: "\u961F\u4F0D"
+  - _key: ui.party.card.sublv.name
+    _ko: "\uBCF4\uC870 {0} \u300C{1}\u300D \uC2A4\uD0AC Lv {2} \u2192 {3}"
+    _ja: "\u30B5\u30D6{0}\u300C{1}\u300D\u30B9\u30AD\u30EB Lv {2} \u2192 {3}"
+    _en: "Sub {0} \"{1}\" Skill Lv {2} \u2192 {3}"
+    _zhHant: "\u526F\u624B{0}\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
+    _zhHans: "\u526F\u624B{0}\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
+  - _key: ui.party.card.sublv.desc
+    _ko: "\uBCF4\uC870 \uC2A4\uD0AC \xB7 \uD3C9\uD0C0 \uC704\uB825 +25% \xB7 \uC2A4\uD0AC
+      \uAC04\uACA9 \u22128%\n\uAD50\uCCB4\uD574\uB3C4 \uC774 \uD638\uC2A4\uD2B8\uC5D0
+      \uB0A8\uB294\uB2E4"
+    _ja: "\u30B5\u30D6\u30B9\u30AD\u30EB\u30FB\u901A\u5E38\u653B\u6483\u5A01\u529B+25%\u30FB\u30B9\u30AD\u30EB\u9593\u9694\u22128%\n\u4EA4\u4EE3\u3057\u3066\u3082\u3053\u306E\u30DB\u30B9\u30C8\u306B\u6B8B\u308B"
+    _en: "Sub skill \xB7 Attack +25% \xB7 Skill interval \u22128%\nStays with this
+      host after a swap"
+    _zhHant: "\u526F\u624B\u6280\u80FD \xB7 \u666E\u653B\u5A01\u529B+25% \xB7 \u6280\u80FD\u9593\u9694\u22128%\n\u4EA4\u63DB\u5F8C\u4ECD\u4FDD\u7559\u65BC\u6B64\u5BBF\u4E3B"
+    _zhHans: "\u526F\u624B\u6280\u80FD \xB7 \u666E\u653B\u5A01\u529B+25% \xB7 \u6280\u80FD\u95F4\u9694\u22128%\n\u4EA4\u6362\u540E\u4ECD\u4FDD\u7559\u4E8E\u6B64\u5BBF\u4E3B"
+  - _key: ui.party.card.subpow.name
+    _ko: "\uBCF4\uC870 \uC704\uB825 +10%"
+    _ja: "\u30B5\u30D6\u5A01\u529B+10%"
+    _en: Sub Power +10%
+    _zhHant: "\u526F\u624B\u5A01\u529B+10%"
+    _zhHans: "\u526F\u624B\u5A01\u529B+10%"
+  - _key: ui.party.card.subpow.desc
+    _ko: "\uBCF4\uC870 \uB458\uC758 \uD3C9\uD0C0 \xB7 \uC2A4\uD0AC\uC774 \uD568\uAED8
+      \uC138\uC9C4\uB2E4\n\uC9C0\uAE08 {0}% \u2192 {1}%"
+    _ja: "\u30B5\u30D62\u4F53\u306E\u901A\u5E38\u653B\u6483\u30FB\u30B9\u30AD\u30EB\u304C\u5F37\u5316\n\u73FE\u5728
+      {0}% \u2192 {1}%"
+    _en: "Both Subs' attacks and skills get stronger\nNow {0}% \u2192 {1}%"
+    _zhHant: "\u5169\u540D\u526F\u624B\u7684\u666E\u653B \xB7 \u6280\u80FD\u4E00\u540C\u589E\u5F37\n\u76EE\u524D
+      {0}% \u2192 {1}%"
+    _zhHans: "\u4E24\u540D\u526F\u624B\u7684\u666E\u653B \xB7 \u6280\u80FD\u4E00\u540C\u589E\u5F3A\n\u76EE\u524D
+      {0}% \u2192 {1}%"
+  - _key: ui.party.card.ghost.name
+    _ko: "\uC720\uB839 HP +10"
+    _ja: "\u30B4\u30FC\u30B9\u30C8HP +10"
+    _en: Ghost HP +10
+    _zhHant: "\u5E7D\u9748HP +10"
+    _zhHans: "\u5E7D\u7075HP +10"
+  - _key: ui.party.card.ghost.desc
+    _ko: "\uBC14\uB85C \uD68C\uBCF5 \xB7 \uC9C0\uAE08 {0} \u2192 {1}"
+    _ja: "\u5373\u56DE\u5FA9\u30FB\u73FE\u5728 {0} \u2192 {1}"
+    _en: "Heal now \xB7 {0} \u2192 {1}"
+    _zhHant: "\u7ACB\u5373\u56DE\u5FA9 \xB7 \u76EE\u524D {0} \u2192 {1}"
+    _zhHans: "\u7ACB\u5373\u6062\u590D \xB7 \u76EE\u524D {0} \u2192 {1}"
+  - _key: ui.party.syn.force
+    _ko: "\uD30C\uC6CC {0}\uC778 \xB7 \uBC1B\uB294 \uD53C\uD574 \u2212{1}%"
+    _ja: "\u30D1\u30EF\u30FC{0}\u4EBA\u30FB\u88AB\u30C0\u30E1\u30FC\u30B8\u2212{1}%"
+    _en: "Power \xD7{0} \xB7 Damage taken \u2212{1}%"
+    _zhHant: "\u529B\u91CF{0}\u4EBA \xB7 \u53D7\u5230\u50B7\u5BB3\u2212{1}%"
+    _zhHans: "\u529B\u91CF{0}\u4EBA \xB7 \u53D7\u5230\u4F24\u5BB3\u2212{1}%"
+  - _key: ui.party.syn.blade
+    _ko: "\uBB34\uAE30 {0}\uC778 \xB7 \uACF5\uC18D +{1}%"
+    _ja: "\u6B66\u5668{0}\u4EBA\u30FB\u653B\u6483\u901F\u5EA6+{1}%"
+    _en: "Weapon \xD7{0} \xB7 Attack speed +{1}%"
+    _zhHant: "\u6B66\u5668{0}\u4EBA \xB7 \u653B\u901F+{1}%"
+    _zhHans: "\u6B66\u5668{0}\u4EBA \xB7 \u653B\u901F+{1}%"
+  - _key: ui.party.syn.magic
+    _ko: "\uB9C8\uBC95 {0}\uC778 \xB7 \uC2A4\uD0AC \uCFE8 \u2212{1}%"
+    _ja: "\u9B54\u6CD5{0}\u4EBA\u30FB\u30B9\u30AD\u30EBCT\u2212{1}%"
+    _en: "Magic \xD7{0} \xB7 Skill cooldown \u2212{1}%"
+    _zhHant: "\u9B54\u6CD5{0}\u4EBA \xB7 \u6280\u80FD\u51B7\u537B\u2212{1}%"
+    _zhHans: "\u9B54\u6CD5{0}\u4EBA \xB7 \u6280\u80FD\u51B7\u5374\u2212{1}%"
+  - _key: ui.party.syn.gang
+    _ko: "\uAC31\uB2E8 {0}\uC778 \xB7 \uCE58\uBA85 +{1}%"
+    _ja: "\u30AE\u30E3\u30F3\u30B0{0}\u4EBA\u30FB\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB+{1}%"
+    _en: "Gang \xD7{0} \xB7 Crit +{1}%"
+    _zhHant: "\u5E6B\u6D3E{0}\u4EBA \xB7 \u66B4\u64CA+{1}%"
+    _zhHans: "\u5E2E\u6D3E{0}\u4EBA \xB7 \u66B4\u51FB+{1}%"
+  - _key: ui.party.syn.commando
+    _ko: "\uCF54\uB9CC\uB3C4 {0}\uC778 \xB7 \uCD5C\uB300 \uCCB4\uB825 +{1}%"
+    _ja: "\u30B3\u30DE\u30F3\u30C9\u30FC{0}\u4EBA\u30FB\u6700\u5927HP+{1}%"
+    _en: "Commando \xD7{0} \xB7 Max HP +{1}%"
+    _zhHant: "\u7A81\u64CA\u5175{0}\u4EBA \xB7 \u6700\u5927HP+{1}%"
+    _zhHans: "\u7A81\u51FB\u5175{0}\u4EBA \xB7 \u6700\u5927HP+{1}%"
+  - _key: ui.party.syn.martial
+    _ko: "\uBB34\uB3C4\uAC00 {0}\uC778 \xB7 \uD68C\uD53C +{1}%"
+    _ja: "\u6B66\u9053\u5BB6{0}\u4EBA\u30FB\u56DE\u907F+{1}%"
+    _en: "Martial \xD7{0} \xB7 Dodge +{1}%"
+    _zhHant: "\u6B66\u8853\u5BB6{0}\u4EBA \xB7 \u9583\u907F+{1}%"
+    _zhHans: "\u6B66\u672F\u5BB6{0}\u4EBA \xB7 \u95EA\u907F+{1}%"
+  - _key: ui.party.syn.monster
+    _ko: "\uAD34\uBB3C {0}\uC778 \xB7 \uCC98\uCE58 \uD68C\uBCF5 {1}%"
+    _ja: "\u602A\u7269{0}\u4EBA\u30FB\u6483\u7834\u56DE\u5FA9{1}%"
+    _en: "Monster \xD7{0} \xB7 Heal {1}% per kill"
+    _zhHant: "\u602A\u7269{0}\u4EBA \xB7 \u64CA\u6BBA\u56DE\u5FA9{1}%"
+    _zhHans: "\u602A\u7269{0}\u4EBA \xB7 \u51FB\u6740\u6062\u590D{1}%"
+  - _key: ui.party.syn.mystic
+    _ko: "\uB9C8\uB3C4 {0}\uC778 \xB7 \uBCF4\uC870 \uC2A4\uD0AC \uAC04\uACA9 \u2212{1}%"
+    _ja: "\u9B54\u5C0E{0}\u4EBA\u30FB\u30B5\u30D6\u30B9\u30AD\u30EB\u9593\u9694\u2212{1}%"
+    _en: "Mystic \xD7{0} \xB7 Sub skill interval \u2212{1}%"
+    _zhHant: "\u9B54\u5C0E{0}\u4EBA \xB7 \u526F\u624B\u6280\u80FD\u9593\u9694\u2212{1}%"
+    _zhHans: "\u9B54\u5BFC{0}\u4EBA \xB7 \u526F\u624B\u6280\u80FD\u95F4\u9694\u2212{1}%"
+  - _key: ui.party.tag.force
+    _ko: "\uD30C\uC6CC"
+    _ja: "\u30D1\u30EF\u30FC"
+    _en: Power
+    _zhHant: "\u529B\u91CF"
+    _zhHans: "\u529B\u91CF"
+  - _key: ui.party.tag.blade
+    _ko: "\uBB34\uAE30"
+    _ja: "\u6B66\u5668"
+    _en: Weapon
+    _zhHant: "\u6B66\u5668"
+    _zhHans: "\u6B66\u5668"
+  - _key: ui.party.tag.magic
+    _ko: "\uB9C8\uBC95"
+    _ja: "\u9B54\u6CD5"
+    _en: Magic
+    _zhHant: "\u9B54\u6CD5"
+    _zhHans: "\u9B54\u6CD5"
+  - _key: ui.party.tag.gang
+    _ko: "\uAC31\uB2E8"
+    _ja: "\u30AE\u30E3\u30F3\u30B0"
+    _en: Gang
+    _zhHant: "\u5E6B\u6D3E"
+    _zhHans: "\u5E2E\u6D3E"
+  - _key: ui.party.tag.commando
+    _ko: "\uCF54\uB9CC\uB3C4"
+    _ja: "\u30B3\u30DE\u30F3\u30C9\u30FC"
+    _en: Commando
+    _zhHant: "\u7A81\u64CA\u5175"
+    _zhHans: "\u7A81\u51FB\u5175"
+  - _key: ui.party.tag.martial
+    _ko: "\uBB34\uB3C4\uAC00"
+    _ja: "\u6B66\u9053\u5BB6"
+    _en: Martial
+    _zhHant: "\u6B66\u8853\u5BB6"
+    _zhHans: "\u6B66\u672F\u5BB6"
+  - _key: ui.party.tag.monster
+    _ko: "\uAD34\uBB3C"
+    _ja: "\u602A\u7269"
+    _en: Monster
+    _zhHant: "\u602A\u7269"
+    _zhHans: "\u602A\u7269"
+  - _key: ui.party.tag.mystic
+    _ko: "\uB9C8\uB3C4"
+    _ja: "\u9B54\u5C0E"
+    _en: Mystic
+    _zhHant: "\u9B54\u5C0E"
+    _zhHans: "\u9B54\u5BFC"
+  - _key: ui.party.syn.title
+    _ko: "\uC2DC\uB108\uC9C0"
+    _ja: "\u30B7\u30CA\u30B8\u30FC"
+    _en: Synergy
+    _zhHant: "\u5354\u540C"
+    _zhHans: "\u534F\u540C"
+  - _key: ui.party.syn.sub
+    _ko: "\uD0ED\uD558\uBA74 \uB2EB\uD78C\uB2E4 \u2014 \uADF8\uB3D9\uC548 \uAC8C\uC784\uC740
+      \uBA48\uCD98\uB2E4"
+    _ja: "\u30BF\u30C3\u30D7\u3067\u9589\u3058\u308B \u2014 \u305D\u306E\u9593\u30B2\u30FC\u30E0\u306F\u505C\u6B62"
+    _en: "Tap to close \u2014 the game is paused"
+    _zhHant: "\u9EDE\u64CA\u95DC\u9589 \u2014 \u671F\u9593\u904A\u6232\u66AB\u505C"
+    _zhHans: "\u70B9\u51FB\u5173\u95ED \u2014 \u671F\u95F4\u6E38\u620F\u6682\u505C"
+  - _key: ui.party.syn.detail
+    _ko: "\uBA54\uC778\uC5D0\uAC8C \uAC78\uB9B0\uB2E4 \xB7 \uBCF4\uC870\uB294 \uACF5\uC18D\uB9CC
+      \uC808\uBC18"
+    _ja: "\u30E1\u30A4\u30F3\u306B\u9069\u7528\u30FB\u30B5\u30D6\u306F\u653B\u6483\u901F\u5EA6\u306E\u307F\u534A\u5206"
+    _en: "Applies to Main \xB7 Subs get half attack speed only"
+    _zhHant: "\u4F5C\u7528\u65BC\u4E3B\u63A7 \xB7 \u526F\u624B\u50C5\u7372\u5F97\u4E00\u534A\u653B\u901F"
+    _zhHans: "\u4F5C\u7528\u4E8E\u4E3B\u63A7 \xB7 \u526F\u624B\u4EC5\u83B7\u5F97\u4E00\u534A\u653B\u901F"
+  - _key: ui.party.syn.none
+    _ko: "\uC2DC\uB108\uC9C0 \uC5C6\uC74C"
+    _ja: "\u30B7\u30CA\u30B8\u30FC\u306A\u3057"
+    _en: No Synergy
+    _zhHant: "\u7121\u5354\u540C"
+    _zhHans: "\u65E0\u534F\u540C"
+  - _key: ui.party.syn.none_desc
+    _ko: "\uAC19\uC740 \uC18D\uC131 \xB7 \uAC19\uC740 \uC870\uC9C1 2\uBA85\uBD80\uD130
+      \uCF1C\uC9C4\uB2E4 \xB7 3\uBA85\uC774\uBA74 \uAC15\uD574\uC9C4\uB2E4"
+    _ja: "\u540C\u3058\u5C5E\u6027\u30FB\u540C\u3058\u7D44\u7E54\u304C2\u4EBA\u3067\u767A\u52D5\u30FB3\u4EBA\u3067\u5F37\u5316"
+    _en: "Activates with 2 of a type or group \xB7 Stronger with 3"
+    _zhHant: "\u540C\u5C6C\u6027 \xB7 \u540C\u7D44\u7E542\u4EBA\u8D77\u767C\u52D5
+      \xB7 3\u4EBA\u66F4\u5F37"
+    _zhHans: "\u540C\u5C5E\u6027 \xB7 \u540C\u7EC4\u7EC72\u4EBA\u8D77\u53D1\u52A8
+      \xB7 3\u4EBA\u66F4\u5F3A"
+  - _key: ui.party.inyeon.title
+    _ko: "\uC778\uC5F0 \xB7 {0}"
+    _ja: "\u7D46\u30FB{0}"
+    _en: "Bond \xB7 {0}"
+    _zhHant: "\u7F88\u7D46 \xB7 {0}"
+    _zhHans: "\u7F81\u7ECA \xB7 {0}"
+  - _key: ui.party.inyeon.title_off
+    _ko: "\uC778\uC5F0 \xB7 {0} (\uAEBC\uC9D0)"
+    _ja: "\u7D46\u30FB{0}\uFF08\u672A\u767A\u52D5\uFF09"
+    _en: "Bond \xB7 {0} (Off)"
+    _zhHant: "\u7F88\u7D46 \xB7 {0}\uFF08\u672A\u555F\u52D5\uFF09"
+    _zhHans: "\u7F81\u7ECA \xB7 {0}\uFF08\u672A\u542F\u52A8\uFF09"
+  - _key: ui.party.inyeon.off_desc
+    _ko: "\uC9DD {0} \uC744(\uB97C) \uBCF4\uC870\uB85C \uB370\uB824\uC624\uBA74 \u2014
+      {1}"
+    _ja: "\u76F8\u68D2{0}\u3092\u30B5\u30D6\u306B\u5165\u308C\u308B\u3068 \u2014
+      {1}"
+    _en: "Bring partner {0} as a Sub \u2014 {1}"
+    _zhHant: "\u5C07\u642D\u6A94{0}\u5E36\u70BA\u526F\u624B \u2014 {1}"
+    _zhHans: "\u5C06\u642D\u6863{0}\u5E26\u4E3A\u526F\u624B \u2014 {1}"
+  - _key: ui.party.bubble.bring
+    _ko: "\uB370\uB824\uC624\uBA74 \u25B6\n{0}"
+    _ja: "\u5165\u308C\u308B\u3068 \u25B6\n{0}"
+    _en: "If added \u25B6\n{0}"
+    _zhHant: "\u52A0\u5165\u5F8C \u25B6\n{0}"
+    _zhHans: "\u52A0\u5165\u540E \u25B6\n{0}"
+  - _key: ui.party.hud.ghost_hp
+    _ko: "\uC720\uB839 HP"
+    _ja: "\u30B4\u30FC\u30B9\u30C8HP"
+    _en: Ghost HP
+    _zhHant: "\u5E7D\u9748HP"
+    _zhHans: "\u5E7D\u7075HP"
+  - _key: ui.party.hud.touch_host
+    _ko: "\uBE59\uC758\uD560 \uD638\uC2A4\uD2B8\uB97C \uD130\uCE58"
+    _ja: "\u30DB\u30B9\u30C8\u3092\u30BF\u30C3\u30C1"
+    _en: Tap a host
+    _zhHant: "\u9EDE\u64CA\u5BBF\u4E3B"
+    _zhHans: "\u70B9\u51FB\u5BBF\u4E3B"
+  - _key: ui.party.hud.inyeon_tag
+    _ko: "\uC778\uC5F0"
+    _ja: "\u7D46"
+    _en: Bond
+    _zhHant: "\u7F88\u7D46"
+    _zhHans: "\u7F81\u7ECA"
+  - _key: inyeon.gangster.desc
+    _ko: "\uD45C\uC2DD \uBD99\uC740 \uC801\uC744 \uBCF4\uC870\uAC00 \uC6B0\uC120
+      \uB178\uB9AC\uACE0 \uBCF4\uC870 \uD53C\uD574 +50%"
+    _ja: "\u30DE\u30FC\u30AF\u3057\u305F\u6575\u3092\u30B5\u30D6\u304C\u512A\u5148\u3057\u3066\u72D9\u3044\u3001\u30B5\u30D6\u306E\u30C0\u30E1\u30FC\u30B8+50%"
+    _en: Subs target marked foes first and deal +50% damage
+    _zhHant: "\u526F\u624B\u512A\u5148\u653B\u64CA\u88AB\u6A19\u8A18\u7684\u6575\u4EBA\uFF0C\u526F\u624B\u50B7\u5BB3+50%"
+    _zhHans: "\u526F\u624B\u4F18\u5148\u653B\u51FB\u88AB\u6807\u8BB0\u7684\u654C\u4EBA\uFF0C\u526F\u624B\u4F24\u5BB3+50%"
+  - _key: inyeon.thug.desc
+    _ko: "\uB09C\uC0AC \uD0C4\uC774 \uAC00\uAE4C\uC6B4 \uC801 \uCABD\uC73C\uB85C
+      \uC0B4\uC9DD \uD71C\uB2E4"
+    _ja: "\u4E71\u5C04\u306E\u5F3E\u304C\u8FD1\u304F\u306E\u6575\u3078\u5C11\u3057\u66F2\u304C\u308B"
+    _en: Spray shots curve slightly toward nearby foes
+    _zhHant: "\u4E82\u5C04\u5B50\u5F48\u6703\u5FAE\u5FAE\u5F4E\u5411\u9644\u8FD1\u6575\u4EBA"
+    _zhHans: "\u4E71\u5C04\u5B50\u5F39\u4F1A\u5FAE\u5FAE\u5F2F\u5411\u9644\u8FD1\u654C\u4EBA"
+  - _key: inyeon.amazon.desc
+    _ko: "\uD55C \uBC88 \uB354 \uB3C4\uC57D \xB7 \uCC29\uC9C0\uB9C8\uB2E4 \uBC88\uAC1C
+      \uACE0\uB9AC"
+    _ja: "\u3082\u3046\u4E00\u5EA6\u8DF3\u8E8D\u30FB\u7740\u5730\u3054\u3068\u306B\u96F7\u306E\u8F2A"
+    _en: "One extra leap \xB7 Lightning ring on each landing"
+    _zhHant: "\u591A\u8E8D\u4E00\u6B21 \xB7 \u6BCF\u6B21\u843D\u5730\u7522\u751F\u96F7\u74B0"
+    _zhHans: "\u591A\u8DC3\u4E00\u6B21 \xB7 \u6BCF\u6B21\u843D\u5730\u4EA7\u751F\u96F7\u73AF"
+  - _key: inyeon.amazon_elite.desc
+    _ko: "\uD568\uC131 \uBC94\uC704 1.5\uBC30 \xB7 \uAE30\uC808 2.5\uCD08"
+    _ja: "\u5486\u54EE\u306E\u7BC4\u56F21.5\u500D\u30FB\u6C17\u7D762.5\u79D2"
+    _en: "Roar range \xD71.5 \xB7 2.5s stun"
+    _zhHant: "\u5436\u558A\u7BC4\u570D1.5\u500D \xB7 \u6688\u77292.5\u79D2"
+    _zhHans: "\u5450\u558A\u8303\u56F41.5\u500D \xB7 \u6655\u77292.5\u79D2"
+  - _key: inyeon.hopper.desc
+    _ko: "\uC870\uC900 \uC0AC\uACA9\uC774 6\uBC1C"
+    _ja: "\u72D9\u3044\u6483\u3061\u304C6\u767A\u306B"
+    _en: Aimed shot fires 6 rounds
+    _zhHant: "\u7784\u6E96\u5C04\u64CA\u8B8A\u70BA6\u767C"
+    _zhHans: "\u7784\u51C6\u5C04\u51FB\u53D8\u4E3A6\u53D1"
+  - _key: inyeon.hopper_smg.desc
+    _ko: "\uBC31\uC2A4\uD15D \uC5F0\uC0AC\uAC00 \uC801\uC744 \uAFF0\uB6AB\uB294\uB2E4"
+    _ja: "\u30D0\u30C3\u30AF\u30B9\u30C6\u30C3\u30D7\u9023\u5C04\u304C\u6575\u3092\u8CAB\u901A\u3059\u308B"
+    _en: Backstep fire pierces foes
+    _zhHant: "\u5F8C\u64A4\u9023\u5C04\u53EF\u8CAB\u7A7F\u6575\u4EBA"
+    _zhHans: "\u540E\u64A4\u8FDE\u5C04\u53EF\u8D2F\u7A7F\u654C\u4EBA"
+  - _key: inyeon.commando_mg.desc
+    _ko: "\uC81C\uC555 \uC0AC\uACA9\uC5D0 \uB9DE\uC740 \uC801 \uBC1C\uBC11\uC5D0
+      \uC218\uB958\uD0C4"
+    _ja: "\u5236\u5727\u5C04\u6483\u304C\u5F53\u305F\u3063\u305F\u6575\u306E\u8DB3\u5143\u306B\u624B\u69B4\u5F3E"
+    _en: Grenades drop under foes hit by suppressing fire
+    _zhHant: "\u88AB\u58D3\u5236\u5C04\u64CA\u547D\u4E2D\u7684\u6575\u4EBA\u8173\u4E0B\u843D\u4E0B\u624B\u69B4\u5F48"
+    _zhHans: "\u88AB\u538B\u5236\u5C04\u51FB\u547D\u4E2D\u7684\u654C\u4EBA\u811A\u4E0B\u843D\u4E0B\u624B\u69B4\u5F39"
+  - _key: inyeon.commando_laser.desc
+    _ko: "\uCDA9\uC804 \uB808\uC774\uC800\uAC00 \uB450 \uC904"
+    _ja: "\u30C1\u30E3\u30FC\u30B8\u30EC\u30FC\u30B6\u30FC\u304C2\u672C\u306B"
+    _en: Charged laser fires two beams
+    _zhHant: "\u84C4\u80FD\u96F7\u5C04\u8B8A\u70BA\u5169\u9053"
+    _zhHans: "\u84C4\u80FD\u6FC0\u5149\u53D8\u4E3A\u4E24\u9053"
+  - _key: inyeon.commando_grenade.desc
+    _ko: "\uC218\uB958\uD0C4 \uD22C\uD558\uAC00 \uD55C \uBC14\uD034 \uB354"
+    _ja: "\u624B\u69B4\u5F3E\u306E\u6295\u4E0B\u304C\u3082\u3046\u4E00\u5468"
+    _en: Grenade drop circles one more time
+    _zhHant: "\u624B\u69B4\u5F48\u6295\u64F2\u591A\u7E5E\u4E00\u5708"
+    _zhHans: "\u624B\u69B4\u5F39\u6295\u63B7\u591A\u7ED5\u4E00\u5708"
+  - _key: inyeon.commando_missile.desc
+    _ko: "\uBBF8\uC0AC\uC77C \uD55C \uBC1C\uB9C8\uB2E4 \uC791\uC740 \uD3ED\uBC1C"
+    _ja: "\u30DF\u30B5\u30A4\u30EB1\u767A\u3054\u3068\u306B\u5C0F\u7206\u767A"
+    _en: Each missile sets off small blasts
+    _zhHant: "\u6BCF\u767C\u98DB\u5F48\u9644\u5E36\u5C0F\u7206\u70B8"
+    _zhHans: "\u6BCF\u53D1\u5BFC\u5F39\u9644\u5E26\u5C0F\u7206\u70B8"
+  - _key: inyeon.salamander.desc
+    _ko: "\uC911\uB3C5\uB41C \uC801\uC774 \uC4F0\uB7EC\uC9C0\uBA74 \uBD88\uAF43\uC73C\uB85C
+      \uD130\uC9C4\uB2E4"
+    _ja: "\u6BD2\u72B6\u614B\u306E\u6575\u304C\u5012\u308C\u308B\u3068\u708E\u3067\u7206\u767A\u3059\u308B"
+    _en: Poisoned foes burst into flames when they fall
+    _zhHant: "\u4E2D\u6BD2\u7684\u6575\u4EBA\u5012\u4E0B\u6642\u6703\u7206\u51FA\u706B\u7130"
+    _zhHans: "\u4E2D\u6BD2\u7684\u654C\u4EBA\u5012\u4E0B\u65F6\u4F1A\u7206\u51FA\u706B\u7130"
+  - _key: inyeon.dragoon.desc
+    _ko: "\uBD88\uBC14\uB2E4\uAC00 1.5\uBC30 \uCEE4\uC9C0\uACE0 \uBC1F\uC740 \uC801\uC774
+      \uB454\uD574\uC9C4\uB2E4"
+    _ja: "\u706B\u306E\u6D77\u304C1.5\u500D\u306B\u5E83\u304C\u308A\u3001\u8E0F\u3093\u3060\u6575\u304C\u920D\u308B"
+    _en: "Sea of fire grows \xD71.5 and slows foes in it"
+    _zhHant: "\u706B\u6D77\u64F4\u59271.5\u500D\uFF0C\u8E29\u5230\u7684\u6575\u4EBA\u6703\u6E1B\u901F"
+    _zhHans: "\u706B\u6D77\u6269\u59271.5\u500D\uFF0C\u8E29\u5230\u7684\u654C\u4EBA\u4F1A\u51CF\u901F"
+  - _key: inyeon.dragon_blue.desc
+    _ko: "\uBB36\uC778 \uC801\uC740 \uB099\uB8B0\uB97C \uB450 \uBC88 \uB9DE\uB294\uB2E4"
+    _ja: "\u62D8\u675F\u3055\u308C\u305F\u6575\u306B\u843D\u96F7\u304C2\u56DE"
+    _en: Bound foes are struck by lightning twice
+    _zhHant: "\u88AB\u675F\u7E1B\u7684\u6575\u4EBA\u6703\u906D\u843D\u96F7\u5169\u6B21"
+    _zhHans: "\u88AB\u675F\u7F1A\u7684\u654C\u4EBA\u4F1A\u906D\u843D\u96F7\u4E24\u6B21"
+  - _key: inyeon.guru.desc
+    _ko: "\uBB36\uC778 \uC801 \uACC1\uC5D0 \uD574\uACE8 2\uAE30"
+    _ja: "\u62D8\u675F\u3057\u305F\u6575\u306E\u305D\u3070\u306B\u30B9\u30B1\u30EB\u30C8\u30F32\u4F53"
+    _en: 2 skeletons rise beside bound foes
+    _zhHant: "\u88AB\u675F\u7E1B\u7684\u6575\u4EBA\u65C1\u51FA\u73FE2\u5177\u9AB7\u9ACF"
+    _zhHans: "\u88AB\u675F\u7F1A\u7684\u654C\u4EBA\u65C1\u51FA\u73B02\u5177\u9AB7\u9AC5"
+  - _key: inyeon.white_wizard.desc
+    _ko: "\uB04C\uC5B4\uBAA8\uC740 \uC801\uC774 \uC5B8 \uB4A4 \uD3ED\uBC1C(\uD53C\uD574
+      +30%)"
+    _ja: "\u5F15\u304D\u5BC4\u305B\u305F\u6575\u304C\u51CD\u3063\u305F\u5F8C\u306B\u7206\u767A\uFF08\u30C0\u30E1\u30FC\u30B8+30%\uFF09"
+    _en: Pulled foes freeze, then explode (+30% damage)
+    _zhHant: "\u88AB\u5438\u5F15\u7684\u6575\u4EBA\u51CD\u7D50\u5F8C\u7206\u70B8\uFF08\u50B7\u5BB3+30%\uFF09"
+    _zhHans: "\u88AB\u5438\u5F15\u7684\u654C\u4EBA\u51BB\u7ED3\u540E\u7206\u70B8\uFF08\u4F24\u5BB3+30%\uFF09"
+  - _key: inyeon.medium.desc
+    _ko: "\uBBF8\uB2C8 \uACE8\uB818\uC774 \uB450 \uAE30"
+    _ja: "\u30DF\u30CB\u30B4\u30FC\u30EC\u30E0\u304C2\u4F53\u306B"
+    _en: Two mini golems
+    _zhHant: "\u8FF7\u4F60\u9B54\u50CF\u8B8A\u70BA\u5169\u5177"
+    _zhHans: "\u8FF7\u4F60\u9B54\u50CF\u53D8\u4E3A\u4E24\u5177"
+  - _key: inyeon.ninja.desc
+    _ko: "\uBCA0\uAE30 \uB05D\uC5D0 \uBD84\uC2E0 \uD558\uB098\uAC00 4\uCD08 \uB0A8\uC544
+      \uC2F8\uC6B4\uB2E4"
+    _ja: "\u65AC\u6483\u306E\u5F8C\u3001\u5206\u8EAB1\u4F53\u304C4\u79D2\u6B8B\u3063\u3066\u6226\u3046"
+    _en: A clone stays and fights for 4s after the slash
+    _zhHant: "\u65AC\u64CA\u5F8C\u7559\u4E0B\u4E00\u500B\u5206\u8EAB\u6230\u9B254\u79D2"
+    _zhHans: "\u65A9\u51FB\u540E\u7559\u4E0B\u4E00\u4E2A\u5206\u8EAB\u6218\u65974\u79D2"
+  - _key: inyeon.ninja_chain.desc
+    _ko: "\uB04C\uC5B4\uC62C \uB54C \uC0AC\uC2AC\uC5D0 \uBC88\uAC1C\uAC00 \uD750\uB978\uB2E4"
+    _ja: "\u5F15\u304D\u5BC4\u305B\u308B\u9396\u306B\u96F7\u304C\u6D41\u308C\u308B"
+    _en: Lightning runs through the chain as it pulls
+    _zhHant: "\u62C9\u626F\u6642\u9396\u93C8\u5E36\u6709\u96F7\u96FB"
+    _zhHans: "\u62C9\u626F\u65F6\u9501\u94FE\u5E26\u6709\u96F7\u7535"
+  - _key: inyeon.robot.desc
+    _ko: "\uD3EC\uD0D1\uC774 \uAFF0\uB6AB\uB294 \uB808\uC774\uC800\uB97C \uC3DC\uB2E4"
+    _ja: "\u30BF\u30EC\u30C3\u30C8\u304C\u8CAB\u901A\u30EC\u30FC\u30B6\u30FC\u3092\u6483\u3064"
+    _en: Turret fires piercing lasers
+    _zhHant: "\u7832\u5854\u767C\u5C04\u8CAB\u7A7F\u96F7\u5C04"
+    _zhHans: "\u70AE\u5854\u53D1\u5C04\u8D2F\u7A7F\u6FC0\u5149"
+  - _key: inyeon.baseball.desc
+    _ko: "\uB77C\uC778 \uB4DC\uB77C\uC774\uBE0C\uC5D0 \uB9DE\uC740 \uC801\uC774 \uC5B8\uB2E4"
+    _ja: "\u30E9\u30A4\u30CA\u30FC\u304C\u5F53\u305F\u3063\u305F\u6575\u304C\u51CD\u308B"
+    _en: Foes hit by the line drive freeze
+    _zhHant: "\u88AB\u5E73\u98DB\u7403\u64CA\u4E2D\u7684\u6575\u4EBA\u6703\u51CD\u7D50"
+    _zhHans: "\u88AB\u5E73\u98DE\u7403\u51FB\u4E2D\u7684\u654C\u4EBA\u4F1A\u51BB\u7ED3"
+  - _key: inyeon.snowwoman.desc
+    _ko: "\uB208\uBCF4\uB77C \uBC94\uC704 2\uBC30"
+    _ja: "\u5439\u96EA\u306E\u7BC4\u56F22\u500D"
+    _en: "Blizzard range \xD72"
+    _zhHant: "\u66B4\u98A8\u96EA\u7BC4\u570D2\u500D"
+    _zhHans: "\u66B4\u98CE\u96EA\u8303\u56F42\u500D"
+  - _key: inyeon.vampire.desc
+    _ko: "\uBC15\uC950\uAC00 \uB450 \uBC30 \xB7 \uC911\uB3C5\uB41C \uC801\uC5D0\uAC8C\uC11C
+      \uB354 \uBE68\uC544 \uC628\uB2E4"
+    _ja: "\u30B3\u30A6\u30E2\u30EA\u304C2\u500D\u30FB\u6BD2\u72B6\u614B\u306E\u6575\u304B\u3089\u3055\u3089\u306B\u5438\u3044\u53D6\u308B"
+    _en: "Twice the bats \xB7 Drain more from poisoned foes"
+    _zhHant: "\u8759\u8760\u6578\u91CF\u5169\u500D \xB7 \u5F9E\u4E2D\u6BD2\u6575\u4EBA\u8EAB\u4E0A\u5438\u53D6\u66F4\u591A"
+    _zhHans: "\u8759\u8760\u6570\u91CF\u4E24\u500D \xB7 \u4ECE\u4E2D\u6BD2\u654C\u4EBA\u8EAB\u4E0A\u5438\u53D6\u66F4\u591A"

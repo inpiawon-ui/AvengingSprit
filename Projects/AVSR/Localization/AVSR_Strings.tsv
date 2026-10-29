@@ -1849,3 +1849,85 @@ inyeon.robot.name	레이저 포탑	レーザータレット	Laser Turret	雷射�
 inyeon.baseball.name	얼음 장타	氷の長打	Frozen Drive	冰霜長打	冰霜长打
 inyeon.snowwoman.name	얼음 진	氷の陣	Ice Formation	冰之陣	冰之阵
 inyeon.vampire.name	피의 연회	血の宴	Blood Feast	血之盛宴	血之盛宴
+ui.party.choice.title	{0} — 어떻게 할까?	{0} — どうする？	{0} — What now?	{0} — 要怎麼做？	{0} — 要怎么做？
+ui.party.ghost_left	남은 유령 HP {0}	残りゴーストHP {0}	Ghost HP left: {0}	剩餘幽靈HP {0}	剩余幽灵HP {0}
+ui.party.choice.main_swap	메인과 바꾸기 · 유령 HP −{0}  (남은 {1}회)	メインと交代・ゴーストHP −{0}（残り{1}回）	Swap with Main · Ghost HP −{0} ({1} left)	與主控交換 · 幽靈HP −{0}（剩{1}次）	与主控交换 · 幽灵HP −{0}（剩{1}次）
+ui.party.choice.main_swap_desc	{0} 대신 {1} 이(가) 메인 · {0} 은(는) 사라진다	{0}の代わりに{1}がメイン・{0}は消える	{1} becomes Main instead of {0} · {0} disappears	{1}取代{0}成為主控 · {0}會消失	{1}取代{0}成为主控 · {0}会消失
+ui.party.choice.sub1_swap	보조 1 과 바꾸기 · 유령 HP −{0}  (남은 {1}회)	サブ1と交代・ゴーストHP −{0}（残り{1}回）	Swap with Sub 1 · Ghost HP −{0} ({1} left)	與副手1交換 · 幽靈HP −{0}（剩{1}次）	与副手1交换 · 幽灵HP −{0}（剩{1}次）
+ui.party.choice.sub2_swap	보조 2 와 바꾸기 · 유령 HP −{0}  (남은 {1}회)	サブ2と交代・ゴーストHP −{0}（残り{1}回）	Swap with Sub 2 · Ghost HP −{0} ({1} left)	與副手2交換 · 幽靈HP −{0}（剩{1}次）	与副手2交换 · 幽灵HP −{0}（剩{1}次）
+ui.party.choice.sub_swap_desc	{0} 대신 {1} · 6초마다 스킬 자동 · 평타 30% · {0} 은(는) 사라진다	{0}の代わりに{1}・6秒ごとにスキル自動・通常攻撃30%・{0}は消える	{1} replaces {0} · Auto skill every 6s · 30% attack · {0} disappears	{1}取代{0} · 每6秒自動施放技能 · 普攻30% · {0}會消失	{1}取代{0} · 每6秒自动施放技能 · 普攻30% · {0}会消失
+ui.party.choice.sub_add	보조 {0} 에 넣기 · 유령 HP −{1}	サブ{0}に入れる・ゴーストHP −{1}	Add to Sub {0} · Ghost HP −{1}	放入副手{0} · 幽靈HP −{1}	放入副手{0} · 幽灵HP −{1}
+ui.party.choice.sub_add_desc	{0} · 6초마다 스킬 자동 · 평타 30% · 체력 없음	{0}・6秒ごとにスキル自動・通常攻撃30%・HPなし	{0} · Auto skill every 6s · 30% attack · No HP	{0} · 每6秒自動施放技能 · 普攻30% · 無HP	{0} · 每6秒自动施放技能 · 普攻30% · 无HP
+ui.party.choice.leave	놔두기	放っておく	Leave It	不理會	不理会
+ui.party.choice.leave_desc	그대로 둔다 — 계속 싸우다 죽는다	そのままにする — 戦い続けて倒れる	Leave it — it fights on until it falls	維持原樣 — 繼續戰鬥直到倒下	维持原样 — 继续战斗直到倒下
+ui.party.death.title	메인 「{0}」 쓰러짐 — 유령 HP −{1}	メイン「{0}」ダウン — ゴーストHP −{1}	Main "{0}" down — Ghost HP −{1}	主控「{0}」倒下 — 幽靈HP −{1}	主控「{0}」倒下 — 幽灵HP −{1}
+ui.party.death.sub	남은 유령 HP {0} · {1:0}초 안에 고른다 · 시간이 지나면 게임 오버	残りゴーストHP {0}・{1:0}秒以内に選ぶ・時間切れでゲームオーバー	Ghost HP left: {0} · Choose within {1:0}s or it's Game Over	剩餘幽靈HP {0} · {1:0}秒內選擇 · 超時即遊戲結束	剩余幽灵HP {0} · {1:0}秒内选择 · 超时即游戏结束
+ui.party.death.new	A. 근처 호스트에 새로 빙의 · −{0}	A. 近くのホストに憑依し直す・−{0}	A. Possess a nearby host · −{0}	A. 重新附身附近宿主 · −{0}	A. 重新附身附近宿主 · −{0}
+ui.party.death.new_desc	유령으로 떠서 다른 호스트를 터치하면 바로 메인 · 보조는 그대로 · 떠 있는 동안 유령 HP 가 샌다	ゴーストで漂い、別のホストをタッチすると即メイン・サブはそのまま・漂う間ゴーストHPが減る	Float as a ghost and tap another host to make it Main · Subs stay · Ghost HP drains while floating	以幽靈漂浮，觸碰其他宿主即成為主控 · 副手不變 · 漂浮期間幽靈HP會流失	以幽灵漂浮，触碰其他宿主即成为主控 · 副手不变 · 漂浮期间幽灵HP会流失
+ui.party.death.promote	B. 보조 {0} 「{1}」 을(를) 메인으로 · −{2}	B. サブ{0}「{1}」をメインに・−{2}	B. Make Sub {0} "{1}" Main · −{2}	B. 讓副手{0}「{1}」成為主控 · −{2}	B. 让副手{0}「{1}」成为主控 · −{2}
+ui.party.death.promote_desc	그 자리에서 바로 메인 · 보조 칸 하나가 빈다	その場ですぐメイン・サブ枠が1つ空く	Becomes Main on the spot · One Sub slot opens	當場成為主控 · 空出一個副手位	当场成为主控 · 空出一个副手位
+ui.party.death.revive	C. 그 자리에서 {0} 부활 · −{1}	C. その場で{0}を復活・−{1}	C. Revive {0} on the spot · −{1}	C. 當場復活{0} · −{1}	C. 当场复活{0} · −{1}
+ui.party.death.revive_desc	보조 그대로 · 체력 가득	サブはそのまま・HP全回復	Subs stay · Full HP	副手不變 · HP全滿	副手不变 · HP全满
+ui.party.timer	남은 시간 {0:0.0}초	残り {0:0.0}秒	{0:0.0}s left	剩餘 {0:0.0}秒	剩余 {0:0.0}秒
+ui.party.sub_strike	연사	連射	Rapid Fire	連射	连射
+ui.party.swap.title	보조 {0} 「{1}」 을(를) 메인으로?	サブ{0}「{1}」をメインに？	Make Sub {0} "{1}" Main?	讓副手{0}「{1}」成為主控？	让副手{0}「{1}」成为主控？
+ui.party.swap.desc	{0} 이(가) 메인 · {1} 은(는) 보조 {2} 로 · 새 메인은 체력 가득	{0}がメイン・{1}はサブ{2}へ・新メインはHP全回復	{0} becomes Main · {1} moves to Sub {2} · New Main at full HP	{0}成為主控 · {1}移至副手{2} · 新主控HP全滿	{0}成为主控 · {1}移至副手{2} · 新主控HP全满
+ui.party.cancel	그만두기	やめる	Cancel	取消	取消
+ui.party.close	닫기	閉じる	Close	關閉	关闭
+ui.party.card.chip	파티	パーティ	Party	隊伍	队伍
+ui.party.card.sublv.name	보조 {0} 「{1}」 스킬 Lv {2} → {3}	サブ{0}「{1}」スキル Lv {2} → {3}	Sub {0} "{1}" Skill Lv {2} → {3}	副手{0}「{1}」技能 Lv {2} → {3}	副手{0}「{1}」技能 Lv {2} → {3}
+ui.party.card.sublv.desc	보조 스킬 · 평타 위력 +25% · 스킬 간격 −8%\n교체해도 이 호스트에 남는다	サブスキル・通常攻撃威力+25%・スキル間隔−8%\n交代してもこのホストに残る	Sub skill · Attack +25% · Skill interval −8%\nStays with this host after a swap	副手技能 · 普攻威力+25% · 技能間隔−8%\n交換後仍保留於此宿主	副手技能 · 普攻威力+25% · 技能间隔−8%\n交换后仍保留于此宿主
+ui.party.card.subpow.name	보조 위력 +10%	サブ威力+10%	Sub Power +10%	副手威力+10%	副手威力+10%
+ui.party.card.subpow.desc	보조 둘의 평타 · 스킬이 함께 세진다\n지금 {0}% → {1}%	サブ2体の通常攻撃・スキルが強化\n現在 {0}% → {1}%	Both Subs' attacks and skills get stronger\nNow {0}% → {1}%	兩名副手的普攻 · 技能一同增強\n目前 {0}% → {1}%	两名副手的普攻 · 技能一同增强\n目前 {0}% → {1}%
+ui.party.card.ghost.name	유령 HP +10	ゴーストHP +10	Ghost HP +10	幽靈HP +10	幽灵HP +10
+ui.party.card.ghost.desc	바로 회복 · 지금 {0} → {1}	即回復・現在 {0} → {1}	Heal now · {0} → {1}	立即回復 · 目前 {0} → {1}	立即恢复 · 目前 {0} → {1}
+ui.party.syn.force	파워 {0}인 · 받는 피해 −{1}%	パワー{0}人・被ダメージ−{1}%	Power ×{0} · Damage taken −{1}%	力量{0}人 · 受到傷害−{1}%	力量{0}人 · 受到伤害−{1}%
+ui.party.syn.blade	무기 {0}인 · 공속 +{1}%	武器{0}人・攻撃速度+{1}%	Weapon ×{0} · Attack speed +{1}%	武器{0}人 · 攻速+{1}%	武器{0}人 · 攻速+{1}%
+ui.party.syn.magic	마법 {0}인 · 스킬 쿨 −{1}%	魔法{0}人・スキルCT−{1}%	Magic ×{0} · Skill cooldown −{1}%	魔法{0}人 · 技能冷卻−{1}%	魔法{0}人 · 技能冷却−{1}%
+ui.party.syn.gang	갱단 {0}인 · 치명 +{1}%	ギャング{0}人・クリティカル+{1}%	Gang ×{0} · Crit +{1}%	幫派{0}人 · 暴擊+{1}%	帮派{0}人 · 暴击+{1}%
+ui.party.syn.commando	코만도 {0}인 · 최대 체력 +{1}%	コマンドー{0}人・最大HP+{1}%	Commando ×{0} · Max HP +{1}%	突擊兵{0}人 · 最大HP+{1}%	突击兵{0}人 · 最大HP+{1}%
+ui.party.syn.martial	무도가 {0}인 · 회피 +{1}%	武道家{0}人・回避+{1}%	Martial ×{0} · Dodge +{1}%	武術家{0}人 · 閃避+{1}%	武术家{0}人 · 闪避+{1}%
+ui.party.syn.monster	괴물 {0}인 · 처치 회복 {1}%	怪物{0}人・撃破回復{1}%	Monster ×{0} · Heal {1}% per kill	怪物{0}人 · 擊殺回復{1}%	怪物{0}人 · 击杀恢复{1}%
+ui.party.syn.mystic	마도 {0}인 · 보조 스킬 간격 −{1}%	魔導{0}人・サブスキル間隔−{1}%	Mystic ×{0} · Sub skill interval −{1}%	魔導{0}人 · 副手技能間隔−{1}%	魔导{0}人 · 副手技能间隔−{1}%
+ui.party.tag.force	파워	パワー	Power	力量	力量
+ui.party.tag.blade	무기	武器	Weapon	武器	武器
+ui.party.tag.magic	마법	魔法	Magic	魔法	魔法
+ui.party.tag.gang	갱단	ギャング	Gang	幫派	帮派
+ui.party.tag.commando	코만도	コマンドー	Commando	突擊兵	突击兵
+ui.party.tag.martial	무도가	武道家	Martial	武術家	武术家
+ui.party.tag.monster	괴물	怪物	Monster	怪物	怪物
+ui.party.tag.mystic	마도	魔導	Mystic	魔導	魔导
+ui.party.syn.title	시너지	シナジー	Synergy	協同	协同
+ui.party.syn.sub	탭하면 닫힌다 — 그동안 게임은 멈춘다	タップで閉じる — その間ゲームは停止	Tap to close — the game is paused	點擊關閉 — 期間遊戲暫停	点击关闭 — 期间游戏暂停
+ui.party.syn.detail	메인에게 걸린다 · 보조는 공속만 절반	メインに適用・サブは攻撃速度のみ半分	Applies to Main · Subs get half attack speed only	作用於主控 · 副手僅獲得一半攻速	作用于主控 · 副手仅获得一半攻速
+ui.party.syn.none	시너지 없음	シナジーなし	No Synergy	無協同	无协同
+ui.party.syn.none_desc	같은 속성 · 같은 조직 2명부터 켜진다 · 3명이면 강해진다	同じ属性・同じ組織が2人で発動・3人で強化	Activates with 2 of a type or group · Stronger with 3	同屬性 · 同組織2人起發動 · 3人更強	同属性 · 同组织2人起发动 · 3人更强
+ui.party.inyeon.title	인연 · {0}	絆・{0}	Bond · {0}	羈絆 · {0}	羁绊 · {0}
+ui.party.inyeon.title_off	인연 · {0} (꺼짐)	絆・{0}（未発動）	Bond · {0} (Off)	羈絆 · {0}（未啟動）	羁绊 · {0}（未启动）
+ui.party.inyeon.off_desc	짝 {0} 을(를) 보조로 데려오면 — {1}	相棒{0}をサブに入れると — {1}	Bring partner {0} as a Sub — {1}	將搭檔{0}帶為副手 — {1}	将搭档{0}带为副手 — {1}
+ui.party.bubble.bring	데려오면 ▶\n{0}	入れると ▶\n{0}	If added ▶\n{0}	加入後 ▶\n{0}	加入后 ▶\n{0}
+ui.party.hud.ghost_hp	유령 HP	ゴーストHP	Ghost HP	幽靈HP	幽灵HP
+ui.party.hud.touch_host	빙의할 호스트를 터치	ホストをタッチ	Tap a host	點擊宿主	点击宿主
+ui.party.hud.inyeon_tag	인연	絆	Bond	羈絆	羁绊
+inyeon.gangster.desc	표식 붙은 적을 보조가 우선 노리고 보조 피해 +50%	マークした敵をサブが優先して狙い、サブのダメージ+50%	Subs target marked foes first and deal +50% damage	副手優先攻擊被標記的敵人，副手傷害+50%	副手优先攻击被标记的敌人，副手伤害+50%
+inyeon.thug.desc	난사 탄이 가까운 적 쪽으로 살짝 휜다	乱射の弾が近くの敵へ少し曲がる	Spray shots curve slightly toward nearby foes	亂射子彈會微微彎向附近敵人	乱射子弹会微微弯向附近敌人
+inyeon.amazon.desc	한 번 더 도약 · 착지마다 번개 고리	もう一度跳躍・着地ごとに雷の輪	One extra leap · Lightning ring on each landing	多躍一次 · 每次落地產生雷環	多跃一次 · 每次落地产生雷环
+inyeon.amazon_elite.desc	함성 범위 1.5배 · 기절 2.5초	咆哮の範囲1.5倍・気絶2.5秒	Roar range ×1.5 · 2.5s stun	吶喊範圍1.5倍 · 暈眩2.5秒	呐喊范围1.5倍 · 晕眩2.5秒
+inyeon.hopper.desc	조준 사격이 6발	狙い撃ちが6発に	Aimed shot fires 6 rounds	瞄準射擊變為6發	瞄准射击变为6发
+inyeon.hopper_smg.desc	백스텝 연사가 적을 꿰뚫는다	バックステップ連射が敵を貫通する	Backstep fire pierces foes	後撤連射可貫穿敵人	后撤连射可贯穿敌人
+inyeon.commando_mg.desc	제압 사격에 맞은 적 발밑에 수류탄	制圧射撃が当たった敵の足元に手榴弾	Grenades drop under foes hit by suppressing fire	被壓制射擊命中的敵人腳下落下手榴彈	被压制射击命中的敌人脚下落下手榴弹
+inyeon.commando_laser.desc	충전 레이저가 두 줄	チャージレーザーが2本に	Charged laser fires two beams	蓄能雷射變為兩道	蓄能激光变为两道
+inyeon.commando_grenade.desc	수류탄 투하가 한 바퀴 더	手榴弾の投下がもう一周	Grenade drop circles one more time	手榴彈投擲多繞一圈	手榴弹投掷多绕一圈
+inyeon.commando_missile.desc	미사일 한 발마다 작은 폭발	ミサイル1発ごとに小爆発	Each missile sets off small blasts	每發飛彈附帶小爆炸	每发导弹附带小爆炸
+inyeon.salamander.desc	중독된 적이 쓰러지면 불꽃으로 터진다	毒状態の敵が倒れると炎で爆発する	Poisoned foes burst into flames when they fall	中毒的敵人倒下時會爆出火焰	中毒的敌人倒下时会爆出火焰
+inyeon.dragoon.desc	불바다가 1.5배 커지고 밟은 적이 둔해진다	火の海が1.5倍に広がり、踏んだ敵が鈍る	Sea of fire grows ×1.5 and slows foes in it	火海擴大1.5倍，踩到的敵人會減速	火海扩大1.5倍，踩到的敌人会减速
+inyeon.dragon_blue.desc	묶인 적은 낙뢰를 두 번 맞는다	拘束された敵に落雷が2回	Bound foes are struck by lightning twice	被束縛的敵人會遭落雷兩次	被束缚的敌人会遭落雷两次
+inyeon.guru.desc	묶인 적 곁에 해골 2기	拘束した敵のそばにスケルトン2体	2 skeletons rise beside bound foes	被束縛的敵人旁出現2具骷髏	被束缚的敌人旁出现2具骷髅
+inyeon.white_wizard.desc	끌어모은 적이 언 뒤 폭발(피해 +30%)	引き寄せた敵が凍った後に爆発（ダメージ+30%）	Pulled foes freeze, then explode (+30% damage)	被吸引的敵人凍結後爆炸（傷害+30%）	被吸引的敌人冻结后爆炸（伤害+30%）
+inyeon.medium.desc	미니 골렘이 두 기	ミニゴーレムが2体に	Two mini golems	迷你魔像變為兩具	迷你魔像变为两具
+inyeon.ninja.desc	베기 끝에 분신 하나가 4초 남아 싸운다	斬撃の後、分身1体が4秒残って戦う	A clone stays and fights for 4s after the slash	斬擊後留下一個分身戰鬥4秒	斩击后留下一个分身战斗4秒
+inyeon.ninja_chain.desc	끌어올 때 사슬에 번개가 흐른다	引き寄せる鎖に雷が流れる	Lightning runs through the chain as it pulls	拉扯時鎖鏈帶有雷電	拉扯时锁链带有雷电
+inyeon.robot.desc	포탑이 꿰뚫는 레이저를 쏜다	タレットが貫通レーザーを撃つ	Turret fires piercing lasers	砲塔發射貫穿雷射	炮塔发射贯穿激光
+inyeon.baseball.desc	라인 드라이브에 맞은 적이 언다	ライナーが当たった敵が凍る	Foes hit by the line drive freeze	被平飛球擊中的敵人會凍結	被平飞球击中的敌人会冻结
+inyeon.snowwoman.desc	눈보라 범위 2배	吹雪の範囲2倍	Blizzard range ×2	暴風雪範圍2倍	暴风雪范围2倍
+inyeon.vampire.desc	박쥐가 두 배 · 중독된 적에게서 더 빨아 온다	コウモリが2倍・毒状態の敵からさらに吸い取る	Twice the bats · Drain more from poisoned foes	蝙蝠數量兩倍 · 從中毒敵人身上吸取更多	蝙蝠数量两倍 · 从中毒敌人身上吸取更多

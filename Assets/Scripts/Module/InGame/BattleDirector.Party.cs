@@ -270,8 +270,8 @@ namespace Game.Module.InGame
             var opts = new List<PartyOption>();
 
             opts.Add(new PartyOption(
-                $"메인과 바꾸기 · 유령 HP −{PartyRule.CostMainSwap}  (남은 {mainLeft}회)",
-                $"{HostName(_host.Key)} 대신 {name} 이(가) 메인 · {HostName(_host.Key)} 은(는) 사라진다",
+                Tf("ui.party.choice.main_swap", PartyRule.CostMainSwap, mainLeft),
+                Tf("ui.party.choice.main_swap_desc", HostName(_host.Key), name),
                 mainLeft > 0 && _ghostHp > PartyRule.CostMainSwap,
                 () => PartySwapMain(target)));
 
@@ -282,24 +282,24 @@ namespace Game.Module.InGame
                 {
                     string old = HostName(_subs[i].U.Key);
                     opts.Add(new PartyOption(
-                        $"보조 {i + 1}{(i == 0 ? " 과" : " 와")} 바꾸기 · 유령 HP −{PartyRule.CostSubSwap}  (남은 {subLeft}회)",
-                        $"{old} 대신 {name} · 6초마다 스킬 자동 · 평타 30% · {old} 은(는) 사라진다",
+                        Tf(i == 0 ? "ui.party.choice.sub1_swap" : "ui.party.choice.sub2_swap", PartyRule.CostSubSwap, subLeft),
+                        Tf("ui.party.choice.sub_swap_desc", old, name),
                         subLeft > 0 && _ghostHp > PartyRule.CostSubSwap,
-                        () => PartySetSub(target, slot, PartyRule.CostSubSwap)));
+                        () => PartySetSub(target, slot, PartyRule.CostSubSwap), true));
                 }
                 else
                 {
                     opts.Add(new PartyOption(
-                        $"보조 {i + 1} 에 넣기 · 유령 HP −{PartyRule.CostSub}",
-                        $"{name} · 6초마다 스킬 자동 · 평타 30% · 체력 없음",
+                        Tf("ui.party.choice.sub_add", i + 1, PartyRule.CostSub),
+                        Tf("ui.party.choice.sub_add_desc", name),
                         _ghostHp > PartyRule.CostSub,
-                        () => PartySetSub(target, slot, PartyRule.CostSub)));
+                        () => PartySetSub(target, slot, PartyRule.CostSub), true));
                     break;   // 빈 칸은 앞에서부터 하나만 보인다
                 }
             }
-            opts.Add(new PartyOption("놔두기", "그대로 둔다 — 계속 싸우다 죽는다", true, null));
+            opts.Add(new PartyOption(Tx("ui.party.choice.leave"), Tx("ui.party.choice.leave_desc"), true, null));
 
-            ShowPartyPopup($"{name} — 어떻게 할까?", $"남은 유령 HP {_ghostHp}", opts, -1f);
+            ShowPartyPopup(Tf("ui.party.choice.title", name), Tf("ui.party.ghost_left", _ghostHp), opts, -1f);
         }
 
         private string HostName(string key)
@@ -362,30 +362,30 @@ namespace Game.Module.InGame
             if (_ghostHp <= 0) return;
             var opts = new List<PartyOption>();
             opts.Add(new PartyOption(
-                $"A. 근처 호스트에 새로 빙의 · −{PartyRule.CostDeathNew}",
-                "유령으로 떠서 다른 호스트를 터치하면 바로 메인 · 보조는 그대로 · 떠 있는 동안 유령 HP 가 샌다",
+                Tf("ui.party.death.new", PartyRule.CostDeathNew),
+                Tx("ui.party.death.new_desc"),
                 _ghostHp > PartyRule.CostDeathNew,
                 () => _partyPossessCost = PartyRule.CostDeathNew));
             for (int i = 0; i < _subs.Count; i++)
             {
                 int slot = i;
                 opts.Add(new PartyOption(
-                    $"B. 보조 {i + 1} 「{HostName(_subs[i].U.Key)}」 을(를) 메인으로 · −{PartyRule.CostDeathPromote}",
-                    "그 자리에서 바로 메인 · 보조 칸 하나가 빈다",
+                    Tf("ui.party.death.promote", i + 1, HostName(_subs[i].U.Key), PartyRule.CostDeathPromote),
+                    Tx("ui.party.death.promote_desc"),
                     _ghostHp > PartyRule.CostDeathPromote,
                     () => PartyPromote(slot, pos)));
             }
             opts.Add(new PartyOption(
-                $"C. 그 자리에서 {HostName(lostKey)} 부활 · −{PartyRule.CostDeathRevive}",
-                "보조 그대로 · 체력 가득",
+                Tf("ui.party.death.revive", HostName(lostKey), PartyRule.CostDeathRevive),
+                Tx("ui.party.death.revive_desc"),
                 _ghostHp > PartyRule.CostDeathRevive,
                 () => PartyRevive(lostKey, pos)));
 
             bool any = false;
             for (int i = 0; i < opts.Count; i++) any |= opts[i].Enabled;
             if (!any) return;   // 고를 길이 없다 — 유령으로 남고 다음 틱 규칙대로
-            ShowPartyPopup($"메인 「{HostName(lostKey)}」 쓰러짐 — 유령 HP −{PartyRule.CostDeath}",
-                           $"남은 유령 HP {_ghostHp} · {PartyRule.DeathChoiceSeconds:0}초 안에 고른다 · 시간이 지나면 게임 오버",
+            ShowPartyPopup(Tf("ui.party.death.title", HostName(lostKey), PartyRule.CostDeath),
+                           Tf("ui.party.death.sub", _ghostHp, PartyRule.DeathChoiceSeconds),
                            opts, PartyRule.DeathChoiceSeconds);
         }
 
@@ -519,7 +519,7 @@ namespace Game.Module.InGame
             var e = _player != null ? _player.GetHost(u.Key) : null;
             string skill = SubSafeSkills.Contains(u.Key)
                 ? (e != null && !string.IsNullOrEmpty(e.ActiveSkillKey) ? Localize.Get($"askill.{e.ActiveSkillKey}.name") : u.Key)
-                : "연사";
+                : Tx("ui.party.sub_strike");
             var t = RentDamageText();
             if (t != null) t.ShowMinor(u.Position + new Vector2(0f, 70f), skill, new Color(0.85f, 0.76f, 1f));   // 데미지 숫자를 덮지 않게 작게
         }
@@ -548,7 +548,7 @@ namespace Game.Module.InGame
         {
             if (_partyTimer < 0f) return;
             _partyTimer -= Time.unscaledDeltaTime;
-            if (_partyTimerText != null) _partyTimerText.text = $"남은 시간 {Mathf.Max(0f, _partyTimer):0.0}초";
+            if (_partyTimerText != null) _partyTimerText.text = Tf("ui.party.timer", Mathf.Max(0f, _partyTimer));
             if (_partyTimerFill != null) _partyTimerFill.fillAmount = Mathf.Clamp01(_partyTimer / Mathf.Max(0.01f, _partyTimerTotal));
             if (_partyTimer > 0f) return;
             ClosePartyPopup();
@@ -567,9 +567,15 @@ namespace Game.Module.InGame
             public readonly string Detail;
             public readonly bool Enabled;
             public readonly UnityAction Act;
-            public PartyOption(string title, string detail, bool enabled, UnityAction act)
-            { Title = title; Detail = detail; Enabled = enabled; Act = act; }
+            /// <summary>추천 줄(금빛 · 왕관) — 보조에 넣기 · 바꾸기. 예전엔 제목이 「보조」로 시작하는지로 갈랐다(번역하면 깨진다).</summary>
+            public readonly bool Best;
+            public PartyOption(string title, string detail, bool enabled, UnityAction act, bool best = false)
+            { Title = title; Detail = detail; Enabled = enabled; Act = act; Best = best; }
         }
+
+        // 파티 화면 글자는 전부 언어팩 `ui.party.*`(5언어) — 숫자 · 이름이 끼면 Format
+        private static string Tx(string key) => Localize.Get(key);
+        private static string Tf(string key, params object[] args) => Localize.Format(key, args);
 
         private TextMeshProUGUI _partyTimerText;
         private Image _partyTimerFill;
@@ -641,7 +647,7 @@ namespace Game.Module.InGame
                 var b = NewRect($"Option{i + 1}", panel, new Vector2(W - 48f, 110f));
                 b.anchoredPosition = new Vector2(0f, y - 55f);
                 var img = b.gameObject.AddComponent<Image>();
-                bool gold = o.Enabled && o.Act != null && i > 0 && o.Title.StartsWith("보조");
+                bool gold = o.Enabled && o.Act != null && i > 0 && o.Best;
                 Sliced(img, !o.Enabled ? "party_row_off" : gold ? "party_row_best" : "party_row",
                        !o.Enabled ? new Color(0.08f, 0.08f, 0.08f) : gold ? new Color(0.23f, 0.19f, 0.09f) : new Color(0.145f, 0.145f, 0.2f));
                 var btn = b.gameObject.AddComponent<Button>();
@@ -667,7 +673,7 @@ namespace Game.Module.InGame
             _partyPopup = go;
             _partyHold = true;
             _partyTimer = timer;
-            if (_partyTimerText != null) _partyTimerText.text = $"남은 시간 {timer:0.0}초";
+            if (_partyTimerText != null) _partyTimerText.text = Tf("ui.party.timer", timer);
         }
 
         private void ClosePartyPopup()

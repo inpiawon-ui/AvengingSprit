@@ -51,7 +51,15 @@ namespace Game.Editor.ReBorn
 
             // ── 유령 ──
             Px(F(root, "GhostHudIcon"), hud, 18, 18, 88, 78);
-            Txt(Px(Node(hud, "PartyGhostLabel"), hud, 96, 25, 200, 46), "유령 HP", 17, Pale, TA.Left, heavy, bold: true);
+            var ghostLabel = Px(Node(hud, "PartyGhostLabel"), hud, 96, 25, 200, 46);
+            Txt(ghostLabel, "유령 HP", 17, Pale, TA.Left, heavy, bold: true);
+            // 고정 글자 — 언어팩이 켜질 때 · 언어가 바뀔 때 다시 쓴다(나머지 파티 칸은 화면 코드가 채운다)
+            if (ghostLabel != null)
+            {
+                if (!ghostLabel.TryGetComponent<Game.Module.Common.LocalizedText>(out var loc))
+                    loc = ghostLabel.gameObject.AddComponent<Game.Module.Common.LocalizedText>();
+                loc.SetKey("ui.party.hud.ghost_hp");
+            }
             var ghp = Px(F(root, "GhostHpText"), hud, 96, 47, 210, 77);
             Size(ghp, 26f);
             var gbg = Px(F(root, "GhostHpBarBg"), hud, 24, 80, 212, 94);

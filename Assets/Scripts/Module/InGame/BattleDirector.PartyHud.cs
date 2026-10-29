@@ -59,7 +59,8 @@ namespace Game.Module.InGame
             "괴물" => "syn_icon_monster", "마도" => "syn_icon_mystic", _ => null,
         };
 
-        private static string SynShortName(string tag) => tag == "코만도 부대" ? "코만도" : tag;
+        // 화면 칸 「무도가 2/3」 의 짧은 이름 — 언어팩 `ui.party.tag.{id}`(내부 태그는 그대로)
+        private static string SynShortName(string tag) => TagId(tag) is string id ? Tx($"ui.party.tag.{id}") : tag;
 
         /// <summary>
         /// 켜진 태그 시너지 칸(2명 이상)을 채운다 — 화면이 「무도가 2/3」 으로 그린다.
@@ -101,18 +102,18 @@ namespace Game.Module.InGame
             if (!PartyOn || _partyHold) return;
             var opts = new List<PartyOption>();
             if (_inyeonKey != null)
-                opts.Add(new PartyOption($"인연 · {InyeonName(_inyeonKey)}", InyeonDesc(_inyeonKey), true, null));
+                opts.Add(new PartyOption(Tf("ui.party.inyeon.title", InyeonName(_inyeonKey)), InyeonDesc(_inyeonKey), true, null));
             else if (_host != null && InyeonOf(_host.Key) != null)
             {
                 var names = new List<string>();
                 foreach (var p in InyeonPartners(_host.Key)) names.Add(HostName(p));
-                opts.Add(new PartyOption($"인연 · {InyeonName(_host.Key)} (꺼짐)",
-                                         $"짝 {string.Join(" · ", names)} 을(를) 보조로 데려오면 — {InyeonDesc(_host.Key)}", false, null));
+                opts.Add(new PartyOption(Tf("ui.party.inyeon.title_off", InyeonName(_host.Key)),
+                                         Tf("ui.party.inyeon.off_desc", string.Join(" · ", names), InyeonDesc(_host.Key)), false, null));
             }
-            for (int i = 0; i < _synLines.Count; i++) opts.Add(new PartyOption(_synLines[i], "메인에게 걸린다 · 보조는 공속만 절반", true, null));
-            if (_synLines.Count == 0) opts.Add(new PartyOption("시너지 없음", "같은 속성 · 같은 조직 2명부터 켜진다 · 3명이면 강해진다", false, null));
-            opts.Add(new PartyOption("닫기", string.Empty, true, null));
-            ShowPartyPopup("시너지", "탭하면 닫힌다 — 그동안 게임은 멈춘다", opts, -1f);
+            for (int i = 0; i < _synLines.Count; i++) opts.Add(new PartyOption(_synLines[i], Tx("ui.party.syn.detail"), true, null));
+            if (_synLines.Count == 0) opts.Add(new PartyOption(Tx("ui.party.syn.none"), Tx("ui.party.syn.none_desc"), false, null));
+            opts.Add(new PartyOption(Tx("ui.party.close"), string.Empty, true, null));
+            ShowPartyPopup(Tx("ui.party.syn.title"), Tx("ui.party.syn.sub"), opts, -1f);
         }
 
         // ── 빙의 가능 말풍선(PD 「빙의 가능일 때 어떤 시너지 효과가 나는지 적 호스트 머리 위에」) ──────────
@@ -148,7 +149,7 @@ namespace Game.Module.InGame
             _bubbleImg.sprite = GetSprite(on ? "possess_bubble_syn" : "possess_bubble_none");
             // 금빛 말풍선 안쪽은 크림색 — 글자는 짙게(부품 검수)
             _bubbleText.color = on ? new Color(0.29f, 0.18f, 0.05f) : new Color(0.86f, 0.86f, 0.9f);
-            _bubbleText.text = on ? $"데려오면 ▶\n{line}" : "시너지 없음";
+            _bubbleText.text = on ? Tf("ui.party.bubble.bring", line) : Tx("ui.party.syn.none");
         }
 
         private Unit NearestPossessable()

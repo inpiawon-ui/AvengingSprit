@@ -137,7 +137,7 @@ namespace Game.Module.InGame
             var t = tagGo.GetComponent<TextMeshProUGUI>();
             var like = _ui.Get<TextMeshProUGUI>("PartyMainName");
             if (like != null) { t.font = like.font; t.fontSharedMaterial = like.fontSharedMaterial; }
-            t.text = "인연";   // 언어팩 키로 옮길 것(파티 글자 일괄)
+            t.text = Game.Module.Common.Localize.Get("ui.party.hud.inyeon_tag");
             t.fontSize = 15f;
             t.fontStyle = FontStyles.Bold;
             t.color = InyeonGoldUi;
@@ -159,7 +159,7 @@ namespace Game.Module.InGame
 
             string main = _battle.PartyMainKey;
             if (_partyMainName != null)
-                _partyMainName.text = main != null ? _battle.PartyHostName(main) : "빙의할 호스트를 터치";   // 언어팩 키로 옮길 것(파티 글자 일괄)
+                _partyMainName.text = main != null ? _battle.PartyHostName(main) : Game.Module.Common.Localize.Get("ui.party.hud.touch_host");
 
             for (int i = 0; i < 2; i++)
             {
