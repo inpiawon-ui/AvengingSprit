@@ -23,8 +23,10 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _icons = Array.Empty<Sprite>();   // 보상 아이콘(rb_icon_*_96) — 이름으로 찾는다
 
         // 유령 HP 는 육성 항목이 아니다(PD) — 「호스트 체력」 · 「받는 피해 감소」(= 방어 %p)는 유령 쪽 이름을 쓴다
+        // 치명타 피해 · 사거리를 되살렸다(PD 2026-10-29 「치명타 피해도 있지 않았어? 스탯 종류가 너무 적다」) — 예전 8칸 그대로
         private static readonly HostStat[] StatOrder =
-            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.AtkSpeed, HostStat.MoveSpeed, HostStat.Defense };
+            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.CritDamage, HostStat.AtkSpeed, HostStat.MoveSpeed,
+              HostStat.Range, HostStat.Defense };
         // 첨자는 `HostStat` 순서다
         private static readonly string[] StatKeys =
             { "ui.rb.ghost.stat.hp", "ui.stat.atk", "ui.stat.crit", "ui.stat.atkspeed", "ui.stat.range", "ui.stat.movespeed",
@@ -133,7 +135,13 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>그 레벨까지 오른 값 — 치명타 · 받는 피해 감소는 %p, 나머지는 %(둘 다 「x%」 로 적는다).</summary>
-        private string Pct(HostStat stat, int lv) => $"{_player.GhostStatValue(stat, lv):0.#}%";
+        private string Pct(HostStat stat, int lv)
+        {
+            // 사거리는 직업마다 다르게 붙는다(근거리가 가장 크다) — 「원거리 ~ 근거리」
+            var c = _player.Config;
+            if (stat != HostStat.Range || c == null) return $"{_player.GhostStatValue(stat, lv):0.#}%";
+            return $"{c.RangePercentPerLevel(2) * lv:0.#}~{c.RangePercentPerLevel(0) * lv:0.#}%";
+        }
 
         private void Buy(HostStat stat)
         {

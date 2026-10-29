@@ -689,7 +689,9 @@ namespace Game.User
         }
 
         // 사거리는 이제 키우지 않는다(유령 강화 줄 없음) — 옛 저장에 남은 단계가 판에 새지 않게 0
-        public float StatLevelEffective(string hostKey, HostStat stat) => 0f;
+        /// <summary>사거리 강화 단계 — 유령 「사거리」 줄(직업마다 다르게 붙는 값은 HostStats.UpgradedRange 가 곱한다).</summary>
+        public float StatLevelEffective(string hostKey, HostStat stat)
+            => !s_powerTest && stat == HostStat.Range ? GhostStatLevel(HostStat.Range) : 0f;
 
         public float StatBonusFlat(string hostKey, HostStat stat)
             => s_powerTest || !GameConfig.IsFlatStat(stat) ? 0f   // 권장 힘 시험 — 강화 0

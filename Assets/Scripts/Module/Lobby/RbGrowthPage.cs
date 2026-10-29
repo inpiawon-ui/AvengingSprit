@@ -299,8 +299,9 @@ namespace Game.Module.Lobby
             return $"{p.GrowthAt(lv, max):0.#}%<size=70%> › </size><color={NextColor}>{p.GrowthAt(next, max):0.#}%</color>";
         }
 
+        // 「+0% › +6%」 는 효과가 없는 것처럼 읽혔다(PD 2026-10-29 「액티브 0퍼센트는 뭐야」) — 위력 그대로 「100% › 106%」
         private static string PowerLine(float now, float next)
-            => $"+{now * 100f:0.#}%<size=70%> › </size><color={NextColor}>+{next * 100f:0.#}%</color>";
+            => $"{(1f + now) * 100f:0.#}%<size=70%> › </size><color={NextColor}>{(1f + next) * 100f:0.#}%</color>";
 
         /// <summary>인연 짝 칸 — 짝 얼굴 · 짝 이름과 성급 · 지금 세기(두 성급 중 낮은 쪽).</summary>
         private void RefreshInyeon()

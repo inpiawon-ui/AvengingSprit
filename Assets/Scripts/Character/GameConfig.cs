@@ -987,10 +987,11 @@ namespace Game.Character
         [Tooltip("유령 강화 상한(유령 레벨 상한과 같다).")]
         [SerializeField] private int _ghostStatMax = 50;
         // 첨자는 `HostStat` 순서 — Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed · CritDamage · Defense.
-        // 유령 강화 줄은 공격력 · 호스트 체력 · 치명타 · 공격 속도 · 이동 속도 · 받는 피해 감소 여섯이다 — 사거리 · 치명타 피해는 0(줄 없음).
+        // 유령 강화 줄은 공격력 · 호스트 체력 · 치명타 · 치명타 피해 · 공격 속도 · 이동 속도 · 사거리 · 받는 피해 감소 여덟이다.
         // 치명타 · 받는 피해 감소는 **더하는 %p**, 나머지는 **곱하는 %** 다.
         [Tooltip("유령 강화 한 단계 값(HostStat 순서). 치명타 · 받는 피해 감소(Defense)는 %p, 나머지는 %.")]
-        [SerializeField] private float[] _ghostStepValue = { 2f, 2f, 0.3f, 0.6f, 0f, 0.3f, 0f, 0.3f };
+        // 치명타 피해(+1%p) · 사거리(직업별 RangePercentPerLevel — 이 칸은 줄이 있다는 표시)를 되살렸다(PD 2026-10-29)
+        [SerializeField] private float[] _ghostStepValue = { 2f, 2f, 0.3f, 0.6f, 1f, 0.3f, 1f, 0.3f };
         // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다(2026-10-13) — 개편 뒤 다시 잰다(TBD-BAL).
         [Tooltip("유령 강화 한 단계 골드 = 이 값 × 다음 레벨.")]
         [SerializeField] private int _ghostStatCostStep = 30;

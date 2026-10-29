@@ -1071,9 +1071,9 @@ MonoBehaviour:
   - 2
   - 0.3
   - 0.6
-  - 0
+  - 1
   - 0.3
-  - 0
+  - 1
   - 0.3
   _ghostStatCostStep: 30
   _activeSkillMax: 10
