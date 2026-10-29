@@ -276,8 +276,18 @@ def to_square(part: Image.Image) -> Image.Image:
 
 def main2():
     log = []
-    for s in STAGES:
+    for s in STAGES + [x + "v2" for x in STAGES]:
         out = OUT / s
+        out.mkdir(parents=True, exist_ok=True)
+        if s.endswith("v2"):   # 7~12챕터 변형 무대는 바닥 · 옆벽도 여기서(1~6 은 main 에서)
+            p = IN / f"bg_{s}_floor.png"
+            if p.exists():
+                fit_exact(p, (720, 1152), out / f"roomfloor_env_{s}.png")
+                log.append(f"{s} 바닥 {Image.open(p).size}")
+            p = IN / f"bg_{s}_side.png"
+            if p.exists():
+                fit_exact(p, (160, 320), out / f"roomside_{s}.png")
+                log.append(f"{s} 옆벽 {Image.open(p).size}")
         p = IN / f"bg_{s}_water.png"
         if p.exists():
             log.append(f"{s} 물 웅덩이 {cut_water(p, s, out)}")

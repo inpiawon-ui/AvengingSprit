@@ -15,7 +15,8 @@ _tall_floor = rsp.tall_floor
 
 
 def tall_floor(stage, height_px):
-    new = os.path.join(APPLY, stage, f'roomfloor_env_{stage}.png')
+    tag = os.environ.get('BG_TAG', stage)
+    new = os.path.join(APPLY, tag, f'roomfloor_env_{tag}.png')
     if not os.path.exists(new):
         return _tall_floor(stage, height_px)
     # 원래 함수는 Assets 의 바닥을 연다 — 같은 자르기 규칙으로 새 바닥을 쓰게 잠깐 바꿔 끼운다

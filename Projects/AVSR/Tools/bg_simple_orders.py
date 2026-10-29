@@ -39,6 +39,8 @@ OBJS_V2 = {
 
 # 다시 받을 때 보탠 말 (1차 검수 2026-10-29)
 WATER_NOTE = {
+    "streetv2": "- [다시 받음] 수면이 바닥과 같은 푸른 회색 · 같은 밝기였다(바닥 평균 RGB 26,42,62 · 수면 7,42,67). **수면 평균을 RGB 4,14,26 쯤으로** — 바닥보다 확실히 어둡게. 밝은 잔물결 몇 줄만 남긴다.\n",
+    "junkyard": "- [다시 받음 · 3차] 수면이 바닥과 같은 남색 · 같은 밝기였다(바닥 평균 RGB 23,46,76 · 수면 1,53,84). **수면 평균을 RGB 5,18,32 쯤으로** — 바닥보다 확실히 어둡고 검푸르게. 밝은 잔물결 몇 줄만 남긴다.\n",
     "lab": "- [다시 받음] 1차본은 바탕이 분홍이 아니라 어두운 색이었고 웅덩이 둘레에 빛 번짐이 둘러 있었다. **웅덩이 밖은 전부 완전한 분홍(#FF00FF) 한 색**, 번짐 · 그림자 금지.\n",
 }
 FLOOR_NOTE = {
@@ -207,6 +209,68 @@ def main2(only):
                 fn(b)
 
 
+# ─────────────────────────────────────────
+# 3차(PD 2026-10-29 「연결은 당연히 해야지 — 배경을 구성하는 리소스 다 준비」) — 7~12챕터 변형 무대 <무대>v2
+# 이름을 <무대>v2 로 맞춰 두면 연결 때 챕터 표 무대 칸만 바꾸면 바닥 · 벽 · 물 · 블록이 다 따라온다.
+V2_COLOR = {"junkyard": "숯빛 · 불씨 주황 벽 조명", "missile": "회녹(어두운 회색빛 초록)", "street": "푸른 회색 · 꺼진 네온",
+            "rooftop": "한밤 남보라", "lab": "붉은 경보빛 어두운 적갈", "refinery": "검은 쇠빛 · 꺼진 등"}
+
+
+def v2_head(s, what):
+    return f"""[무대] {V2_NAME[s]} — 7~12챕터 변형 무대(1~6챕터 「{KO[s]}」를 다시 쓰는 챕터). {what}
+[모양 · 재질 · 틀 정답] 1~6챕터용 같은 부품: 아래 [바탕] 파일 — **같은 그림의 색 변형**이다. 구도 · 재질 · 칸 · 띠 자리는 그대로 두고, 벽 장식 한두 개만 이 챕터답게 바꿔도 된다.
+[색 정답] Projects/AVSR/_exchange/{MOCK_V2[s]} (PD 승인 시안 — 바닥 · 벽 색) · 대표 색: {V2_COLOR[s]}
+  PD 「오브젝트 종류가 중요하지 배경은 약간만 달라도 돼」 — 크게 바꾸지 말고 색 · 분위기만 이 챕터로 옮긴다.
+[같이 놓이는 것] Projects/AVSR/_exchange/bg_apply/{s}v2/obj_{s}v2_block_1.png ~ _5.png (이 챕터 블록 — 함께 어울려야 한다)
+"""
+
+
+def v2_floor(s):
+    ps1(v2_head(s, "전투 방 **바닥 한 장**.") + f"""[바탕] Projects/AVSR/_exchange/bg_apply/{s}/roomfloor_env_{s}.png
+- 크기 정확히 **720 x 1152**, 띠 자리(위 108 · 아래 108 · 좌우 약 24 px) 그대로. 빈 바닥(물건 · 캐릭터 · 탄 · HUD 금지).
+- 걸어 다니는 바닥은 큰 타일 결 하나 · 낮은 대비 · 얼룩 · 금 없음 · 바탕 그림보다 더 비우지도 더 채우지도 마라.
+{TAIL_RULES}[저장] Projects/AVSR/_exchange/in/bg_{s}v2_floor.png (720 x 1152, PNG)
+""", f"{s}v2_floor")
+
+
+def v2_side(s):
+    ps1(v2_head(s, "넓은 화면에서 방 왼쪽 바깥을 채우는 **세로 벽 띠 한 장**.") + f"""[바탕] Projects/AVSR/_exchange/bg_apply/{s}/roomside_{s}.png
+- 크기 정확히 **160 x 320**, 위아래가 이음매 없이 이어지는 반복 무늬. 오른쪽 변이 방 바닥에 맞닿는 앞면.
+{TAIL_RULES}[저장] Projects/AVSR/_exchange/in/bg_{s}v2_side.png (160 x 320, PNG)
+""", f"{s}v2_side")
+
+
+def v2_apron(s):
+    ps1(v2_head(s, "전투 방 **아래쪽 바깥**(입구 밑) 그림 한 장.") + f"""[바탕] Projects/AVSR/_exchange/bg_apply/{s}/roomapron_{s}.png
+- 크기 정확히 **720 x 540**. 위 끝은 이 챕터 바닥의 아래 벽 띠와 같은 색으로 이어지고 아래로 갈수록 어두워진다. 가운데 입구 길은 비운다.
+{TAIL_RULES}[저장] Projects/AVSR/_exchange/in/bg_{s}v2_apron.png (720 x 540, PNG)
+""", f"{s}v2_apron")
+
+
+def v2_water(s):
+    ps1(v2_head(s, "전투 방 바닥의 **물 칸(웅덩이)** 한 장.") + f"""[바탕] Projects/AVSR/_exchange/in/bg_{s}_water.png (1~6챕터용 웅덩이 — 크기 · 비율 · 둑 두께 · 구도 그대로)
+- 분홍(#FF00FF) 바탕 가운데 직사각형 웅덩이 하나, 가로:세로 = 5:4, 약 1000 x 800. 둑은 안쪽 가장자리에 칸의 약 1/3 두께, 이 챕터 벽 재질 · 색.
+- 수면은 이 챕터 바닥보다 **확실히 어둡게(밝기 절반쯤)** 하고 물빛이 돌아 한눈에 물로 읽히게. 웅덩이 밖은 전부 완전한 분홍 한 색 — 번짐 · 그림자 금지. 모서리 직각.
+{WATER_NOTE.get(s + "v2", "")}{TAIL_RULES}[저장] Projects/AVSR/_exchange/in/bg_{s}v2_water.png (PNG)
+""", f"{s}v2_water")
+
+
+def v2_hazards(s):
+    ps1(v2_head(s, "바닥 물건 **4개**를 한 장에: ① 가시판 ② 가시판(다른 배열) ③ 낮은 울타리 ④ 낮은 울타리(다른 모양).") + f"""[바탕] Projects/AVSR/_exchange/in/bg_{s}_hazards.png (1~6챕터용 — 모양 · 크기 · 배치 그대로, 색 · 재질만 이 챕터로)
+- 바탕은 완전한 분홍(#FF00FF), 넷을 한 줄로 넉넉히 띄운다. 물건 하나 약 200 px 폭. 그림자 판 금지.
+{TAIL_RULES}[저장] Projects/AVSR/_exchange/in/bg_{s}v2_hazards.png (PNG)
+""", f"{s}v2_hazards")
+
+
+def main3(only):
+    for s in STAGES:
+        for fn, name in ((v2_floor, f"{s}v2_floor"), (v2_side, f"{s}v2_side"), (v2_apron, f"{s}v2_apron"),
+                         (v2_water, f"{s}v2_water"), (v2_hazards, f"{s}v2_hazards")):
+            if not only or name in only:
+                fn(s)
+
+
 if __name__ == "__main__":
     main()
     main2(set(sys.argv[1:]))
+    main3(set(sys.argv[1:]))
