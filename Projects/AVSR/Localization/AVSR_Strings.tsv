@@ -1393,7 +1393,7 @@ ui.rb.host.shards	조각 {0}/{1}	かけら {0}/{1}	Shards {0}/{1}	碎片 {0}/{1}
 ui.rb.host.locked	미보유	未所持	Not owned	未持有	未拥有
 ui.rb.host.help	호스트를 눌러 능력치 · 성급을 올려요.\n조각을 모으면 새 호스트를 해금해요.	ホストをタップして能力・星級を上げます。\nかけらを集めると新しいホストを解放できます。	Tap a host to upgrade stats and stars.\nCollect shards to unlock new hosts.	點擊宿主提升能力值與星級。\n收集碎片即可解鎖新宿主。	点击宿主提升属性与星级。\n收集碎片即可解锁新宿主。
 ui.rb.growth.title	호스트 성장	ホスト成長	Host Growth	宿主成長	宿主成长
-ui.rb.growth.help	능력치는 골드로 · 성급은 조각과 골드로 올려요.\n성급이 오르면 강화 상한 · 스킬 위력이 함께 올라요.	能力はゴールドで、星級はかけらとゴールドで上げます。\n星級が上がると強化上限とスキル威力も上がります。	Stats use gold; stars use shards and gold.\nHigher stars raise the upgrade cap and skill power.	能力值用金幣、星級用碎片和金幣提升。\n星級提升後，強化上限與技能威力也會提升。	属性用金币、星级用碎片和金币提升。\n星级提升后，强化上限与技能威力也会提升。
+ui.rb.growth.help	스킬 레벨은 골드로 · 성급은 조각과 골드로 올려요.\n성급이 오르면 체력·공격과 스킬 레벨 상한이 함께 올라요.	スキルレベルはゴールドで、星級はかけらとゴールドで上げます。\n星級が上がるとHP・攻撃とスキルレベル上限も上がります。	Skill levels use gold; stars use shards and gold.\nHigher stars raise HP/ATK and the skill level cap.	技能等級用金幣、星級用碎片和金幣提升。\n星級提升後，體力·攻擊與技能等級上限也會提升。	技能等级用金币、星级用碎片和金币提升。\n星级提升后，体力·攻击与技能等级上限也会提升。
 ui.rb.growth.power	전투력	戦闘力	Power	戰力	战力
 ui.rb.growth.ult	필살기	必殺技	Ultimate	必殺技	必杀技
 ui.rb.growth.act	액티브	アクティブ	Active	主動	主动
@@ -1813,3 +1813,39 @@ ui.rb.pass.head_prem	프리미엄	プレミアム	Premium	高級	高级
 ui.rb.pass.reward_host	SSR 흡혈귀	SSR 吸血鬼	SSR Vampire	SSR 吸血鬼	SSR 吸血鬼
 ui.rb.pass.reward_lv	프리미엄 Lv 30 보상	プレミアム Lv 30 報酬	Premium Lv 30 Reward	高級 Lv 30 獎勵	高级 Lv 30 奖励
 ui.rb.pass.now	현재	現在	Now	目前	目前
+ui.rb.ghost.stat.hp	호스트 체력	ホスト体力	Host HP	宿主體力	宿主体力
+ui.rb.ghost.stat.def	받는 피해 감소	被ダメージ軽減	Damage Reduction	受到傷害減少	受到伤害减少
+ui.rb.growth.skill_header	◆ 스킬 레벨	◆ スキルレベル	◆ Skill Level	◆ 技能等級	◆ 技能等级
+ui.rb.growth.skill_hint	성급이 오르면 상한이 열려요	星級が上がると上限が開きます	Stars raise the level cap	星級提升後開放上限	星级提升后开放上限
+ui.rb.growth.skill_lv	{0} Lv {1}/{2}	{0} Lv {1}/{2}	{0} Lv {1}/{2}	{0} Lv {1}/{2}	{0} Lv {1}/{2}
+ui.rb.growth.skill_need_rank	{0}성 필요	星{0}が必要	Needs {0}★	需要{0}星	需要{0}星
+ui.rb.growth.node_opt	Lv{0} 추가 옵션	Lv{0} 追加オプション	Lv{0} Bonus Effect	Lv{0} 追加效果	Lv{0} 追加效果
+ui.rb.growth.node_inyeon	Lv{0} 인연 강화	Lv{0} 絆強化	Lv{0} Bond Boost	Lv{0} 羈絆強化	Lv{0} 羁绊强化
+ui.rb.growth.node_ult	Lv{0} 강화형	Lv{0} 強化型	Lv{0} Enhanced	Lv{0} 強化型	Lv{0} 强化型
+ui.rb.growth.inyeon_tile	인연 · {0} <size=75%><color=#B3BDD6>{1}단</color></size>	絆・{0} <size=75%><color=#B3BDD6>{1}段</color></size>	Bond · {0} <size=75%><color=#B3BDD6>Tier {1}</color></size>	羈絆 · {0} <size=75%><color=#B3BDD6>{1}階</color></size>	羁绊 · {0} <size=75%><color=#B3BDD6>{1}阶</color></size>
+ui.rb.growth.opt_lv_open	액티브 Lv{0} 추가 옵션 열림	アクティブLv{0} 追加オプション解放	Active Lv{0} bonus effect unlocked	主動Lv{0} 追加效果開啟	主动Lv{0} 追加效果开启
+ui.rb.growth.opt_lv_locked	액티브 Lv{0} 추가 옵션 · 잠김	アクティブLv{0} 追加オプション・ロック	Active Lv{0} bonus effect · Locked	主動Lv{0} 追加效果 · 未解鎖	主动Lv{0} 追加效果 · 未解锁
+ui.rb.growth.opt_lv_max	액티브 Lv{0} · 인연이 켜지면 한 단계 더	アクティブLv{0}・絆発動でさらに強化	Active Lv{0} · Stronger with a Bond	主動Lv{0} · 羈絆啟動時再強化	主动Lv{0} · 羁绊启动时再强化
+ui.rb.growth.done_line2b	스킬 상한 · 액티브 {0}→{1} · 패시브·필살기 {2}→{3}	スキル上限・アクティブ {0}→{1}・パッシブ/必殺技 {2}→{3}	Skill cap · Active {0}→{1} · Passive/Ult {2}→{3}	技能上限 · 主動 {0}→{1} · 被動/必殺技 {2}→{3}	技能上限 · 主动 {0}→{1} · 被动/必杀技 {2}→{3}
+inyeon.gangster.name	청부 표식	請負の標的	Contract Mark	委託標記	委托标记
+inyeon.thug.name	뒷골목 난사	路地裏乱射	Alley Spray	暗巷亂射	暗巷乱射
+inyeon.amazon.name	번개 도약	雷の跳躍	Thunder Leap	雷霆躍擊	雷霆跃击
+inyeon.amazon_elite.name	불굴의 함성	不屈の咆哮	Unyielding Roar	不屈吶喊	不屈呐喊
+inyeon.hopper.name	쌍권총	二丁拳銃	Twin Pistols	雙槍	双枪
+inyeon.hopper_smg.name	백스텝 탄막	バックステップ弾幕	Backstep Barrage	後撤彈幕	后撤弹幕
+inyeon.commando_mg.name	엄호 화망	援護射撃網	Covering Fire	掩護火網	掩护火网
+inyeon.commando_laser.name	과부하	オーバーロード	Overload	過載	过载
+inyeon.commando_grenade.name	융단 폭격	絨毯爆撃	Carpet Bombing	地毯轟炸	地毯轰炸
+inyeon.commando_missile.name	집속탄	クラスター弾	Cluster Shot	集束彈	集束弹
+inyeon.salamander.name	불독	炎毒	Fire Venom	炎毒	炎毒
+inyeon.dragoon.name	업화	業火	Hellfire	業火	业火
+inyeon.dragon_blue.name	번개 사슬	雷の鎖	Lightning Chain	雷鏈	雷链
+inyeon.guru.name	결계 강령	結界降霊	Ward Summoning	結界降靈	结界降灵
+inyeon.white_wizard.name	빛과 얼음	光と氷	Light and Ice	光與冰	光与冰
+inyeon.medium.name	쌍골렘	ツインゴーレム	Twin Golems	雙魔像	双魔像
+inyeon.ninja.name	그림자 분신	影分身	Shadow Clone	影分身	影分身
+inyeon.ninja_chain.name	뇌전 사슬	雷電の鎖	Thunder Chain	雷電鎖鏈	雷电锁链
+inyeon.robot.name	레이저 포탑	レーザータレット	Laser Turret	雷射砲塔	激光炮塔
+inyeon.baseball.name	얼음 장타	氷の長打	Frozen Drive	冰霜長打	冰霜长打
+inyeon.snowwoman.name	얼음 진	氷の陣	Ice Formation	冰之陣	冰之阵
+inyeon.vampire.name	피의 연회	血の宴	Blood Feast	血之盛宴	血之盛宴

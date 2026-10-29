@@ -14,8 +14,10 @@ namespace Game.Module.Lobby
 {
     /// <summary>
     /// RE:BORN 호스트 성장 — 탭 없는 한 화면(시안 Screens/growth.png, PD 2026-10-23).
-    /// 히어로 판(몸 · 등급 · 상성 · 사거리 · 전투력 · 별) → 스킬 3칸 → 능력치 8칸(길게 누르면 연속 강화) → 성급 판 · 성급 올리기.
-    /// 능력치 값은 이 게임 규칙대로 퍼센트(+x%)다 — 시안의 절대값(20 › 24)은 예시 숫자.
+    /// 히어로 판(몸 · 등급 · 상성 · 사거리 · 전투력 · 별) → 스킬 3칸 → 스킬 레벨 3칸 + 인연 짝 칸 → 성급 판 · 성급 올리기.
+    /// 육성 개편(PD 2026-10-29) — 호스트는 **스킬**로 키운다. 능력치 강화 8칸은 없앴다(스탯은 유령 탭).
+    ///   성급이 스킬 레벨 상한을 열고(액티브 = 성급 · 패시브 · 필살기 = 1 + 성급 ÷ 2), 레벨은 골드로 셋을 따로 올린다.
+    /// 칸은 옛 능력치 칸 본보기(`GrwStatTemplate`)를 그대로 복제해 쓴다 — 새 그림 없음.
     /// </summary>
     public sealed class RbGrowthPage : MonoBehaviour
     {
@@ -34,12 +36,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _btnReady, _btnShort;
         [SerializeField] private Sprite[] _stageBgs = Array.Empty<Sprite>();
 
-        // 시안 순서 — 공격력 · 최대 HP / 크리 확률 · 크리 피해 / 방어력 · 공격 속도 / 사거리 · 이동 속도
-        private static readonly HostStat[] StatOrder =
-            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.CritDamage, HostStat.Defense,
-              HostStat.AtkSpeed, HostStat.Range, HostStat.MoveSpeed };
-        // 첨자는 `HostStat` 순서다
-        private static readonly string[] StatKeys = { "hp", "atk", "crit", "atkspeed", "range", "movespeed", "critdmg", "def" };
+        // 칸 순서 — 액티브 · 패시브 / 필살기 · 인연 짝. 앞 셋은 `HostSkillSlot` 그대로
+        private static readonly HostSkillSlot[] SkillOrder = { HostSkillSlot.Active, HostSkillSlot.Passive, HostSkillSlot.Ult };
+        private const int TileCount = 4, InyeonTile = 3;
         private const float ColPitch = (550f - 25f) * 2f / 3f, RowPitch = 162.6f * 2f / 3f;
         private const string NextColor = "#4AE08A", ShortColor = "#FF5A5A";
 
@@ -109,17 +108,33 @@ namespace Game.Module.Lobby
             var tpl = _ui.Find("GrwStatTemplate");
             if (tpl == null) return;
             var start = ((RectTransform)tpl).anchoredPosition;
-            for (int i = 0; i < StatOrder.Length; i++)
+            for (int i = 0; i < TileCount; i++)
             {
                 var t = i == 0 ? tpl : Instantiate(tpl.gameObject, tpl.parent).transform;
                 t.name = $"GrwStat{i}";
                 ((RectTransform)t).anchoredPosition = start + new Vector2(ColPitch * (i % 2), -RowPitch * (i / 2));
-                var stat = StatOrder[i];
-                if (_ui.Find(t, "GrwStatIcon")?.GetComponent<Image>() is Image icon && (int)stat < _statIcons.Length)
-                    icon.sprite = _statIcons[(int)stat];
-                _ui.Find(t, "GrwStatBuy")?.GetComponent<Button>()?.onClick.AddListener(() => Buy(stat));
+                if (i < SkillOrder.Length)
+                {
+                    var slot = SkillOrder[i];
+                    _ui.Find(t, "GrwStatBuy")?.GetComponent<Button>()?.onClick.AddListener(() => Buy(slot));
+                }
+                // 이름 · 값 줄은 능력치보다 길다(「액티브 Lv 3/6」 · 「Lv5 추가 옵션」, 3언어) — 칸 안에서 줄어들게 하한을 낮춘다
+                foreach (var n in new[] { "GrwStatName", "GrwStatValue" })
+                    if (_ui.Find(t, n)?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI tx) tx.fontSizeMin = 12f;
                 _tiles.Add(t);
             }
+            _ui.Find(_tiles[InyeonTile], "GrwStatBuy")?.gameObject.SetActive(false);
+            // 인연 칸은 버튼이 없다 — 이름 · 값 줄을 버튼 자리(오른쪽 끝)까지 늘린다(영어 「Bond · Unyielding Roar」 가 길다)
+            float widen = 146f * 2f / 3f;   // 1080 기준 372 → 518
+            foreach (var n in new[] { "GrwStatName", "GrwStatValue" })
+                if (_ui.Find(_tiles[InyeonTile], n) is RectTransform r)
+                {
+                    r.sizeDelta += new Vector2(widen, 0f);
+                    r.anchoredPosition += new Vector2(widen * r.pivot.x, 0f);   // 왼쪽 끝은 그대로
+                }
+            // 머리 · 안내 글자도 스킬 쪽으로(프리팹에 박힌 글자라 언어 키를 바꿔 끼운다)
+            if (_ui.Find("GrwStatHeader")?.GetComponent<LocalizedText>() is LocalizedText head) head.SetKey("ui.rb.growth.skill_header");
+            if (_ui.Find("GrwStatHint")?.GetComponent<LocalizedText>() is LocalizedText hint) hint.SetKey("ui.rb.growth.skill_hint");
         }
 
         // ── 칠하기 ──────────────────────────────────────────────
@@ -132,7 +147,8 @@ namespace Game.Module.Lobby
             int m = _player.GetMastery(_key);
             RefreshHero(e, m);
             RefreshSkills(e);
-            RefreshStats(m);
+            RefreshSkillLevels(e, m);
+            RefreshInyeon();
             RefreshStar(m);
         }
 
@@ -213,23 +229,33 @@ namespace Game.Module.Lobby
             _ui.SetText("GrwSkillPasName", passive != null ? passive.DisplayName : "—");
         }
 
-        private void RefreshStats(int m)
+        private void RefreshSkillLevels(HostEntry e, int m)
         {
             bool locked = m < 1;
-            for (int i = 0; i < _tiles.Count; i++)
+            var art = ArtOf(_key);
+            Sprite[] icons = { art.Active, art.Passive, art.Ult };
+            string[] kinds = { "ui.rb.growth.act", "ui.rb.growth.pas", "ui.rb.growth.ult" };
+            string[] kindKo = { "액티브", "패시브", "필살기" };
+            for (int i = 0; i < SkillOrder.Length && i < _tiles.Count; i++)
             {
                 var t = _tiles[i];
-                var stat = StatOrder[i];
-                int lv = _player.HostStatLevel(_key, stat);
-                int cost = _player.HostStatCost(_key, stat);
-                bool max = !locked && cost <= 0;
-                bool poor = !locked && !max && _player.Gold < cost;
-                TextIn(t, "GrwStatName", Localize.Get($"ui.stat.{StatKeys[(int)stat]}"));
-                TextIn(t, "GrwStatValue", max || locked ? Pct(stat, lv)
-                                          : $"{Pct(stat, lv)}<size=70%> › </size><color={NextColor}>{Pct(stat, lv + 1)}</color>");
-                if (t.GetComponent<Image>() is Image bg) bg.sprite = max ? _tileMax : poor ? _tilePoor : _tileNormal;
+                var slot = SkillOrder[i];
+                int lv = _player.SkillLevel(_key, slot), cap = _player.SkillLevelCap(_key, slot), max = _player.SkillLevelMax(slot);
+                int cost = _player.SkillLevelCost(_key, slot);
+                bool full = lv >= max, capped = !locked && !full && cost <= 0;
+                bool poor = !locked && cost > 0 && _player.Gold < cost;
+                if (_ui.Find(t, "GrwStatIcon")?.GetComponent<Image>() is Image icon && icons[i] != null)
+                {
+                    icon.sprite = icons[i];
+                    icon.preserveAspect = true;
+                }
+                TextIn(t, "GrwStatName", string.Format(Localize.FromTable("ui.rb.growth.skill_lv", "{0} Lv {1}/{2}"),
+                                                       Localize.FromTable(kinds[i], kindKo[i]), lv, locked ? max : cap));
+                TextIn(t, "GrwStatValue", SkillLine(e, slot, lv, cap, max, locked));
+                if (t.GetComponent<Image>() is Image bg) bg.sprite = full ? _tileMax : poor ? _tilePoor : _tileNormal;
                 var buy = _ui.Find(t, "GrwStatBuy");
-                if (buy != null) buy.gameObject.SetActive(!max);
+                bool showBuy = locked || cost > 0;
+                if (buy != null) buy.gameObject.SetActive(showBuy && !capped);
                 if (buy != null && buy.GetComponent<Button>() is Button b) b.interactable = !locked;
                 TextIn(t, "GrwStatBuyCost", locked ? Localize.Get("ui.growth.locked") : cost.ToString("N0"));
                 if (_ui.Find(t, "GrwStatBuyCost")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI ct)
@@ -238,6 +264,71 @@ namespace Game.Module.Lobby
                 FitPrice(buy as RectTransform, _ui.Find(t, "GrwStatBuyCoin") as RectTransform,
                          _ui.Find(t, "GrwStatBuyCost")?.GetComponent<TextMeshProUGUI>(), !locked);
             }
+        }
+
+        /// <summary>
+        /// 칸 아래 줄 — 다음 마디가 오면 마디를(Lv5 추가 옵션 · Lv10 인연 강화 · Lv5 강화형), 아니면 「지금 › 다음」 위력.
+        /// 상한에 막혔으면 무엇이 필요한지(성급 n).
+        /// </summary>
+        private string SkillLine(HostEntry e, HostSkillSlot slot, int lv, int cap, int max, bool locked)
+        {
+            var c = _player.Config;
+            if (lv >= max) return "MAX";
+            int next = lv + 1;
+            if (!locked && lv >= cap)
+            {
+                int needRank = slot == HostSkillSlot.Active ? next : next * 2 - 2;   // 패시브 · 필살기 상한 = 1 + 성급 ÷ 2
+                return string.Format(Localize.FromTable("ui.rb.growth.skill_need_rank", "{0}성 필요"), needRank);
+            }
+            if (slot == HostSkillSlot.Active)
+            {
+                if (next == SkillScaling.SpecLevel) return $"<color={NextColor}>{Localize.Format("ui.rb.growth.node_opt", next)}</color>";
+                if (c != null && next == c.ActiveInyeonLevel) return $"<color={NextColor}>{Localize.Format("ui.rb.growth.node_inyeon", next)}</color>";
+                float per = c != null ? c.ActivePowerPerLevel : 0.06f;
+                return PowerLine(per * (lv - 1), per * (next - 1));
+            }
+            if (slot == HostSkillSlot.Ult)
+            {
+                if (c != null && next == c.UltEnhancedLevel) return $"<color={NextColor}>{Localize.Format("ui.rb.growth.node_ult", next)}</color>";
+                float per = c != null ? c.UltPowerPerLevel : 0.08f;
+                return PowerLine(per * (lv - 1), per * (next - 1));
+            }
+            // 패시브 — 대표 수치(%)가 레벨을 따라 오른다. 오르지 않는 패시브면 레벨만
+            var p = _player.GetPassiveSkill(e.PassiveSkillKey);
+            if (p == null || !p.HasGrowth) return $"Lv {lv}<size=70%> › </size><color={NextColor}>Lv {next}</color>";
+            return $"{p.GrowthAt(lv, max):0.#}%<size=70%> › </size><color={NextColor}>{p.GrowthAt(next, max):0.#}%</color>";
+        }
+
+        private static string PowerLine(float now, float next)
+            => $"+{now * 100f:0.#}%<size=70%> › </size><color={NextColor}>+{next * 100f:0.#}%</color>";
+
+        /// <summary>인연 짝 칸 — 짝 얼굴 · 짝 이름과 성급 · 지금 세기(두 성급 중 낮은 쪽).</summary>
+        private void RefreshInyeon()
+        {
+            if (_tiles.Count <= InyeonTile) return;
+            var t = _tiles[InyeonTile];
+            string name = BattleDirector.InyeonName(_key);
+            var partners = BattleDirector.InyeonPartners(_key);
+            t.gameObject.SetActive(!string.IsNullOrEmpty(name) && partners.Count > 0);
+            if (!t.gameObject.activeSelf) return;
+            var cfg = _player.Config;
+            // 짝이 둘이면 성급이 높은 짝을 보여 주고 「+1」 — 둘을 다 적으면 칸에 안 들어간다(3언어)
+            int mine = _player.GetMastery(_key), bestAt = 0;
+            for (int i = 1; i < partners.Count; i++)
+                if (_player.GetMastery(partners[i]) > _player.GetMastery(partners[bestAt])) bestAt = i;
+            string partner = partners[bestAt];
+            int pm = _player.GetMastery(partner);
+            if (_ui.Find(t, "GrwStatIcon")?.GetComponent<Image>() is Image icon && _shell.Face(partner) is Sprite face)
+            {
+                icon.sprite = face;
+                icon.preserveAspect = true;
+            }
+            var ph = _player.GetHost(partner);
+            string line = $"{(ph != null ? ph.DisplayName : partner)} ★{pm}" + (partners.Count > 1 ? $" <size=75%>+{partners.Count - 1}</size>" : string.Empty);
+            int tier = cfg != null ? cfg.InyeonTierOf(Mathf.Min(mine, pm)) : 1;
+            TextIn(t, "GrwStatName", string.Format(Localize.FromTable("ui.rb.growth.inyeon_tile", "인연 · {0} <size=75%><color=#B3BDD6>{1}단</color></size>"),
+                                                   Localize.FromTable($"inyeon.{_key}.name", name), tier));
+            TextIn(t, "GrwStatValue", line);
         }
 
         // 금화 + 값 묶음을 버튼 가운데로 — 값이 「1,200」 처럼 길면 글자를 줄인다(겹쳐서 금화를 덮었다, 2026-10-26)
@@ -261,17 +352,6 @@ namespace Game.Module.Lobby
             tr.sizeDelta = new Vector2(w + 2f, tr.sizeDelta.y);
             tr.anchoredPosition = new Vector2(left + (cw > 0f ? cw + gap : 0f) + tr.sizeDelta.x * 0.5f, tr.anchoredPosition.y);
             cost.alignment = TextAlignmentOptions.Left;
-        }
-
-        /// <summary>사거리만 직업마다 다르다(근 · 중 · 원거리) — 나머지는 표의 레벨당 퍼센트.</summary>
-        private string Pct(HostStat stat, int lv)
-        {
-            var c = _player.Config;
-            float v = stat == HostStat.Range && c != null
-                ? c.RangePercentPerLevel(HostStats.JobIndex(_player.GetHost(_key))) * lv * c.StatShare(false)
-                : _player.StatPercent(stat, lv, false);
-            // 「+」 는 뺀다 — 칸이 좁아 「+0.4% › +0.7%」 가 강화 띠에 걸렸다(시안도 「150% › 160%」)
-            return $"{v:0.#}%";
         }
 
         private void RefreshStar(int m)
@@ -319,22 +399,29 @@ namespace Game.Module.Lobby
 
         // ── 행동 ────────────────────────────────────────────────
 
-        private void Buy(HostStat stat)
+        private void Buy(HostSkillSlot slot)
         {
-            int cost = _player.HostStatCost(_key, stat);
+            int cost = _player.SkillLevelCost(_key, slot);
             if (cost <= 0) return;
             int powerBefore = _player.PowerOf(_key);
-            if (!_player.BuyHostStat(_key, stat)) { _shell.Notice.ShowGoldShort(cost, _player.Gold, null, null, null); return; }
+            if (!_player.BuySkillLevel(_key, slot)) { _shell.Notice.ShowGoldShort(cost, _player.Gold, null, null, null); return; }
             int powerGain = _player.PowerOf(_key) - powerBefore;
             if (powerGain > 0) PowerUpAsync(powerGain).Forget();   // fire-and-forget: 띠가 1.2초 뒤 스스로 걷힌다
             GameSound.Cue("run.shop");
-            _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장 — 앱이 꺼져도 산 것은 남는다
+            _player.SaveAsync().Forget();   // fire-and-forget: 올릴 때마다 저장 — 앱이 꺼져도 산 것은 남는다
             Refresh();
             _shell.RefreshHeader();
-            // 강화 성공 — 그 칸 아래 금빛 용암이 살짝 차오르고 불티 · 값이 톡(길게 누르면 차오른 채 머문다)
-            int idx = Array.IndexOf(StatOrder, stat);
+            // 올리기 성공 — 그 칸 아래 금빛 용암이 살짝 차오르고 불티 · 값이 톡(길게 누르면 차오른 채 머문다)
+            int idx = Array.IndexOf(SkillOrder, slot);
             if (_shell.Fx != null && idx >= 0 && idx < _tiles.Count && _tiles[idx] is RectTransform tile)
                 _shell.Fx.UpgradeTick(tile, _ui.Find(tile, "GrwStatValue") as RectTransform);
+            // 액티브 Lv5 — 추가 옵션이 열렸다(예전 6성 각성 자리)
+            if (slot == HostSkillSlot.Active && _player.SkillLevel(_key, slot) == SkillScaling.SpecLevel)
+            {
+                string opt = Localize.Get($"askill.{_key}.opt");
+                if (opt != $"askill.{_key}.opt")
+                    Toast(Localize.Format("ui.rb.growth.opt_lv_open", SkillScaling.SpecLevel) + "\n" + opt);
+            }
         }
 
         // 「전투력 +n」 띠(시안 growth-success) — 톡 튀어나와 머물다 위로 사라진다. 길게 눌러 연속 강화하면 숫자만 갈아 끼운다
@@ -394,24 +481,22 @@ namespace Game.Module.Lobby
             _modals.SetActive("GrwStarAsk", false);
             // 성공 화면의 「2성 → 3성 · 강화 상한 20 → 30」 — 올리기 전 값을 쥐어 둔다
             _doneFromRank = _player.GetMastery(_key);
-            _doneFromCap = _player.HostStatCap(_key);
+            _doneFromCap = _player.SkillLevelCap(_key, HostSkillSlot.Active);
             if (!_player.TryStarUp(_key)) return;
             GameSound.Cue("run.card");
             _player.SaveAsync().Forget();   // fire-and-forget: 성급을 올리자마자 남긴다
             Refresh();
             _shell.RefreshHeader();
-            int now = _player.GetMastery(_key);
-            // 각성이 시작되는 6성 · 다 각성한 10성은 큰 화면으로 보여 준다(시안 awaken-6 · awaken-10)
-            if (now == RbRevealPage.AwakenStart || now == RbRevealPage.AwakenFull) { _shell.ShowReveal(_key, now); return; }
+            // 각성(추가 옵션)은 성급이 아니라 액티브 Lv5 로 옮겼다(2026-10-29) — 성급은 늘 같은 성공 화면
             ShowStarDone();
         }
 
-        // 성급 강화 성공(시안 star-success-detail, 전체 화면) — 스킬 Lv 은 성급과 같이 오른다
+        // 성급 강화 성공(시안 star-success-detail, 전체 화면) — 성급은 스킬 레벨 **상한**을 연다(레벨은 골드로)
         private void ShowStarDone()
         {
             int m = _player.GetMastery(_key);
             int from = _doneFromRank >= 0 ? _doneFromRank : Mathf.Max(0, m - 1);
-            int cap = _player.HostStatCap(_key);
+            int cap = _player.SkillLevelCap(_key, HostSkillSlot.Active);
             int capFrom = _doneFromCap >= 0 ? _doneFromCap : cap;
             _doneFromRank = _doneFromCap = -1;
             var host = _player.GetHost(_key);
@@ -424,8 +509,8 @@ namespace Game.Module.Lobby
             RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _rankGold, _rankSilver);
             _modals.SetText("GrwStarDoneGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
             _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.done_line1", "{0}성 → {1}성 · 체력·공격 +7%"), from, m));
-            _modals.SetText("GrwStarDoneLine2", string.Format(Localize.FromTable("ui.rb.growth.done_line2", "스킬 Lv {0}→{1} · 강화 상한 {2}→{3}"),
-                                                              from, m, capFrom, cap));
+            _modals.SetText("GrwStarDoneLine2", string.Format(Localize.FromTable("ui.rb.growth.done_line2b", "스킬 상한 · 액티브 {0}→{1} · 패시브·필살기 {2}→{3}"),
+                                                              capFrom, cap, 1 + from / 2, 1 + m / 2));
             _modals.SetActive("GrwStarDone", true);
             // 새로 찬 별(1~5성은 m-1 째, 6~10성은 각성 별로 다시 m-6 째)이 작게 터진다
             if (_shell.Fx != null && m > 0 && _modals.Find(_modals.Find("GrwStarDoneStars"), $"GrwStarDoneStar{(m - 1) % 5}") is RectTransform star)
@@ -466,18 +551,20 @@ namespace Game.Module.Lobby
             _modals.SetText("GrwSkillInfoKind", kind);
             _modals.SetText("GrwSkillInfoName", name);
             _modals.SetText("GrwSkillInfoDesc", desc);
-            // 각성 옵션 — 액티브에만 있다(6성에 열리고 10성에 2배, 옛 성장 화면과 같은 말). 없으면 창을 줄인다
+            // 추가 옵션 — 액티브에만 있다(액티브 Lv5 에 열린다). 없으면 창을 줄인다
             string opt = slot == 1 ? Localize.Get($"askill.{e.HostKey}.opt") : null;
             bool hasOpt = !string.IsNullOrEmpty(opt) && opt != $"askill.{e.HostKey}.opt";
             _modals.SetActive("GrwSkillInfoAwakenTitle", hasOpt);
             _modals.SetActive("GrwSkillInfoAwaken", hasOpt);
             if (hasOpt)
             {
-                int m = _player.GetMastery(e.HostKey);
-                bool open = m >= SkillScaling.SpecLevel;
-                _modals.SetText("GrwSkillInfoAwakenTitle", m >= _player.MasteryMax ? Localize.Get("ui.growth6.opt_max")
-                    : open ? string.Format(Localize.FromTable("ui.rb.growth.opt_open", "{0}성 각성 옵션 열림"), SkillScaling.SpecLevel)
-                    : Localize.Format("ui.growth6.opt_locked", SkillScaling.SpecLevel));
+                // 액티브 Lv5 에 열린다(2026-10-29 — 예전 6성) · Lv10 은 인연이 켜지면 한 단계 더
+                int lv = _player.SkillLevel(e.HostKey, HostSkillSlot.Active);
+                bool open = lv >= SkillScaling.SpecLevel;
+                int inyeonLv = _player.Config != null ? _player.Config.ActiveInyeonLevel : 10;
+                _modals.SetText("GrwSkillInfoAwakenTitle", lv >= inyeonLv ? Localize.Format("ui.rb.growth.opt_lv_max", inyeonLv)
+                    : open ? Localize.Format("ui.rb.growth.opt_lv_open", SkillScaling.SpecLevel)
+                    : Localize.Format("ui.rb.growth.opt_lv_locked", SkillScaling.SpecLevel));
                 _modals.SetText("GrwSkillInfoAwaken", opt);
                 if (_modals.Get<TextMeshProUGUI>("GrwSkillInfoAwaken") is TextMeshProUGUI ot) ot.color = open ? new Color(0.29f, 0.88f, 0.54f) : new Color(0.70f, 0.74f, 0.84f);
             }

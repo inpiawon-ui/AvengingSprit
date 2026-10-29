@@ -12,7 +12,8 @@ using UnityEngine.UI;
 namespace Game.Module.Lobby
 {
     /// <summary>
-    /// RE:BORN 유령 성장(시안 Screens/ghost-growth) — 모든 호스트에 붙는 성장. 유령 레벨 · 레벨 보상 3칸 · 능력치 8칸(골드, 길게 누르면 연속) · 유령 경험치.
+    /// RE:BORN 유령 성장(시안 Screens/ghost-growth) — 모든 호스트에 붙는 성장. 유령 레벨 · 레벨 보상 3칸 · 강화 6줄(골드, 길게 누르면 연속) · 유령 경험치.
+    /// 육성 개편(PD 2026-10-29) — 스탯은 유령이 들고 다닌다: 공격력 · 호스트 체력 · 치명타 · 공격 속도 · 이동 속도 · 받는 피해 감소. 상한 = 유령 레벨.
     /// 값 · 상한 · 보상은 IPlayerDataService(GhostStat* · Path*) 그대로. 위 프로필(유령 얼굴) · 도감 「성장 ›」 이 연다.
     /// </summary>
     public sealed class RbGhostPage : MonoBehaviour
@@ -21,9 +22,13 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _claimOn, _claimOff;
         [SerializeField] private Sprite[] _icons = Array.Empty<Sprite>();   // 보상 아이콘(rb_icon_*_96) — 이름으로 찾는다
 
+        // 유령 HP 는 육성 항목이 아니다(PD) — 「호스트 체력」 · 「받는 피해 감소」(= 방어 %p)는 유령 쪽 이름을 쓴다
         private static readonly HostStat[] StatOrder =
-            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.CritDamage, HostStat.Defense, HostStat.AtkSpeed, HostStat.Range, HostStat.MoveSpeed };
-        private static readonly string[] StatKeys = { "hp", "atk", "crit", "atkspeed", "range", "movespeed", "critdmg", "def" };
+            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.AtkSpeed, HostStat.MoveSpeed, HostStat.Defense };
+        // 첨자는 `HostStat` 순서다
+        private static readonly string[] StatKeys =
+            { "ui.rb.ghost.stat.hp", "ui.stat.atk", "ui.stat.crit", "ui.stat.atkspeed", "ui.stat.range", "ui.stat.movespeed",
+              "ui.stat.critdmg", "ui.rb.ghost.stat.def" };
         private const float ColPitch = (550f - 25f) * 2f / 3f, RowPitch = 142f * 2f / 3f;
         private const int PathShown = 3;
 
@@ -116,7 +121,7 @@ namespace Game.Module.Lobby
                 var stat = StatOrder[i];
                 int lv = _player.GhostStatLevel(stat), cost = _player.GhostStatCost(stat);
                 bool maxed = cost <= 0;
-                TextIn(t, "GhoStatName", $"{Localize.Get($"ui.stat.{StatKeys[(int)stat]}")} <size=75%><color=#B3BDD6>Lv {lv}/{cap}</color></size>");
+                TextIn(t, "GhoStatName", $"{Localize.Get(StatKeys[(int)stat])} <size=75%><color=#B3BDD6>Lv {lv}/{cap}</color></size>");
                 TextIn(t, "GhoStatValue", maxed ? Pct(stat, lv) : $"{Pct(stat, lv)}<size=70%> › </size><color=#4AE08A>{Pct(stat, lv + 1)}</color>");
                 var buy = _ui.Find(t, "GhoStatBuy");
                 if (buy != null) buy.gameObject.SetActive(!maxed);
@@ -127,14 +132,8 @@ namespace Game.Module.Lobby
             }
         }
 
-        /// <summary>유령은 모든 몸에 붙어 사거리만 「가장 작은~가장 큰」(GrowthPanel 과 같은 규칙).</summary>
-        private string Pct(HostStat stat, int lv)
-        {
-            var c = _player.Config;
-            if (stat != HostStat.Range || c == null) return $"{_player.StatPercent(stat, lv, true):0.#}%";
-            float share = c.StatShare(true);
-            return $"{c.RangePercentPerLevel(HostStats.JobRanged) * lv * share:0.#}~{c.RangePercentPerLevel(HostStats.JobMelee) * lv * share:0.#}%";
-        }
+        /// <summary>그 레벨까지 오른 값 — 치명타 · 받는 피해 감소는 %p, 나머지는 %(둘 다 「x%」 로 적는다).</summary>
+        private string Pct(HostStat stat, int lv) => $"{_player.GhostStatValue(stat, lv):0.#}%";
 
         private void Buy(HostStat stat)
         {

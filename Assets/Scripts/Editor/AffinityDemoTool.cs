@@ -121,12 +121,7 @@ namespace Game.EditorTools
             for (int i = 0; i < data.ghostStatLevels.Length; i++) data.ghostStatLevels[i] = 0;
             var g = parts[1].Split(',');
             for (int i = 0; i < at.Length; i++) data.ghostStatLevels[at[i]] = int.Parse(g[i]);
-
-            int hostAt = (int)player.GetType().GetMethod("IndexOfHost", F).Invoke(player, new object[] { hostKey });
-            for (int i = 0; i < data.hostStatLevels.Length; i++) data.hostStatLevels[i] = 0;
-            if (hostAt < 0) return;
-            var h = parts[2].Split(',');
-            for (int i = 0; i < at.Length; i++) data.hostStatLevels[hostAt * count + at[i]] = int.Parse(h[i]);
+            // 호스트 탭 능력치 강화(셋째 칸)는 없앴다(육성 개편 2026-10-29) — 프로필의 그 값은 읽지 않는다
         }
 
         private static void Tick()

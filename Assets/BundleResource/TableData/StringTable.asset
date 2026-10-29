@@ -9050,17 +9050,17 @@ MonoBehaviour:
     _zhHant: "\u5BBF\u4E3B\u6210\u9577"
     _zhHans: "\u5BBF\u4E3B\u6210\u957F"
   - _key: ui.rb.growth.help
-    _ko: "\uB2A5\uB825\uCE58\uB294 \uACE8\uB4DC\uB85C \xB7 \uC131\uAE09\uC740 \uC870\uAC01\uACFC
-      \uACE8\uB4DC\uB85C \uC62C\uB824\uC694.\n\uC131\uAE09\uC774 \uC624\uB974\uBA74
-      \uAC15\uD654 \uC0C1\uD55C \xB7 \uC2A4\uD0AC \uC704\uB825\uC774 \uD568\uAED8
-      \uC62C\uB77C\uC694."
-    _ja: "\u80FD\u529B\u306F\u30B4\u30FC\u30EB\u30C9\u3067\u3001\u661F\u7D1A\u306F\u304B\u3051\u3089\u3068\u30B4\u30FC\u30EB\u30C9\u3067\u4E0A\u3052\u307E\u3059\u3002\n\u661F\u7D1A\u304C\u4E0A\u304C\u308B\u3068\u5F37\u5316\u4E0A\u9650\u3068\u30B9\u30AD\u30EB\u5A01\u529B\u3082\u4E0A\u304C\u308A\u307E\u3059\u3002"
-    _en: 'Stats use gold; stars use shards and gold.
+    _ko: "\uC2A4\uD0AC \uB808\uBCA8\uC740 \uACE8\uB4DC\uB85C \xB7 \uC131\uAE09\uC740
+      \uC870\uAC01\uACFC \uACE8\uB4DC\uB85C \uC62C\uB824\uC694.\n\uC131\uAE09\uC774
+      \uC624\uB974\uBA74 \uCCB4\uB825\xB7\uACF5\uACA9\uACFC \uC2A4\uD0AC \uB808\uBCA8
+      \uC0C1\uD55C\uC774 \uD568\uAED8 \uC62C\uB77C\uC694."
+    _ja: "\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u306F\u30B4\u30FC\u30EB\u30C9\u3067\u3001\u661F\u7D1A\u306F\u304B\u3051\u3089\u3068\u30B4\u30FC\u30EB\u30C9\u3067\u4E0A\u3052\u307E\u3059\u3002\n\u661F\u7D1A\u304C\u4E0A\u304C\u308B\u3068HP\u30FB\u653B\u6483\u3068\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u4E0A\u9650\u3082\u4E0A\u304C\u308A\u307E\u3059\u3002"
+    _en: 'Skill levels use gold; stars use shards and gold.
 
-      Higher stars raise the
-      upgrade cap and skill power.'
-    _zhHant: "\u80FD\u529B\u503C\u7528\u91D1\u5E63\u3001\u661F\u7D1A\u7528\u788E\u7247\u548C\u91D1\u5E63\u63D0\u5347\u3002\n\u661F\u7D1A\u63D0\u5347\u5F8C\uFF0C\u5F37\u5316\u4E0A\u9650\u8207\u6280\u80FD\u5A01\u529B\u4E5F\u6703\u63D0\u5347\u3002"
-    _zhHans: "\u5C5E\u6027\u7528\u91D1\u5E01\u3001\u661F\u7EA7\u7528\u788E\u7247\u548C\u91D1\u5E01\u63D0\u5347\u3002\n\u661F\u7EA7\u63D0\u5347\u540E\uFF0C\u5F3A\u5316\u4E0A\u9650\u4E0E\u6280\u80FD\u5A01\u529B\u4E5F\u4F1A\u63D0\u5347\u3002"
+      Higher stars raise
+      HP/ATK and the skill level cap.'
+    _zhHant: "\u6280\u80FD\u7B49\u7D1A\u7528\u91D1\u5E63\u3001\u661F\u7D1A\u7528\u788E\u7247\u548C\u91D1\u5E63\u63D0\u5347\u3002\n\u661F\u7D1A\u63D0\u5347\u5F8C\uFF0C\u9AD4\u529B\xB7\u653B\u64CA\u8207\u6280\u80FD\u7B49\u7D1A\u4E0A\u9650\u4E5F\u6703\u63D0\u5347\u3002"
+    _zhHans: "\u6280\u80FD\u7B49\u7EA7\u7528\u91D1\u5E01\u3001\u661F\u7EA7\u7528\u788E\u7247\u548C\u91D1\u5E01\u63D0\u5347\u3002\n\u661F\u7EA7\u63D0\u5347\u540E\uFF0C\u4F53\u529B\xB7\u653B\u51FB\u4E0E\u6280\u80FD\u7B49\u7EA7\u4E0A\u9650\u4E5F\u4F1A\u63D0\u5347\u3002"
   - _key: ui.rb.growth.power
     _ko: "\uC804\uD22C\uB825"
     _ja: "\u6226\u95D8\u529B"
@@ -11797,3 +11797,224 @@ MonoBehaviour:
     _en: Shield
     _zhHant: "\u8B77\u76FE\u91CF"
     _zhHans: "\u62A4\u76FE\u503C"
+  - _key: ui.rb.ghost.stat.hp
+    _ko: "\uD638\uC2A4\uD2B8 \uCCB4\uB825"
+    _ja: "\u30DB\u30B9\u30C8\u4F53\u529B"
+    _en: Host HP
+    _zhHant: "\u5BBF\u4E3B\u9AD4\u529B"
+    _zhHans: "\u5BBF\u4E3B\u4F53\u529B"
+  - _key: ui.rb.ghost.stat.def
+    _ko: "\uBC1B\uB294 \uD53C\uD574 \uAC10\uC18C"
+    _ja: "\u88AB\u30C0\u30E1\u30FC\u30B8\u8EFD\u6E1B"
+    _en: Damage Reduction
+    _zhHant: "\u53D7\u5230\u50B7\u5BB3\u6E1B\u5C11"
+    _zhHans: "\u53D7\u5230\u4F24\u5BB3\u51CF\u5C11"
+  - _key: ui.rb.growth.skill_header
+    _ko: "\u25C6 \uC2A4\uD0AC \uB808\uBCA8"
+    _ja: "\u25C6 \u30B9\u30AD\u30EB\u30EC\u30D9\u30EB"
+    _en: "\u25C6 Skill Level"
+    _zhHant: "\u25C6 \u6280\u80FD\u7B49\u7D1A"
+    _zhHans: "\u25C6 \u6280\u80FD\u7B49\u7EA7"
+  - _key: ui.rb.growth.skill_hint
+    _ko: "\uC131\uAE09\uC774 \uC624\uB974\uBA74 \uC0C1\uD55C\uC774 \uC5F4\uB824\uC694"
+    _ja: "\u661F\u7D1A\u304C\u4E0A\u304C\u308B\u3068\u4E0A\u9650\u304C\u958B\u304D\u307E\u3059"
+    _en: Stars raise the level cap
+    _zhHant: "\u661F\u7D1A\u63D0\u5347\u5F8C\u958B\u653E\u4E0A\u9650"
+    _zhHans: "\u661F\u7EA7\u63D0\u5347\u540E\u5F00\u653E\u4E0A\u9650"
+  - _key: ui.rb.growth.skill_lv
+    _ko: '{0} Lv {1}/{2}'
+    _ja: '{0} Lv {1}/{2}'
+    _en: '{0} Lv {1}/{2}'
+    _zhHant: '{0} Lv {1}/{2}'
+    _zhHans: '{0} Lv {1}/{2}'
+  - _key: ui.rb.growth.skill_need_rank
+    _ko: "{0}\uC131 \uD544\uC694"
+    _ja: "\u661F{0}\u304C\u5FC5\u8981"
+    _en: "Needs {0}\u2605"
+    _zhHant: "\u9700\u8981{0}\u661F"
+    _zhHans: "\u9700\u8981{0}\u661F"
+  - _key: ui.rb.growth.node_opt
+    _ko: "Lv{0} \uCD94\uAC00 \uC635\uC158"
+    _ja: "Lv{0} \u8FFD\u52A0\u30AA\u30D7\u30B7\u30E7\u30F3"
+    _en: Lv{0} Bonus Effect
+    _zhHant: "Lv{0} \u8FFD\u52A0\u6548\u679C"
+    _zhHans: "Lv{0} \u8FFD\u52A0\u6548\u679C"
+  - _key: ui.rb.growth.node_inyeon
+    _ko: "Lv{0} \uC778\uC5F0 \uAC15\uD654"
+    _ja: "Lv{0} \u7D46\u5F37\u5316"
+    _en: Lv{0} Bond Boost
+    _zhHant: "Lv{0} \u7F88\u7D46\u5F37\u5316"
+    _zhHans: "Lv{0} \u7F81\u7ECA\u5F3A\u5316"
+  - _key: ui.rb.growth.node_ult
+    _ko: "Lv{0} \uAC15\uD654\uD615"
+    _ja: "Lv{0} \u5F37\u5316\u578B"
+    _en: Lv{0} Enhanced
+    _zhHant: "Lv{0} \u5F37\u5316\u578B"
+    _zhHans: "Lv{0} \u5F3A\u5316\u578B"
+  - _key: ui.rb.growth.inyeon_tile
+    _ko: "\uC778\uC5F0 \xB7 {0} <size=75%><color=#B3BDD6>{1}\uB2E8</color></size>"
+    _ja: "\u7D46\u30FB{0} <size=75%><color=#B3BDD6>{1}\u6BB5</color></size>"
+    _en: "Bond \xB7 {0} <size=75%><color=#B3BDD6>Tier {1}</color></size>"
+    _zhHant: "\u7F88\u7D46 \xB7 {0} <size=75%><color=#B3BDD6>{1}\u968E</color></size>"
+    _zhHans: "\u7F81\u7ECA \xB7 {0} <size=75%><color=#B3BDD6>{1}\u9636</color></size>"
+  - _key: ui.rb.growth.opt_lv_open
+    _ko: "\uC561\uD2F0\uBE0C Lv{0} \uCD94\uAC00 \uC635\uC158 \uC5F4\uB9BC"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6Lv{0} \u8FFD\u52A0\u30AA\u30D7\u30B7\u30E7\u30F3\u89E3\u653E"
+    _en: Active Lv{0} bonus effect unlocked
+    _zhHant: "\u4E3B\u52D5Lv{0} \u8FFD\u52A0\u6548\u679C\u958B\u555F"
+    _zhHans: "\u4E3B\u52A8Lv{0} \u8FFD\u52A0\u6548\u679C\u5F00\u542F"
+  - _key: ui.rb.growth.opt_lv_locked
+    _ko: "\uC561\uD2F0\uBE0C Lv{0} \uCD94\uAC00 \uC635\uC158 \xB7 \uC7A0\uAE40"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6Lv{0} \u8FFD\u52A0\u30AA\u30D7\u30B7\u30E7\u30F3\u30FB\u30ED\u30C3\u30AF"
+    _en: "Active Lv{0} bonus effect \xB7 Locked"
+    _zhHant: "\u4E3B\u52D5Lv{0} \u8FFD\u52A0\u6548\u679C \xB7 \u672A\u89E3\u9396"
+    _zhHans: "\u4E3B\u52A8Lv{0} \u8FFD\u52A0\u6548\u679C \xB7 \u672A\u89E3\u9501"
+  - _key: ui.rb.growth.opt_lv_max
+    _ko: "\uC561\uD2F0\uBE0C Lv{0} \xB7 \uC778\uC5F0\uC774 \uCF1C\uC9C0\uBA74 \uD55C
+      \uB2E8\uACC4 \uB354"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6Lv{0}\u30FB\u7D46\u767A\u52D5\u3067\u3055\u3089\u306B\u5F37\u5316"
+    _en: "Active Lv{0} \xB7 Stronger with a Bond"
+    _zhHant: "\u4E3B\u52D5Lv{0} \xB7 \u7F88\u7D46\u555F\u52D5\u6642\u518D\u5F37\u5316"
+    _zhHans: "\u4E3B\u52A8Lv{0} \xB7 \u7F81\u7ECA\u542F\u52A8\u65F6\u518D\u5F3A\u5316"
+  - _key: ui.rb.growth.done_line2b
+    _ko: "\uC2A4\uD0AC \uC0C1\uD55C \xB7 \uC561\uD2F0\uBE0C {0}\u2192{1} \xB7 \uD328\uC2DC\uBE0C\xB7\uD544\uC0B4\uAE30
+      {2}\u2192{3}"
+    _ja: "\u30B9\u30AD\u30EB\u4E0A\u9650\u30FB\u30A2\u30AF\u30C6\u30A3\u30D6 {0}\u2192{1}\u30FB\u30D1\u30C3\u30B7\u30D6/\u5FC5\u6BBA\u6280
+      {2}\u2192{3}"
+    _en: "Skill cap \xB7 Active {0}\u2192{1} \xB7 Passive/Ult {2}\u2192{3}"
+    _zhHant: "\u6280\u80FD\u4E0A\u9650 \xB7 \u4E3B\u52D5 {0}\u2192{1} \xB7 \u88AB\u52D5/\u5FC5\u6BBA\u6280
+      {2}\u2192{3}"
+    _zhHans: "\u6280\u80FD\u4E0A\u9650 \xB7 \u4E3B\u52A8 {0}\u2192{1} \xB7 \u88AB\u52A8/\u5FC5\u6740\u6280
+      {2}\u2192{3}"
+  - _key: inyeon.gangster.name
+    _ko: "\uCCAD\uBD80 \uD45C\uC2DD"
+    _ja: "\u8ACB\u8CA0\u306E\u6A19\u7684"
+    _en: Contract Mark
+    _zhHant: "\u59D4\u8A17\u6A19\u8A18"
+    _zhHans: "\u59D4\u6258\u6807\u8BB0"
+  - _key: inyeon.thug.name
+    _ko: "\uB4B7\uACE8\uBAA9 \uB09C\uC0AC"
+    _ja: "\u8DEF\u5730\u88CF\u4E71\u5C04"
+    _en: Alley Spray
+    _zhHant: "\u6697\u5DF7\u4E82\u5C04"
+    _zhHans: "\u6697\u5DF7\u4E71\u5C04"
+  - _key: inyeon.amazon.name
+    _ko: "\uBC88\uAC1C \uB3C4\uC57D"
+    _ja: "\u96F7\u306E\u8DF3\u8E8D"
+    _en: Thunder Leap
+    _zhHant: "\u96F7\u9706\u8E8D\u64CA"
+    _zhHans: "\u96F7\u9706\u8DC3\u51FB"
+  - _key: inyeon.amazon_elite.name
+    _ko: "\uBD88\uAD74\uC758 \uD568\uC131"
+    _ja: "\u4E0D\u5C48\u306E\u5486\u54EE"
+    _en: Unyielding Roar
+    _zhHant: "\u4E0D\u5C48\u5436\u558A"
+    _zhHans: "\u4E0D\u5C48\u5450\u558A"
+  - _key: inyeon.hopper.name
+    _ko: "\uC30D\uAD8C\uCD1D"
+    _ja: "\u4E8C\u4E01\u62F3\u9283"
+    _en: Twin Pistols
+    _zhHant: "\u96D9\u69CD"
+    _zhHans: "\u53CC\u67AA"
+  - _key: inyeon.hopper_smg.name
+    _ko: "\uBC31\uC2A4\uD15D \uD0C4\uB9C9"
+    _ja: "\u30D0\u30C3\u30AF\u30B9\u30C6\u30C3\u30D7\u5F3E\u5E55"
+    _en: Backstep Barrage
+    _zhHant: "\u5F8C\u64A4\u5F48\u5E55"
+    _zhHans: "\u540E\u64A4\u5F39\u5E55"
+  - _key: inyeon.commando_mg.name
+    _ko: "\uC5C4\uD638 \uD654\uB9DD"
+    _ja: "\u63F4\u8B77\u5C04\u6483\u7DB2"
+    _en: Covering Fire
+    _zhHant: "\u63A9\u8B77\u706B\u7DB2"
+    _zhHans: "\u63A9\u62A4\u706B\u7F51"
+  - _key: inyeon.commando_laser.name
+    _ko: "\uACFC\uBD80\uD558"
+    _ja: "\u30AA\u30FC\u30D0\u30FC\u30ED\u30FC\u30C9"
+    _en: Overload
+    _zhHant: "\u904E\u8F09"
+    _zhHans: "\u8FC7\u8F7D"
+  - _key: inyeon.commando_grenade.name
+    _ko: "\uC735\uB2E8 \uD3ED\uACA9"
+    _ja: "\u7D68\u6BEF\u7206\u6483"
+    _en: Carpet Bombing
+    _zhHant: "\u5730\u6BEF\u8F5F\u70B8"
+    _zhHans: "\u5730\u6BEF\u8F70\u70B8"
+  - _key: inyeon.commando_missile.name
+    _ko: "\uC9D1\uC18D\uD0C4"
+    _ja: "\u30AF\u30E9\u30B9\u30BF\u30FC\u5F3E"
+    _en: Cluster Shot
+    _zhHant: "\u96C6\u675F\u5F48"
+    _zhHans: "\u96C6\u675F\u5F39"
+  - _key: inyeon.salamander.name
+    _ko: "\uBD88\uB3C5"
+    _ja: "\u708E\u6BD2"
+    _en: Fire Venom
+    _zhHant: "\u708E\u6BD2"
+    _zhHans: "\u708E\u6BD2"
+  - _key: inyeon.dragoon.name
+    _ko: "\uC5C5\uD654"
+    _ja: "\u696D\u706B"
+    _en: Hellfire
+    _zhHant: "\u696D\u706B"
+    _zhHans: "\u4E1A\u706B"
+  - _key: inyeon.dragon_blue.name
+    _ko: "\uBC88\uAC1C \uC0AC\uC2AC"
+    _ja: "\u96F7\u306E\u9396"
+    _en: Lightning Chain
+    _zhHant: "\u96F7\u93C8"
+    _zhHans: "\u96F7\u94FE"
+  - _key: inyeon.guru.name
+    _ko: "\uACB0\uACC4 \uAC15\uB839"
+    _ja: "\u7D50\u754C\u964D\u970A"
+    _en: Ward Summoning
+    _zhHant: "\u7D50\u754C\u964D\u9748"
+    _zhHans: "\u7ED3\u754C\u964D\u7075"
+  - _key: inyeon.white_wizard.name
+    _ko: "\uBE5B\uACFC \uC5BC\uC74C"
+    _ja: "\u5149\u3068\u6C37"
+    _en: Light and Ice
+    _zhHant: "\u5149\u8207\u51B0"
+    _zhHans: "\u5149\u4E0E\u51B0"
+  - _key: inyeon.medium.name
+    _ko: "\uC30D\uACE8\uB818"
+    _ja: "\u30C4\u30A4\u30F3\u30B4\u30FC\u30EC\u30E0"
+    _en: Twin Golems
+    _zhHant: "\u96D9\u9B54\u50CF"
+    _zhHans: "\u53CC\u9B54\u50CF"
+  - _key: inyeon.ninja.name
+    _ko: "\uADF8\uB9BC\uC790 \uBD84\uC2E0"
+    _ja: "\u5F71\u5206\u8EAB"
+    _en: Shadow Clone
+    _zhHant: "\u5F71\u5206\u8EAB"
+    _zhHans: "\u5F71\u5206\u8EAB"
+  - _key: inyeon.ninja_chain.name
+    _ko: "\uB1CC\uC804 \uC0AC\uC2AC"
+    _ja: "\u96F7\u96FB\u306E\u9396"
+    _en: Thunder Chain
+    _zhHant: "\u96F7\u96FB\u9396\u93C8"
+    _zhHans: "\u96F7\u7535\u9501\u94FE"
+  - _key: inyeon.robot.name
+    _ko: "\uB808\uC774\uC800 \uD3EC\uD0D1"
+    _ja: "\u30EC\u30FC\u30B6\u30FC\u30BF\u30EC\u30C3\u30C8"
+    _en: Laser Turret
+    _zhHant: "\u96F7\u5C04\u7832\u5854"
+    _zhHans: "\u6FC0\u5149\u70AE\u5854"
+  - _key: inyeon.baseball.name
+    _ko: "\uC5BC\uC74C \uC7A5\uD0C0"
+    _ja: "\u6C37\u306E\u9577\u6253"
+    _en: Frozen Drive
+    _zhHant: "\u51B0\u971C\u9577\u6253"
+    _zhHans: "\u51B0\u971C\u957F\u6253"
+  - _key: inyeon.snowwoman.name
+    _ko: "\uC5BC\uC74C \uC9C4"
+    _ja: "\u6C37\u306E\u9663"
+    _en: Ice Formation
+    _zhHant: "\u51B0\u4E4B\u9663"
+    _zhHans: "\u51B0\u4E4B\u9635"
+  - _key: inyeon.vampire.name
+    _ko: "\uD53C\uC758 \uC5F0\uD68C"
+    _ja: "\u8840\u306E\u5BB4"
+    _en: Blood Feast
+    _zhHant: "\u8840\u4E4B\u76DB\u5BB4"
+    _zhHans: "\u8840\u4E4B\u76DB\u5BB4"

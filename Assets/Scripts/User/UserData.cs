@@ -93,15 +93,17 @@ namespace Game.User
         public long[] chestUnlockAt = Array.Empty<long>();
         public int[] chestSeconds = Array.Empty<int>();
 
-        // ── 능력치 강화(골드) · 성장 경로 ─────────────────────
+        // ── 유령 강화(골드) · 호스트 스킬 레벨 · 성장 경로 (육성 개편 PD 2026-10-29) ──
         //
-        // 첨자는 `HostStat` 순서(Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed).
-        //   ghostStatLevels  유령 탭에서 올린 값 — **모든 몸**에 붙는다
-        //   hostStatLevels   호스트별 — `hostKeys[i]` 의 값이 [i × 6 + 능력치] 에 들어간다
+        //   ghostStatLevels  유령 강화 — 첨자는 `HostStat` 순서. **모든 몸**에 붙는다
+        //   hostSkillLevels  호스트별 스킬 레벨 — `hostKeys[i]` 의 값이 [i × 3 + 칸](0 액티브 · 1 패시브 · 2 필살기). 0 은 Lv1 로 읽는다
+        //   inyeonClaimed    처음 켠 인연 보상을 받은 짝(「메인|짝」) — 한 번만 준다
+        // 호스트 탭 능력치 강화(`hostStatLevels`)는 없앴다 — 옛 저장의 그 칸은 읽을 때 버려진다(개발 단계, 돌려주기 없음).
         // 성장 경로 보상은 받은 칸을 비트로 적는다(칸 i → 1 << i).
-        [Header("능력치 강화 · 성장 경로")]
+        [Header("유령 강화 · 스킬 레벨 · 성장 경로")]
         public int[] ghostStatLevels = Array.Empty<int>();
-        public int[] hostStatLevels = Array.Empty<int>();
+        public int[] hostSkillLevels = Array.Empty<int>();
+        public string[] inyeonClaimed = Array.Empty<string>();
         public int ghostPathClaimed;
 
         [Header("선택")]
@@ -142,29 +144,18 @@ namespace Game.User
             chestSeconds = Resize(chestSeconds, slotCount, 0);
         }
 
-        /// <summary>
-        /// 능력치 강화 배열 길이를 맞춘다 — 옛 저장(v3)은 비어 있고, 호스트가 늘면 짧다.
-        ///
-        /// ⚠ 능력치 수가 늘면(6 → 8, 2026-10-06) 몸마다 칸 수가 바뀐다. 길이만 늘리면
-        ///   [몸 × 6 + 능력치] 로 적힌 값이 [몸 × 8 + 능력치] 로 읽혀 **다른 몸의 강화가 섞인다.**
-        ///   옛 칸 수를 길이에서 알아내 몸별로 옮긴다.
-        /// </summary>
+        /// <summary>유령 강화 배열 길이를 능력치 수에 맞춘다 — 옛 저장은 비어 있다.</summary>
         public void NormalizeStats(int statCount)
         {
             ghostStatLevels = Resize(ghostStatLevels, statCount, 0);
+        }
+
+        /// <summary>스킬 레벨 배열을 몸 수 × 칸 수에 맞춘다 — 뒤에 붙으므로 기존 첨자는 그대로다.</summary>
+        public void NormalizeSkills(int slotCount)
+        {
             int hosts = hostKeys?.Length ?? 0;
-            int len = hostStatLevels?.Length ?? 0;
-            if (hosts > 0 && len > 0 && len % hosts == 0 && len / hosts != statCount && len / hosts < statCount)
-            {
-                int old = len / hosts;
-                var moved = new int[hosts * statCount];
-                for (int h = 0; h < hosts; h++)
-                    for (int s = 0; s < old; s++)
-                        moved[h * statCount + s] = hostStatLevels[h * old + s];
-                hostStatLevels = moved;
-                return;
-            }
-            hostStatLevels = Resize(hostStatLevels, hosts * statCount, 0);
+            if ((hostSkillLevels?.Length ?? 0) != hosts * slotCount) hostSkillLevels = Resize(hostSkillLevels, hosts * slotCount, 0);
+            inyeonClaimed ??= Array.Empty<string>();
         }
 
         private static T[] Resize<T>(T[] src, int n, T fill)

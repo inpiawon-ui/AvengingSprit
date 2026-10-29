@@ -41,12 +41,10 @@ namespace Game.Module.InGame
             => me == null ? 1
              : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * DragonBloodMul(me) * mul * UltPowerMul));
 
-        // 성급 성장(PD 2026-10-15 「성급이 올라가면 액티브가 더 좋아져야」) — 몸 공격력(×1.07/단계)과 따로 곱한다.
-        // 기획: `Projects/AVSR/_exchange/doc_skill_concept` 성급 성장 표
-        private const float ActivePowerPerLevel = 0.06f;
-        private const float UltPowerPerLevel = 0.04f;
-        private float ActivePowerMul => 1f + ActivePowerPerLevel * Mathf.Max(0, HostMastery - 1);
-        private float UltPowerMul => (1f + UltPowerPerLevel * Mathf.Max(0, HostMastery - 1))
+        // 스킬 레벨 성장(육성 개편 PD 2026-10-29) — 몸 공격력(성급 ×1.07/단계)과 따로 곱한다.
+        // 액티브 = 액티브 스킬 레벨 · 필살기 = 필살기 스킬 레벨(+ Lv5 강화형). 값은 `BattleDirector.PartyGrowth` · `GameConfig`
+        private float ActivePowerMul => SkillLvActivePowerMul;
+        private float UltPowerMul => SkillLvUltPowerMul
                                      * (_config != null && _host?.Profile != null ? _config.GradeUltMul(_host.Profile.Grade) : 1f);
 
         /// <summary>Lv1 → Lv4 에 자라는 축. Lv5 부터는 끝값에서 멈춘다.</summary>

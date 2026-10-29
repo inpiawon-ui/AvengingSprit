@@ -977,44 +977,97 @@ namespace Game.Character
         //   Lv15 +30% 2,800G · Lv12 +24% 2,400G → 레벨당 +2%, 한 단계 ≈ 200G × 다음 레벨.
         //   배열 첨자는 `HostStat` 순서(Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed).
 
-        [Header("성장 — 능력치 골드 강화")]
-        [Tooltip("유령 탭 강화 상한 — 모든 몸에 붙는다.")]
-        [SerializeField] private int _ghostStatMax = 50;
-        [Tooltip("호스트별 강화 상한(5성일 때). 성급 한 단계마다 `_hostStatPerStep` 씩 열린다.")]
-        [SerializeField] private int _hostStatMax = 50;
-        // 예전에는 별 하나(두 단계)마다 10 이었다(기획 2026-10-02). 성급 창이 「함께 오르는 것」을 보여주게 되면서
-        // (2026-10-06) 단계마다 오르게 바꿨다 — 반 칸 올렸는데 상한이 그대로면 연결이 끊겨 보인다. 끝값(50)은 같다.
-        [Tooltip("성급 한 단계(별 반 칸)가 여는 강화 레벨. Lv1 5 · Lv2 10 … Lv10 50.")]
-        [SerializeField] private int _hostStatPerStep = 5;
-        [Tooltip("레벨당 오르는 %. 치명타도 확률에 곱하는 배율이다(%p 가 아니다). 순서 Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed")]
-        [SerializeField] private float[] _statPercentPerLevel = { 2f, 2f, 2f, 1f, 1f, 1f };
+        // ── 육성 개편 (PD 2026-10-29 · 정본 `_exchange/plan_party_growth.md`) ──
+        //
+        // **유령 = 스탯(골드) · 호스트 = 스킬(조각으로 상한 · 골드로 레벨).** 호스트 탭 능력치 강화 6종은 없앴다 —
+        // 파티가 판마다 랜덤 호스트로 짜여서, 몸마다 스탯을 키우면 「안 키운 몸이 나오면 망한 판」이 된다.
+        // ⚠ 수치는 전부 **임시값**이다(「수치는 나중에 조절」) — 판에서 전투력을 재서 맞춘다.
 
-        // 치명타 피해 · 방어력(2026-10-06)은 **더하는 값(%p)** 이다 — 배율로 곱하면 타고난 값이 낮은 몸
-        // (방어 3% · 치명타 피해는 모두 200%)에게 강화가 거의 안 먹는다.
-        [Tooltip("치명타 피해 — 레벨당 더하는 %p. 기본 200% 에 더한다(유령 50 + 몸 50 = +100%p → 300%).")]
-        [SerializeField] private float _critDamagePerLevel = 1f;
-        [Tooltip("방어력 — 레벨당 더하는 %p. 몸의 타고난 방어(등급 × 3%)에 더한다(유령 50 + 몸 50 = +20%p).")]
-        [SerializeField] private float _defensePerLevel = 0.2f;
+        [Header("육성 — 유령 강화(스탯 6줄)")]
+        [Tooltip("유령 강화 상한(유령 레벨 상한과 같다).")]
+        [SerializeField] private int _ghostStatMax = 50;
+        // 첨자는 `HostStat` 순서 — Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed · CritDamage · Defense.
+        // 유령 강화 줄은 공격력 · 호스트 체력 · 치명타 · 공격 속도 · 이동 속도 · 받는 피해 감소 여섯이다 — 사거리 · 치명타 피해는 0(줄 없음).
+        // 치명타 · 받는 피해 감소는 **더하는 %p**, 나머지는 **곱하는 %** 다.
+        [Tooltip("유령 강화 한 단계 값(HostStat 순서). 치명타 · 받는 피해 감소(Defense)는 %p, 나머지는 %.")]
+        [SerializeField] private float[] _ghostStepValue = { 2f, 2f, 0.3f, 0.6f, 0f, 0.3f, 0f, 0.3f };
+        // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다(2026-10-13) — 개편 뒤 다시 잰다(TBD-BAL).
+        [Tooltip("유령 강화 한 단계 골드 = 이 값 × 다음 레벨.")]
+        [SerializeField] private int _ghostStatCostStep = 30;
+
+        [Header("육성 — 호스트 스킬 레벨")]
+        [Tooltip("스킬 레벨 상한 — 액티브 · 패시브 · 필살기.")]
+        [SerializeField] private int _activeSkillMax = 10;
+        [SerializeField] private int _passiveSkillMax = 5;
+        [SerializeField] private int _ultSkillMax = 5;
+        [Tooltip("액티브 레벨 하나당 위력 +(0.06 = +6%).")]
+        [SerializeField] private float _activePowerPerLevel = 0.06f;
+        [Tooltip("필살기 레벨 하나당 위력 +(0.08 = +8%).")]
+        [SerializeField] private float _ultPowerPerLevel = 0.08f;
+        [Tooltip("필살기 강화형이 되는 레벨 · 그때 한 번 더 곱하는 배율.")]
+        [SerializeField] private int _ultEnhancedLevel = 5;
+        [SerializeField] private float _ultEnhancedMul = 1.2f;
+        [Tooltip("액티브 인연형 한 단계 더가 열리는 레벨 · 인연이 켜졌을 때 인연형 수치에 곱하는 배율.")]
+        [SerializeField] private int _activeInyeonLevel = 10;
+        [SerializeField] private float _activeInyeonMul = 1.25f;
+        [Tooltip("스킬 레벨 한 단계 골드 = 이 값 × 다음 레벨 × 등급 배율 — 액티브 · 패시브 · 필살기.")]
+        [SerializeField] private int _activeSkillGold = 400;
+        [SerializeField] private int _passiveSkillGold = 800;
+        [SerializeField] private int _ultSkillGold = 800;
+        [Tooltip("스킬 레벨 골드의 등급 배율 (R · SR · SSR).")]
+        [SerializeField] private float[] _skillGoldGradeMul = { 1f, 1.5f, 2f };
+
+        [Header("육성 — 조각 새 공급 · 인연 세기")]
+        [Tooltip("판 끝에 메인 · 보조로 있던 호스트마다 조각 — 진 판 · 깬 판.")]
+        [SerializeField] private int _partyRunShards = 1;
+        [SerializeField] private int _partyClearShards = 2;
+        [Tooltip("인연을 처음 켠 판에 짝 둘 다 받는 조각(짝마다 한 번만).")]
+        [SerializeField] private int _inyeonFirstShards = 2;
+        [Tooltip("인연 세기 단계가 오르는 성급(두 호스트 중 낮은 쪽) — 0~3 1단 · 4~7 2단 · 8~10 3단.")]
+        [SerializeField] private int[] _inyeonTierFrom = { 4, 8 };
+
+        /// <summary>유령 강화 한 단계 값. 치명타 · 받는 피해 감소는 %p, 나머지는 %. 줄이 없는 능력치는 0.</summary>
+        public float GhostStepValue(HostStat stat)
+            => _ghostStepValue == null || (int)stat < 0 || (int)stat >= _ghostStepValue.Length ? 0f : _ghostStepValue[(int)stat];
+
+        /// <summary>더하는 능력치인가(치명타 · 치명타 피해 · 받는 피해 감소). 곱하는 것과 화면 · 계산이 다르다.</summary>
+        public static bool IsFlatStat(HostStat stat)
+            => stat == HostStat.Crit || stat == HostStat.CritDamage || stat == HostStat.Defense;
+
+        /// <summary>Lv <paramref name="level"/> → 다음 단계 골드.</summary>
+        public int GhostStatCostAt(int level) => _ghostStatCostStep * (level + 1);
+
+        public int ActiveSkillMax => Mathf.Max(1, _activeSkillMax);
+        public int PassiveSkillMax => Mathf.Max(1, _passiveSkillMax);
+        public int UltSkillMax => Mathf.Max(1, _ultSkillMax);
+        public float ActivePowerPerLevel => _activePowerPerLevel;
+        public float UltPowerPerLevel => _ultPowerPerLevel;
+        public int UltEnhancedLevel => _ultEnhancedLevel;
+        public float UltEnhancedMul => Mathf.Max(1f, _ultEnhancedMul);
+        public int ActiveInyeonLevel => _activeInyeonLevel;
+        public float ActiveInyeonMul => Mathf.Max(1f, _activeInyeonMul);
+
+        /// <summary>그 스킬(0 액티브 · 1 패시브 · 2 필살기)의 다음 레벨 골드 — 등급 배율 전.</summary>
+        public int SkillGoldStep(int slot) => slot == 0 ? _activeSkillGold : slot == 1 ? _passiveSkillGold : _ultSkillGold;
+
+        public float SkillGoldGradeMul(HostGrade g) => ByGradeF(_skillGoldGradeMul, g, 1f);
+
+        public int PartyRunShards => Mathf.Max(0, _partyRunShards);
+        public int PartyClearShards => Mathf.Max(0, _partyClearShards);
+        public int InyeonFirstShards => Mathf.Max(0, _inyeonFirstShards);
+
+        /// <summary>낮은 쪽 성급 → 인연 세기 1 · 2 · 3단.</summary>
+        public int InyeonTierOf(int lowerMastery)
+        {
+            int tier = 1;
+            if (_inyeonTierFrom != null)
+                for (int i = 0; i < _inyeonTierFrom.Length; i++)
+                    if (lowerMastery >= _inyeonTierFrom[i]) tier = i + 2;
+            return tier;
+        }
 
         /// <summary>방어력 상한(%). 강화를 다 해도 이 위로는 안 오른다 — 맞아도 안 아프면 피할 이유가 없다.</summary>
         public const int DefenseCapPercent = 60;
-        // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다 — 10챕터를 67판쯤에 깨는
-        // 수입(누적 약 7만 9천 골드)으로 유령 15 · 주력 몸 25 레벨쯤 사게 맞춘 값이다.
-        // 예전 200 은 한 판 수입(300~1,550)에 비해 14배쯤 비쌌다.
-        [Tooltip("한 단계 골드 = 이 값 × 다음 레벨. 유령 탭은 효과가 작아(무게 0.2) 값도 내렸다(100 → 30, 2026-10-13).")]
-        [SerializeField] private int _ghostStatCostStep = 30;
-        [SerializeField] private int _hostStatCostStep = 60;
-
-        // 계정 20 : 개별 80 (PD 2026-10-13 「고스트 스텟 20% · 개별 호스트 80%」) — 유령 탭(모든 몸)이 크면 아무 몸이나 다 세져서
-        //   속성마다 몸을 따로 키울 이유가 없다. 레벨당 값(`_statPercentPerLevel` 등)에 탭마다 이 무게를 곱한다.
-        //   둘 다 50 단계면 합이 예전(1 + 1 = 2)과 거의 같다(0.2 + 1.75 = 1.95).
-        [Tooltip("유령 탭 강화의 무게 — 레벨당 값 × 이 값. 0.2 = 체력 단계당 0.4%.")]
-        [SerializeField] private float _ghostStatShare = 0.2f;
-        [Tooltip("호스트 탭 강화의 무게 — 레벨당 값 × 이 값. 1.75 = 체력 단계당 3.5%.")]
-        [SerializeField] private float _hostStatShare = 1.75f;
-
-        /// <summary>그 탭 강화 한 단계의 무게. 유령 탭 0.2 · 호스트 탭 1.75.</summary>
-        public float StatShare(bool ghost) => Mathf.Max(0f, ghost ? _ghostStatShare : _hostStatShare);
 
         [Header("성장 — 유저(유령) 레벨")]
         [Tooltip("다음 레벨까지 경험치 = 기본 + 증가폭 × (레벨 - 1).")]
@@ -1031,35 +1084,12 @@ namespace Game.Character
 
         public int GhostStatMax => Mathf.Max(1, _ghostStatMax);
 
-        [Tooltip("유령 레벨 하나가 여는 유령 탭 강화 레벨. 1 = Lv10 이면 강화 10 까지(PD 2026-10-13 「레벨이 오르면 스텟을 찍을 수 있는 능력이 오른다」).")]
+        [Tooltip("유령 레벨 하나가 여는 유령 강화 레벨. 1 = Lv10 이면 강화 10 까지(PD 2026-10-13 「레벨이 오르면 스텟을 찍을 수 있는 능력이 오른다」).")]
         [SerializeField] private int _ghostStatPerLevel = 1;
 
-        /// <summary>이 유령 레벨이 여는 유령 탭 강화 상한. 성급 → 호스트 탭 상한과 같은 짝이다.</summary>
+        /// <summary>이 유령 레벨이 여는 유령 강화 상한(레벨 = 상한, PD 2026-10-29).</summary>
         public int GhostStatCap(int ghostLevel)
             => Mathf.Clamp(Mathf.Max(1, ghostLevel) * Mathf.Max(1, _ghostStatPerLevel), 1, GhostStatMax);
-        public int HostStatMax => Mathf.Max(1, _hostStatMax);
-
-        /// <summary>
-        /// 성급(숙련도) 단계가 여는 호스트 강화 상한. Lv1 5 · Lv2 10 … Lv10 50.
-        /// 조각 → 성급 → 강화 상한 → 골드 강화 순서로 육성이 묶인다(기획 2026-10-02).
-        /// </summary>
-        public int HostStatCap(int mastery)
-            => Mathf.Clamp(Mathf.Max(1, mastery) * Mathf.Max(1, _hostStatPerStep), 1, HostStatMax);
-
-        /// <summary>
-        /// 레벨당 오르는 값. 치명타 피해 · 방어력은 %p(더하는 값), 나머지는 %(곱하는 배율).
-        /// </summary>
-        public float StatPercentPerLevel(HostStat stat)
-            => stat == HostStat.CritDamage ? _critDamagePerLevel
-             : stat == HostStat.Defense ? _defensePerLevel
-             : _statPercentPerLevel == null || (int)stat >= _statPercentPerLevel.Length ? 0f
-             : _statPercentPerLevel[(int)stat];
-
-        /// <summary>더하는 능력치인가(치명타 피해 · 방어력). 곱하는 것과 화면 표시 · 계산이 다르다.</summary>
-        public static bool IsFlatStat(HostStat stat) => stat == HostStat.CritDamage || stat == HostStat.Defense;
-
-        /// <summary>Lv <paramref name="level"/> → 다음 단계 골드.</summary>
-        public int StatCost(bool ghost, int level) => (ghost ? _ghostStatCostStep : _hostStatCostStep) * (level + 1);
 
         public int UserExpToNext(int level) => _userExpBase + _userExpStep * Mathf.Max(0, level - 1);
 

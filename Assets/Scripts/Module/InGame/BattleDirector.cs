@@ -416,6 +416,7 @@ namespace Game.Module.InGame
             _runShardKeys.Clear();
             _runShardCounts.Clear();
             _metHosts.Clear();
+            ClearPartyGrowth();   // 육성 개편 — 이 판에 파티로 있던 호스트 · 켠 인연
             _possessReachMul = 0f;
             _shopDiscount = 0;
             _bossShieldBreak = false;
@@ -3652,6 +3653,7 @@ namespace Game.Module.InGame
             TickRangeRing(dt);     // 내 공격 사거리 원 — 움직인 뒤 자리를 따라간다
             TickAlly(dt);          // 상점에서 산 동료
             TickParty(dt);         // 빙의 파티 보조 둘
+            NotePartyGrowth();     // 판 끝 조각(메인 · 보조로 있던 호스트 · 처음 켠 인연)을 위해 적어 둔다
             TickSummons(dt);       // 내가 불러낸 것들 — 해골 · 골렘 · 분신
             TickAfterimages(dt);
             TickEnemies(dt);
@@ -8491,11 +8493,12 @@ namespace Game.Module.InGame
         private float CritPercent =>
             HostStats.CritPercent(_config, _host?.Profile)
             * UpgradeMul(_host?.Profile?.HostKey, HostStat.Crit)
+            + (_player != null ? _player.StatBonusFlat(_host?.Profile?.HostKey, HostStat.Crit) : 0f)   // 유령 강화 치명타(%p, 2026-10-29)
             + PartyCritAdd;   // 빙의 파티 — 갱단 시너지(%p)
 
         /// <summary>
-        /// 로비 능력치 골드 강화 배율 — 유령 탭(모든 몸) + 이 몸의 호스트 탭. 저장이 없으면 1.
-        /// 치명타는 확률에 곱한다(%p 가 아니다).
+        /// 유령 강화 배율(모든 몸, 2026-10-29 호스트 탭 강화는 없앴다). 저장이 없으면 1.
+        /// 치명타 · 받는 피해 감소는 더하는 값이라 여기서는 1 이다(`StatBonusFlat`).
         /// </summary>
         private float UpgradeMul(string hostKey, HostStat stat)
             => _player != null ? _player.StatBonusMul(hostKey, stat) : 1f;
@@ -9247,11 +9250,15 @@ namespace Game.Module.InGame
             }
         }
 
-        /// <summary>지금 몸의 숙련도. 저장이 없으면 0(봉인)이다.</summary>
+        /// <summary>
+        /// 지금 몸의 **액티브 스킬 레벨**(1~10). 액티브 위력 · 기본 축 · Lv5 추가 옵션(특수 축)이 전부 이 값을 본다.
+        /// ⚠ 육성 개편(PD 2026-10-29) 전에는 성급(숙련도)이었다 — 이제 성급은 상한만 열고 레벨은 골드로 올린다.
+        /// 못 가진 몸은 1. 저장이 없으면 1.
+        /// </summary>
         private int HostMastery
-            => _player != null && _host != null ? _player.GetMastery(_host.Key) : 0;
+            => _player != null && _host != null ? _player.SkillLevel(_host.Key, Game.User.HostSkillSlot.Active) : 1;
 
-        private int MasteryMaxOrDefault => _player != null ? _player.MasteryMax : 10;
+        private int MasteryMaxOrDefault => _player != null ? _player.SkillLevelMax(Game.User.HostSkillSlot.Active) : 10;
 
         /// <summary>그 몸의 액티브 스킬 성장 수치. 표가 없으면 null.</summary>
         private SkillScaling? ActiveScalingOf(HostEntry e)
@@ -10350,6 +10357,7 @@ namespace Game.Module.InGame
             _running = false;
             if (IsModeRun) { GiveUpMode(); return; }
             int carried = Mathf.Max(0, _runGold);
+            GrantPartyGrowthShards(false);   // 포기도 판의 끝이다 — 같이 싸운 호스트 조각(진 판 몫)
             // 골드가 0 이어도 저장한다 — 판 안에서 모은 조각이 남아야 한다
             if (_player != null && _player.IsReady)
                 _player.GrantRunGoldAsync(carried).Forget();   // fire-and-forget: 씬을 떠나는 중이다
@@ -10379,6 +10387,7 @@ namespace Game.Module.InGame
             // ⚠ **죽으면 판에서 번 골드만 준다**(기획 2026-10-01). 상자도 클리어 골드도 없다.
             //   예전에는(2026-09-18) 아무것도 안 줬다 — 못 깨는 챕터에 막히면 강해질 길이 없어
             //   같은 판을 맨손으로 되풀이해야 했다. 진 판도 다음 판의 밑천이 된다.
+            GrantPartyGrowthShards(cleared);   // 육성 개편 — 파티로 있던 호스트 · 처음 켠 인연 조각(아래 저장 전에)
             RunShardsSorted(out var shardKeys, out var shardCounts);
             if (!cleared)
             {

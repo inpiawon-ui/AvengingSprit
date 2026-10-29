@@ -202,6 +202,7 @@ namespace Game.User
             _data = await _repo.LoadAsync();
             _data.NormalizeChests(ChestSlotCount);   // 옛 저장(v2)은 상자 배열이 비어 있다
             _data.NormalizeStats(StatCount);         // 옛 저장(v3)은 능력치 강화 배열이 비어 있다
+            _data.NormalizeSkills(SkillSlotCount);   // 스킬 레벨(2026-10-29)은 옛 저장에 없다 — 0(= Lv1)으로 채운다
             _data.ghostExpMax = ExpToNext(_data.ghostLevel);   // 곡선이 바뀌면 막대 끝도 따라온다
             GrantStarter();
             if (s_testMode && _data.gem < TestGem) _data.gem = TestGem;
@@ -340,7 +341,7 @@ namespace Game.User
             _data.hostKeys[n] = hostKey;
             _data.hostMastery[n] = 0;
             _data.hostShards[n] = 0;
-            _data.NormalizeStats(StatCount);   // 능력치 강화 배열도 한 칸(6값) 늘린다 — 뒤에 붙으므로 기존 첨자는 그대로
+            _data.NormalizeSkills(SkillSlotCount);   // 스킬 레벨 배열도 한 칸(3값) 늘린다 — 뒤에 붙으므로 기존 첨자는 그대로
             return n;
         }
 
@@ -594,6 +595,7 @@ namespace Game.User
                 HpMul = StatBonusMul(hostKey, HostStat.Hp),
                 AtkMul = StatBonusMul(hostKey, HostStat.Atk),
                 CritMul = StatBonusMul(hostKey, HostStat.Crit),
+                CritFlat = StatBonusFlat(hostKey, HostStat.Crit),
                 AtkSpeedMul = StatBonusMul(hostKey, HostStat.AtkSpeed),
                 CritDamageFlat = StatBonusFlat(hostKey, HostStat.CritDamage),
                 DefenseFlat = StatBonusFlat(hostKey, HostStat.Defense),
@@ -647,20 +649,16 @@ namespace Game.User
         public bool IsHostOwned(HostEntry host)
             => host != null && (host.IsGhost || GetMastery(host.HostKey) >= 1);
 
-        // ── 능력치 골드 강화 ─────────────────────────────────
+        // ── 유령 강화 — 스탯 6줄 (육성 개편 PD 2026-10-29) ─────
         //
+        // 유령 레벨 = 강화 상한. 골드로 한 단계씩. **모든 몸**에 붙는다(메인 100% · 보조는 파티 규칙대로).
+        // 호스트 탭 능력치 강화는 없앴다 — 몸은 스킬로 키운다(아래 「호스트 스킬 레벨」).
         // 수치는 전부 `GameConfig`(임시값). 여기엔 규칙만 둔다.
 
         private static readonly int StatCount = Enum.GetValues(typeof(HostStat)).Length;
 
         public int GhostStatMax => _config != null ? _config.GhostStatMax : 50;
         public int GhostStatCap => _config != null ? _config.GhostStatCap(GhostLevel) : GhostStatMax;
-        public int HostStatMax => _config != null ? _config.HostStatMax : 50;
-
-        /// <summary>이 몸의 강화 상한 — 성급 한 단계마다 열린다(Lv1 5 · Lv2 10 …).</summary>
-        public int HostStatCap(string hostKey)
-            // 안 가진 몸(숙련도 0)은 강화할 수 없다 — 해금이 먼저다
-            => GetMastery(hostKey) < 1 ? 0 : _config != null ? _config.HostStatCap(GetMastery(hostKey)) : 10;
 
         public int GhostStatLevel(HostStat stat)
         {
@@ -669,28 +667,15 @@ namespace Game.User
             return _data.ghostStatLevels[(int)stat];
         }
 
-        public int HostStatLevel(string hostKey, HostStat stat)
-        {
-            int i = IndexOfHost(hostKey);
-            if (i < 0) return 0;
-            _data.NormalizeStats(StatCount);
-            return _data.hostStatLevels[i * StatCount + (int)stat];
-        }
-
         public int GhostStatCost(HostStat stat)
         {
             int lv = GhostStatLevel(stat);
-            return _config == null || lv >= GhostStatCap ? 0 : _config.StatCost(true, lv);
+            // 줄이 없는 능력치(사거리 · 치명타 피해)는 살 수 없다
+            return _config == null || lv >= GhostStatCap || _config.GhostStepValue(stat) <= 0f ? 0 : _config.GhostStatCostAt(lv);
         }
 
-        public int HostStatCost(string hostKey, HostStat stat)
-        {
-            int lv = HostStatLevel(hostKey, stat);
-            return _config == null || lv >= HostStatCap(hostKey) ? 0 : _config.StatCost(false, lv);
-        }
-
-        public float StatPercent(HostStat stat, int level, bool ghost)
-            => _config != null ? _config.StatPercentPerLevel(stat) * _config.StatShare(ghost) * level : 0f;
+        public float GhostStatValue(HostStat stat, int level)
+            => _config != null ? _config.GhostStepValue(stat) * Mathf.Max(0, level) : 0f;
 
         public bool BuyGhostStat(HostStat stat)
         {
@@ -703,39 +688,101 @@ namespace Game.User
             return true;
         }
 
-        public bool BuyHostStat(string hostKey, HostStat stat)
-        {
-            int cost = HostStatCost(hostKey, stat);
-            if (cost <= 0 || _data.gold < cost) return false;
-            int i = EnsureHost(hostKey);
-            if (i < 0) return false;
-            _data.gold -= cost;
-            _data.hostStatLevels[i * StatCount + (int)stat]++;
-            PublishCurrency();
-            _bus?.Publish(new HostStatUpgradedEvent { UpgradedHostKey = hostKey, IsGhostTab = false });
-            return true;
-        }
-
-        public float StatLevelEffective(string hostKey, HostStat stat)
-        {
-            if (_config == null) return 0f;
-            return GhostStatLevel(stat) * _config.StatShare(true)
-                 + (string.IsNullOrEmpty(hostKey) ? 0f : HostStatLevel(hostKey, stat) * _config.StatShare(false));
-        }
+        // 사거리는 이제 키우지 않는다(유령 강화 줄 없음) — 옛 저장에 남은 단계가 판에 새지 않게 0
+        public float StatLevelEffective(string hostKey, HostStat stat) => 0f;
 
         public float StatBonusFlat(string hostKey, HostStat stat)
-            => s_powerTest ? 0f   // 권장 힘 시험 — 강화 0
-             : StatPercent(stat, GhostStatLevel(stat), true)
-             + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat), false));
+            => s_powerTest || !GameConfig.IsFlatStat(stat) ? 0f   // 권장 힘 시험 — 강화 0
+             : GhostStatValue(stat, GhostStatLevel(stat));
 
         public float StatBonusMul(string hostKey, HostStat stat)
         {
             // 권장 힘 시험 — 강화 대신 체력 · 공격에 같은 배율(그 챕터 권장 전투력이 되게)
             if (s_powerTest)
                 return !string.IsNullOrEmpty(hostKey) && (stat == HostStat.Hp || stat == HostStat.Atk) ? PowerTestMul(hostKey) : 1f;
-            float pct = StatPercent(stat, GhostStatLevel(stat), true)
-                      + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat), false));
-            return 1f + pct / 100f;
+            if (GameConfig.IsFlatStat(stat)) return 1f;   // 더하는 능력치는 StatBonusFlat 이 준다
+            return 1f + GhostStatValue(stat, GhostStatLevel(stat)) / 100f;
+        }
+
+        // ── 호스트 스킬 레벨 (육성 개편 PD 2026-10-29) ─────────
+        //
+        // 성급(조각 + 골드)은 상한만 연다 — 액티브 = 성급 단계(최소 1) · 패시브 · 필살기 = 1 + 성급 ÷ 2.
+        // 레벨은 골드로 셋을 따로 올린다(「골드를 어디에 쓸까」가 선택이 된다). 성급이 레벨을 자동으로 올리지 않는다.
+        // 못 가진 몸(판에서 빙의)은 전부 Lv1.
+
+        private const int SkillSlotCount = 3;
+
+        public int SkillLevelMax(HostSkillSlot slot)
+            => _config == null ? (slot == HostSkillSlot.Active ? 10 : 5)
+             : slot == HostSkillSlot.Active ? _config.ActiveSkillMax
+             : slot == HostSkillSlot.Passive ? _config.PassiveSkillMax
+             : _config.UltSkillMax;
+
+        public int SkillLevelCap(string hostKey, HostSkillSlot slot)
+        {
+            int m = GetMastery(hostKey);
+            if (m < 1) return 1;
+            int cap = slot == HostSkillSlot.Active ? m : 1 + m / 2;
+            return Mathf.Clamp(cap, 1, SkillLevelMax(slot));
+        }
+
+        public int SkillLevel(string hostKey, HostSkillSlot slot)
+        {
+            if (string.IsNullOrEmpty(hostKey) || hostKey == HostEntry.GhostKey) return 1;
+            int cap = SkillLevelCap(hostKey, slot);
+            // 시험 스위치(전부 열기 · 권장 힘)는 상한까지 올린 것으로 읽는다 — 저장은 그대로
+            if (s_powerTest || s_openAllHosts) return cap;
+            int i = IndexOfHost(hostKey);
+            if (i < 0 || GetMastery(hostKey) < 1) return 1;
+            _data.NormalizeSkills(SkillSlotCount);
+            return Mathf.Clamp(_data.hostSkillLevels[i * SkillSlotCount + (int)slot], 1, cap);
+        }
+
+        public int SkillLevelCost(string hostKey, HostSkillSlot slot)
+        {
+            if (_config == null || GetMastery(hostKey) < 1) return 0;
+            int lv = SkillLevel(hostKey, slot);
+            if (lv >= SkillLevelCap(hostKey, slot)) return 0;
+            var host = GetHost(hostKey);
+            float mul = host != null ? _config.SkillGoldGradeMul(host.Grade) : 1f;
+            return Mathf.RoundToInt(_config.SkillGoldStep((int)slot) * (lv + 1) * mul / 10f) * 10;
+        }
+
+        public bool BuySkillLevel(string hostKey, HostSkillSlot slot)
+        {
+            int cost = SkillLevelCost(hostKey, slot);
+            if (cost <= 0 || _data.gold < cost) return false;
+            int i = EnsureHost(hostKey);
+            if (i < 0) return false;
+            int lv = SkillLevel(hostKey, slot);
+            _data.gold -= cost;
+            _data.hostSkillLevels[i * SkillSlotCount + (int)slot] = lv + 1;
+            PublishCurrency();
+            _bus?.Publish(new HostStatUpgradedEvent { UpgradedHostKey = hostKey, IsGhostTab = false });
+            return true;
+        }
+
+        // ── 처음 켠 인연 (조각 새 공급, PD 2026-10-29) ───────────
+
+        private static string InyeonPairKey(string mainKey, string partnerKey) => mainKey + "|" + partnerKey;
+
+        public bool IsInyeonClaimed(string mainKey, string partnerKey)
+        {
+            if (_data == null || _data.inyeonClaimed == null) return false;
+            string k = InyeonPairKey(mainKey, partnerKey);
+            for (int i = 0; i < _data.inyeonClaimed.Length; i++) if (_data.inyeonClaimed[i] == k) return true;
+            return false;
+        }
+
+        public bool TryClaimInyeon(string mainKey, string partnerKey)
+        {
+            if (_data == null || string.IsNullOrEmpty(mainKey) || string.IsNullOrEmpty(partnerKey)) return false;
+            if (IsInyeonClaimed(mainKey, partnerKey)) return false;
+            _data.inyeonClaimed ??= Array.Empty<string>();
+            int n = _data.inyeonClaimed.Length;
+            Array.Resize(ref _data.inyeonClaimed, n + 1);
+            _data.inyeonClaimed[n] = InyeonPairKey(mainKey, partnerKey);
+            return true;
         }
 
         // ── 유령 성장 경로 ──────────────────────────────────

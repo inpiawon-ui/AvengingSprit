@@ -4,6 +4,9 @@ using Game.Character;
 
 namespace Game.User
 {
+    /// <summary>호스트 스킬 레벨 칸. 저장 배열 첨자와 같다 — 순서를 바꾸지 않는다.</summary>
+    public enum HostSkillSlot { Active = 0, Passive = 1, Ult = 2 }
+
     /// <summary>
     /// 재화·진행도 갱신의 **단일 집약 지점** (constants.md 6절 제약 4).
     ///
@@ -111,17 +114,14 @@ namespace Game.User
         /// <summary>별 — 숙련도 2단계마다 하나(0~5). 조각을 모아 올린다.</summary>
         int StarsOf(string hostKey);
 
-        // ── 능력치 골드 강화 ─────────────────────────────────
+        // ── 유령 강화 — 스탯 6줄 (육성 개편 PD 2026-10-29) ─────
         //
-        // 유령 탭에서 올린 값은 **모든 몸**에, 호스트 탭에서 올린 값은 그 몸에만 붙는다.
-        // 판에서는 두 값을 더한 % 가 빙의한 몸의 능력치에 곱해진다.
+        // 공격력 · 호스트 체력 · 치명타 · 공격 속도 · 이동 속도 · 받는 피해 감소. 골드로 한 단계씩, 상한 = 유령 레벨.
+        // **모든 몸**에 붙는다. 호스트 탭 능력치 강화는 없앴다 — 몸은 스킬 레벨로 키운다.
 
         int GhostStatMax { get; }
-        /// <summary>지금 유령 레벨이 여는 유령 탭 강화 상한(레벨 1 당 1, 최대 GhostStatMax).</summary>
+        /// <summary>지금 유령 레벨이 여는 유령 강화 상한(레벨 1 당 1, 최대 GhostStatMax).</summary>
         int GhostStatCap { get; }
-        int HostStatMax { get; }
-        /// <summary>이 몸의 강화 상한 — 성급 한 단계마다 열린다(Lv1 5 · Lv2 10 …).</summary>
-        int HostStatCap(string hostKey);
         /// <summary>챕터 수(챕터 표의 줄 수).</summary>
         int ChapterCount { get; }
         /// <summary>테스트 모드 — 전부 해금 · 무료 입장 · 젬 100만 · 상자 빨리. 라이브는 false.</summary>
@@ -131,25 +131,41 @@ namespace Game.User
         /// <summary>게임 설정. 부트 초기에는 null 일 수 있다.</summary>
         Game.Character.GameConfig Config { get; }
         int GhostStatLevel(HostStat stat);
-        int HostStatLevel(string hostKey, HostStat stat);
-        /// <summary>다음 단계 골드. 0 이면 상한.</summary>
+        /// <summary>다음 단계 골드. 0 이면 상한(또는 줄이 없는 능력치).</summary>
         int GhostStatCost(HostStat stat);
-        int HostStatCost(string hostKey, HostStat stat);
-        /// <summary>그 탭에서 그 레벨까지 오른 % — 유령 탭은 무게 0.2, 호스트 탭은 1.75 가 곱해진다(2026-10-13).</summary>
-        float StatPercent(HostStat stat, int level, bool ghost);
+        /// <summary>그 레벨까지 오른 값 — 치명타 · 받는 피해 감소는 %p, 나머지는 %.</summary>
+        float GhostStatValue(HostStat stat, int level);
         /// <summary>골드를 쓰고 한 단계 올린다. 모자라거나 상한이면 false. 저장은 부르는 쪽이.</summary>
         bool BuyGhostStat(HostStat stat);
-        bool BuyHostStat(string hostKey, HostStat stat);
-        /// <summary>그 몸이 판에서 받는 배율 = 1 + (유령 % + 호스트 %) / 100.</summary>
+        /// <summary>곱하는 능력치의 판 배율 = 1 + 유령 % / 100. 더하는 능력치는 1.</summary>
         float StatBonusMul(string hostKey, HostStat stat);
 
-        /// <summary>
-        /// 더하는 능력치(치명타 피해 · 방어력)의 강화 합(%p) — 유령 탭 + 이 몸의 호스트 탭.
-        /// </summary>
+        /// <summary>더하는 능력치(치명타 · 치명타 피해 · 받는 피해 감소)의 유령 강화 합(%p).</summary>
         float StatBonusFlat(string hostKey, HostStat stat);
 
-        /// <summary>그 능력치의 강화 레벨 — 탭 무게를 곱해 더한 값(유령 × 0.2 + 호스트 × 1.75). 사거리 강화가 쓴다.</summary>
+        /// <summary>사거리 강화 레벨 — 사거리는 이제 키우지 않아 늘 0(2026-10-29).</summary>
         float StatLevelEffective(string hostKey, HostStat stat);
+
+        // ── 호스트 스킬 레벨 (육성 개편 PD 2026-10-29) ─────────
+        //
+        // 성급이 상한을 연다(액티브 = 성급 · 패시브 · 필살기 = 1 + 성급 ÷ 2). 레벨은 골드로 셋을 따로 올린다.
+        // 못 가진 몸(판에서 빙의)은 전부 Lv1.
+
+        /// <summary>그 칸의 끝 레벨(액티브 10 · 패시브 5 · 필살기 5).</summary>
+        int SkillLevelMax(HostSkillSlot slot);
+        /// <summary>지금 성급이 여는 상한. 못 가진 몸은 1.</summary>
+        int SkillLevelCap(string hostKey, HostSkillSlot slot);
+        /// <summary>그 몸의 스킬 레벨(1~). 못 가진 몸 · 유령은 1.</summary>
+        int SkillLevel(string hostKey, HostSkillSlot slot);
+        /// <summary>다음 레벨 골드(등급 배율 포함). 0 이면 상한이거나 못 가진 몸.</summary>
+        int SkillLevelCost(string hostKey, HostSkillSlot slot);
+        /// <summary>골드를 쓰고 한 레벨 올린다. 모자라거나 상한이면 false. 저장은 부르는 쪽이.</summary>
+        bool BuySkillLevel(string hostKey, HostSkillSlot slot);
+
+        /// <summary>그 인연 짝의 첫 켜짐 보상을 이미 받았는가.</summary>
+        bool IsInyeonClaimed(string mainKey, string partnerKey);
+        /// <summary>처음이면 기록하고 true(조각은 부르는 쪽이 준다). 이미 받았으면 false. 저장은 부르는 쪽이.</summary>
+        bool TryClaimInyeon(string mainKey, string partnerKey);
 
         // ── 유령 성장 경로 ──────────────────────────────────
 

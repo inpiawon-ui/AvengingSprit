@@ -86,7 +86,9 @@ namespace Game.Module.InGame
             if (entry == null || _player == null) return;
             var passive = _player.GetPassiveSkill(entry.PassiveSkillKey);
             if (passive == null || !passive.HasGrowth) return;
-            _passiveGrowth = passive.GrowthAt(_player.GetMastery(entry.HostKey), _player.MasteryMax);
+            // 육성 개편(2026-10-29) — 성급이 아니라 패시브 스킬 레벨(1~5)로 Lv1 → 끝값을 잇는다
+            _passiveGrowth = passive.GrowthAt(_player.SkillLevel(entry.HostKey, Game.User.HostSkillSlot.Passive),
+                                              _player.SkillLevelMax(Game.User.HostSkillSlot.Passive));
         }
 
         // ── 몸에 붙는 성질 ────────────────────────────────────
@@ -117,7 +119,7 @@ namespace Game.Module.InGame
             if (entry == null) return 0;
             float percent = entry.DefensePercent;
             if (key == "commando_mg") percent *= 1f + PassiveFrac(CommandoMgDefenseBonus);
-            // 로비 방어력 강화(%p)를 더한다 — 유령 탭(모든 몸) + 이 몸의 호스트 탭(2026-10-06)
+            // 유령 강화 「받는 피해 감소」(%p)를 더한다 — 모든 몸(2026-10-29, 호스트 탭 강화는 없앴다)
             if (_player != null) percent += _player.StatBonusFlat(key, Game.Character.HostStat.Defense);
             return Mathf.Min(Mathf.RoundToInt(percent), Game.Character.GameConfig.DefenseCapPercent);
         }
@@ -357,9 +359,9 @@ namespace Game.Module.InGame
         private void PassiveOnKill(Unit victim)
         {
             if (_host == null || victim == null) return;
+            IyOnKill(victim);   // 인연 「불독」 — 중독된 적이 쓰러지면 불꽃(BattleDirector.SkillsInyeon)
 
             switch (_host.Key)
-            IyOnKill(victim);   // 인연 「불독」 — 중독된 적이 쓰러지면 불꽃(BattleDirector.SkillsInyeon)
             {
                 // 갱스터 청부 계약 — 표식 단 적을 잡으면 액티브 쿨 −1초(PD 2026-10-29 — 예전 「표식 적 즉사」는 R 에 너무 셌다)
                 case "gangster":

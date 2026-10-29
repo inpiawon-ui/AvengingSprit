@@ -64,6 +64,8 @@ namespace Game.Character
             public int Mastery;
             public float HpMul, AtkMul, CritMul, AtkSpeedMul;
             public float CritDamageFlat, DefenseFlat;
+            /// <summary>유령 강화 치명타(%p, 2026-10-29) — 확률에 더한다.</summary>
+            public float CritFlat;
 
             public static Growth None => new Growth
             {
@@ -78,7 +80,7 @@ namespace Game.Character
             float hit = BaseAtk(config, e) * g.AtkMul * MasteryStatMul(g.Mastery);
             float rate = config.RateOfGrade(e.RateGrade) * HandSpeedMul(e) * g.AtkSpeedMul;
             // 판(`BattleDirector.CritPercent`)과 같이 확률에 곱한다 — 100% 를 넘으면 늘 치명이다
-            float critP = Mathf.Clamp01(HostStats.CritPercent(config, e) * g.CritMul / 100f);
+            float critP = Mathf.Clamp01((HostStats.CritPercent(config, e) * g.CritMul + g.CritFlat) / 100f);
             float critX = config.CritMultiplier + g.CritDamageFlat / 100f;
             return hit * rate * (1f + critP * (critX - 1f));
         }
