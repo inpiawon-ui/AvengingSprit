@@ -78,6 +78,7 @@ namespace Game.EditorTools
             EditorUserBuildSettings.buildAppBundle = false;
 
             ResetPixelFallbackToDisk();
+            OldFontSwap.Run();   // 빌더가 옛 폰트를 다시 박았어도 빌드에는 지금 폰트로(메모리 · 언어별 폰트)
 
             Debug.Log("[Build] Addressable 번들을 굽는다…");
             AddressableAssetSettings.BuildPlayerContent(out var addrResult);
@@ -123,6 +124,10 @@ namespace Game.EditorTools
 
             SweepOldSymbolFolders(dir, version);
             MoveOlderApksAside(dir, version);
+
+            // 끝난 시각으로 다시 건다 — 빌드가 몇 분 걸리면 시작 시각 기준 대기는 이미 지나,
+            // 자동화가 시간 초과로 다시 부른 호출이 같은 빌드를 한 번 더 구웠다(2026-10-29 0.1.33 직후)
+            EditorPrefs.SetString(LastBuildKey, System.DateTime.UtcNow.Ticks.ToString());
         }
 
         /// <summary>

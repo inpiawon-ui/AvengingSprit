@@ -138,12 +138,37 @@ namespace Game.Module.InGame
             => h != null && !h.IsGhost && !Game.User.PlayerDataService.IsHiddenHost(h.HostKey)
                && h.PossessKind != PossessKind.NotPossessable;
 
-        /// <summary>판 시작에 올릴 그림 — 호스트 자리가 랜덤이라 빙의할 수 있는 호스트를 전부 올린다.</summary>
+        /// <summary>판마다 랜덤 호스트 자리 후보로 미리 올리는 몸 수(인연 짝 · 이 길에 나오는 호스트는 따로 늘 올린다).</summary>
+        private const int PartyPreloadCount = 10;
+
+        /// <summary>
+        /// 판 시작에 올릴 그림 — 호스트 자리 랜덤 후보.
+        ///
+        /// ⚠ 예전에는 빙의할 수 있는 호스트를 **전부**(약 40명, 아틀라스 약 44MB) 올렸다. 인게임 크래시(메모리)의
+        ///   큰 몫이라(2026-10-30) 지금 메인의 인연 짝 + 판마다 랜덤 <see cref="PartyPreloadCount"/>명만 올린다.
+        ///   랜덤 뽑기(<see cref="PartyRandomHost"/>)는 원래 그림이 안 올라온 몸을 빼고 고르므로 그 안에서 뽑힌다.
+        /// </summary>
         private void AddPartyUnitKeys(List<string> keys, IReadOnlyList<HostEntry> hosts)
         {
             if (!PartyOn) return;
+            // 판 시작 전이라 메인(_host)이 아직 없을 수 있다 — 로비에서 고른 호스트의 짝을 본다
+            var start = _host != null ? _host.Key : PickPlayerHost()?.HostKey;
+            var inyeon = start != null ? InyeonOf(start) : null;
+            _partyPool.Clear();
             for (int i = 0; i < hosts.Count; i++)
-                if (PartyPickable(hosts[i]) && !keys.Contains(hosts[i].SpriteKey)) keys.Add(hosts[i].SpriteKey);
+            {
+                var h = hosts[i];
+                if (!PartyPickable(h) || keys.Contains(h.SpriteKey)) continue;
+                if (inyeon != null && System.Array.IndexOf(inyeon.Partners, h.HostKey) >= 0) keys.Add(h.SpriteKey);
+                else _partyPool.Add(h);
+            }
+            for (int n = 0; n < PartyPreloadCount && _partyPool.Count > 0; n++)
+            {
+                int pick = _rng.Next(_partyPool.Count);
+                if (!keys.Contains(_partyPool[pick].SpriteKey)) keys.Add(_partyPool[pick].SpriteKey);
+                _partyPool.RemoveAt(pick);
+            }
+            _partyPool.Clear();
         }
 
         /// <summary>

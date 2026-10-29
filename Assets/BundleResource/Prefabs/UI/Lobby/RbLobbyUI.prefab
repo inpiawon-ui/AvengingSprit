@@ -61710,7 +61710,7 @@ MonoBehaviour:
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 21.333334
+  m_fontSizeMin: 19
   m_fontSizeMax: 29.333334
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -90094,7 +90094,7 @@ MonoBehaviour:
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 21.333334
+  m_fontSizeMin: 19
   m_fontSizeMax: 22.666668
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -140059,7 +140059,7 @@ MonoBehaviour:
   _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
   _silhouette: {fileID: 2100000, guid: 43001d9f02ceec74fb08f287c54e4578, type: 2}
   _softGlow: {fileID: 2100000, guid: e0b93116c67a1f0499dcfb35bbd188cb, type: 2}
-  _font: {fileID: 11400000, guid: 4d923984108639f48ba17abf48cd8a7e, type: 2}
+  _font: {fileID: 11400000, guid: 27449771177d6fd4888f49f599aa9818, type: 2}
 --- !u!1 &8901331752174489125
 GameObject:
   m_ObjectHideFlags: 0

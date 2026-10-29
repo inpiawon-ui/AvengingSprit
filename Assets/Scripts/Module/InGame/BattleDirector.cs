@@ -2898,7 +2898,11 @@ namespace Game.Module.InGame
             // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
             //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
             // 몬스터 키가 아니라 **그림 키**를 올린다 — 변종은 몸 그림을, 원소판은 제 그림을 쓴다(몬스터 표)
-            for (int c = 1; c <= ChapterCount; c++)
+            // ⚠ 위 주석(09-08)과 달리 지금 일반 판은 **챕터 끝에서 끝난다**(EndsRun) — 이번 챕터 잡몹만 올린다.
+            //   열 챕터 것을 다 올리던 것이 인게임 크래시(메모리)의 큰 몫이었다(2026-10-30). 모드 판은 여러 챕터를 섞으므로 그대로.
+            int firstChapter = IsModeRun ? 1 : chapter;
+            int lastChapter = IsModeRun ? ChapterCount : chapter;
+            for (int c = firstChapter; c <= lastChapter; c++)
                 foreach (var k in TrashKeysFor(c))
                 {
                     var t = TrashEntryOf(TrashKeyAlias(k));
@@ -2920,9 +2924,10 @@ namespace Game.Module.InGame
                 for (int i = 0; i < _rooms.Rooms.Count; i++)
                 {
                     var r = _rooms.Rooms[i];
-                    // ⚠ 챕터로 거르지 않는다. 한 런이 1→2→3 을 이어서 가므로
-                    //   현재 챕터의 보스만 올리면 다음 챕터 보스가 흰 사각형으로 선다.
+                    // 일반 판은 챕터 끝에서 끝난다(EndsRun) — 이번 챕터 보스만 올린다(2026-10-30 메모리).
+                    //   예전 주석 「한 런이 1→2→3 을 이어 간다」는 09월 구조다. 모드 판은 그대로 다 올린다.
                     if (r == null || !r.IsBoss) continue;
+                    if (!IsModeRun && r.Chapter != chapter) continue;
                     // `BossStand` 가 곧 "아직 그림이 없는 보스" 목록이다 —
                     // 제 이름과 다른 몸을 돌려주면 그 보스는 아직 그림이 없다는 뜻이다.
                     // 없는 아틀라스를 미리 부르면 로드 실패가 콘솔에 쌓인다.
@@ -2947,6 +2952,7 @@ namespace Game.Module.InGame
                 {
                     var r = _rooms.Rooms[i];
                     if (r == null || !r.IsMidBoss || string.IsNullOrEmpty(r.MidBossKey)) continue;
+                    if (!IsModeRun && r.Chapter != chapter) continue;   // 이번 챕터 것만(위 보스와 같은 이유)
                     for (int h = 0; h < hosts.Count; h++)
                         if (hosts[h] != null && hosts[h].HostKey == r.MidBossKey && !keys.Contains(hosts[h].SpriteKey))
                             keys.Add(hosts[h].SpriteKey);
