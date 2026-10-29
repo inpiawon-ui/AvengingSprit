@@ -651,6 +651,7 @@ namespace Game.Module.InGame
                 // Lv5 — 착탄마다 작은 화상 장판이 남는다
                 if (SpecOpen)
                     SpawnField(at, Meters(1.2f) * _buffs.AoeMul, 3f,
+            if (InyeonOn(me)) IyCarpetLap(me, shots, dmg);   // 인연 「융단 폭격」 — 한 바퀴 더
                                FieldEffect.Burn, SkillDamage(me, 0.15f), fromPlayer: true);
             }
         }
@@ -919,16 +920,23 @@ namespace Game.Module.InGame
             var side = new Vector2(-me.Facing.y, me.Facing.x);      // 바라보는 쪽의 직각
             if (side.sqrMagnitude < 0.01f) side = Vector2.right;
             side = side.normalized * Meters(TurretSideMeters);
+            // 인연 「레이저 포탑」 — 맥동탄은 사거리 0 으로 막고 레이저를 따로 쏜다(BattleDirector.SkillsInyeon)
+            bool iy = InyeonOn(me);
+            float turretRange = iy ? 0.01f : Meters(RobotTurretRangeMeters);
 
             QxTurretDrop(ClampedInField(me, me.Position + side));   // 퀄업(2026-10-07) — 쿵 착지 흙먼지
             SpawnDeployable(ClampedInField(me, me.Position + side), ghostly: false, seconds: seconds,
-                            range: Meters(RobotTurretRangeMeters), damage: dmg,
+            if (iy) IyAdoptLaserTurret(dmg);
+                            range: turretRange, damage: dmg,
                             fireInterval: RobotTurretInterval);
+            {
             // Lv5 — 두 번째는 **반대쪽 옆**. 양옆에 한 대씩 서야 좌우가 다 덮인다.
             if (SpecOpen)
                 SpawnDeployable(ClampedInField(me, me.Position - side),
                                 ghostly: false, seconds: seconds,
-                                range: Meters(RobotTurretRangeMeters), damage: dmg,
+                if (iy) IyAdoptLaserTurret(dmg);
+            }
+                                range: turretRange, damage: dmg,
                                 fireInterval: RobotTurretInterval);
 
             _turretHasteSeconds = seconds;

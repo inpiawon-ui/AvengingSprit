@@ -182,6 +182,7 @@ namespace Game.Module.InGame
         private void TickSkills1029(float dt)
         {
             TickFortress(dt);
+            TickInyeonSkills(dt);   // 인연 — 레이저 포탑(BattleDirector.SkillsInyeon)
         }
 
         /// <summary>몸을 갈아입거나 방을 나갈 때(`ClearSkillState`).</summary>
@@ -190,6 +191,7 @@ namespace Game.Module.InGame
             EndFortress();
             _wrapUntil.Clear();
             _amazonSprintReady = false;
+            ClearInyeonSkills();
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -201,6 +203,7 @@ namespace Game.Module.InGame
             var far = FarthestEnemy(me.Position);
             if (far == null) { PlayFx("crit", me.Position, 96f, loop: false); return; }
             int shots = SpecOpen ? AimShotSpecCount : AimShotCount;
+            if (InyeonOn(me)) shots *= IyAimShotMul;   // 인연 「쌍권총」 — 3 → 6발
             // 확정 치명 — 치명 배율(+ 급소 패시브)을 미리 곱한다. 숫자 색은 일반 피해로 뜬다(스킬 피해 길)
             int dmg = Mathf.Max(1, Mathf.RoundToInt(SkillDamage(me, AimShotMul * GrowRatio(AimShotTableBase))
                                                    * (CritMultiplier + CritDamageBonus)));
@@ -253,6 +256,8 @@ namespace Game.Module.InGame
             int dmg = SkillDamage(me, SuppressShotMul * GrowRatio(SuppressTableBase));
             int slow = SpecOpen ? SuppressSpecSlowPercent : SuppressSlowPercent;
             float half = SuppressConeDeg * 0.5f;
+            bool iy = InyeonOn(me);   // 인연 「엄호 화망」 — 맞는 적 발밑에 수류탄
+            int iyGrenade = iy ? SkillDamage(me, IyCoverGrenadeMul) : 0;
             for (int s = 0; s < steps; s++)
             {
                 bool slowTick = s % SuppressSlowEvery == 0;
@@ -271,6 +276,8 @@ namespace Game.Module.InGame
                     if (!slowTick) return;
                     var cone = EnemiesInCone(me.Position, aim, SuppressConeDeg, Meters(SuppressRangeMeters));
                     for (int i = 0; i < cone.Count; i++) cone[i].ApplySlow(slow, SuppressSlowSeconds);
+                    if (iy && cone.Count > 0)
+                        ThrowSkillGrenade(me, cone[Random.Range(0, cone.Count)].Position, iyGrenade, Meters(IyCoverGrenadeMeters));
                 });
             }
         }
@@ -352,6 +359,7 @@ namespace Game.Module.InGame
                         new Vector2(30f, 4f), ChargeLaserSeconds * 0.8f, new Color(0.5f, 0.9f, 1f, 1f));
             float width = Meters(SpecOpen ? ChargeLaserSpecWidthMeters : ChargeLaserWidthMeters) * _buffs.AoeMul;
             int dmg = SkillDamage(me, ChargeLaserMul * GrowRatio(ChargeLaserTableBase));
+            bool iy = InyeonOn(me);   // 인연 「과부하」 — 레이저 두 줄
             UltAfter(ChargeLaserSeconds, () =>
             {
                 if (!IsLiveCaster(me)) return;
@@ -374,6 +382,7 @@ namespace Game.Module.InGame
                     HitEnemyWith(hit[i], dmg, me.Profile);
                     PlayFx("lzhit", at, 90f, loop: false);
                 }
+                if (iy) IySecondLaser(me, from, aim, t, length, width, dmg);
                 Shake(6f);
                 HitStop(0.05f);
             });
@@ -387,6 +396,11 @@ namespace Game.Module.InGame
         {
             float r = Meters(WarCryMeters) * _buffs.AoeMul;
             float stun = SpecOpen ? WarCrySpecStunSeconds : WarCryStunSeconds;
+            if (InyeonOn(me))   // 인연 「불굴의 함성」 — 범위 1.5배 · 기절 2.5초
+            {
+                r *= IyWarCryRangeMul;
+                stun = Mathf.Max(stun, IyWarCryStunSeconds);
+            }
             var list = new List<Unit>(EnemiesInRange(me.Position, r));
             for (int i = 0; i < list.Count; i++)
             {
@@ -422,6 +436,7 @@ namespace Game.Module.InGame
             // 메인은 순간이동하는 동안 안 맞는다(스킬 무적 윤곽)
             if (me == _host) UltInvuln(n * ShadowCutGap + 0.2f);
             PlayFx("njsmoke", me.Position, SsrBody * 1.6f, loop: false);
+            if (InyeonOn(me)) IyShadowClone(me, n * ShadowCutGap + 0.1f);   // 인연 「그림자 분신」 — 베기 끝에 분신 4초
             for (int i = 0; i < n; i++)
             {
                 var e = near[i];
@@ -469,12 +484,14 @@ namespace Game.Module.InGame
 
             var hit = new List<Unit>(EnemiesInPath(from, dir, length, width));
             var bumped = new HashSet<Unit>(hit);   // 타구에 맞은 적은 부딪혀 다시 맞지 않는다
+            bool iy = InyeonOn(me);   // 인연 「얼음 장타」 — 맞은 적이 언다
             for (int i = 0; i < hit.Count; i++)
             {
                 var e = hit[i];
                 HitEnemyWith(e, dmg, me.Profile);
                 PlayFx("crit", e.Position, 96f, loop: false);
                 if (e.IsAlive && !e.IsBoss) LaunchDrive(me, e, dir, fly, bump, bumped);
+                if (iy) IyIceDrive(e);
             }
             Shake(5f);
             HitStop(0.05f);
@@ -519,6 +536,7 @@ namespace Game.Module.InGame
             int dmg = SkillDamage(me, ThunderMul * GrowRatio(ThunderTableBase));
             me.PlayAttack();
             PlayFx("dscoil", me.Position, SsrBody * 1.2f, loop: false);
+            bool iy = InyeonOn(me);   // 인연 「번개 사슬」 — 묶인 적은 낙뢰를 두 번 맞는다
             for (int i = 0; i < n; i++)
             {
                 var e = list[i];
@@ -532,6 +550,18 @@ namespace Game.Module.InGame
                     HitEnemyWith(e, dmg, me.Profile);
                     if (!QxSurgeSpark(at)) SpawnImpact(at, "thunder", ChainImpactSize);
                     Shake(2.5f);
+                    if (iy && e.IsAlive && (e.IsRooted || IsWrapped(e)))
+                        UltAfter(IyThunderAgainGap, () =>
+                        {
+                            if (!IsLiveCaster(me) || e == null || !e.IsAlive) return;
+                            var again = PlayFx("dbstrike", e.Position + new Vector2(0f, SsrBody * 1.1f), SsrBody * 2.2f, loop: false);
+                            if (again != null) again.SetFrameSeconds(0.04f);
+                            else PlayBolt(e.Position + new Vector2(0f, Meters(4f)), e.Position);
+                            var p = e.Position;
+                            HitEnemyWith(e, dmg, me.Profile);
+                            SpawnImpact(p, "thunder", ChainImpactSize);
+                            Shake(2.5f);
+                        });
                 });
             }
         }
@@ -558,6 +588,7 @@ namespace Game.Module.InGame
                 e.CancelWindup();
                 PlayFx("guard", e.Position, 72f, loop: false);
             }
+            if (InyeonOn(me)) IyBindSkullsNear(me, list);   // 인연 「결계 강령」 — 묶인 적 곁에 해골 2기
             Shake(3f);
         }
 
@@ -568,6 +599,7 @@ namespace Game.Module.InGame
         private void SnowBlizzard(Unit me)
         {
             float r = Meters(BlizzardMeters) * _buffs.AoeMul;
+            if (InyeonOn(me)) r *= IyBlizzardRangeMul;   // 인연 「얼음 진」 — 눈보라 범위 2배
             float seconds = (SpecOpen ? BlizzardSpecSeconds : BlizzardSeconds) * GrowRatio(BlizzardTableBase);
             me.PlayAttack();
             PlayFx("breath_ice", me.Position, r * 2f, loop: false);
@@ -596,6 +628,7 @@ namespace Game.Module.InGame
         {
             _amazonSprintReady = me == _host;
             AmazonLeapStrike(me);
+            if (InyeonOn(me)) IyLeapAgain(me);   // 인연 「번개 도약」 — 한 번 더 도약
         }
 
         /// <summary>도약 강타가 적을 잡았다 — 장전돼 있으면 가장 가까운 적에게 한 번 더 뛰어든다.</summary>

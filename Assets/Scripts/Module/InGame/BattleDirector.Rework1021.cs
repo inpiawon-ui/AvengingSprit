@@ -72,7 +72,9 @@ namespace Game.Module.InGame
                     me.SetFacing(at - me.Position);
                     me.PlayAttack();
                     // 원래 평타 탄(`ShotSpriteOf`)으로 나간다 — 예광탄으로 바꾸지 않는다
-                    FireFan(me, at, shots, ThugBurstSpanDeg, dmg, fromPlayer: true);
+                    // 인연 「뒷골목 난사」 — 탄이 가까운 적 쪽으로 살짝 휜다(메인만)
+                    if (InyeonOn(me)) IyFireFan(me, at, shots, ThugBurstSpanDeg, dmg, pierce: false, homing: IyThugHoming);
+                    else FireFan(me, at, shots, ThugBurstSpanDeg, dmg, fromPlayer: true);
                     PlayFx("muzzle", me.MuzzlePosition, 56f, loop: false);
                     Shake(2f);
                 });
@@ -93,6 +95,7 @@ namespace Game.Module.InGame
             float radius = Meters(MissileBlastMeters);
             var aim = list.Count > 0 && (list[0].Position - me.Position).sqrMagnitude > 1f
                     ? (list[0].Position - me.Position).normalized : me.Facing;
+            bool iy = InyeonOn(me);   // 인연 「집속탄」 — 한 발마다 작은 폭발
             for (int i = 0; i < MissileVolleyShots; i++)
             {
                 // 적이 일곱보다 적으면 가까운 쪽부터 한 바퀴 더 돈다
@@ -100,7 +103,8 @@ namespace Game.Module.InGame
                 float off = -MissileFanSpreadDeg * 0.5f + MissileFanSpreadDeg * i / (MissileVolleyShots - 1);
                 var fan = Rotate(aim, off);
                 var from = ClampedInField(me, me.Position + fan * Meters(MissileFanOutMeters));
-                FireSkillMissile(me, from, from + fan * Meters(6f), target, dmg, radius);
+                var missile = FireSkillMissile(me, from, from + fan * Meters(6f), target, dmg, radius);
+                if (iy) IyMarkCluster(missile);
                 PlayFx("missile_trail", from, 32f, loop: false);
             }
         }
@@ -203,6 +207,12 @@ namespace Game.Module.InGame
             SpawnSummon(GolemKey, "미니 골렘", MiniGolemHpPercent, MiniGolemAtkPercent, MiniGolemLifeSeconds + (SpecOpen ? MiniGolemSpecSeconds : 0f),
                         attacks: true, mobile: true, taunt: false, at: at, scale: MiniGolemScale, profile: GolemProfile);
             PlayFx("soulripple", at, Meters(1.4f), loop: false);
+            if (!InyeonOn(me)) return;
+            // 인연 「쌍골렘」 — 반대쪽에 한 기 더(다시 쓰면 위 줄이 둘 다 거둔다)
+            var at2 = ClampedInField(me, me.Position - AimDirection(me) * Meters(1.2f));
+            SpawnSummon(GolemKey, "미니 골렘", MiniGolemHpPercent, MiniGolemAtkPercent, MiniGolemLifeSeconds + (SpecOpen ? MiniGolemSpecSeconds : 0f),
+                        attacks: true, mobile: true, taunt: false, at: at2, scale: MiniGolemScale, profile: GolemProfile);
+            PlayFx("soulripple", at2, Meters(1.4f), loop: false);
         }
 
         // 닌자 액티브 「몸놀림」(회피 · 이속)은 PD 2026-10-29 에 「그림자 베기」로 바뀌었다(BattleDirector.Skills1029).
@@ -239,6 +249,8 @@ namespace Game.Module.InGame
                 from[i] = list[i].Position;
                 if (!QxChainCast(me, list[i])) PlayFx("chain", list[i].Position, 64f, loop: false);
             }
+            if (InyeonOn(me)) IyChainShock(me, list);   // 인연 「뇌전 사슬」 — 끌어올 때 사슬에 번개
+
             // 0.25초 동안 앞으로 끌려온다(열 걸음) — 한 점에 겹치지 않게 앞 지점 둘레로 조금씩 흩는다
             const int Steps = 10;
             for (int s = 1; s <= Steps; s++)
@@ -518,6 +530,8 @@ namespace Game.Module.InGame
 
             int tickDmg = SkillDamage(me, GravityTickMul);
             float hold = Meters(GravityHoldMeters);
+            bool iy = InyeonOn(me);   // 인연 「빛과 얼음」 — 끌어모은 적이 언 뒤 폭발(피해 +30%)
+            if (iy) IyFreezeGathered(me, c, r);
             for (int s = 1; s <= GravitySteps; s++)
             {
                 bool tick = s % GravityTickEvery == 0;   // 루프 변수를 람다에 잡지 않는다
@@ -543,6 +557,7 @@ namespace Game.Module.InGame
             {
                 if (!IsLiveCaster(me)) return;
                 int dmg = SkillDamage(me, GravityBurstMul);
+                if (iy) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * IyLightIceMul));
                 var hit = new List<Unit>(EnemiesInRange(c, r));
                 for (int i = 0; i < hit.Count; i++) HitEnemyWith(hit[i], dmg, me.Profile);
                 LightWardOnBurst(me, hit.Count);   // 패시브 「빛의 가호」 — 셋 이상 맞히면 쉴드(PD 2026-10-29)

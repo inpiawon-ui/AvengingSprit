@@ -44,6 +44,7 @@ namespace Game.Module.InGame
         /// <summary>떨어진 융단 폭격 탄이면 큰 도트 폭발로 터뜨린다. 다뤘으면 true(예전 폭발 그림을 안 띄운다).</summary>
         private bool PwExplode(Projectile shot, Vector2 at, float radius)
         {
+            IyClusterBurst(shot, at);   // 인연 「집속탄」 — 집속탄이면 작은 폭발 셋(BattleDirector.SkillsInyeon)
             // 미사일(다중 유도 · 미사일 몸) · 포탑 탄(pulse)도 내 것이면 같은 도트 폭발로 — 퀄업 13종(2026-10-07)
             bool mine = shot.FromPlayer && (shot.Kind == "missile" || shot.Kind == "pulse");
             bool carpet = _pwCarpet.Remove(shot);

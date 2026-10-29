@@ -277,8 +277,10 @@ namespace Game.Module.InGame
             if (near != null)
             {
                 me.SetFacing(near.Position - to);
-                FireFan(me, near.Position, SmgBackstepShots, SmgBackstepSpreadDeg,
-                        SkillDamage(me, BaseAxis(0.6f)), fromPlayer: true);
+                int dmg = SkillDamage(me, BaseAxis(0.6f));
+                // 인연 「백스텝 탄막」 — 연사가 적을 꿰뚫는다(메인만)
+                if (InyeonOn(me)) IyFireFan(me, near.Position, SmgBackstepShots, SmgBackstepSpreadDeg, dmg, pierce: true, homing: 0f);
+                else FireFan(me, near.Position, SmgBackstepShots, SmgBackstepSpreadDeg, dmg, fromPlayer: true);
                 SmgKnockFan(me, to, near.Position - to, SmgBackstepSpreadDeg);
             }
             PlayFx("dash", to, GaleDashFxSize, loop: false);

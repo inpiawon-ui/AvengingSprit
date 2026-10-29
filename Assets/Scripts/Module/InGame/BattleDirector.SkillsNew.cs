@@ -122,6 +122,7 @@ namespace Game.Module.InGame
             // 큰 회색 폭발 구름은 캐릭터 · 적을 통째로 가렸다(코덱스 진단) — 퀄업 연출이 있으면 절삭 · 바닥 펄스로
             if (WpReady) WpAmazonImpact(from, me.Position, r);
             else PlayFx("slam", me.Position, r * 2f, loop: false);
+            if (InyeonOn(me)) IyLeapRing(me);   // 인연 「번개 도약」 — 착지마다 번개 고리
         }
 
         /// <summary>
@@ -166,7 +167,8 @@ namespace Game.Module.InGame
         /// 예전엔 「묶여 있는 동안 ×1.3」(묶임 1.5초)이었다. 얼린 적 보너스(설녀)와 같은 층이다.
         /// </summary>
         private float BindBonusMul(Unit victim)
-            => PassiveHostKey == "ninja_chain" && IsWrapped(victim) ? 1f + PassiveFrac(ChainWrapBonus) : 1f;
+            => (PassiveHostKey == "ninja_chain" && IsWrapped(victim) ? 1f + PassiveFrac(ChainWrapBonus) : 1f)
+               * IyContractMul(victim);   // 인연 「청부 표식」 — 보조가 표식 적을 때리면 +50%(BattleDirector.SkillsInyeon)
 
         // ═══════════════════════════════════════════════════════════
         //  중거리
@@ -186,9 +188,12 @@ namespace Game.Module.InGame
             //   (기획 2026-09-15). 컷 네 장(`fx_lava_1~4`)을 장판 그림으로 넘겨 돌린다 —
             //   시작할 때 한 번 터지던 같은 그림은 겹쳐 보이므로 뺀다.
             float fieldRadius = Meters(LavaRadiusMeters) * _buffs.AoeMul;
+            bool iy = InyeonOn(me);   // 인연 「업화」 — 불바다 1.5배 · 밟은 적 둔화
+            if (iy) fieldRadius *= IyFireFieldMul;
             SpawnField(at, fieldRadius, 6f,
                        FieldEffect.Burn, tick, fromPlayer: true, artKey: FireFieldArt);
             QxFireBloom(at, fieldRadius);   // 퀄업(2026-10-07) — 불바다가 확 피어난다
+            if (iy) IyFireFieldSlow(at, fieldRadius);
             // ⚠ `fx_lava` 는 불 둘레의 검붉은 얼룩이 **피웅덩이**로 읽혀 반려됐다(기획 2026-09-15).
             //   영역 곳곳에서 불길이 솟고 바깥은 숯빛인 `fx_firefield_1~4` 로 바꾼다.
         }
@@ -301,6 +306,8 @@ namespace Game.Module.InGame
             // 빨아 온 피는 **메인**에게 간다(PD 2026-10-29) — 보조가 써도 메인의 최대 체력으로 센다
             var main = _host != null ? _host : me;
             int heal = Mathf.Max(1, Mathf.RoundToInt(main.HpMax * per * list.Count));
+            bool iy = InyeonOn(me);   // 인연 「피의 연회」 — 박쥐 두 배 · 중독된 적에게서 두 배
+            if (iy) heal = Mathf.Max(1, Mathf.RoundToInt(main.HpMax * per * IyFeastCount(list)));
 
             // ⚠ **즉발이 아니다.** 머릿수만큼 박쥐를 날려 보내고, 돌아온 뒤에 피가 찬다
             //   (기획 2026-09-15). 즉시 차면 무엇 때문에 찼는지가 안 보인다.
@@ -316,6 +323,7 @@ namespace Game.Module.InGame
                 im.Play(me.Position, BatFrames, BatFxSizeQ, loop: true);
                 _batTargets.Add((im, me.Position, list[i].Position));
             }
+            if (iy) IyFeastSecondBats(me, list);
             if (_batTargets.Count == 0) { Leech(heal); _batSeconds = 0f; }
         }
 
@@ -368,6 +376,7 @@ namespace Game.Module.InGame
 
             _markQueue.Clear();
             if (targets.Count == 0) { PlayFx("crit", me.Position, 96f, loop: false); return; }
+            if (InyeonOn(me)) IyContractStrike(targets);   // 인연 「청부 표식」 — 보조가 표식 적을 노린다
             // 퀄업 연출(2026-10-07) — 빠르게 훑고 한 번에 박힌다(큰 불덩이 · 섬광 없이)
             if (WpGangOpen(me, targets, seconds, percent)) return;
             for (int i = 0; i < targets.Count; i++) _markQueue.Add((targets[i], 0f, 0f, seconds, percent));
@@ -424,15 +433,16 @@ namespace Game.Module.InGame
         /// 로켓이 아니라 폭탄을 던지는 것으로 보였다(기획 2026-09-15). 머리가 나는 쪽을 보고,
         /// 벌어진 자리에서 표적으로 모이도록 조금 휘며, 닿거나 수명이 다하면 터진다.
         /// </summary>
-        private void FireSkillMissile(Unit me, Vector2 from, Vector2 at, Unit target, int damage, float radius)
+        private Projectile FireSkillMissile(Unit me, Vector2 from, Vector2 at, Unit target, int damage, float radius)
         {
             var shot = RentShot();
-            if (shot == null) return;
+            if (shot == null) return null;
             shot.SetSprite(ShotFrames("missile"), "missile", LoopsFrames("missile"));
             shot.Fire(from, at, _config.ShotSpeedPlayer, damage, true, target,
                       _config.ShotSize, ShotPlayerColor, _config.ShotLifeSeconds);
             shot.SetBlastRadius(radius);
             if (target != null) shot.SetHoming(MissileFanHoming);
+            return shot;
         }
 
         // ═══════════════════════════════════════════════════════════

@@ -359,6 +359,7 @@ namespace Game.Module.InGame
             if (_host == null || victim == null) return;
 
             switch (_host.Key)
+            IyOnKill(victim);   // 인연 「불독」 — 중독된 적이 쓰러지면 불꽃(BattleDirector.SkillsInyeon)
             {
                 // 갱스터 청부 계약 — 표식 단 적을 잡으면 액티브 쿨 −1초(PD 2026-10-29 — 예전 「표식 적 즉사」는 R 에 너무 셌다)
                 case "gangster":
