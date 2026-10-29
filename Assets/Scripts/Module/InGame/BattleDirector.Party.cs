@@ -49,8 +49,8 @@ namespace Game.Module.InGame
         public const int SubSwapMax = 1;
         public const int SubSlots = 2;
 
-        /// <summary>적 호스트의 체력이 이 비율 아래면 빙의 가능.</summary>
-        public const float PossessHpRatio = 0.35f;
+        /// <summary>적 호스트의 체력이 이 비율 아래면 빙의 가능. 35% 는 너무 빨리 죽어 60% 로 올렸다(PD 2026-10-29).</summary>
+        public const float PossessHpRatio = 0.6f;
         /// <summary>보조의 평타 · 스킬 세기(메인 대비).</summary>
         public const float SubPower = 0.3f;
         /// <summary>보조 스킬 자동 발동 간격(초).</summary>
@@ -263,13 +263,16 @@ namespace Game.Module.InGame
             Destroy(target.gameObject);
 
             var u = NewUnit($"PartySub_{key}");
-            int atk = Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * PartyRule.SubPower));
+            // 메인으로 입었을 때와 같은 식(로비 강화 · 성급 포함)의 30% — 기본값의 30% 면 메인보다 훨씬 약해진다
+            int atk = Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk)
+                                                    * MasteryStatMulOf(key) * PartyRule.SubPower));
             u.Setup(UnitSide.Player, key, entry != null ? entry.DisplayName : key, UnitGet(key),
                     9999, atk, HostSpeedOf(entry) * 1.15f, HostRangeOf(entry), HostIntervalOf(entry),
                     UnitBox(84f, 80f), isBoss: false, profile: entry);
             u.Position = at;
             u.SetState(EnemyState.Idle);
             ApplyFacingSprites(u, key);
+            u.SetHpBarVisible(false);   // 보조는 체력이 없다 — 적이 노리지 않아 맞지도 않는다
             PlayFx("shield", at, 128f, loop: false);
 
             var sub = new PartySub { U = u, SkillCd = Random.Range(1.5f, 3f) };
@@ -346,6 +349,7 @@ namespace Game.Module.InGame
 
         private void TickParty(float dt)
         {
+            SyncPartyKeys();
             if (!PartyOn || _subs.Count == 0) return;
             var me = Avatar;
             if (me == null) return;
@@ -427,6 +431,18 @@ namespace Game.Module.InGame
                 : "연사";
             var t = RentDamageText();
             if (t != null) t.Show(u.Position + new Vector2(0f, 70f), skill, new Color(0.85f, 0.76f, 1f));
+        }
+
+        /// <summary>
+        /// 지금 파티(메인 · 보조)에 있는 호스트 — 같은 호스트는 두 번 빙의하지 못한다(PD 2026-10-29 「똑같은 캐릭터 여러 마리는 아니야」).
+        /// </summary>
+        private void SyncPartyKeys()
+        {
+            var set = Unit.PartyKeys;
+            set.Clear();
+            if (!PartyOn) return;
+            if (_host != null && _host.Key != null) set.Add(_host.Key);
+            for (int i = 0; i < _subs.Count; i++) if (_subs[i].U != null && _subs[i].U.Key != null) set.Add(_subs[i].U.Key);
         }
 
         /// <summary>깊이 정렬 — 보조도 줄에 세운다.</summary>

@@ -265,6 +265,9 @@ namespace Game.Module.InGame
         /// <summary>빙의 파티 규칙이 걸린 판인가(`BattleDirector.Party`). 경직 대신 체력 35% 아래가 빙의 조건이다.</summary>
         public static bool PartyActive;
 
+        /// <summary>지금 파티에 있는 호스트 키. 같은 호스트는 빙의할 수 없다(`BattleDirector.Party.SyncPartyKeys`).</summary>
+        public static readonly System.Collections.Generic.HashSet<string> PartyKeys = new();
+
         /// <summary>
         /// 지금 이 순간 빼앗을 수 있는가.
         /// **숙주로 찍힌 몸**이어야 하고, 몸을 입고 있다면 **경직 중**이기까지 해야 한다.
@@ -279,7 +282,8 @@ namespace Game.Module.InGame
                 if (Profile != null &&
                     Profile.PossessKind == Game.Character.PossessKind.NotPossessable) return false;
                 // 빙의 파티 — 몸을 입고 있어도 체력 35% 아래면 탈 수 있다. 계속 싸우다 죽는다
-                if (PartyActive) return !PlayerHasHost || Hp <= HpMax * PartyRule.PossessHpRatio;
+                if (PartyActive)
+                    return !PartyKeys.Contains(Key) && (!PlayerHasHost || Hp <= HpMax * PartyRule.PossessHpRatio);
                 return !PlayerHasHost || IsStaggered;
             }
         }
