@@ -54,6 +54,11 @@ namespace Game.Module.Common
         private StringTable _table;
         private Language _current = Language.Japanese;
 
+        // 지금 언어의 폰트 꾸러미 하나만 쥔다. 언어를 바꾸면 새 것을 읽고 옛 것을 놓는다.
+        private LanguageFontSet _fontSet;
+        private string _fontSetAddress;
+        private int _switchVersion;
+
 #if UNITY_EDITOR
         // 빠진 키를 한 번씩만 알린다. 매 프레임 같은 경고가 쌓이면 진짜 경고가 묻힌다.
         private readonly HashSet<string> _warned = new();
@@ -68,7 +73,9 @@ namespace Game.Module.Common
 
         public Language Current => _current;
         public bool IsReady => _table != null;
-        public TMP_FontAsset GothicFont => _table?.FontFor(_current)?.Gothic;
+        public TMP_FontAsset GothicFont => Target?.Gothic;
+
+        private LanguageFont Target => _fontSet != null ? _fontSet.Font : null;
 
         public async UniTask LoadAsync()
         {
@@ -82,6 +89,7 @@ namespace Game.Module.Common
             }
 
             _current = PickStartLanguage();
+            await LoadFontSetAsync(_current);
             ApplyAll();
         }
 
@@ -120,13 +128,13 @@ namespace Game.Module.Common
             PlayerPrefs.Save();
             if (language == _current && _table != null) return;
             _current = language;
-            ApplyAll();
+            SwitchAsync(++_switchVersion).Forget();   // fire-and-forget: 폰트 꾸러미가 오면 화면을 다시 입힌다
         }
 
         public void ApplyFonts(Transform root)
         {
             if (root == null || _table == null) return;
-            var target = _table.FontFor(_current);
+            var target = Target;
             if (target?.Gothic == null) return;
 
             var texts = root.GetComponentsInChildren<TMP_Text>(true);
@@ -145,6 +153,37 @@ namespace Game.Module.Common
         }
 
         // ─────────────────────────────────────────────────────────
+
+        private async UniTaskVoid SwitchAsync(int version)
+        {
+            await LoadFontSetAsync(_current);
+            if (version != _switchVersion) return;   // 그사이 또 바뀌었다 — 마지막 것만 입힌다
+            ApplyAll();
+        }
+
+        private async UniTask LoadFontSetAsync(Language language)
+        {
+            string address = LanguageFontSet.AddressOf(language);
+            if (address == _fontSetAddress && _fontSet != null) return;
+
+            var resources = CoreModule.Get<IResourceManager>();
+            LanguageFontSet loaded;
+            try
+            {
+                loaded = await resources.LoadAsync<LanguageFontSet>(address);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Language] 폰트 꾸러미를 못 읽었다({address}) — 지금 폰트를 그대로 쓴다: {e.Message}");
+                return;
+            }
+
+            // 새 것을 쥔 뒤에 옛 것을 놓는다 — 화면 글자가 옛 폰트를 아직 물고 있어도 묶음이 먼저 풀리지 않는다
+            string old = _fontSetAddress;
+            _fontSet = loaded;
+            _fontSetAddress = address;
+            if (!string.IsNullOrEmpty(old) && old != address) resources.Release(old);
+        }
 
         private Language PickStartLanguage()
         {
@@ -165,7 +204,7 @@ namespace Game.Module.Common
             // 이미 떠 있는 모든 화면. 꺼진 오브젝트까지 — 켜지는 순간 옛 폰트가 보이면 안 된다.
             if (_table != null)
             {
-                var target = _table.FontFor(_current);
+                var target = Target;
                 if (target?.Gothic != null)
                 {
                     var texts = UnityEngine.Object.FindObjectsByType<TMP_Text>(
@@ -181,12 +220,16 @@ namespace Game.Module.Common
         /// <summary>
         /// 픽셀 폰트(영문·숫자)는 한글·일본어를 대체 폰트로 받는다. 그 대체를 지금 언어의
         /// 본문 폰트로 **맨 앞에** 둔다 — 한글 폰트가 앞에 있으면 일본어 한자가 한국식으로 나온다.
+        ///
+        /// 다른 언어 폰트는 대체 목록에 넣지 않는다 — 넣으려면 다 읽어야 해서 메모리가 다시 커진다(2026-10-30).
+        /// 번역이 빈 줄(한국어 원문)은 각 본문 폰트가 이미 받는다: Pretendard · Pretendard JP 는 한글이 들어 있고,
+        /// 중국어 폰트는 제 대체 목록에 Pretendard 를 물고 있다.
         /// </summary>
         private void ApplyPixelFallback()
         {
             if (_table == null) return;
             var pixel = TMP_Settings.defaultFontAsset;
-            var gothic = _table.FontFor(_current)?.Gothic;
+            var gothic = Target?.Gothic;
             if (pixel == null || gothic == null) return;
 
             if (_pixel == null)
@@ -195,13 +238,7 @@ namespace Game.Module.Common
                 _pixelOriginal = new List<TMP_FontAsset>(pixel.fallbackFontAssetTable ?? new List<TMP_FontAsset>());
             }
 
-            var list = new List<TMP_FontAsset> { gothic };
-            for (int i = 0; i < _table.Fonts.Count; i++)
-            {
-                var other = _table.Fonts[i]?.Gothic;
-                if (other != null && !list.Contains(other)) list.Add(other);
-            }
-            pixel.fallbackFontAssetTable = list;
+            pixel.fallbackFontAssetTable = new List<TMP_FontAsset> { gothic };
         }
 
         private void SwapFont(TMP_Text text, LanguageFont target)
@@ -274,23 +311,10 @@ namespace Game.Module.Common
             text.fontSharedMaterial = m;
         }
 
-        /// <summary>어느 언어든 굵은 폰트로 등록된 것인가. 본문 폰트와 같은 칸은 빼고 본다.</summary>
-        private bool IsHeavy(TMP_FontAsset font)
-        {
-            for (int i = 0; i < _table.Fonts.Count; i++)
-            {
-                var f = _table.Fonts[i];
-                if (f != null && f.HasHeavy && f.Heavy == font) return true;
-            }
-            return false;
-        }
+        // 어느 언어든 굵은 · 본문 폰트로 등록된 것인가. 다른 언어 폰트를 읽지 않고 이름으로 가린다.
+        private bool IsHeavy(TMP_FontAsset font) => _table.IsHeavyFont(font);
 
-        private bool IsGothic(TMP_FontAsset font)
-        {
-            for (int i = 0; i < _table.Fonts.Count; i++)
-                if (_table.Fonts[i]?.Gothic == font) return true;
-            return false;
-        }
+        private bool IsGothic(TMP_FontAsset font) => _table.IsGothicFont(font);
 
         /// <summary>`NotoSansKR SDF - Outline` → ` - Outline`. 기본 재질이면 null.</summary>
         private static string PresetSuffix(Material material)

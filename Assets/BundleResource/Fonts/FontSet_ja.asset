@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ed0569c2db55eb49bbd2672cf542fc7, type: 3}
+  m_Name: FontSet_ja
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LanguageFontSet
+  _font:
+    _language: 1
+    _gothic: {fileID: 11400000, guid: 71cb0acc4899b2546ae3a703b0361e3c, type: 2}
+    _presets:
+    - {fileID: 2100000, guid: 6bc6337728f12524f97d1c3ecd835339, type: 2}
+    - {fileID: 2100000, guid: f5ac1ac765c7dad4ea6748c77316fa94, type: 2}
+    - {fileID: 2100000, guid: 3ad15d82aa689f2409a52ff081f00af8, type: 2}
+    - {fileID: 2100000, guid: e40a9811d6c71b14889a7fee8c4bb150, type: 2}
+    - {fileID: 2100000, guid: 5594a7817230ca749ba838610b68e236, type: 2}
+    - {fileID: 2100000, guid: 7ecc4a9200d47d24baf590b74bfe4c3f, type: 2}
+    - {fileID: 2100000, guid: ede29e71d0620d8459bc44963fa36403, type: 2}
+    - {fileID: 2100000, guid: d297a54ee4de7024199ace98b5da71e3, type: 2}
+    _heavy: {fileID: 11400000, guid: b05089bf346339d4da5c5fb8440c5e2c, type: 2}

@@ -41,7 +41,7 @@ namespace Game.EditorTools
                 }
                 foreach (Language lang in System.Enum.GetValues(typeof(Language)))
                 {
-                    var font = strings.FontFor(lang);
+                    var font = LanguageFontSet.LoadInEditor(lang);
                     if (font != null)
                     {
                         name.font = font.Heavy;

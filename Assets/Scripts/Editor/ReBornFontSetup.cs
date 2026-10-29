@@ -11,7 +11,8 @@ namespace Game.Editor
 {
     /// <summary>
     /// 글꼴 파일(`Assets/BaseResource/Fonts/ReBorn/`)에서 TMP 동적 SDF 글꼴을 만들고, 효과 프리셋 8개(이름 꼬리)를 같이 만들어
-    /// 문자열 표의 언어별 글꼴(`StringTable._fonts`)에 건다. 여러 번 돌려도 같다(있는 것은 다시 만들지 않는다).
+    /// 언어별 폰트 꾸러미(`Assets/BundleResource/Fonts/FontSet_{코드}.asset`)에 건다. 표에는 이름만 적고,
+    /// 폰트는 `font` 묶음에 하나씩 등록한다(2026-10-30 메모리). 여러 번 돌려도 같다(있는 것은 다시 만들지 않는다).
     /// 설정은 지금 쓰던 NotoSansKR SDF 와 같게 — 90pt · 여백 9 · SDFAA · 1024 · 여러 장 아틀라스 · 빌드 때 동적 글자 비움(규칙 09).
     /// </summary>
     public static class ReBornFontSetup
@@ -22,6 +23,8 @@ namespace Game.Editor
         private const string PresetSource = "Assets/BaseResource/Fonts/NotoSansKR SDF - {0}.mat";
         private static readonly string[] Tails = { "GlowBlue", "GlowGold", "GlowPurple", "Label", "Outline", "Shadow", "Soft", "Title" };
         private const string NumberFont = "Galmuri11-Bold.ttf";
+        private const string FontGroup = "font";
+        private const string FontLabel = "label_font";
 
         // 언어 → (본문 파일, 굵은 파일)
         private static readonly (Language lang, string body, string heavy)[] Map =
@@ -57,15 +60,21 @@ namespace Game.Editor
                 EditorUtility.SetDirty(kv.Value);
             }
 
-            var table = AssetDatabase.LoadAssetAtPath<StringTable>(TablePath);
-            var so = new SerializedObject(table);
-            var fonts = so.FindProperty("_fonts");
-            fonts.ClearArray();
-            for (int i = 0; i < Map.Length; i++)
+            // 언어마다 꾸러미 한 장. 표는 폰트를 물지 않고 이름만 쥔다(2026-10-30 메모리 — LanguageFontSet 참고)
+            if (!AssetDatabase.IsValidFolder(LanguageFontSet.Folder))
+                AssetDatabase.CreateFolder("Assets/BundleResource", "Fonts");
+            var sets = new List<LanguageFontSet>();
+            foreach (var (lang, body, heavy) in Map)
             {
-                var (lang, body, heavy) = Map[i];
-                fonts.InsertArrayElementAtIndex(i);
-                var e = fonts.GetArrayElementAtIndex(i);
+                string path = $"{LanguageFontSet.Folder}/FontSet_{LanguageCodes.Code(lang)}.asset";
+                var set = AssetDatabase.LoadAssetAtPath<LanguageFontSet>(path);
+                if (set == null)
+                {
+                    set = ScriptableObject.CreateInstance<LanguageFontSet>();
+                    AssetDatabase.CreateAsset(set, path);
+                }
+                var so = new SerializedObject(set);
+                var e = so.FindProperty("_font");
                 e.FindPropertyRelative("_language").enumValueIndex = (int)lang;
                 e.FindPropertyRelative("_gothic").objectReferenceValue = made[body];
                 e.FindPropertyRelative("_heavy").objectReferenceValue = made[heavy];
@@ -76,11 +85,90 @@ namespace Game.Editor
                     p.InsertArrayElementAtIndex(k);
                     p.GetArrayElementAtIndex(k).objectReferenceValue = presets[body][k];
                 }
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(set);
+                sets.Add(set);
             }
-            so.ApplyModifiedPropertiesWithoutUndo();
+
+            var table = AssetDatabase.LoadAssetAtPath<StringTable>(TablePath);
+            var tso = new SerializedObject(table);
+            WriteNames(tso.FindProperty("_gothicFontNames"), Map, m => made[m.body].name);
+            WriteNames(tso.FindProperty("_heavyFontNames"), Map, m => made[m.heavy].name);
+            tso.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[RE:BORN 글꼴] 글꼴 {made.Count}개 · 언어 {Map.Length}개 걸음");
+
+            int entries = RegisterFontGroup(sets);
+            Debug.Log($"[RE:BORN 글꼴] 글꼴 {made.Count}개 · 언어 꾸러미 {sets.Count}장 · font 묶음 항목 {entries}개");
+        }
+
+        private static void WriteNames(SerializedProperty list,
+                                       (Language lang, string body, string heavy)[] map,
+                                       System.Func<(Language lang, string body, string heavy), string> pick)
+        {
+            var names = new List<string>();
+            foreach (var m in map)
+            {
+                string n = pick(m);
+                if (!names.Contains(n)) names.Add(n);
+            }
+            list.ClearArray();
+            for (int i = 0; i < names.Count; i++)
+            {
+                list.InsertArrayElementAtIndex(i);
+                list.GetArrayElementAtIndex(i).stringValue = names[i];
+            }
+        }
+
+        /// <summary>
+        /// 폰트를 `font` 묶음에 **하나씩 따로**(Pack Separately) 등록한다.
+        ///
+        /// ⚠ 등록하지 않으면 그 폰트를 무는 묶음마다 폰트가 복사돼 들어간다 — 표 묶음과 화면 묶음에
+        ///   같은 폰트가 두 벌씩 있었다(0.1.33 빌드 보고서: 압축 전 64.6MB + 58.1MB). 따로 묶어야
+        ///   꾸러미 하나를 읽을 때 그 언어 폰트 묶음만 따라 올라온다.
+        /// 본문 · 굵은 · 숫자 폰트와 효과 프리셋, 옛 화면이 아직 무는 NotoSans KR/JP 까지 넣는다.
+        /// 픽셀 폰트(`OriginalPixel SDF`)는 TMP 설정(Resources)이 물어 앱 본체에 이미 들어가므로 넣지 않는다.
+        /// </summary>
+        private static int RegisterFontGroup(List<LanguageFontSet> sets)
+        {
+            var settings = UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings;
+            var group = settings.FindGroup(FontGroup);
+            if (group == null)
+            {
+                var template = settings.FindGroup("tabledata");
+                group = settings.CreateGroup(FontGroup, false, false, true, template.Schemas);
+            }
+            var schema = group.GetSchema<UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema>();
+            schema.BundleMode = UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
+            EditorUtility.SetDirty(schema);
+
+            int n = 0;
+            foreach (var set in sets)
+                n += Register(settings, group, AssetDatabase.GetAssetPath(set), $"Fonts/{set.name}");
+            foreach (var dir in new[] { "Assets/BaseResource/Fonts", Dir })
+            {
+                foreach (var guid in AssetDatabase.FindAssets("t:TMP_FontAsset t:Material", new[] { dir }))
+                {
+                    string path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (System.IO.Path.GetDirectoryName(path)!.Replace('\\', '/') != dir) continue;   // 하위 폴더는 따로 돈다
+                    if (path.Contains("OriginalPixel")) continue;
+                    n += Register(settings, group, path, "Fonts/" + System.IO.Path.GetFileNameWithoutExtension(path));
+                }
+            }
+            settings.SetDirty(UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.ModificationEvent.BatchModification, null, true, true);
+            AssetDatabase.SaveAssets();
+            return n;
+        }
+
+        private static int Register(UnityEditor.AddressableAssets.Settings.AddressableAssetSettings settings,
+                                    UnityEditor.AddressableAssets.Settings.AddressableAssetGroup group,
+                                    string path, string address)
+        {
+            var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(path), group, false, false);
+            if (entry == null) return 0;
+            entry.address = address;
+            entry.SetLabel(FontLabel, true, true, false);
+            return 1;
         }
 
         private static TMP_FontAsset Ensure(string file)

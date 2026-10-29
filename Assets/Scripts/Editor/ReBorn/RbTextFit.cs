@@ -110,7 +110,7 @@ namespace Game.Editor.ReBorn
                     string s = e.Raw(lang);
                     if (string.IsNullOrEmpty(s)) s = e.Raw(Language.Korean);
                     s = s.Replace("\\n", "\n").Replace("{0}", "88").Replace("{1}", "88").Replace("{2}", "88").Replace("{3:N0}", "8,888").Replace("{0:N0}", "8,888");
-                    var lf = table.FontFor(lang);
+                    var lf = LanguageFontSet.LoadInEditor(lang);
                     bool number = t.font != null && t.font.name.StartsWith("Galmuri");
                     if (lf != null && !number) t.font = heavy ? lf.Heavy : lf.Gothic;
                     t.enableAutoSizing = false;

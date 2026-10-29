@@ -77,6 +77,8 @@ namespace Game.EditorTools
             // AAB 가 아니라 APK. 스토어가 아니라 폰에 바로 넣을 것이다.
             EditorUserBuildSettings.buildAppBundle = false;
 
+            ResetPixelFallbackToDisk();
+
             Debug.Log("[Build] Addressable 번들을 굽는다…");
             AddressableAssetSettings.BuildPlayerContent(out var addrResult);
             if (!string.IsNullOrEmpty(addrResult.Error))
@@ -121,6 +123,44 @@ namespace Game.EditorTools
 
             SweepOldSymbolFolders(dir, version);
             MoveOlderApksAside(dir, version);
+        }
+
+        /// <summary>
+        /// 픽셀 폰트(TMP 기본 폰트)의 대체 목록을 **파일에 적힌 값**으로 되돌린다.
+        ///
+        /// ⚠ 언어 서비스는 플레이 중 이 목록을 지금 언어 폰트로 바꾸고 끝날 때 되돌린다. 그런데 플레이 중
+        ///   컴파일(도메인 리로드)로 되돌리기가 건너뛰면 바뀐 목록이 **메모리에 남아 빌드에 그대로 구워진다**.
+        ///   0.1.33 까지 일본어 · 중국어 두 벌 · 한국어 본문 폰트(원본 약 25MB)가 화면 묶음과 앱 본체에
+        ///   딸려 들어간 원인이다(2026-10-30). 다시 가져오기(ImportAsset)로는 메모리 값이 안 돌아온다.
+        /// </summary>
+        private static void ResetPixelFallbackToDisk()
+        {
+            var pixel = TMPro.TMP_Settings.defaultFontAsset;
+            if (pixel == null) return;
+            string path = AssetDatabase.GetAssetPath(pixel);
+            if (string.IsNullOrEmpty(path)) return;
+
+            string yaml = File.ReadAllText(path);
+            int at = yaml.IndexOf("m_FallbackFontAssetTable:", StringComparison.Ordinal);
+            var list = new System.Collections.Generic.List<TMPro.TMP_FontAsset>();
+            if (at >= 0)
+            {
+                foreach (var line in yaml.Substring(at).Split('\n').Skip(1))
+                {
+                    if (!line.StartsWith("  - ", StringComparison.Ordinal)) break;
+                    var m = System.Text.RegularExpressions.Regex.Match(line, @"guid: (\w+)");
+                    if (!m.Success) continue;
+                    var font = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(
+                        AssetDatabase.GUIDToAssetPath(m.Groups[1].Value));
+                    if (font != null) list.Add(font);
+                }
+            }
+
+            var before = pixel.fallbackFontAssetTable;
+            bool same = before != null && before.Count == list.Count && before.SequenceEqual(list);
+            pixel.fallbackFontAssetTable = list;
+            if (!same)
+                Debug.LogWarning($"[Build] 픽셀 폰트 대체 목록이 메모리에서 바뀌어 있었다 — 파일 값({list.Count}개)으로 되돌리고 굽는다");
         }
 
         /// <summary>

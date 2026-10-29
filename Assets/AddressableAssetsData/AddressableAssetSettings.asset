@@ -62,6 +62,7 @@ MonoBehaviour:
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
   - {fileID: 11400000, guid: 30e054224b82106449b1837af2f3d560, type: 2}
+  - {fileID: 11400000, guid: 3789038800ec54c40985ee6ca8e94f14, type: 2}
   - {fileID: 11400000, guid: 50723f3b2f2fdfc45926c287fff1d167, type: 2}
   - {fileID: 11400000, guid: cb79a52c7537b8e4bbdea3e534aebf04, type: 2}
   - {fileID: 11400000, guid: a62c1812be8aec3418b59875b29ed957, type: 2}
@@ -120,6 +121,7 @@ MonoBehaviour:
     - label_cutscene
     - label_sound
     - label_particlefx
+    - label_font
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 588d833945a63a74c8f4261df786507e, type: 2}

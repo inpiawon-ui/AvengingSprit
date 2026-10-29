@@ -106,28 +106,27 @@ namespace Game.Module.Common
         [Tooltip("켜면 저장된 선택이 없을 때 기기 언어를 따른다. 끄면 위 기본 언어로 시작한다.")]
         [SerializeField] private bool _followSystemLanguage;
 
-        [SerializeField] private List<LanguageFont> _fonts = new();
+        // ⚠ 폰트를 직접 물지 않는다 — 물면 표를 읽을 때 다섯 언어 폰트가 다 올라온다(2026-10-30).
+        //   폰트는 언어별 꾸러미(`LanguageFontSet`)에 있고, 여기는 「어느 칸이 본문 · 굵은 폰트인가」를
+        //   가리는 이름만 둔다. `언어별 글꼴 만들기 · 걸기` 도구가 채운다.
+        [SerializeField] private List<string> _gothicFontNames = new();
+        [SerializeField] private List<string> _heavyFontNames = new();
         [SerializeField] private List<StringEntry> _entries = new();
 
         private Dictionary<string, StringEntry> _index;
 
         public Language DefaultLanguage => _defaultLanguage;
         public bool FollowSystemLanguage => _followSystemLanguage;
-        public IReadOnlyList<LanguageFont> Fonts => _fonts;
         public IReadOnlyList<StringEntry> Entries => _entries;
+
+        public bool IsGothicFont(TMP_FontAsset font) => font != null && _gothicFontNames.Contains(font.name);
+        public bool IsHeavyFont(TMP_FontAsset font) => font != null && _heavyFontNames.Contains(font.name);
 
         public StringEntry Find(string key)
         {
             if (string.IsNullOrEmpty(key)) return null;
             if (_index == null) BuildIndex();
             return _index.TryGetValue(key, out var entry) ? entry : null;
-        }
-
-        public LanguageFont FontFor(Language language)
-        {
-            for (int i = 0; i < _fonts.Count; i++)
-                if (_fonts[i] != null && _fonts[i].Language == language) return _fonts[i];
-            return null;
         }
 
         /// <summary>에디터 도구용 — 없으면 한국어 원문으로 새 줄을 만든다.</summary>
