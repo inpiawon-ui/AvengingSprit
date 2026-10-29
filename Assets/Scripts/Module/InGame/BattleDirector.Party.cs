@@ -155,7 +155,10 @@ namespace Game.Module.InGame
                 bool here = false;
                 for (int k = 0; k < _enemies.Count; k++)
                     if (_enemies[k] != null && _enemies[k].IsHostBody && _enemies[k].Key == h.HostKey) { here = true; break; }
-                if (!here) _partyPool.Add(h);
+                if (here) continue;
+                _partyPool.Add(h);
+                // 지금 메인의 인연 짝은 한 번 더 넣는다 = 약 2배(PD 2026-10-29 「등장 확률을 올려 줘야지」)
+                if (IsMainPartner(h.HostKey)) _partyPool.Add(h);
             }
             return _partyPool.Count == 0 ? canon : _partyPool[_rng.Next(_partyPool.Count)];
         }
@@ -409,6 +412,7 @@ namespace Game.Module.InGame
         {
             SyncPartyKeys();
             RecountSynergy();
+            RecountInyeon();
             RefreshSubAtk();
             TickPartyHud();
             TickPartyFx(dt);

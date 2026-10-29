@@ -224,6 +224,7 @@ namespace Game.Module.InGame
             float thick = thread != null ? ThreadThickness : LinkThickness;
             float dt = Mathf.Min(Time.deltaTime, 0.05f);
 
+            if (_inyeonFlash > 0f) _inyeonFlash -= dt;
             _linkMoteTimer -= dt;
             bool mote = _linkMoteTimer <= 0f;
             if (mote) _linkMoteTimer = LinkMoteGap;
@@ -245,7 +246,7 @@ namespace Game.Module.InGame
 
                 // 혼줄이 숨쉬듯 아주 조금 짙어졌다 옅어진다 — 멈춘 선이면 바닥 무늬로 읽힌다
                 float a = LinkAlpha * (0.85f + 0.15f * Mathf.Sin(Time.time * 2.4f + i));
-                DrawRope(r, segSprite, thick, a);
+                DrawRope(r, segSprite, thick, RopeTint(u, a));
 
                 // 실 위 아무 마디에서 빛 점 하나가 천천히 떠올라 사라진다 — 양 끝(몸 가까이)은 피한다
                 if (mote && _pfx != null)
@@ -318,7 +319,7 @@ namespace Game.Module.InGame
             return r.P[k] + n * w;
         }
 
-        private static void DrawRope(PartyRope r, Sprite seg, float thickness, float alpha)
+        private static void DrawRope(PartyRope r, Sprite seg, float thickness, Color tint)
         {
             int segs = RopeNodes - 1;
             // 그리는 점은 이웃과 평균 낸다 — 마디가 꺾인 자리가 각지게 보였다(2026-10-29 확대 검수)
@@ -342,8 +343,33 @@ namespace Game.Module.InGame
                 float fade = edge == 0 ? 0.3f : edge == 1 ? 0.7f : 1f;
                 var img = r.Img[k];
                 img.sprite = seg;
-                img.color = new Color(1f, 1f, 1f, alpha * fade);
+                img.color = new Color(tint.r, tint.g, tint.b, tint.a * fade);
             }
+        }
+
+        // ── 인연 켜짐 (기본형 — 연출 단계에서 다듬는다) ─────────────────
+        // 켜지는 순간 짝과 이은 혼실이 금빛으로 번쩍였다가, 켜져 있는 동안 옅은 금빛으로 남는다.
+        // 메인 머리 위에 「인연 · 이름」 한 줄. 전투는 멈추지 않는다(메모리 「연출로 게임을 멈춘 듯 만들지 말 것」).
+        private const float InyeonFlashSeconds = 1.2f;
+        private static readonly Color InyeonGold = new(1f, 0.84f, 0.42f);
+        private float _inyeonFlash;
+
+        private void PlayInyeonFx(bool on)
+        {
+            if (!on || _host == null) { _inyeonFlash = 0f; return; }
+            _inyeonFlash = InyeonFlashSeconds;
+            var t = RentDamageText();
+            if (t != null) t.Show(_host.Position + new Vector2(0f, 84f), $"인연 · {InyeonName(_host.Key)}", InyeonGold);
+        }
+
+        /// <summary>이 보조와 이은 실의 색 · 짙기 — 인연 짝이면 금빛.</summary>
+        private Color RopeTint(Unit sub, float alpha)
+        {
+            if (_inyeonKey == null || sub == null || !IsMainPartner(sub.Key)) return new Color(1f, 1f, 1f, alpha);
+            float k = Mathf.Clamp01(_inyeonFlash / InyeonFlashSeconds);
+            var c = Color.Lerp(Color.white, InyeonGold, 0.55f + 0.45f * k);
+            c.a = Mathf.Lerp(alpha * 1.3f, 0.95f, k);
+            return c;
         }
 
         private (RectTransform, Image) NewCordImage(string name, RectTransform layer)

@@ -67,13 +67,23 @@ namespace Game.Module.InGame
         /// <summary>지금 파티(메인 · 보조)로 시너지를 다시 센다. 매 프레임 `SyncPartyKeys` 뒤에 부른다.</summary>
         private void RecountSynergy()
         {
-            _syn = default;
-            _synLines.Clear();
-            if (PartyOn && Unit.PartyKeys.Count >= 2)
+            CountSynergy(Unit.PartyKeys, ref _syn, _synLines);
+            ApplySynergyHp();
+        }
+
+        /// <summary>
+        /// 태그 시너지를 센다 — 값과 줄만 만들고 몸에는 아무것도 걸지 않는다.
+        /// 빙의 가능 말풍선이 「데려오면 무엇이 켜지나」를 물을 때도 이것을 쓴다(체력이 흔들리면 안 된다).
+        /// </summary>
+        private void CountSynergy(HashSet<string> keys, ref PartySynergy syn, List<string> lines)
+        {
+            syn = default;
+            lines.Clear();
+            if (PartyOn && keys.Count >= 2)
             {
                 _tagCount.Clear();
                 int force = 0, blade = 0, magic = 0;
-                foreach (var k in Unit.PartyKeys)
+                foreach (var k in keys)
                 {
                     var a = AffinityRule.KindOf(k);
                     if (a == Affinity.Force) force++; else if (a == Affinity.Blade) blade++; else if (a == Affinity.Magic) magic++;
@@ -81,9 +91,9 @@ namespace Game.Module.InGame
                     if (o != null) _tagCount[o] = _tagCount.TryGetValue(o, out int n) ? n + 1 : 1;
                 }
 
-                if (force >= 2) { bool st = force >= 3; _syn.Def += st ? 0.20f : 0.10f; _synLines.Add($"파워 {force}인 · 받는 피해 −{(st ? 20 : 10)}%"); }
-                if (blade >= 2) { bool st = blade >= 3; _syn.AtkSpd += st ? 0.25f : 0.12f; _synLines.Add($"무기 {blade}인 · 공속 +{(st ? 25 : 12)}%"); }
-                if (magic >= 2) { bool st = magic >= 3; _syn.Cd += st ? 0.25f : 0.12f; _synLines.Add($"마법 {magic}인 · 스킬 쿨 −{(st ? 25 : 12)}%"); }
+                if (force >= 2) { bool st = force >= 3; syn.Def += st ? 0.20f : 0.10f; lines.Add($"파워 {force}인 · 받는 피해 −{(st ? 20 : 10)}%"); }
+                if (blade >= 2) { bool st = blade >= 3; syn.AtkSpd += st ? 0.25f : 0.12f; lines.Add($"무기 {blade}인 · 공속 +{(st ? 25 : 12)}%"); }
+                if (magic >= 2) { bool st = magic >= 3; syn.Cd += st ? 0.25f : 0.12f; lines.Add($"마법 {magic}인 · 스킬 쿨 −{(st ? 25 : 12)}%"); }
 
                 foreach (var kv in _tagCount)
                 {
@@ -92,15 +102,14 @@ namespace Game.Module.InGame
                     string lv = st ? "3인" : "2인";
                     switch (kv.Key)
                     {
-                        case "갱단": _syn.Crit += st ? 20f : 10f; _synLines.Add($"갱단 {lv} · 치명 +{(st ? 20 : 10)}%"); break;
-                        case "코만도 부대": _syn.Hp += st ? 0.30f : 0.15f; _synLines.Add($"코만도 {lv} · 최대 체력 +{(st ? 30 : 15)}%"); break;
-                        case "무도가": _syn.Dodge += st ? 16 : 8; _synLines.Add($"무도가 {lv} · 회피 +{(st ? 16 : 8)}%"); break;
-                        case "괴물": _syn.KillHeal += st ? 0.04f : 0.02f; _synLines.Add($"괴물 {lv} · 처치 회복 {(st ? 4 : 2)}%"); break;
-                        case "마도": _syn.SubCd += st ? 0.30f : 0.15f; _synLines.Add($"마도 {lv} · 보조 스킬 간격 −{(st ? 30 : 15)}%"); break;
+                        case "갱단": syn.Crit += st ? 20f : 10f; lines.Add($"갱단 {lv} · 치명 +{(st ? 20 : 10)}%"); break;
+                        case "코만도 부대": syn.Hp += st ? 0.30f : 0.15f; lines.Add($"코만도 {lv} · 최대 체력 +{(st ? 30 : 15)}%"); break;
+                        case "무도가": syn.Dodge += st ? 16 : 8; lines.Add($"무도가 {lv} · 회피 +{(st ? 16 : 8)}%"); break;
+                        case "괴물": syn.KillHeal += st ? 0.04f : 0.02f; lines.Add($"괴물 {lv} · 처치 회복 {(st ? 4 : 2)}%"); break;
+                        case "마도": syn.SubCd += st ? 0.30f : 0.15f; lines.Add($"마도 {lv} · 보조 스킬 간격 −{(st ? 30 : 15)}%"); break;
                     }
                 }
             }
-            ApplySynergyHp();
         }
 
         // ── 코만도 — 최대 체력 ─────────────────────────────────
