@@ -92,8 +92,8 @@ MonoBehaviour:
   _enemyIntervalMul: 0.85
   _enemyWindupMul: 0.7
   _enemyHpMul: 2
-  _shieldPerHitPercent: 1.5
-  _shieldCapPercent: 15
+  _shieldPerHitPercent: 3
+  _shieldCapPercent: 20
   _shieldHoldSeconds: 1
   _shieldDecayPercentPerSecond: 12
   _hostHpPerPoint: 6
