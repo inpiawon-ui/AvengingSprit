@@ -71,6 +71,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c3c5e0fe23adfec4e92018deca1f3c2c, type: 2}
   - {fileID: 11400000, guid: 0bb61b18be008674a95b72e26537f741, type: 2}
   - {fileID: 11400000, guid: c68704ac6046ab640909c978519b3676, type: 2}
+  - {fileID: 11400000, guid: b67226cfb5a1cb145bf968f4cd864a74, type: 2}
   - {fileID: 11400000, guid: fd807b1c82685b84b94db1389127ec65, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -122,6 +123,7 @@ MonoBehaviour:
     - label_sound
     - label_particlefx
     - label_font
+    - label_stagebg
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 588d833945a63a74c8f4261df786507e, type: 2}

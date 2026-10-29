@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: stagebg
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: stagebg
+  m_GUID: eb7503cff30c1cf44bb5b3d2e9636c8b
+  m_SerializeEntries:
+  - m_GUID: 066b04b98efab6543b3d627e36201769
+    m_Address: StageBg/rb_art_bg_stage_ch02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 38fbbbb68d0eaf443afbf6b7873d151b
+    m_Address: StageBg/rb_art_bg_stage_ch07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 433d148a043ac20408ad026f2bc38740
+    m_Address: StageBg/rb_art_bg_stage_ch04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5fa8bc38c8173bf4283a4bf144a2e41c
+    m_Address: StageBg/rb_art_bg_stage_ch03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ca95ee035f29d746b653af17a9b4e49
+    m_Address: StageBg/rb_art_bg_stage_ch05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8bd80bdee4bb596429c2f65655b436e5
+    m_Address: StageBg/rb_art_bg_stage_ch01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4ace7e157eaae949abd995c53fe0c76
+    m_Address: StageBg/rb_art_bg_stage_ch08
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db70de281465c3641a96cd4dcf0bab72
+    m_Address: StageBg/rb_art_bg_stage_ch09
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd3e53bf891b0a14fa10ca69268cd477
+    m_Address: StageBg/rb_art_bg_stage_ch06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: edcecff7c4606854b93d0da40926d5a0
+    m_Address: StageBg/rb_art_bg_stage_ch10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_stagebg
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c6c277573e33af940b234b0fad410f26, type: 2}
+    - {fileID: 11400000, guid: b264f906f8dfddd4e9c6ffea4aae038e, type: 2}

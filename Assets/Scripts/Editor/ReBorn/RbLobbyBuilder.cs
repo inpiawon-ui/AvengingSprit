@@ -126,9 +126,10 @@ namespace Game.Editor.ReBorn
             One("_segOff", "Components/rb_lobby_seg_off");
             One("_segMid", "Components/rb_lobby_seg_mid");
             One("_segBoss", "Components/rb_lobby_seg_boss");
-            var bgs = new string[StageBgOf.Length];
-            for (int i = 0; i < bgs.Length; i++) bgs[i] = $"Art/rb_art_bg_stage_ch{StageBgOf[i]:00}";
-            Many("_stageBgs", bgs);
+            // 챕터 배경은 파일 이름만 적는다 — 그림을 걸면 로비가 10장을 한꺼번에 올린다(StageBgSlot, 2026-10-30)
+            var bgs = so.FindProperty("_stageBgNames");
+            bgs.arraySize = StageBgOf.Length;
+            for (int i = 0; i < StageBgOf.Length; i++) bgs.GetArrayElementAtIndex(i).stringValue = $"rb_art_bg_stage_ch{StageBgOf[i]:00}";
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

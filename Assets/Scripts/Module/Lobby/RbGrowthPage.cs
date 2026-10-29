@@ -34,7 +34,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _rankGold, _rankSilver;   // 성급 별 — 큰 금별(5성마다) · 작은 은별(RbHostPage.Stars)
         [SerializeField] private Sprite _tileNormal, _tileMax, _tilePoor;
         [SerializeField] private Sprite _btnReady, _btnShort;
-        [SerializeField] private Sprite[] _stageBgs = Array.Empty<Sprite>();
+        // 챕터 배경은 파일 이름만 — 보일 때 한 장만 주소로 읽는다(StageBgSlot, 2026-10-30 메모리)
+        [SerializeField] private string[] _stageBgNames = Array.Empty<string>();
+        private readonly StageBgSlot _stageBg = new();
         // 오른쪽 인연 판(시안 2 mock1029_growth_inyeon) — `Tools/Game/RE:BORN 화면/해금 연출 부품 꽂기` 가 같이 꽂는다
         [SerializeField] private RbGrowthInyeonPanel.Art _iyArt;
         private RbGrowthInyeonPanel _iyPanel;
@@ -185,8 +187,8 @@ namespace Game.Module.Lobby
                 show.SetShadow(true);   // 발판 그림 대신 발밑 검은 그림자(PD 2026-10-26)
                 show.Show(_key, tint);
             }
-            if (_ui.Get<Image>("GrwHeroStage") is Image stage && _stageBgs.Length > 0)
-                stage.sprite = _stageBgs[(Mathf.Max(1, _player.SelectedChapter) - 1) % _stageBgs.Length];
+            if (_ui.Get<Image>("GrwHeroStage") is Image stage && _stageBgNames.Length > 0)
+                _stageBg.Show(stage, _stageBgNames[(Mathf.Max(1, _player.SelectedChapter) - 1) % _stageBgNames.Length], gameObject.scene.name);
             _ui.SetText("GrwName", e.DisplayName);
 
             var kind = AffinityRule.KindOf(_key);

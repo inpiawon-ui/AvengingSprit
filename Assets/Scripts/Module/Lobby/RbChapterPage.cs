@@ -21,6 +21,8 @@ namespace Game.Module.Lobby
         private UIBinder _ui;
         private RbLobbyUI _shell;
         private readonly List<Transform> _rows = new();
+        // 줄마다 썸네일 한 칸 — 목록을 열 때 읽고 닫을 때 놓는다(2026-10-30 메모리: 10장을 로비 내내 쥐고 있었다)
+        private readonly List<StageBgSlot> _thumbs = new();
 
         private void Awake()
         {
@@ -31,13 +33,14 @@ namespace Game.Module.Lobby
             _ui.OnClick("ChsHelp", () => SystemPopup.Show(Localize.FromTable("ui.rb.chs.help", "챕터를 깨면 다음 챕터가 열려요.\n깬 챕터도 다시 도전할 수 있어요."), null, Localize.Get("ui.common.ok"), null));
         }
 
-        public void Open(IPlayerDataService player, Sprite[] stageBgs, int selected)
+        public void Open(IPlayerDataService player, string[] stageBgs, int selected)
         {
             Awake();
             gameObject.SetActive(true);
             int count = Mathf.Max(1, player.ChapterCount);
             EnsureRows(count);
-            for (int i = 0; i < _rows.Count; i++) Fill(_rows[i], i + 1, player, stageBgs, selected);
+            while (_thumbs.Count < _rows.Count) _thumbs.Add(new StageBgSlot());
+            for (int i = 0; i < _rows.Count; i++) Fill(_rows[i], _thumbs[i], i + 1, player, stageBgs, selected);
             if (_ui.Find("ChsBody") is RectTransform view && view.TryGetComponent<ScrollRect>(out var sr))
             {
                 if (sr.content != null) sr.content.sizeDelta = new Vector2(sr.content.sizeDelta.x, count * RowPitch + ListPad);
@@ -62,12 +65,18 @@ namespace Game.Module.Lobby
             for (int i = 0; i < _rows.Count; i++) _rows[i].gameObject.SetActive(i < count);
         }
 
-        private void Fill(Transform row, int ch, IPlayerDataService player, Sprite[] stageBgs, int selected)
+        private void OnDisable()
+        {
+            for (int i = 0; i < _thumbs.Count; i++) _thumbs[i].Clear();
+        }
+
+        private void Fill(Transform row, StageBgSlot thumb, int ch, IPlayerDataService player, string[] stageBgs, int selected)
         {
             bool open = ch <= player.UnlockedChapter;
             bool cleared = ch < player.UnlockedChapter || ch <= player.ClearedChapter;
-            if (Find(row, "ChsRowThumbArt") is Transform t && t.TryGetComponent<Image>(out var art) && stageBgs != null && stageBgs.Length > 0)
-                art.sprite = stageBgs[(ch - 1) % stageBgs.Length];
+            if (row.gameObject.activeSelf && Find(row, "ChsRowThumbArt") is Transform t && t.TryGetComponent<Image>(out var art)
+                && stageBgs != null && stageBgs.Length > 0)
+                thumb.Show(art, stageBgs[(ch - 1) % stageBgs.Length], gameObject.scene.name);
             var no = Text(row, "ChsRowNo", $"CH {ch}");
             var info = player.ChapterInfo(ch);
             var name = Text(row, "ChsRowName", Localize.FromTable($"stage.{ch}.1.name", info.Name ?? string.Empty));
