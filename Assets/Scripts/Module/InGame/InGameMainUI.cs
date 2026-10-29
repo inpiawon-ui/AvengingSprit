@@ -407,6 +407,7 @@ namespace Game.Module.InGame
             TickBossTrail(Time.deltaTime);
             TickGoldFx(Time.deltaTime);
             TickLowHpBlink();
+            TickPartyHud();
         }
 
         // ── 딸피 점멸 ────────────────────────────────────────────

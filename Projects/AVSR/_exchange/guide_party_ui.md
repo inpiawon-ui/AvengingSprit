@@ -34,3 +34,31 @@
 - 전투가 가장 잘 보여야 한다 — HUD 는 위 · 아래 띠와 왼쪽(또는 오른쪽) 가장자리 좁은 열만 쓴다. 필드 가운데를 판으로 덮지 않는다
 - 시너지 문장은 태그마다 다른 모양(갱단 · 코만도 · 무도가 · 괴물 · 마도 · 파워 · 무기 · 마법 · 균형)
 - 금지: 글자만 늘어놓은 판 · 필드 한가운데 큰 반투명 판 · 영어 글자
+
+---
+
+## 확정 (PD 2026-10-29)
+- 정답 틀: `in/mock_partyui_S1b.png`(위쪽 한 줄 판 · 메인 칸만 크게 + 체력 · 보조 썸네일 · 빈 자리 「+ −10」 · 판 바로 밑 왼쪽 시너지 칸 「2/3」만)
+- 같은 틀 다섯 장: `in/mock_partyui_F_states.png` · `F_possess.png` · `F_syndetail.png` · `F_choice.png` · `F_death.png`
+- PD 보탬: 빙의 선택창은 **화면 가운데** · 시너지 설명 창은 **칸을 눌렀을 때만**(전투 잠깐 멈춤) · 시너지 칸은 **최대한 작게**(폭 약 56px, 문장 + 「2/3」)
+- 시너지 칸은 왼쪽에 **세로로** 쌓는다(한 번에 2~3칸)
+
+## 부품 표 — 발주는 이 덩어리에서 만든다 · 납품 검수는 이것과 하나씩 맞댄다
+앵커 크롭: `ref/party_ui_1029/anchor/`
+
+```
+UI-PARTY-01  partyhud_panel        위쪽 판 — 어두운 남색 반투명 + 얇은 청록 테두리 + 리벳. 9분할로 늘려 쓸 수 있게(가로 늘림). 앵커 a_top_hud.png
+UI-PARTY-02  partyhud_main_frame   메인 칸 테 — 금 테 + 작은 왕관(오른쪽 위). 칸 안은 비움(얼굴 · 체력은 코드가 넣음). 약 104×84
+UI-PARTY-03  partyhud_sub_frame    보조 썸네일 테 — 보라 테 정사각. 약 56×56
+UI-PARTY-04  partyhud_empty_frame  빈 자리 — 점선 테 + 「+」 그림(「−10」 글자는 코드). 약 56×56
+UI-PARTY-05  partyhud_bar_bg / partyhud_bar_ghost / partyhud_bar_hp   막대 바탕 · 유령 HP 채움(청록) · 메인 체력 채움(초록) — 9분할 가로
+UI-PARTY-06  syn_cell_on / syn_cell_off / syn_cell_preview   시너지 칸 바탕 — 켜짐(금 테) · 꺼짐(어두운 테) · 미리보기(흐린 점선). 약 56×64
+UI-PARTY-07  syn_icon_force · blade · magic · gang · commando · martial · monster · mystic · balance   시너지 육각 문장 9종(파워 · 무기 · 마법 · 갱단 · 코만도 부대 · 무도가 · 괴물 · 마도 · 균형). 약 44×44
+UI-PARTY-08  possess_bubble_syn / possess_bubble_none   빙의 가능 말풍선 — 금빛(시너지 들어감) · 회색(시너지 없음). 9분할 · 꼬리 아래
+UI-PARTY-09  party_popup_panel     창 판(빙의 선택 · 사망 · 시너지 설명 공용) — 9분할
+UI-PARTY-10  party_row / party_row_best / party_row_off   선택 줄 — 보통 · 추천(금빛 + 「추천」 꼬리표) · 못 고름(어둡게 + 자물쇠). 9분할
+UI-PARTY-11  party_timer_ring      사망창 원형 시계 테(채움은 코드가 돌린다)
+금지: 글자 박기(모든 글자는 코드) · 그림에 빛 번짐 굽기 · 외곽 그림자 판
+바탕: 분홍(#FF00FF) — 받으면 뚫는다
+상태: 발주
+```

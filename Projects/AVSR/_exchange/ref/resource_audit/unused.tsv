@@ -74,7 +74,7 @@
 사용	Assets/BaseResource/Fonts/NotoSansKR-Bold.ttf	6223212	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR.ttf	10415532	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/OriginalPixel SDF.asset	30843	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF.asset	2798620	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF.asset	5268321	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold.ttf	2613660	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold SDF.asset	371299	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold.ttf	10585504	GUID 참조(프리팹 · 표 · 재질)
@@ -100,7 +100,7 @@
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Title.mat	1931	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF.asset	135105	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold.ttf	7142644	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold SDF.asset	14716650	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold SDF.asset	16989424	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold.otf	1576660	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowBlue.mat	1942	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowGold.mat	1942	GUID 참조(프리팹 · 표 · 재질)
@@ -110,7 +110,7 @@
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Shadow.mat	1925	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Soft.mat	1930	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Title.mat	1931	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF.asset	11724711	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF.asset	13969716	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold.otf	1583704	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold SDF.asset	7258707	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold.otf	3774288	GUID 참조(프리팹 · 표 · 재질)
@@ -364,8 +364,22 @@
 사용	Assets/BaseResource/InGameMainUI/obj_wallturret_e.png	11684	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/obj_wallturret_s.png	16247	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/obj_wallturret_w.png	11576	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/party_popup_panel.png	155493	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/party_row.png	41445	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/party_row_best.png	48204	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/party_row_off.png	43232	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/party_sub_ring.png	13873	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/party_timer_ring.png	20707	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/partyhud_bar_bg.png	5654	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/partyhud_bar_ghost.png	4454	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/partyhud_bar_hp.png	5202	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/partyhud_empty_frame.png	6444	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/partyhud_main_frame.png	8245	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/partyhud_panel.png	97854	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/partyhud_sub_frame.png	4147	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/InGameMainUI/pausebutton.png	6858	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/possess_bubble_none.png	12875	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/possess_bubble_syn.png	14378	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/possessbutton.png	49451	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/possessbutton_glow.png	35463	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/InGameMainUI/possessicon_enter.png	6972	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
@@ -410,6 +424,17 @@
 사용	Assets/BaseResource/InGameMainUI/skillcastready_2.png	20483	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/skillcastready_3.png	20113	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/skillcastspark.png	4114	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_cell_box.png	50157	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/syn_cell_on.png	6420	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/syn_icon_blade.png	5804	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_icon_commando.png	5681	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_icon_force.png	5667	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_icon_gang.png	6106	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_icon_glow.png	21904	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/syn_icon_magic.png	5510	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_icon_martial.png	5445	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/syn_icon_monster.png	6088	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/InGameMainUI/syn_icon_mystic.png	6426	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/tower_plate.png	27536	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/InGameMainUI/ui_dodge_arrow.png	322	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/ultimatebutton.png	57113	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
@@ -1095,7 +1120,7 @@
 사용	Assets/BundleResource/ParticleFx/pfx_streak.mat	2651	주소 ParticleFx/streak
 사용	Assets/BundleResource/Prefabs/UI/Common/RbLoadingView.prefab	19474	주소 UI/Common/RbLoadingView
 사용	Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab	976100	주소 UI/InGame/InGameMainUI
-사용	Assets/BundleResource/Prefabs/UI/InGame/RbInGameMainUI.prefab	2012898	주소 UI/InGame/RbInGameMainUI
+사용	Assets/BundleResource/Prefabs/UI/InGame/RbInGameMainUI.prefab	2125007	주소 UI/InGame/RbInGameMainUI
 사용	Assets/BundleResource/Prefabs/UI/Lobby/RbLobbyUI.prefab	4436061	주소 UI/Lobby/RbLobbyUI
 사용	Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab	29359	주소 UI/Opening/OpeningMainUI
 사용	Assets/BundleResource/Prefabs/UI/Title/RbTitleUI.prefab	20314	주소 UI/Title/RbTitleUI
@@ -1189,7 +1214,7 @@
 사용	Assets/BundleResource/Sounds/SFX/sfx_36.wav	30862	주소 Sounds/sfx_36
 사용	Assets/BundleResource/Sounds/SFX/sfx_37.wav	42218	주소 Sounds/sfx_37
 사용	Assets/BundleResource/Sounds/SFX/sfx_38.wav	48700	주소 Sounds/sfx_38
-사용	Assets/BundleResource/TableData/ActiveSkillTable.asset	9681	주소 TableData/ActiveSkillTable
+사용	Assets/BundleResource/TableData/ActiveSkillTable.asset	10240	주소 TableData/ActiveSkillTable
 사용	Assets/BundleResource/TableData/BossTable.asset	15377	주소 TableData/BossTable
 사용	Assets/BundleResource/TableData/BuffTable.asset	20269	주소 TableData/BuffTable
 사용	Assets/BundleResource/TableData/ChestTable.asset	1327	주소 TableData/ChestTable
@@ -1198,13 +1223,13 @@
 사용	Assets/BundleResource/TableData/GameConfig.asset	23859	주소 TableData/GameConfig
 사용	Assets/BundleResource/TableData/HostTable.asset	29866	주소 TableData/HostTable
 사용	Assets/BundleResource/TableData/ModeTable.asset	5525	주소 TableData/ModeTable
-사용	Assets/BundleResource/TableData/PassiveSkillTable.asset	9734	주소 TableData/PassiveSkillTable
+사용	Assets/BundleResource/TableData/PassiveSkillTable.asset	9856	주소 TableData/PassiveSkillTable
 사용	Assets/BundleResource/TableData/RoomTable.asset	4388281	주소 TableData/RoomTable
 사용	Assets/BundleResource/TableData/SeasonTable.asset	4647	주소 TableData/SeasonTable
 사용	Assets/BundleResource/TableData/ShopTable.asset	16195	주소 TableData/ShopTable
 사용	Assets/BundleResource/TableData/SoundTable.asset	15235	주소 TableData/SoundTable
 사용	Assets/BundleResource/TableData/StoreTable.asset	9678	주소 TableData/StoreTable
-사용	Assets/BundleResource/TableData/StringTable.asset	571825	주소 TableData/StringTable
+사용	Assets/BundleResource/TableData/StringTable.asset	574875	주소 TableData/StringTable
 사용	Assets/BundleResource/TableData/TrashTable.asset	19039	주소 TableData/TrashTable
 사용(동적)	Assets/BaseResource/Card/card_c002.png	34382	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c003.png	31474	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -1966,11 +1991,6 @@
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflect_2.png	1554	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflect_3.png	1403	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflect_sheet.png	3743	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflectaura_1.png	6677	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflectaura_2.png	6389	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflectaura_3.png	6171	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflectaura_4.png	6364	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_reflectaura_sheet.png	20144	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_rfring_1.png	21033	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_rfring_2.png	25598	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_rfring_3.png	24539	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -5827,6 +5847,11 @@
 안 씀	Assets/BaseResource/InGameMainUI/fx_mgwall_4.png	41014	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_mgwall_5.png	41144	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_mgwall_6.png	41032	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_reflectaura_1.png	6677	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_reflectaura_2.png	6389	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_reflectaura_3.png	6171	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_reflectaura_4.png	6364	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_reflectaura_sheet.png	20144	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_soulcord.png	4787	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_wworb_1.png	1186	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_wworb_2.png	1562	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
@@ -5853,20 +5878,6 @@
 안 씀	Assets/BaseResource/InGameMainUI/obj_pillar_144x330.png	28407	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/obj_pillar_234x348.png	73336	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/obj_rail_carriage.png	11720	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/party_popup_panel.png	155493	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/party_row.png	41445	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/party_row_best.png	48204	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/party_row_off.png	43232	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/party_timer_ring.png	20707	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_bar_bg.png	5654	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_bar_ghost.png	4454	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_bar_hp.png	5202	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_empty_frame.png	6444	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_main_frame.png	8245	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_panel.png	97854	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/partyhud_sub_frame.png	4147	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/possess_bubble_none.png	12875	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/possess_bubble_syn.png	14378	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/possessmark_banned.png	337	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/possessmark_locked.png	337	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/possessmark_nextbody_1.png	296	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
@@ -5919,17 +5930,8 @@
 안 씀	Assets/BaseResource/InGameMainUI/shot_evo11_2.png	323	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/shot_evo11_3.png	330	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/syn_cell_off.png	6313	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_cell_on.png	6420	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/syn_cell_preview.png	6421	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/syn_icon_balance.png	5835	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_blade.png	5804	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_commando.png	5681	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_force.png	5667	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_gang.png	6106	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_magic.png	5510	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_martial.png	5445	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_monster.png	6088	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
-안 씀	Assets/BaseResource/InGameMainUI/syn_icon_mystic.png	6426	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/uipiece_cardchips.png	30471	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/uipiece_cardpanel_evolution.png	70093	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/uipiece_eventbuttons.png	167072	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
@@ -6315,3 +6317,21 @@
 안 씀	Assets/Screenshots/screenshot-20261029-172848.png	14822	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/Screenshots/screenshot-20261029-172855.png	1338041	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/Screenshots/screenshot-20261029-172911.png	1355645	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-173930.png	1376611	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-173931.png	1371366	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-174104-1.png	1367559	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-174104.png	1368103	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-175246.png	14822	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-175255.png	1417093	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-181713.png	1450265	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-181723.png	1434338	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-181920.png	1435718	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-181930.png	1427629	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-182342.png	14822	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-182350.png	1448397	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-182553.png	1419132	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-182601.png	1415077	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-183209.png	14822	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-183217.png	1479112	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-183319.png	14822	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/Screenshots/screenshot-20261029-183329.png	1443303	아무 데서도 참조 · 이름 사용이 없다

@@ -119,6 +119,9 @@ namespace Game.Module.InGame
         {
             "gangster", "thug", "dragoon", "salamander", "dragon_blue", "commando_grenade",
             "commando_missile", "commando_laser", "white_wizard", "medium", "robot", "ninja_chain",
+            // 스킬 개편(2026-10-29)으로 적에게 닿는 액티브가 된 것 — 메인 전용 덤(쉴드 등)은 메인일 때만 붙는다
+            "hopper", "commando_mg", "amazon_elite", "baseball", "guru", "snowwoman", "vampire",
+            // ⚠ ninja(그림자 베기) · hopper_smg(백스텝)는 보조 몸을 옮긴다 — 대열 코드와 깜빡이는지 판에서 본 뒤 넣는다
         };
 
         // ─────────────────────────────────────────
@@ -414,8 +417,8 @@ namespace Game.Module.InGame
             RecountSynergy();
             RecountInyeon();
             RefreshSubAtk();
-            TickPartyHud();
             TickPartyFx(dt);
+            TickPossessBubble();
             if (!PartyOn || _subs.Count == 0) return;
             var me = Avatar;
             if (me == null) return;
@@ -536,6 +539,7 @@ namespace Game.Module.InGame
             if (_partyTimer < 0f) return;
             _partyTimer -= Time.unscaledDeltaTime;
             if (_partyTimerText != null) _partyTimerText.text = $"남은 시간 {Mathf.Max(0f, _partyTimer):0.0}초";
+            if (_partyTimerFill != null) _partyTimerFill.fillAmount = Mathf.Clamp01(_partyTimer / Mathf.Max(0.01f, _partyTimerTotal));
             if (_partyTimer > 0f) return;
             ClosePartyPopup();
             _ghostHp = 0;
@@ -558,6 +562,17 @@ namespace Game.Module.InGame
         }
 
         private TextMeshProUGUI _partyTimerText;
+        private Image _partyTimerFill;
+        private float _partyTimerTotal = 1f;
+
+        /// <summary>부품 그림을 9분할로 깐다. 그림이 없으면(아틀라스가 아직 안 올라옴) 예전 단색으로 둔다.</summary>
+        private void Sliced(Image img, string sprite, Color fallback)
+        {
+            var sp = GetSprite(sprite);
+            img.sprite = sp;
+            img.type = sp != null && sp.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
+            img.color = sp != null ? Color.white : fallback;
+        }
 
         private void ShowPartyPopup(string title, string sub, List<PartyOption> opts, float timer)
         {
@@ -575,12 +590,9 @@ namespace Game.Module.InGame
 
             const float W = 640f;
             float h = 150f + opts.Count * 122f + (timer > 0f ? 40f : 0f);
+            // 창 판 · 줄 · 시계 테는 발주 부품(UI-PARTY-09~11, 시안 mock_partyui_F_choice · F_death) — 가운데에 띄운다(PD 「빙의 선택창은 가운데」)
             var panel = NewRect("Panel", rt, new Vector2(W, h));
-            var pImg = panel.gameObject.AddComponent<Image>();
-            pImg.color = new Color(0.106f, 0.106f, 0.153f, 0.98f);
-            var outline = panel.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.36f, 0.78f, 1f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            Sliced(panel.gameObject.AddComponent<Image>(), "party_popup_panel", new Color(0.106f, 0.106f, 0.153f, 0.98f));
 
             float y = h * 0.5f - 44f;
             NewText(panel, title, 30, Color.white, new Vector2(0f, y), new Vector2(W - 40f, 44f), true);
@@ -591,6 +603,21 @@ namespace Game.Module.InGame
             if (timer > 0f)
             {
                 _partyTimerText = NewText(panel, "", 24, new Color(1f, 0.54f, 0.42f), new Vector2(0f, y - 6f), new Vector2(W - 40f, 34f), true);
+                // 시계 테 + 줄어드는 채움(코드가 돌린다)
+                var ring = NewRect("TimerRing", panel, new Vector2(64f, 64f));
+                ring.anchoredPosition = new Vector2(W * 0.5f - 52f, h * 0.5f - 52f);
+                var ringImg = ring.gameObject.AddComponent<Image>();
+                ringImg.sprite = GetSprite("party_timer_ring");
+                ringImg.raycastTarget = false;
+                var fill = NewRect("TimerFill", ring, new Vector2(50f, 50f));
+                _partyTimerFill = fill.gameObject.AddComponent<Image>();
+                _partyTimerFill.sprite = GetSprite("party_timer_ring");
+                _partyTimerFill.type = Image.Type.Filled;
+                _partyTimerFill.fillMethod = Image.FillMethod.Radial360;
+                _partyTimerFill.fillOrigin = (int)Image.Origin360.Top;
+                _partyTimerFill.color = new Color(1f, 0.54f, 0.42f, 0.85f);
+                _partyTimerFill.raycastTarget = false;
+                _partyTimerTotal = timer;
                 y -= 40f;
             }
             y -= 14f;
@@ -602,7 +629,8 @@ namespace Game.Module.InGame
                 b.anchoredPosition = new Vector2(0f, y - 55f);
                 var img = b.gameObject.AddComponent<Image>();
                 bool gold = o.Enabled && o.Act != null && i > 0 && o.Title.StartsWith("보조");
-                img.color = !o.Enabled ? new Color(0.08f, 0.08f, 0.08f) : gold ? new Color(0.23f, 0.19f, 0.09f) : new Color(0.145f, 0.145f, 0.2f);
+                Sliced(img, !o.Enabled ? "party_row_off" : gold ? "party_row_best" : "party_row",
+                       !o.Enabled ? new Color(0.08f, 0.08f, 0.08f) : gold ? new Color(0.23f, 0.19f, 0.09f) : new Color(0.145f, 0.145f, 0.2f));
                 var btn = b.gameObject.AddComponent<Button>();
                 btn.interactable = o.Enabled;
                 var act = o.Act;
@@ -631,6 +659,7 @@ namespace Game.Module.InGame
             if (_partyPopup != null) Destroy(_partyPopup);
             _partyPopup = null;
             _partyTimerText = null;
+            _partyTimerFill = null;
             _partyHold = false;
             _partyTimer = -1f;
             _partyPick = null;

@@ -38,6 +38,7 @@ namespace Game.Editor.ReBorn
                 foreach (var n in new[] { "TopHudGroup", "ControlGroup", "StageText" })
                     if (root.transform.Find(n) is Transform t && t.GetComponent<Game.Module.Common.UI.ScreenFitKeepWidth>() == null)
                         t.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitKeepWidth>();
+                RbPartyHudBuilder.Apply(root.transform);   // 빙의 파티 위 HUD(S1b) — 빌더를 다시 돌려도 남게
                 Wire(root.GetComponent<Game.Module.InGame.InGameMainUI>());
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
