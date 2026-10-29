@@ -764,10 +764,13 @@ namespace Game.Editor.ReBorn
             var accept = PutPx(F(root, "EventAcceptButton"), panel, 360f, buttons + 40f, DealRowW, 80f);
             Skin(accept, "Components/rb_btn_primary");
             SwapPressed(accept, "Components/rb_btn_primary_pressed");
+            // 글자 칸을 단추에 꽉 채운다 — 단추 왼쪽 위 모서리에 걸려 글자가 왼쪽으로 쏠렸다(PD 2026-10-30 「악마의 제단 선택 글자가 가운데가 아니다」)
+            Stretch(F(root, "EventAcceptText"));
             Style(F(root, "EventAcceptText"), 44, new Color(0.17f, 0.1f, 0f), TA.Center, heavy: true);
             var decline = PutPx(F(root, "EventDeclineButton"), panel, 360f, buttons + 136f, DealRowW, 80f);
             Skin(decline, "Components/rb_btn_secondary");
             SwapPressed(decline, "Components/rb_btn_secondary_pressed");
+            Stretch(F(root, "EventDeclineText"));
             Style(F(root, "EventDeclineText"), 44, White, TA.Center, heavy: true);
             if (F(root, "EventDeclineText")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI dt) dt.richText = true;
             PutPx(F(root, "EventResultText"), panel, 360f, buttons + 40f, DealRowW, 80f);
