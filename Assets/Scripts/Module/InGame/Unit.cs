@@ -1809,10 +1809,27 @@ namespace Game.Module.InGame
         /// <summary>빙의 파티의 보조 호스트인가. 비치는 보랏빛으로 숨쉬듯 깜빡인다.</summary>
         public bool IsPartySub { get; private set; }
 
-        public void MarkPartySub()
+        private Image _partyRing;
+
+        /// <summary>보조로 세운다. 발밑(그림자 자리)에 혼령 고리를 깐다 — 몸은 떠 있어도 고리는 바닥에 남는다.</summary>
+        public void MarkPartySub(Sprite ring)
         {
             IsPartySub = true;
             if (_body != null) _body.color = RestColor;
+            if (ring == null || _partyRing != null) return;
+            var size = ((RectTransform)transform).sizeDelta;
+            _partyRing = GetOrCreate("PartySubRing", new Vector2(size.x * 1.3f, size.x * 0.65f), new Vector2(0f, -size.y * 0.34f));
+            _partyRing.sprite = ring;
+            _partyRing.raycastTarget = false;
+            _partyRing.color = Color.white;
+            _partyRing.transform.SetAsFirstSibling();   // 몸보다 뒤 · 바닥
+        }
+
+        /// <summary>고리가 숨쉬듯 밝아졌다 흐려진다. 보조를 굴리는 쪽(`BattleDirector.Party`)이 매 프레임 부른다.</summary>
+        public void TickPartyRing(float phase)
+        {
+            if (_partyRing == null) return;
+            _partyRing.color = new Color(1f, 1f, 1f, 0.75f + 0.25f * Mathf.Sin(phase));
         }
 
         /// <summary>보조 색 — 70% 쯤 보이고 0.66~0.74 사이로 천천히 오르내린다(숨쉬기). 0.5~0.68 은 너무 빠져 잘 안 보였다(PD 2026-10-29).</summary>

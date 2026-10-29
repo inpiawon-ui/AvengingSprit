@@ -53,6 +53,12 @@ namespace Game.Module.InGame
         public const float PossessHpRatio = 0.6f;
         /// <summary>보조의 평타 · 스킬 세기(메인 대비).</summary>
         public const float SubPower = 0.3f;
+        /// <summary>보조의 공격 속도(메인 대비). 0.5 = 두 번 칠 시간에 한 번.</summary>
+        public const float SubRateMul = 0.5f;
+        /// <summary>보조의 공격 사거리(메인 대비). 능력치는 다 낮추고 사거리만 넓힌다(PD 2026-10-29).</summary>
+        public const float SubRangeMul = 1.3f;
+        /// <summary>보조가 메인에게서 벗어나지 않는 반경(m). 보면서 잡는 값(PD 2026-10-29).</summary>
+        public const float LeashMeters = 5f;
         /// <summary>보조 스킬 자동 발동 간격(초).</summary>
         public const float SubSkillSeconds = 6f;
         /// <summary>메인 사망 뒤 고르는 시간(초).</summary>
@@ -308,13 +314,14 @@ namespace Game.Module.InGame
             int atk = Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk)
                                                     * MasteryStatMulOf(key) * PartyRule.SubPower));
             u.Setup(UnitSide.Player, key, entry != null ? entry.DisplayName : key, UnitGet(key),
-                    9999, atk, HostSpeedOf(entry) * 1.15f, HostRangeOf(entry), HostIntervalOf(entry),
+                    9999, atk, HostSpeedOf(entry) * 1.15f, HostRangeOf(entry) * PartyRule.SubRangeMul,
+                    HostIntervalOf(entry) / PartyRule.SubRateMul,
                     UnitBox(84f, 80f), isBoss: false, profile: entry);
             u.Position = at;
             u.SetState(EnemyState.Idle);
             ApplyFacingSprites(u, key);
             u.SetHpBarVisible(false);   // 보조는 체력이 없다 — 적이 노리지 않아 맞지도 않는다
-            u.MarkPartySub();           // 붙들어 둔 혼 — 비치는 보랏빛 · 숨쉬기
+            u.MarkPartySub(GetSprite("party_sub_ring"));   // 붙들어 둔 혼 — 비치는 보랏빛 · 숨쉬기 · 발밑 혼령 고리
             PlayFx("shield", at, 128f, loop: false);
 
             var sub = new PartySub { U = u, SkillCd = Random.Range(1.5f, 3f) };
@@ -408,30 +415,39 @@ namespace Game.Module.InGame
                 var home = me.Position + new Vector2(i == 0 ? -78f : 78f, -36f);
                 // 혼이라 바닥에서 떠 있다 — 자리는 그대로, 그림만 둥실(둘이 엇박으로). 그림자가 실제 자리다
                 u.SetSpriteLift(14f + 6f * Mathf.Sin(Time.time * 2.2f + i * 1.7f));
+                u.TickPartyRing(Time.time * 3f + i * 1.3f);
                 // 방이 바뀌어 멀리 떨어졌으면 곁으로 옮긴다
                 if (Vector2.Distance(u.Position, me.Position) > 600f) u.Position = home;
 
                 if (_host == null) { u.SetMoving(false); continue; }   // 메인이 없으면 싸우지 않는다
 
+                // 고르는 적 — 메인 둘레(반경 + 내 사거리) 안에서 나에게 가장 가까운 것. 반경 밖 적은 쫓지 않는다
+                float leash = PartyRule.LeashMeters * _pxPerMeter;
                 Unit target = null;
                 float best = float.MaxValue;
                 for (int k = 0; k < _enemies.Count; k++)
                 {
                     var e = _enemies[k];
                     if (e == null || !e.IsAlive || e.IsDying) continue;
+                    if (Vector2.Distance(e.Position, me.Position) > leash + u.AttackRange) continue;
                     float d = Vector2.Distance(e.Position, u.Position);
                     if (d < best) { best = d; target = e; }
                 }
 
                 bool inRange = target != null && best <= u.AttackRange;
-                // 사거리 안이면 서서 친다. 아니면 메인 곁 자리로 — 근접 보조도 멀리 쫓아가지 않는다
-                if (!inRange && Vector2.Distance(u.Position, home) > 8f)
+                // 사거리 밖이면 적에게 다가간다(근접도 나가서 친다). 적이 없으면 메인 곁으로 돌아온다
+                Vector2 goal = target != null ? target.Position : home;
+                bool move = target != null ? !inRange : Vector2.Distance(u.Position, home) > 8f;
+                if (move)
                 {
                     u.SetState(EnemyState.Approach);
-                    u.Position = SlideMove(u, u.Position, u.StepToward(home, dt));
+                    u.Position = SlideMove(u, u.Position, u.StepToward(goal, dt));
                     u.SetMoving(true);
                 }
                 else u.SetMoving(false);
+                // 메인 반경을 벗어나지 않는다(PD 2026-10-29 「5m 를 벗어나지 말아야」)
+                var off = u.Position - me.Position;
+                if (off.magnitude > leash) u.Position = me.Position + off.normalized * leash;
 
                 if (target != null)
                 {
@@ -445,7 +461,7 @@ namespace Game.Module.InGame
                 }
 
                 s.SkillCd -= dt;
-                if (s.SkillCd <= 0f && target != null && best < 700f)
+                if (s.SkillCd <= 0f && target != null)
                 {
                     s.SkillCd = PartyRule.SubSkillSeconds;
                     CastSubSkill(u, target);
