@@ -174,7 +174,7 @@ namespace Game.Module.InGame
             // 꼬리표는 늘리지 않는다 — 왼쪽 유령 얼굴이 9분할 세로 칸에 걸려 눌렸다(2026-10-29 검수). 그림 크기(137 × 42) 그대로
             var pill = MImg("Pill", _bubble, box, new MBox(0, 0, 137, 42), "possess_pill");
             if (pill.sprite == null) { pill.sprite = GetSprite("possess_bubble_syn"); pill.type = UnityEngine.UI.Image.Type.Sliced; pill.color = new Color(0.55f, 0.3f, 0.95f); }
-            MTxt(_bubble, box, new MBox(42, 2, 132, 32), Tx("ui.party.p2.possess_tag"), 17, Color.white,
+            MTxt(_bubble, box, new MBox(42, 2, 132, 32), Tx("ui.party.p2.possess_tag"), 21, Color.white,
                  TMPro.TextAlignmentOptions.Center);
             // 「시너지 없음」 — 꼬리표 바로 아래 회색 한 줄
             _bubbleNone = MTxt(_bubble, box, new MBox(0, 44, 137, 66), string.Empty, 16, new Color(0.86f, 0.87f, 0.92f),
@@ -183,7 +183,7 @@ namespace Game.Module.InGame
             _bubbleImg = MImg("Bubble", _bubble, box, new MBox(66, 44, 236, 100), "possess_bubble_light", true);
             if (_bubbleImg.sprite == null) { _bubbleImg.sprite = GetSprite("possess_bubble_none"); _bubbleImg.type = UnityEngine.UI.Image.Type.Sliced; }
             var bb = new MBox(66, 44, 236, 100);
-            _bubbleText = MTxt(_bubbleImg.rectTransform, bb, new MBox(78, 48, 230, 90), string.Empty, 16, new Color(0.1f, 0.11f, 0.16f),
+            _bubbleText = MTxt(_bubbleImg.rectTransform, bb, new MBox(78, 48, 230, 92), string.Empty, 18, new Color(0.1f, 0.11f, 0.16f),
                                TMPro.TextAlignmentOptions.MidlineLeft);
             _bubbleText.lineSpacing = -8f;
             if (GameFramework.Core.Base.CoreModule.TryGet<Game.Module.Common.ILanguageService>(out var lang) && lang.IsReady)
