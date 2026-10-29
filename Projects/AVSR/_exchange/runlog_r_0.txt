@@ -1,0 +1,5 @@
+ok part_gs_lock
+ok part_hp_slash
+ok part_sm_pool
+ok part_gr_mandala
+ok part_sw_circle

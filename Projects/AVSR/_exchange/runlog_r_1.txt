@@ -1,0 +1,5 @@
+ok part_gs_beam
+ok part_mg_wall
+ok part_sm_geyser
+ok part_gr_burst
+ok part_sw_crystal

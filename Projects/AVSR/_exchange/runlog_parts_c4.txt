@@ -1,0 +1,3 @@
+FAIL part_c4_disc
+FAIL part_c4_bomb
+ok part_c4_trail

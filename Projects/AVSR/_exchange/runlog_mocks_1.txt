@@ -1,0 +1,5 @@
+ok commando_laser
+ok hopper_smg
+ok salamander
+ok white_wizard
+ok death

@@ -1,0 +1,5 @@
+ok commando_mg
+ok ninja
+ok dragoon
+ok snowwoman
+ok commando_grenade_v2

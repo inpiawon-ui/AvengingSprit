@@ -1,0 +1,5 @@
+ok mock_active_death
+ok mock_active_vampire
+ok mock_active_salamander
+ok mock_active_white_wizard
+ok mock_skill_ninja_chain_v2

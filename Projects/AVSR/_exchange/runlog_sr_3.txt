@@ -1,0 +1,3 @@
+ok part_lz_charge
+ok part_nj_slash
+ok part_cm_lock

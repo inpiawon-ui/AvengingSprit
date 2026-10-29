@@ -1,0 +1,5 @@
+ok commando_missile
+ok ninja_chain
+ok dragon_blue
+ok vampire
+ok medium_v3

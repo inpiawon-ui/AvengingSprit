@@ -1,0 +1,6 @@
+ok mock_active_gangster
+ok mock_active_robot
+ok mock_active_dragoon
+ok mock_active_snowwoman
+ok mock_active_dragon_blue
+ok mock_skill_robot_v2

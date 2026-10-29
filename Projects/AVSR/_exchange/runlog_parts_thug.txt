@@ -1,0 +1,3 @@
+ok part_th_spin
+ok part_th_ring
+ok part_th_shell

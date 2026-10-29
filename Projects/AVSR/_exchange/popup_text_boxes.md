@@ -1,0 +1,53 @@
+# 팝업 글자 칸 (popup_c_layout.json)
+
+| 노드 | 칸 w x h | 지금 최대/최소 | 정렬 |
+|---|---|---|---|
+| BuffTitleText | 349 x 80 | 52/28 | center |
+| BuffSubText | 309 x 38 | 22/16 | center |
+| BuffCard0ChipText | 134 x 26 | 18/12 | center |
+| BuffCard0Name | 150 x 34 | 26/16 | center |
+| BuffCard0Desc | 146 x 92 | 19/13 | center |
+| BuffCard1ChipText | 134 x 26 | 18/12 | center |
+| BuffCard1Name | 150 x 34 | 26/16 | center |
+| BuffCard1Desc | 146 x 92 | 19/13 | center |
+| BuffCard2ChipText | 134 x 26 | 18/12 | center |
+| BuffCard2Name | 150 x 34 | 26/16 | center |
+| BuffCard2Desc | 146 x 92 | 19/13 | center |
+| ShrineTitleText | 314 x 48 | 34/22 | center |
+| ShrineHintText | 280 x 34 | 19/13 | center |
+| ShrineChoice0Text | 290 x 30 | 25/16 | left |
+| ShrineChoice0Desc | 290 x 22 | 18/12 | left |
+| ShrineChoice1Text | 290 x 30 | 25/16 | left |
+| ShrineChoice1Desc | 290 x 22 | 18/12 | left |
+| ShrineChoice2Text | 290 x 30 | 25/16 | left |
+| ShrineChoice2Desc | 290 x 22 | 18/12 | left |
+| EventTitleText | 248 x 55 | 34/20 | center |
+| EventBodyText | 484 x 78 | 21/14 | center |
+| EventRewardText | 222 x 48 | 20/12 | center |
+| EventCostText | 206 x 48 | 20/12 | center |
+| EventAcceptText | 460 x 98 | 32/20 | center |
+| EventDeclineText | 446 x 66 | 22/14 | center |
+| EventResultText | 460 x 98 | 24/16 | center |
+| ShopTitleText | 276 x 51 | 34/22 | center |
+| ShopGoldText | 242 x 34 | 20/13 | center |
+| ShopLimitText | 550 x 28 | 18/12 | center |
+| ShopItem0Name | 112 x 28 | 21/13 | left |
+| ShopItem0Price | 62 x 28 | 19/12 | center |
+| ShopItem0Desc | 176 x 42 | 16/11 | left |
+| ShopItem1Name | 112 x 28 | 21/13 | left |
+| ShopItem1Price | 62 x 28 | 19/12 | center |
+| ShopItem1Desc | 176 x 42 | 16/11 | left |
+| ShopItem2Name | 112 x 28 | 21/13 | left |
+| ShopItem2Price | 62 x 28 | 19/12 | center |
+| ShopItem2Desc | 176 x 42 | 16/11 | left |
+| ShopItem3Name | 112 x 28 | 21/13 | left |
+| ShopItem3Price | 62 x 28 | 19/12 | center |
+| ShopItem3Desc | 176 x 42 | 16/11 | left |
+| ShopItem4Name | 112 x 28 | 21/13 | left |
+| ShopItem4Price | 62 x 28 | 19/12 | center |
+| ShopItem4Desc | 176 x 42 | 16/11 | left |
+| ShopItem5Name | 112 x 28 | 21/13 | left |
+| ShopItem5Price | 62 x 28 | 19/12 | center |
+| ShopItem5Desc | 176 x 42 | 16/11 | left |
+| ShopLeaveText | 276 x 64 | 26/16 | center |
+| ShopResultText | 550 x 26 | 18/14 | center |

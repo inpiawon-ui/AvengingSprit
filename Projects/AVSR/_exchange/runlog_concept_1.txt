@@ -1,0 +1,6 @@
+ok mock_active_hopper
+ok mock_active_ninja
+ok mock_active_baseball
+ok mock_active_thug
+ok mock_active_commando_mg
+ok mock_skill_amazon_elite_v2
