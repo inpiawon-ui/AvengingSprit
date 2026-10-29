@@ -154,10 +154,10 @@ MonoBehaviour:
     Hazard: 
     Crowd: 0
     Fire: 0.9
-    EnemyHpMul: 0.8
-    EnemyAtkMul: 1
-    BossHp: 1650
-    BossAtk: 36
+    EnemyHpMul: 0.53
+    EnemyAtkMul: 0.67
+    BossHp: 1100
+    BossAtk: 24
     ClearGold: 0
     Chest: silver
     ClearExp: 300
