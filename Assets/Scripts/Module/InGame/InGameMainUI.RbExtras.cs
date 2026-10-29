@@ -17,7 +17,7 @@ namespace Game.Module.InGame
     public sealed partial class InGameMainUI
     {
         private const float BossWarnSeconds = 3.2f;
-        private static readonly string[] FirstRunGuide = { "possess", "stand_fire", "ghost_hp", "lock", "release", "rooms" };
+        private static readonly string[] FirstRunGuide = { "possess", "stand_fire", "ultimate", "ghost_hp", "rooms" };
 
         private RbGuide _rbGuide;
         private int _rbChapterTotal;
@@ -54,7 +54,7 @@ namespace Game.Module.InGame
             _rbStage = e.StageInChapter;
             _rbChapter = e.Chapter;
             _ui.SetActive("RbNextRoom", false);
-            // 첫 판 첫 방 — 빙의 · 멈춰야 쏨 · 유령 에너지 · 자물쇠 · 놓아주기 · 다음 방(시안 guide, 판을 멈춘다)
+            // 첫 판 첫 방 — 빙의 · 멈춰야 쏨 · 두 버튼 · 유령 체력 · 다음 방(판을 멈춘다). 자물쇠 · 해제는 뺐다(빙의 파티 규칙엔 없음, PD 2026-10-30)
             if (!RunModeContext.IsMode && e.RoomIndex == 0) ShowGuideLater("ingame", 1.6f, FirstRunGuide);
         }
 
@@ -90,13 +90,26 @@ namespace Game.Module.InGame
             return _rbGuide.ShowOnce(id, true, then, topics);
         }
 
+        /// <summary>첫 판 그림 설명을 지금 — 유령 출전 셋 고르기 앞에서 전투가 부른다. 이미 봤거나 다른 설명이 떠 있으면 아무것도 안 한다.</summary>
+        public void ShowFirstRunGuideNow()
+        {
+            if (_rbGuide == null || _finished || _rbGuide.IsOpen || RbGuide.HasSeen("ingame")) return;
+            _rbGuide.ShowOnce("ingame", true, FirstRunGuide);
+        }
+
+        /// <summary>창이 비면 처음 한 번 그림 설명 — 전투(따라 하기 · 파티)가 부른다.</summary>
+        public void GuideLater(string id, params string[] topics) => ShowGuideLater(id, 0.4f, topics);
+
+        /// <summary>그 창을 열기 전에 처음 보는 그림 설명을 먼저 — 띄웠으면 true(닫으면 then).</summary>
+        public bool GuideBefore(string id, System.Action then, params string[] topics) => GuideFirst(id, then, topics);
+
         private static readonly string[] BlockingWindows = { "BuffChoicePanel", "ShopPanel", "EventPanel", "ShrinePanel" };
 
         /// <summary>설명을 띄우면 겹치는 창이 떠 있나.</summary>
         private bool AnyWindowOpen()
         {
             if (_rbGuide != null && _rbGuide.IsOpen) return true;
-            if (_battle != null && _battle.PartyPopupOpen) return true;
+            if (_battle != null && (_battle.PartyPopupOpen || _battle.CoachShowing)) return true;
             for (int i = 0; i < BlockingWindows.Length; i++)
                 if (_ui.Find(BlockingWindows[i]) is Transform t && t.gameObject.activeInHierarchy) return true;
             return false;
@@ -122,8 +135,10 @@ namespace Game.Module.InGame
                 _ui.SetActive("UltNoBodyText", !e.HasHost);
                 // 몸이 있으면 스킬 묶음(액티브 · 필살기)만, 몸을 잃으면 스킬을 걷고 빙의 버튼만 크게 숨쉬며(PD 2026-10-27)
                 _ui.SetActive("RbSkillGroup", e.HasHost);
-                _ui.SetActive("RbPossessGroup", !e.HasHost);
-                if (!e.HasHost) PossessBreathAsync(++_rbPossessBreathId).Forget();   // fire-and-forget: 몸을 입으면 스스로 멈춘다
+                // 빙의 파티는 적을 직접 누른다 — 빙의 버튼은 모드 판(탑 · 밤, 파티 꺼짐)에서만(PD 2026-10-30 「이제 빙의 버튼 필요 없네」)
+                bool possessButton = !e.HasHost && (!PartyRule.Enabled || RunModeContext.IsMode);
+                _ui.SetActive("RbPossessGroup", possessButton);
+                if (possessButton) PossessBreathAsync(++_rbPossessBreathId).Forget();   // fire-and-forget: 몸을 입으면 스스로 멈춘다
                 else _rbPossessBreathId++;
                 if (e.HasHost) _ui.SetActive("RbNoBodyHint", false);
                 else if (!_rbNoBodyHintShown && !_finished)

@@ -268,7 +268,9 @@ namespace Game.Module.InGame
                 float d = Vector2.Distance(c, screen);
                 if (d <= reach && d < bestD) { bestD = d; best = e; }
             }
-            if (best == null) return false;
+            if (_trio.Count > 0) { if (best != null && _trio.Contains(best)) PickTrio(best); return true; }   // 유령 출전 셋 고르기
+            if (_coachTarget != null) { if (CoachTap(best)) return true; }   // 따라 하기 — 짚은 적만 받는다
+            else if (best == null) return false;
 
             if (ghost)
             {

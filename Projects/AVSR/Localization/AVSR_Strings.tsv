@@ -1692,12 +1692,12 @@ ui.rb.guide.night.title	망령의 밤	亡霊の夜	Phantom Night	亡靈之夜	�
 ui.rb.guide.night.body	요일마다 다른 규칙으로 5분을 버텨요.\n쓰러뜨린 수만큼 조각을 받아요.	曜日ごとに違うルールで5分間耐えます。\n倒した数だけかけらがもらえます。	Survive 5 minutes under each day's rule.\nEarn shards by how many you defeat.	每天以不同規則撐過5分鐘。\n依擊倒數量獲得碎片。	每天以不同规则撑过5分钟。\n依击倒数量获得碎片。
 ui.rb.guide.pass.title	시즌 패스	シーズンパス	Season Pass	賽季通行證	赛季通行证
 ui.rb.guide.pass.body	미션을 끝내 패스 경험치를 모으면 단계마다 보상을 받아요.\n프리미엄을 열면 오른쪽 보상도 받아요.	ミッションでパス経験値を集めると段階ごとに報酬がもらえます。\nプレミアムを開くと右の報酬ももらえます。	Clear missions for pass XP and earn rewards each tier.\nUnlock premium to get the right-side rewards too.	完成任務累積通行證經驗，每階都能領獎。\n開啟高級後也能領取右側獎勵。	完成任务累积通行证经验，每阶都能领奖。\n开启高级后也能领取右侧奖励。
-ui.rb.guide.possess.title	호스트에 빙의해요	ホストに憑依しよう	Possess a host	附身宿主	附身宿主
-ui.rb.guide.possess.body	머리 위에 금색 조준 링이 뜬 적에게 빙의 버튼을 누르면\n그 호스트로 싸워요.	頭上に金の照準リングが出た敵に憑依ボタンを押すと\nそのホストで戦えます。	Tap Possess on an enemy with a gold ring overhead\nto fight as that host.	對頭上出現金色瞄準環的敵人按下附身鍵，\n就能用那個宿主戰鬥。	对头上出现金色瞄准环的敌人按下附身键，\n就能用那个宿主战斗。
+ui.rb.guide.possess.title	호스트에 빙의해요	ホストに憑依しよう	Possess a Host	附身宿主	附身宿主
+ui.rb.guide.possess.body	체력이 60% 아래로 떨어진 적 머리 위에 빙의 표시가 떠요.\n그 적을 직접 누르면 빙의해요.	体力が60%を切った敵の頭上に憑依マークが出ます。\nその敵を直接タップすると憑依します。	Enemies below 60% HP show a possess mark.\nTap that enemy to possess it.	體力降到60%以下的敵人頭上會出現附身標記。\n直接點擊該敵人即可附身。	体力降到60%以下的敌人头上会出现附身标记。\n直接点击该敌人即可附身。
 ui.rb.guide.stand_fire.title	멈춰야 쏴요	止まると撃つ	Stop to shoot	停下才會射擊	停下才会射击
 ui.rb.guide.stand_fire.body	움직이는 동안에는 자동 공격이 멈춰요.\n멈춰 서면 가까운 적을 쏴요.	移動中は自動攻撃が止まります。\n立ち止まると近くの敵を撃ちます。	Auto-attack stops while you move.\nStand still to shoot the nearest enemy.	移動時會停止自動攻擊。\n停下來就會射擊附近的敵人。	移动时会停止自动攻击。\n停下来就会射击附近的敌人。
 ui.rb.guide.ghost_hp.title	유령 체력	ゴースト体力	Ghost HP	幽靈體力	幽灵体力
-ui.rb.guide.ghost_hp.body	호스트 없이 떠 있어도 유령 체력은 줄지 않아요.\n호스트를 잃으면 크게 깎이니 조심해요.	ホストなしで漂ってもゴースト体力は減りません。\nホストを失うと大きく削られるので注意しましょう。	Ghost HP doesn't drain while you float without a host.\nLosing a host costs a lot, so be careful.	沒有宿主漂浮時幽靈體力也不會減少。\n失去宿主會大幅扣除，請小心。	没有宿主漂浮时幽灵体力也不会减少。\n失去宿主会大幅扣除，请小心。
+ui.rb.guide.ghost_hp.body	유령 체력은 한 판 동안 쓰는 몫이에요.\n빙의 · 교체할 때마다 줄고, 메인이 쓰러지면 크게 줄어요.	ゴースト体力は1回のプレイで使う分です。\n憑依・交代のたびに減り、メインが倒れると大きく減ります。	Ghost HP is your budget for the run.\nPossessing or swapping costs HP; losing your main costs a lot.	幽靈體力是一局可用的份額。\n每次附身・交換都會減少，主宿主倒下時大幅減少。	幽灵体力是一局可用的份额。\n每次附身・交换都会减少，主宿主倒下时大幅减少。
 ui.rb.guide.lock.title	회색 자물쇠 링	灰色の鍵リング	Gray lock ring	灰色鎖環	灰色锁环
 ui.rb.guide.lock.body	링에 회색 자물쇠가 있으면 아직 빙의할 수 없어요.\n더 공격하면 풀려요.	リングに灰色の鍵が表示されている敵には、まだ憑依できません。\nさらに攻撃すると解除されます。	A gray lock on the ring means you can't possess that enemy yet.\nKeep attacking to unlock it.	瞄準環出現灰色鎖頭時，還不能附身該敵人。\n繼續攻擊即可解除。	瞄准环出现灰色锁时，还不能附身该敌人。\n继续攻击即可解除。
 ui.rb.guide.release.title	빙의 해제	憑依解除	Releasing a Host	解除附身	解除附身
@@ -1710,6 +1710,14 @@ ui.rb.guide.merchant.title	떠돌이 상인	さすらいの商人	Wandering merc
 ui.rb.guide.merchant.body	판에서 모은 골드로 카드와 회복을 살 수 있어요.\n상인은 다시 오지 않아요.	集めたゴールドでカードや回復を買えます。\n商人は二度と来ません。	Spend run gold on cards and healing.\nThe merchant won't come back.	可用本局金幣購買卡片與回復。\n商人不會再來。	可用本局金币购买卡片与回复。\n商人不会再来。
 ui.rb.guide.boss.title	보스에게는 빙의할 수 없어요	ボスは奪えない	Bosses can't be stolen	無法奪取頭目	无法夺取头目
 ui.rb.guide.boss.body	보스는 빙의할 수 없어요.\n입장한 호스트로 끝내야 해요.	ボスには憑依できません。\n乗ってきたホストで倒しましょう。	You can't possess a boss.\nFinish it with the host you brought in.	無法附身頭目。\n要用帶進來的宿主打倒它。	无法附身头目。\n要用带进来的宿主打倒它。
+ui.rb.guide.party.title	메인과 보조	メインとサポート	Main & Support	主宿主與輔助	主宿主与辅助
+ui.rb.guide.party.body	처음 빙의한 호스트가 메인, 그다음 둘은 보조예요.\n보조는 메인 곁을 따라다니며 같이 싸워요.	最初に憑依したホストがメイン、次の2体はサポートです。\nサポートはメインのそばで一緒に戦います。	Your first host is the main; the next two are supports.\nSupports follow the main and fight alongside.	最先附身的宿主是主宿主，之後兩名是輔助。\n輔助會跟在主宿主身邊一起戰鬥。	最先附身的宿主是主宿主，之后两名是辅助。\n辅助会跟在主宿主身边一起战斗。
+ui.rb.guide.main_down.title	메인이 쓰러지면	メインが倒れたら	If Your Main Falls	主宿主倒下時	主宿主倒下时
+ui.rb.guide.main_down.body	정해진 시간 안에 하나를 골라요.\n새 적에 빙의 · 보조를 메인으로 · 그 자리에서 부활.	制限時間内にひとつ選びます。\n新しい敵に憑依・サポートをメインに・その場で復活。	Choose one before time runs out:\npossess a new enemy, promote a support, or revive.	在限定時間內選擇一項。\n附身新敵人・輔助升為主宿主・原地復活。	在限定时间内选择一项。\n附身新敌人・辅助升为主宿主・原地复活。
+ui.rb.guide.synergy.title	무리와 인연	派閥と縁	Factions & Bonds	派系與羈絆	派系与羁绊
+ui.rb.guide.synergy.body	같은 무리 호스트가 모이면 무리 효과가 켜져요.\n인연 짝을 함께 데려가면 인연 효과도 켜져요.	同じ派閥のホストが集まると派閥効果が発動します。\n縁のペアを一緒に連れると縁効果も発動します。	Gather hosts of one faction to turn on its bonus.\nBring bonded pairs together for a bond bonus.	同派系宿主聚在一起會開啟派系效果。\n帶上羈絆搭檔也會開啟羈絆效果。	同派系宿主聚在一起会开启派系效果。\n带上羁绊搭档也会开启羁绊效果。
+ui.rb.guide.ultimate.title	스킬 버튼 두 개	スキルボタン2つ	Two Skill Buttons	兩個技能按鈕	两个技能按钮
+ui.rb.guide.ultimate.body	작은 버튼은 액티브 스킬, 큰 버튼은 필살기예요.\n필살기는 게이지가 다 차면 쓸 수 있어요.	小さいボタンはアクティブスキル、大きいボタンは必殺技です。\n必殺技はゲージが満タンで使えます。	The small button is your active skill; the big one is your ultimate.\nUse the ultimate when its gauge is full.	小按鈕是主動技能，大按鈕是必殺技。\n必殺技在量表滿時可以使用。	小按钮是主动技能，大按钮是必杀技。\n必杀技在量表满时可以使用。
 ui.rb.boss.no_possess	보스는 빙의할 수 없어요	ボスには憑依できません	Bosses can't be possessed	無法附身頭目	无法附身头目
 boss.robot_snakes.weak	약점: 솟은 머리가 들어가기 전에 때려라	弱点：出た頭が引っ込む前に叩け	Weak point: hit the head before it ducks back in	弱點：趁頭縮回去前攻擊	弱点：趁头缩回去前攻击
 boss.crusher.weak	약점: 파괴구가 벽을 치게 안쪽으로 파고들어라	弱点：内側に入り鉄球を壁に当てさせろ	Weak point: get inside so the wrecking ball hits the wall	弱點：鑽到內側讓破壞球撞牆	弱点：钻到内侧让破坏球撞墙
@@ -1981,3 +1989,7 @@ ui.rb.org.need	{0}명	{0}人	{0}	{0}人	{0}人
 ui.rb.org.rule	같은 무리를 메인 · 보조로 함께 데려가면 켜진다	同じ群れをメイン・サブに一緒に編成すると発動	Active when the same group is your Main and Subs	同群宿主一起編為主控 · 副手即啟動	同群宿主一起编为主控 · 副手即启动
 ui.ingame.ult_locked_hint	호스트 해금 후\n해제	ホスト解放で\n解除	Unlock host\nto use	解鎖宿主後\n解除	解锁宿主后\n解除
 ui.party.choice.main_swap_hp	메인과 바꾸기 · 유령 HP −{0}	メインと交代・ゴーストHP −{0}	Swap with Main · Ghost HP −{0}	與主控交換 · 幽靈HP −{0}	与主控交换 · 幽灵HP −{0}
+ui.tut.coach.tap_main	이 적을 눌러 빙의해요!	この敵をタップして憑依しよう！	Tap this enemy to possess it!	點擊這個敵人附身！	点击这个敌人附身！
+ui.tut.coach.tap_sub	이 적을 눌러 보조로 데려와요!	この敵をタップしてサポートにしよう！	Tap this enemy to recruit a support!	點擊這個敵人收為輔助！	点击这个敌人收为辅助！
+ui.tut.coach.tap_row	「보조」 칸을 눌러요	「サポート」をタップしよう	Tap the Support slot	點擊「輔助」欄	点击「辅助」栏
+ui.tut.coach.pick_trio	호스트 하나를 골라 눌러요!	ホストをひとり選んでタップしよう！	Pick a host and tap it!	選一名宿主點擊！	选一名宿主点击！

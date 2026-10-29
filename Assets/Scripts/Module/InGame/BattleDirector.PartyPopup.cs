@@ -271,6 +271,7 @@ namespace Game.Module.InGame
             if (best != null) best.Best = true;
 
             BuildChoice(target, name, rows);
+            CoachChoiceRow(1 + _subs.Count);   // 따라 하기 보조 단계 — 「보조 넣기」 줄(메인 줄 · 지금 보조 줄 다음)
         }
 
         private void BuildChoice(Unit target, string name, List<ChoiceRow> rows)
@@ -417,6 +418,8 @@ namespace Game.Module.InGame
         private void OpenPartyDeath(string lostKey, Vector2 pos)
         {
             if (_ghostHp <= 0) return;
+            // 처음 메인이 쓰러지면 그림 설명부터 — 닫으면 이 창을 연다(설명이 판을 세워 시계도 안 간다)
+            if (Ui != null && Ui.GuideBefore("g.main_down", () => OpenPartyDeath(lostKey, pos), "main_down")) return;
             var near = NearestHostEnemy(pos);
             var rows = new List<DeathRow>
             {

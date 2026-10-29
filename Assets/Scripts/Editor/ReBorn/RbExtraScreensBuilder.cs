@@ -17,7 +17,7 @@ namespace Game.Editor.ReBorn
         public static readonly string[] GuideTopics =
         {
             "sortie", "growth", "summon", "tower", "night", "pass", "possess", "stand_fire", "ghost_hp",
-            "lock", "release", "rooms", "cards", "merchant", "boss",
+            "rooms", "cards", "merchant", "boss", "party", "main_down", "synergy", "ultimate",
         };
 
         /// <summary>판(딤 + 가운데 720 × 1280) — 꺼진 채 저장하지 않는다(글자 크기가 풀린다). 다 세운 뒤 부르는 쪽이 끈다.</summary>

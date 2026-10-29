@@ -584,6 +584,12 @@ namespace Game.Module.InGame
         private void EnterStartHost()
         {
             var entry = PickPlayerHost();
+            // 유령 출전(또는 따라 하기 첫 판) — 첫 방에서 셋 중 하나를 고른다(BattleDirector.StartTrio)
+            if (entry == null && _player != null && _player.IsReady && (_player.StartAsGhost || !CoachSeen("main")))
+            {
+                QueueStartTrio();
+                return;
+            }
             if (entry == null)
             {
                 // 조용히 유령으로 시작하면 "왜 내 캐릭터가 아니지"의 원인을 못 찾는다.
@@ -3657,6 +3663,7 @@ namespace Game.Module.InGame
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
             if (Game.Module.Common.UI.RbGuide.PausingOpen) return;   // 설명 창 — 시간 배율만으론 못 멈춘다(타격 멈칫이 1로 되돌림, 2026-10-30)
+            if (TickCoach()) return;   // 따라 하는 튜토리얼 — 짚은 적을 누를 때까지 선다(BattleDirector.Coach)
             if (_partyHold) { TickPartyHold(); return; }   // 빙의 파티 선택창 — 잠깐 멈춘다
             if (!IsPresentationHeld && _shopHealPending) ApplyShopHeal();
             if (IsPresentationHeld) return;   // 보상 연출 중 — 무엇을 얻었는지 보여 주는 동안 선다(BattleDirector.Present)
@@ -4080,6 +4087,8 @@ namespace Game.Module.InGame
             // 유령으로 골라 들어왔고 아직 한 번도 몸을 안 입었다 —
             // 1번 방에서 직접 빼앗는다. 원작이 그랬다.
             if (_player.StartAsGhost) return null;
+            // 첫 판 — 따라 하는 튜토리얼(적을 눌러 빙의)을 아직 안 했으면 유령으로 시작한다(PD 2026-10-30 「처음에 유령으로 시작해서」)
+            if (PartyRule.Enabled && !CoachSeen("main")) return null;
             // 히든 체험 — 저장된 선택(`SelectedHostId`)은 히든을 걸러 유령으로 돌아오므로 이 판의 몸 키를 직접 본다
             if (_player.RunStartMode == RunStartMode.Random && _player.RunHostKey == PlayerDataService.HiddenTrialHostKey)
                 return _player.GetHost(PlayerDataService.HiddenTrialHostKey);

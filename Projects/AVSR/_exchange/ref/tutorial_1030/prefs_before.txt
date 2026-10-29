@@ -1,0 +1,1 @@
+guide.seen.ingame=1; guide.seen.g.party=없음; guide.seen.g.synergy=없음; guide.seen.g.main_down=없음; tut.coach.main=없음; tut.coach.sub1=없음; tut.coach.sub2=없음; guide.seen.cards=1; guide.seen.merchant=1; 
