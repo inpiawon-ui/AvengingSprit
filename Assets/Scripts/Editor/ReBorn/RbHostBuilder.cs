@@ -295,7 +295,7 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_tilePoor").objectReferenceValue = KitSprite("Components/rb_panel_base");
             so.FindProperty("_btnReady").objectReferenceValue = KitSprite("Components/rb_btn_primary");
             so.FindProperty("_btnShort").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
-            // 챕터 배경은 파일 이름만 — 그림을 걸면 화면이 10장을 한꺼번에 올린다(StageBgSlot, 2026-10-30)
+            // 챕터 배경은 파일 이름만 — 그림을 걸면 화면이 10장을 한꺼번에 올린다(LazySpriteSlot, 2026-10-30)
             var bgs = so.FindProperty("_stageBgNames");
             bgs.arraySize = 10;
             for (int i = 0; i < 10; i++) bgs.GetArrayElementAtIndex(i).stringValue = $"rb_art_bg_stage_ch{i + 1:00}";

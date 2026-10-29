@@ -37,7 +37,7 @@ namespace Game.Module.Lobby
         // 속성 아이콘 — 무기 · 파워 · 마법(Affinity 값 − 1)
         [SerializeField] private Sprite[] _affIcons = Array.Empty<Sprite>();
         [SerializeField] private Sprite _iconRandom, _iconGhost;
-        // 챕터 배경은 그림이 아니라 파일 이름만 쥔다 — 보일 때 한 장씩 주소로 읽는다(StageBgSlot, 2026-10-30 메모리)
+        // 챕터 배경은 그림이 아니라 파일 이름만 쥔다 — 보일 때 한 장씩 주소로 읽는다(LazySpriteSlot, 2026-10-30 메모리)
         [SerializeField] private string[] _stageBgNames = Array.Empty<string>();
         [SerializeField] private Sprite _iconNext, _iconLock;
         // 방 진행 칸(시안) — 깬 칸 · 남은 칸 · 중간보스 칸 · 보스 칸
@@ -49,7 +49,7 @@ namespace Game.Module.Lobby
         private UIBinder _ui;
         private IPlayerDataService _player;
         private readonly List<IDisposable> _tokens = new();
-        private readonly StageBgSlot _stageBg = new();
+        private readonly LazySpriteSlot _stageBg = new();
         private readonly List<(Transform card, RunStartMode mode, string key)> _cards = new();
         private SpriteAtlas _faces;
         private Sprite _ghostFace;
@@ -371,7 +371,7 @@ namespace Game.Module.Lobby
 
             var bg = _ui.Get<Image>("StageBg");
             if (bg != null && _stageBgNames.Length > 0)
-                _stageBg.Show(bg, _stageBgNames[Mathf.Clamp(_chapter - 1, 0, _stageBgNames.Length - 1)], gameObject.scene.name);
+                _stageBg.Show(bg, LazySpriteSlot.StageBg + _stageBgNames[Mathf.Clamp(_chapter - 1, 0, _stageBgNames.Length - 1)], gameObject.scene.name);
         }
 
         /// <summary>

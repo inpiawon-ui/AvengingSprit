@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: kitart
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: kitart
+  m_GUID: 21459a93ffc6a5c48bc8715a74b0412d
+  m_SerializeEntries:
+  - m_GUID: 082e57ab10347fe41af1c545fab701ac
+    m_Address: KitArt/rb_art_ev_last_airdrop
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b7d6950d7470bd4b98220a2c7232895
+    m_Address: KitArt/rb_art_ev_deadly_challenge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12ad01590463adc4396590470e0b642c
+    m_Address: KitArt/rb_art_ev_crossfire
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1b43c596a3968a043b26bd90f747e58a
+    m_Address: KitArt/rb_art_result_clear_bg_quiet
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e07b72760b69814983f609f342e3e89
+    m_Address: KitArt/rb_art_ev_boss_prep
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2eee22c5fcd9ac74fab344bee3bf4ded
+    m_Address: KitArt/rb_art_ev_narrow_path
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31f73d82ad0a4fb4bbb2276a41fba230
+    m_Address: KitArt/rb_art_ev_soul_wager
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4234aca71c913da4085f588e77bab3ce
+    m_Address: KitArt/rb_art_ev_fallen_host
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4872703771d05044ba68fcc56a32c2d1
+    m_Address: KitArt/rb_art_ev_soul_shrine
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6dfc9c92fa5ee8343a495854356c8f50
+    m_Address: KitArt/rb_art_ev_lost_soul
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75cc5ede0e7761e47988034f78f29747
+    m_Address: KitArt/rb_art_ev_famous_body
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d0e279401de29e4b988931119cde678
+    m_Address: KitArt/rb_art_ev_sealed_chest
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80a7f428c03e5bd45958cb05e21d1fbc
+    m_Address: KitArt/rb_art_ev_abyss_deal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 925a1b5c61dc9fa4090cda86b02d48bf
+    m_Address: KitArt/rb_art_ev_locked_safe
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a57b10691658bcd46911e4111b02d4e5
+    m_Address: KitArt/rb_art_ev_abandoned_supply
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b70e787572001f04b93ee595b2a504bc
+    m_Address: KitArt/rb_art_ev_black_market
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ce9915a42a96b5f42b1bd75c2ebffeb5
+    m_Address: KitArt/rb_art_result_clear_bg
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ded9df89a3961f34695c2017951f8245
+    m_Address: KitArt/rb_art_result_fail_bg
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e47f46b09cbc2724c9cc36185aa3248f
+    m_Address: KitArt/rb_art_ev_cursed_cache
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed3bc3d5038902648a4af84d5d9d9787
+    m_Address: KitArt/rb_art_ev_blood_pact
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ee9d77234cba4a7478f5504bdba24c4a
+    m_Address: KitArt/rb_art_ev_broken_altar
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fde07b30ff0df534ca2613b859b7a4d7
+    m_Address: KitArt/rb_art_ev_field_medic
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_kitart
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7439313d81f40b14c91d7355dae87e91, type: 2}
+    - {fileID: 11400000, guid: e41556b2256b0a34b9fdd877884dd433, type: 2}

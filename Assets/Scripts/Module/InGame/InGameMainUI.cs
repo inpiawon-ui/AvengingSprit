@@ -60,8 +60,8 @@ namespace Game.Module.InGame
         [SerializeField] private bool _reborn;
         /// <summary>상점 값 알약 — 살 수 있음 / 모자람.</summary>
         [SerializeField] private Sprite _rbPrice, _rbPricePoor;
-        /// <summary>이벤트 그림(rb_art_ev_*) — 이름으로 찾는다(<see cref="EventArtOf"/>).</summary>
-        [SerializeField] private Sprite[] _rbEventArts = Array.Empty<Sprite>();
+        // 이벤트 그림(rb_art_ev_*)은 프리팹에 걸지 않는다 — 이벤트 방에서 한 장만 주소로 읽는다(2026-10-30 메모리, <see cref="EventArtOf"/>)
+        private readonly LazySpriteSlot _eventArt = new();
         private float _ghostBarWidth = GhostBarWidth, _hostBarWidth = HostBarWidth, _bossBarWidth = BossBarWidth, _expBarWidth;
 
         private RectTransform _dpad;
@@ -272,8 +272,8 @@ namespace Game.Module.InGame
 
         private float WidthOf(string node, float fallback) => _ui.Find(node) is RectTransform r ? r.sizeDelta.x : fallback;
 
-        /// <summary>이벤트 그림(키트 rb_art_ev_*) — 빌더가 이벤트 순서대로 꽂는다. 거래(악마) 이벤트는 「심연의 거래」 그림을 같이 쓴다.</summary>
-        private Sprite EventArtOf(string eventId)
+        /// <summary>이벤트 그림(키트 rb_art_ev_*)의 주소. 거래(악마) 이벤트는 「심연의 거래」 그림을 같이 쓴다. 없으면 null.</summary>
+        private static string EventArtOf(string eventId)
         {
             string key = eventId switch
             {
@@ -286,11 +286,7 @@ namespace Game.Module.InGame
                 "EV_DEAL_01" => "blood_pact",
                 _ => eventId != null && eventId.StartsWith("EV_DEAL") ? "abyss_deal" : null,
             };
-            if (key == null) return null;
-            string name = "rb_art_ev_" + key;
-            for (int i = 0; i < _rbEventArts.Length; i++)
-                if (_rbEventArts[i] != null && _rbEventArts[i].name == name) return _rbEventArts[i];
-            return null;
+            return key == null ? null : LazySpriteSlot.KitArt + "rb_art_ev_" + key;
         }
 
         private void OnEnable()
@@ -1269,8 +1265,9 @@ namespace Game.Module.InGame
             _ui.SetText("EventTitleText", e.Title);
             if (_reborn && _ui.Get<Image>("EventArt") is Image evArt)
             {
-                evArt.sprite = EventArtOf(e.EventId);
-                evArt.enabled = evArt.sprite != null;
+                string art = EventArtOf(e.EventId);
+                if (art == null) evArt.enabled = false;
+                else _eventArt.Show(evArt, art, gameObject.scene.name, hideUntilLoaded: true);   // 앞 이벤트 그림이 잠깐 보이지 않게
             }
             // 본문은 분위기만 적혀 있어 무엇을 받는지 알 수 없었다 — 받는 것은 금빛 알약 판에 따로 올린다.
             // (C 원혼 회로 2026-10-08: 본문 끝에 덧붙이면 본문 칸이 넘쳐 글자가 같이 줄었다)

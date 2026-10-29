@@ -22,7 +22,7 @@ namespace Game.Module.Lobby
         private RbLobbyUI _shell;
         private readonly List<Transform> _rows = new();
         // 줄마다 썸네일 한 칸 — 목록을 열 때 읽고 닫을 때 놓는다(2026-10-30 메모리: 10장을 로비 내내 쥐고 있었다)
-        private readonly List<StageBgSlot> _thumbs = new();
+        private readonly List<LazySpriteSlot> _thumbs = new();
 
         private void Awake()
         {
@@ -39,7 +39,7 @@ namespace Game.Module.Lobby
             gameObject.SetActive(true);
             int count = Mathf.Max(1, player.ChapterCount);
             EnsureRows(count);
-            while (_thumbs.Count < _rows.Count) _thumbs.Add(new StageBgSlot());
+            while (_thumbs.Count < _rows.Count) _thumbs.Add(new LazySpriteSlot());
             for (int i = 0; i < _rows.Count; i++) Fill(_rows[i], _thumbs[i], i + 1, player, stageBgs, selected);
             if (_ui.Find("ChsBody") is RectTransform view && view.TryGetComponent<ScrollRect>(out var sr))
             {
@@ -70,13 +70,13 @@ namespace Game.Module.Lobby
             for (int i = 0; i < _thumbs.Count; i++) _thumbs[i].Clear();
         }
 
-        private void Fill(Transform row, StageBgSlot thumb, int ch, IPlayerDataService player, string[] stageBgs, int selected)
+        private void Fill(Transform row, LazySpriteSlot thumb, int ch, IPlayerDataService player, string[] stageBgs, int selected)
         {
             bool open = ch <= player.UnlockedChapter;
             bool cleared = ch < player.UnlockedChapter || ch <= player.ClearedChapter;
             if (row.gameObject.activeSelf && Find(row, "ChsRowThumbArt") is Transform t && t.TryGetComponent<Image>(out var art)
                 && stageBgs != null && stageBgs.Length > 0)
-                thumb.Show(art, stageBgs[(ch - 1) % stageBgs.Length], gameObject.scene.name);
+                thumb.Show(art, LazySpriteSlot.StageBg + stageBgs[(ch - 1) % stageBgs.Length], gameObject.scene.name);
             var no = Text(row, "ChsRowNo", $"CH {ch}");
             var info = player.ChapterInfo(ch);
             var name = Text(row, "ChsRowName", Localize.FromTable($"stage.{ch}.1.name", info.Name ?? string.Empty));

@@ -16272,13 +16272,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db9baa14f69c4264385464ea8ae4db6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.InGame.RbRunResult
-  _bgClear: {fileID: 21300000, guid: ce9915a42a96b5f42b1bd75c2ebffeb5, type: 3}
-  _bgFail: {fileID: 21300000, guid: ded9df89a3961f34695c2017951f8245, type: 3}
   _wordClear: {fileID: 21300000, guid: 2dbc3d8d0ace21b44b7916fc7820c2b6, type: 3}
   _wordFailed: {fileID: 21300000, guid: 8801afdc69946b9428fe5686372fdc60, type: 3}
   _ghostCheer: {fileID: 21300000, guid: 0177a50ec41282e4d95388e50ff1f121, type: 3}
   _ghostSad: {fileID: 21300000, guid: 7f11c956a462ab7419fa2cc7a5a855c9, type: 3}
-  _bgStory: {fileID: 21300000, guid: 1b43c596a3968a043b26bd90f747e58a, type: 3}
+  _bgClear: rb_art_result_clear_bg
+  _bgFail: rb_art_result_fail_bg
+  _bgStory: rb_art_result_clear_bg_quiet
   _cellClear: {fileID: 21300000, guid: 937781ce019ae03468a3c2e72c3942b5, type: 3}
   _cellGold: {fileID: 21300000, guid: ac3adc2208b260f43b11d79c0bc323eb, type: 3}
   _cellTeal: {fileID: 21300000, guid: b36c3d4f366a47e4a9eb69c700360fbb, type: 3}
@@ -27108,26 +27108,6 @@ MonoBehaviour:
   _reborn: 1
   _rbPrice: {fileID: 21300000, guid: e9620d5d957e03244a856888f01d7ed8, type: 3}
   _rbPricePoor: {fileID: 21300000, guid: 658557e1bd7827c45a9fb492dc5566d0, type: 3}
-  _rbEventArts:
-  - {fileID: 21300000, guid: a57b10691658bcd46911e4111b02d4e5, type: 3}
-  - {fileID: 21300000, guid: 80a7f428c03e5bd45958cb05e21d1fbc, type: 3}
-  - {fileID: 21300000, guid: b70e787572001f04b93ee595b2a504bc, type: 3}
-  - {fileID: 21300000, guid: ed3bc3d5038902648a4af84d5d9d9787, type: 3}
-  - {fileID: 21300000, guid: 1e07b72760b69814983f609f342e3e89, type: 3}
-  - {fileID: 21300000, guid: ee9d77234cba4a7478f5504bdba24c4a, type: 3}
-  - {fileID: 21300000, guid: 12ad01590463adc4396590470e0b642c, type: 3}
-  - {fileID: 21300000, guid: e47f46b09cbc2724c9cc36185aa3248f, type: 3}
-  - {fileID: 21300000, guid: 0b7d6950d7470bd4b98220a2c7232895, type: 3}
-  - {fileID: 21300000, guid: 4234aca71c913da4085f588e77bab3ce, type: 3}
-  - {fileID: 21300000, guid: 75cc5ede0e7761e47988034f78f29747, type: 3}
-  - {fileID: 21300000, guid: fde07b30ff0df534ca2613b859b7a4d7, type: 3}
-  - {fileID: 21300000, guid: 082e57ab10347fe41af1c545fab701ac, type: 3}
-  - {fileID: 21300000, guid: 925a1b5c61dc9fa4090cda86b02d48bf, type: 3}
-  - {fileID: 21300000, guid: 6dfc9c92fa5ee8343a495854356c8f50, type: 3}
-  - {fileID: 21300000, guid: 2eee22c5fcd9ac74fab344bee3bf4ded, type: 3}
-  - {fileID: 21300000, guid: 7d0e279401de29e4b988931119cde678, type: 3}
-  - {fileID: 21300000, guid: 4872703771d05044ba68fcc56a32c2d1, type: 3}
-  - {fileID: 21300000, guid: 31f73d82ad0a4fb4bbb2276a41fba230, type: 3}
 --- !u!114 &184756266425846340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43788,7 +43768,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ce9915a42a96b5f42b1bd75c2ebffeb5, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

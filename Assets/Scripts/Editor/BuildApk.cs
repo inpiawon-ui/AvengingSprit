@@ -79,7 +79,7 @@ namespace Game.EditorTools
 
             ResetPixelFallbackToDisk();
             OldFontSwap.Run();   // 빌더가 옛 폰트를 다시 박았어도 빌드에는 지금 폰트로(메모리 · 언어별 폰트)
-            StageBgGroup.Ensure();   // 챕터 배경은 보일 때 한 장씩 주소로 읽는다 — 새 배경도 빠지지 않게
+            LazyArtGroups.Ensure();   // 챕터 배경 · 결과 배경 · 이벤트 그림은 보일 때 한 장씩 주소로 읽는다 — 새 그림도 빠지지 않게
 
             Debug.Log("[Build] Addressable 번들을 굽는다…");
             AddressableAssetSettings.BuildPlayerContent(out var addrResult);

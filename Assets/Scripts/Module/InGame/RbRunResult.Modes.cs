@@ -107,7 +107,7 @@ namespace Game.Module.InGame
             transform.SetAsLastSibling();   // 06_ui — 열 때 맨 위
             _leaving = false;
             ApplyLayout(false);
-            SetSprite("RbResultBg", clear ? _bgClear : _bgFail);
+            SetBg(clear ? _bgClear : _bgFail);
             SetSprite("RbResultGhost", clear ? _ghostCheer : _ghostSad);
             _ui.SetActive("RbResultWord", false);
         }

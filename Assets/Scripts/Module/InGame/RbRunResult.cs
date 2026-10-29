@@ -29,9 +29,12 @@ namespace Game.Module.InGame
             public float ClearFont, FailFont;
         }
 
-        [SerializeField] private Sprite _bgClear, _bgFail, _wordClear, _wordFailed, _ghostCheer, _ghostSad;
+        [SerializeField] private Sprite _wordClear, _wordFailed, _ghostCheer, _ghostSad;
+        // 결과 배경 3장(장당 약 2.5MB)은 그림이 아니라 파일 이름만 — 판이 끝나 결과가 뜰 때 한 장만 주소로 읽는다(2026-10-30 메모리)
+        [SerializeField] private string _bgClear = "rb_art_result_clear_bg", _bgFail = "rb_art_result_fail_bg";
         [Tooltip("스토리 클리어 배경 — 시안 .scene.quiet(흐림 14 · 밝기 0.3 · 채도 0.72 · 가장자리 어둡게)를 구운 그림. 탑 · 밤은 _bgClear 그대로")]
-        [SerializeField] private Sprite _bgStory;
+        [SerializeField] private string _bgStory = "rb_art_result_clear_bg_quiet";
+        private readonly LazySpriteSlot _bg = new();
         [SerializeField] private Sprite _cellClear, _cellGold, _cellTeal, _expClear, _expFail;
         [Tooltip("몸 카드 등급 테 · 꼬리표 — HostGrade 순서(B · A · S = 화면 R · SR · SSR)")]
         [SerializeField] private Sprite[] _hostFrames = System.Array.Empty<Sprite>(), _gradeTags = System.Array.Empty<Sprite>();
@@ -60,7 +63,7 @@ namespace Game.Module.InGame
             int chapters = _player != null ? Mathf.Max(1, _player.ChapterCount) : ch;
             _nextChapter = clear ? Mathf.Min(ch + 1, chapters) : ch;
 
-            SetSprite("RbResultBg", clear ? (_bgStory != null ? _bgStory : _bgClear) : _bgFail);
+            SetBg(clear ? (!string.IsNullOrEmpty(_bgStory) ? _bgStory : _bgClear) : _bgFail);
             SetSprite("RbResultWord", clear ? _wordClear : _wordFailed);
             _ui.SetActive("RbResultWord", true);
             _ui.SetActive("RbResultHeadline", false);
@@ -231,6 +234,13 @@ namespace Game.Module.InGame
             if (_ui.Get<Image>(node) is not Image face) return;
             face.sprite = hostKey != null && faces != null ? faces.GetSprite($"face_{hostKey}") : null;
             face.enabled = face.sprite != null;
+        }
+
+        /// <summary>결과 배경 — 다 읽을 때까지 칸을 감춰 빈 칸 · 지난 판 배경이 안 보이게(뒤의 어두운 바닥만 보인다).</summary>
+        private void SetBg(string name)
+        {
+            if (_ui.Get<Image>("RbResultBg") is Image img)
+                _bg.Show(img, LazySpriteSlot.KitArt + name, gameObject.scene.name, hideUntilLoaded: true);
         }
 
         private void SetSprite(string node, Sprite s)

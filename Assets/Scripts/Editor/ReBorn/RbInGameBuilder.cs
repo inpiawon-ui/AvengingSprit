@@ -886,7 +886,9 @@ namespace Game.Editor.ReBorn
             dim.color = new Color(0.02f, 0.03f, 0.06f, 1f);
             dim.raycastTarget = true;
             var bg = Stretch(Node(page, "RbResultBg"));
-            var bgImg = Img(bg, "Art/rb_art_result_clear_bg");
+            // 배경 그림은 걸지 않는다 — 결과가 뜰 때 RbRunResult 가 주소로 읽어 꽂는다(2026-10-30 메모리)
+            var bgImg = bg.GetComponent<Image>() ?? bg.gameObject.AddComponent<Image>();
+            bgImg.sprite = null;
             bgImg.preserveAspect = false;
             var fit = bg.gameObject.AddComponent<AspectRatioFitter>();
             fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
@@ -971,9 +973,10 @@ namespace Game.Editor.ReBorn
             // 실패 배치를 한 번 입혀 보고 잰 뒤 클리어 배치로 되돌린다 — 둘 다 RbRunResult 에 담긴다
             var view = page.gameObject.AddComponent<Game.Module.InGame.RbRunResult>();
             var so = new SerializedObject(view);
-            so.FindProperty("_bgClear").objectReferenceValue = KitSprite("Art/rb_art_result_clear_bg");
-            so.FindProperty("_bgStory").objectReferenceValue = KitSprite("Art/rb_art_result_clear_bg_quiet");
-            so.FindProperty("_bgFail").objectReferenceValue = KitSprite("Art/rb_art_result_fail_bg");
+            // 결과 배경은 파일 이름만 — 결과가 뜰 때 한 장만 주소로 읽는다(LazySpriteSlot, 2026-10-30 메모리)
+            so.FindProperty("_bgClear").stringValue = "rb_art_result_clear_bg";
+            so.FindProperty("_bgStory").stringValue = "rb_art_result_clear_bg_quiet";
+            so.FindProperty("_bgFail").stringValue = "rb_art_result_fail_bg";
             so.FindProperty("_wordClear").objectReferenceValue = KitSprite("WordArt/rb_word_word_clear");
             so.FindProperty("_wordFailed").objectReferenceValue = KitSprite("WordArt/rb_word_word_failed");
             so.FindProperty("_ghostCheer").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_cheer");
@@ -1296,11 +1299,7 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_rbSkillReady").objectReferenceValue = KitSprite("Hud/rb_btn_skill_ready");
             so.FindProperty("_rbPrice").objectReferenceValue = KitSprite("Components/rb_btn_price");
             so.FindProperty("_rbPricePoor").objectReferenceValue = KitSprite("Components/rb_btn_price_poor");
-            var arts = AssetDatabase.FindAssets("rb_art_ev_ t:Sprite", new[] { $"{Kit}/Art" });
-            var ev = so.FindProperty("_rbEventArts");
-            ev.arraySize = arts.Length;
-            for (int i = 0; i < arts.Length; i++)
-                ev.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(arts[i]));
+            // 이벤트 그림(rb_art_ev_*)은 걸지 않는다 — 화면이 이벤트 방에서 주소로 한 장만 읽는다(LazySpriteSlot · LazyArtGroups, 2026-10-30)
             // 이벤트 「내준다 / 받는다」 줄 아이콘 — 이름으로 찾는다(InGameMainUI.RbEvent DealIcon)
             string[] deal = { "heal_ghost", "heal_host", "stat_hp", "currency_gold", "room_battle", "room_elite", "card_up",
                               "reward_chest", "possess_range", "shop_discount", "boss_shield", "mode_ghost", "sys_warning" };
