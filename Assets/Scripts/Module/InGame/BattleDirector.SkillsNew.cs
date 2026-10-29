@@ -292,6 +292,8 @@ namespace Game.Module.InGame
         }
 
         /// <summary>흡혈귀 — 화면에 보이는 적 **머릿수만큼** 돌려받는다.</summary>
+        private const int VampireBatTargets = 4;
+
         private void VampireFeast(Unit me)
         {
             // ⚠ **화면에 보이는 적 전부**에게 보낸다(기획 2026-09-15). 둘레 5 m 는 화면에 안 그려져
@@ -301,6 +303,18 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
                 if (Targetable(_enemies[i]) && IsOnScreen(_enemies[i])) list.Add(_enemies[i]);
             if (list.Count == 0) { PlayFx("drain", me.Position, 64f, loop: false); return; }
+            // 기획서 「박쥐가 적 넷을 물고」(PD 2026-10-29 「기획서 기준으로」) — 화면 안에서 가까운 넷만 남긴다(회복도 그 머릿수)
+            while (list.Count > VampireBatTargets)
+            {
+                int far = 0;
+                float farD = -1f;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    float d = (list[i].Position - me.Position).sqrMagnitude;
+                    if (d > farD) { farD = d; far = i; }
+                }
+                list.RemoveAt(far);
+            }
 
             float per = VampireFeastPercentPerEnemy * BaseAxis(1f) * ActiveRebaseMul;   // Lv1 2% → Lv4 3% · 쿨 비율(BattleDirector.Rework1021)
             // 빨아 온 피는 **메인**에게 간다(PD 2026-10-29) — 보조가 써도 메인의 최대 체력으로 센다

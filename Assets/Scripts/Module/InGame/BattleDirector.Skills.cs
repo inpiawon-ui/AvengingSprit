@@ -240,7 +240,7 @@ namespace Game.Module.InGame
         public bool IsReflectingAll => _reflectSeconds > 0f;
 
         /// <summary>
-        /// 받는 피해 감소(0~1) — 구루 결계 · 탄막 요새(코만도 기관총) · 예비 회로(로봇).
+        /// 받는 피해 감소(0~1) — 구루 결계 · 탄막 요새 · 중장갑(코만도 기관총) · 예비 회로(로봇).
         /// 셋은 **곱해진다**(남는 몫끼리 곱). 더하면 겹쳤을 때 무적이 된다.
         /// </summary>
         private float WardReduce
@@ -251,6 +251,7 @@ namespace Game.Module.InGame
                 if (_wardSeconds > 0f) keep *= 1f - _wardReduce;
                 if (_fortressSeconds > 0f) keep *= 1f - FortressDamageCut;
                 keep *= 1f - SpareCircuitCut;
+                keep *= 1f - HeavyArmorCut;
                 return 1f - keep;
             }
         }

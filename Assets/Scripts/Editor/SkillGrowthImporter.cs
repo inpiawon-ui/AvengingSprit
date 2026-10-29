@@ -33,7 +33,7 @@ namespace Game.Editor
             { "psv_commando_grenade", (50f, 75f) },   // 파편탄 — 방어 무시
             { "psv_snowwoman",        (30f, 45f) },   // 서릿발 — 추가 피해
             { "psv_hopper_smg",       (60f, 80f) },   // 치고 빠지기 — 이동 사격 위력
-            { "psv_commando_mg",      (20f, 35f) },   // 중장갑 — 방어력 증가
+            { "psv_commando_mg",      (15f, 25f) },   // 중장갑 — 받는 피해 감소(기획서 −15% · Lv5 −25% 시험값)
             { "psv_thug",             (20f, 35f) },   // 난전 — 공격 속도
             { "psv_ninja",            (20f, 30f) },   // 몸놀림 — 회피
             { "psv_leech",            (5f, 8f) },   // 피의 갈증 — 흡혈량

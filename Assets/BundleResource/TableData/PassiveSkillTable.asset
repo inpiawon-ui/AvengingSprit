@@ -40,8 +40,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 45
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_slugger
     _nameEn: SLUGGER
     _nameKr: "\uBC18\uC0AC \uC2E0\uACBD"
@@ -54,8 +54,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 45
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_death
     _nameEn: DEATH
     _nameKr: "\uB9DD\uC790 \uC18C\uC9D1"
@@ -95,8 +95,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 25
-    _growthMax: 40
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_dragoon
     _nameEn: DRAGOON
     _nameKr: "\uC6A9\uC758 \uD53C"
@@ -109,8 +109,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 45
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_salamander
     _nameEn: SALAMANDER
     _nameKr: "\uB3C5\uB2C8"
@@ -123,8 +123,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 20
-    _growthMax: 35
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_dragon_blue
     _nameEn: DRAGON_BLUE
     _nameKr: "\uB099\uB8B0"
@@ -138,8 +138,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 18
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_commando_grenade
     _nameEn: COMMANDO_GRENADE
     _nameKr: "\uD30C\uD3B8\uD0C4"
@@ -151,8 +151,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 50
-    _growthMax: 75
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_snowwoman
     _nameEn: SNOWWOMAN
     _nameKr: "\uC11C\uB9BF\uBC1C"
@@ -165,8 +165,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 45
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_hopper_smg
     _nameEn: HOPPER_SMG
     _nameKr: "\uCE58\uACE0 \uBE60\uC9C0\uAE30"
@@ -179,12 +179,12 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 60
-    _growthMax: 80
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_commando_mg
     _nameEn: COMMANDO_MG
     _nameKr: "\uC911\uC7A5\uAC11"
-    _description: "\uBC29\uC5B4\uB825 20% \uC99D\uAC00."
+    _description: "\uBC1B\uB294 \uD53C\uD574 15% \uAC10\uC18C."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -192,8 +192,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 20
-    _growthMax: 35
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_thug
     _nameEn: THUG
     _nameKr: "\uB09C\uC804"
@@ -206,8 +206,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 20
-    _growthMax: 35
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_ninja
     _nameEn: NINJA
     _nameKr: "\uBAB8\uB180\uB9BC"
@@ -219,8 +219,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 20
-    _growthMax: 30
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_leech
     _nameEn: LEECH
     _nameKr: "\uD53C\uC758 \uAC08\uC99D"
@@ -234,8 +234,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 5
-    _growthMax: 8
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_gangster
     _nameEn: GANGSTER
     _nameKr: "\uCCAD\uBD80 \uACC4\uC57D"
@@ -261,8 +261,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 50
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_commando_missile
     _nameEn: COMMANDO_MISSILE
     _nameKr: "\uD45C\uC801 \uACE0\uC815"
@@ -275,8 +275,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 15
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_medium
     _nameEn: MEDIUM
     _nameKr: "\uAC15\uB839\uC220"
@@ -289,8 +289,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 45
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_white_wizard
     _nameEn: WHITE_WIZARD
     _nameKr: "\uBE5B\uC758 \uAC00\uD638"
@@ -303,8 +303,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 15
-    _growthMax: 25
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_commando_laser
     _nameEn: COMMANDO_LASER
     _nameKr: "\uC9D1\uC18D \uAD11\uC120"
@@ -331,5 +331,5 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 20
-    _growthMax: 30
+    _growthMin: 0
+    _growthMax: 0

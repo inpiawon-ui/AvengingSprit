@@ -67,7 +67,7 @@ askill.psg_h20.desc	적을 꿰뚫는 강타구를 친다. 맞은 적은 멀리 �
 askill.psg_h21.name	눈보라	吹雪	Blizzard	暴風雪	暴风雪
 askill.psg_h21.desc	둘레 적을 1.5초간 빙결시킨다. 보스는 얼지 않고 느려진다.	周囲の敵を1.5秒間凍結させる。ボスは凍らず鈍足になる。	Freeze nearby foes for 1.5s. Bosses are slowed instead.	冰凍周圍敵人1.5秒。頭目不會被冰凍，改為減速。	冰冻周围敌人1.5秒。头目不会被冰冻，改为减速。
 askill.psg_h22.name	박쥐 떼	コウモリの群れ	Bat Swarm	蝙蝠群	蝙蝠群
-askill.psg_h22.desc	화면 안의 적마다 박쥐가 날아가 물고, 빨아 온 피로 메인을 회복한다. 적 1명당 최대 체력 2%.	画面内の敵ごとにコウモリが噛みつき、吸った血でメインを回復する。敵1体ごとに最大体力2%。	A bat bites each foe on screen and brings blood back to heal your main. 2% max HP per foe.	蝙蝠咬向畫面中每個敵人，吸回的血為主控回復。每個敵人回復最大HP的2%。	蝙蝠咬向画面中每个敌人，吸回的血为主控恢复。每个敌人恢复最大HP的2%。
+askill.psg_h22.desc	가까운 적 넷에게 박쥐가 날아가 물고, 빨아 온 피로 메인을 회복한다. 적 1명당 최대 체력 2%.	近くの敵4体にコウモリが噛みつき、吸った血でメインを回復する。敵1体につき最大HPの2%。	Bats bite the 4 nearest enemies and the drained blood heals your main. 2% max HP per enemy.	蝙蝠咬住附近4名敵人，吸來的血為主控回復。每名敵人回復最大生命2%。	蝙蝠咬住附近4名敌人，吸来的血为主控恢复。每名敌人恢复最大生命2%。
 askill.psg_h23.name	사신의 시간	死神の刻	Death's Hour	死神之刻	死神之刻
 askill.psg_h23.desc	3초간 공격한 적을 즉사시킨다. 중간 보스는 50% 확률, 보스는 10% 확률로 최대 체력 25% 피해.	3秒間、攻撃した敵を即死させる。中ボスは50%の確率、ボスは10%の確率で最大HPの25%ダメージ。	For 3s, enemies you hit die instantly. Mini-bosses: 50% chance. Bosses: 10% chance to lose 25% max HP.	3秒內被你攻擊的敵人即死。中頭目有50%機率即死，頭目有10%機率受到最大HP 25%的傷害。	3秒内被你攻击的敌人即死。中头目有50%几率即死，头目有10%几率受到最大HP 25%的伤害。
 pskill.psv_amazon.name	질주	疾走	Sprint	疾走	疾走
@@ -95,7 +95,7 @@ pskill.psv_snowwoman.desc	빙결된 적에게 주는 피해 +30%.	凍結した�
 pskill.psv_hopper_smg.name	치고 빠지기	ヒット＆アウェイ	Hit and Run	打帶跑	打带跑
 pskill.psv_hopper_smg.desc	이동 중에도 기본 공격을 쏜다(위력 60%).	移動中も通常攻撃を撃つ（威力60%）。	Keep firing basic attacks while moving (60% power).	移動中也會進行普通攻擊（威力60%）。	移动中也会进行普通攻击（威力60%）。
 pskill.psv_commando_mg.name	중장갑	重装甲	Heavy Armor	重裝甲	重装甲
-pskill.psv_commando_mg.desc	방어력 20% 증가.	防御力20%上昇。	Defense +20%.	防禦力提升20%。	防御力提升20%。
+pskill.psv_commando_mg.desc	받는 피해 15% 감소.	被ダメージ15%減少。	Damage taken −15%.	受到的傷害減少15%。	受到的伤害减少15%。
 pskill.psv_thug.name	난전	乱戦	Brawl	亂戰	乱战
 pskill.psv_thug.desc	근처에 적이 3명 이상이면 기본 공격 속도 +20%.	近くに敵が3体以上いると通常攻撃速度+20%。	+20% basic attack speed while 3+ foes are nearby.	附近有3名以上敵人時，普通攻擊速度+20%。	附近有3名以上敌人时，普通攻击速度+20%。
 pskill.psv_ninja.name	몸놀림	身のこなし	Agility	身法	身法
@@ -1304,7 +1304,7 @@ ult.commando_mg.name	탄막 요새	弾幕要塞	Bullet Fortress	彈幕要塞	弹
 ult.commando_mg.desc	3초간 제자리에 기관총을 거치해 받는 피해를 70% 줄이고 사방으로 연사한다.	3秒間その場に機関銃を据え、被ダメージを70%減らして全方向へ連射する。	Plant your machine gun for 3s: take 70% less damage and fire in every direction.	原地架設機槍3秒，受到傷害降低70%並向四面八方連射。	原地架设机枪3秒，受到伤害降低70%并向四面八方连射。
 ult.commando_mg.short	3초 고정 · 받는 피해 −70% · 사방 연사	3秒固定・被ダメ−70%・全方向連射	3s planted · −70% damage · all-round fire	固定3秒 · 受傷−70% · 全方位連射	固定3秒 · 受伤−70% · 全方位连射
 askill.commando_mg.short	앞쪽 부채꼴 2초 연사 · 둔화	前方扇状に2秒連射・鈍足	2s forward spray · slows	向前扇形連射2秒 · 減速	向前扇形连射2秒 · 减速
-pskill.commando_mg.short	방어력 20% 증가	防御力20%上昇	Defense +20%	防禦 +20%	防御 +20%
+pskill.commando_mg.short	받는 피해 −15%	被ダメージ−15%	Damage taken −15%	受到傷害 −15%	受到伤害 −15%
 askill.commando_mg.opt	둔화 30 → 50%	鈍足30→50%	Slow 30 → 50%	減速 30 → 50%	减速 30 → 50%
 host.amazon_elite.concept	불굴의 반격자	不屈の反撃者	Unyielding avenger	不屈反擊者	不屈反击者
 ult.amazon_elite.name	역린	逆鱗	Wrath	逆鱗	逆鳞

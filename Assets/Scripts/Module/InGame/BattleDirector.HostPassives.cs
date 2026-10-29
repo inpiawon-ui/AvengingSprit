@@ -29,11 +29,8 @@ namespace Game.Module.InGame
         /// <summary>확률로 거는 상태이상이 도는 시간(필살기가 같이 쓴다).</summary>
         private const float PassiveAilmentSeconds = 3f;
         private const int NinjaDodgePercent = 20;             // 닌자 몸놀림 — 회피
-        /// <summary>
-        /// 코만도(기관총) — 「기본 방어력 20% 증가」. 제 등급이 준 값에 **곱한다**.
-        /// 20%p 를 더하면 등급 9(27%)가 47% 가 되어 이 몸만 다른 게임을 한다.
-        /// </summary>
-        private const float CommandoMgDefenseBonus = 0.20f;
+        /// <summary>코만도(기관총) 중장갑 — 받는 피해 −15%(기획서 plan_party_skills · PD 2026-10-29 「기획서 기준으로」). 성장 표가 Lv5 까지 키운다.</summary>
+        private const float HeavyArmorDamageCut = 0.15f;
         private const int GrenadeArmorIgnorePercent = 50;     // 코만도(수류탄) 파편탄
         private const float FrostBiteBonus = 0.30f;           // 설녀 서릿발 — 빙결된 적에게
         private const float VenomFangBonus = 0.20f;           // 샐러맨더 독니 — 중독된 적에게
@@ -118,7 +115,6 @@ namespace Game.Module.InGame
         {
             if (entry == null) return 0;
             float percent = entry.DefensePercent;
-            if (key == "commando_mg") percent *= 1f + PassiveFrac(CommandoMgDefenseBonus);
             // 유령 강화 「받는 피해 감소」(%p)를 더한다 — 모든 몸(2026-10-29, 호스트 탭 강화는 없앴다)
             if (_player != null) percent += _player.StatBonusFlat(key, Game.Character.HostStat.Defense);
             return Mathf.Min(Mathf.RoundToInt(percent), Game.Character.GameConfig.DefenseCapPercent);
@@ -166,6 +162,9 @@ namespace Game.Module.InGame
 
         /// <summary>영매 강령술 — 소환물을 이만큼 더 세운다(`SpawnSummon` 의 상한).</summary>
         private int SummonCapBonus => PassiveHostKey == "medium" ? MediumSummonCapBonus : 0;
+
+        /// <summary>코만도(기관총) 중장갑 — 늘 받는 피해를 줄인다(`WardReduce` 가 곱한다).</summary>
+        private float HeavyArmorCut => PassiveHostKey == "commando_mg" ? PassiveFrac(HeavyArmorDamageCut) : 0f;
 
         /// <summary>로봇 예비 회로 — 포탑이 서 있는 동안 받는 피해를 줄인다(`WardReduce` 가 곱한다).</summary>
         private float SpareCircuitCut
