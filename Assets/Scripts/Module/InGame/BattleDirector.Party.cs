@@ -57,6 +57,8 @@ namespace Game.Module.InGame
         public const float SubRateMul = 0.5f;
         /// <summary>보조의 공격 사거리(메인 대비). 능력치는 다 낮추고 사거리만 넓힌다(PD 2026-10-29).</summary>
         public const float SubRangeMul = 1.3f;
+        /// <summary>보조 크기 배율(PD 2026-10-29 「0.8 정도」).</summary>
+        public const float SubScale = 0.8f;
         /// <summary>보조가 메인에게서 벗어나지 않는 반경(m). 보면서 잡는 값(PD 2026-10-29).</summary>
         public const float LeashMeters = 5f;
         /// <summary>보조 스킬 자동 발동 간격(초).</summary>
@@ -91,11 +93,11 @@ namespace Game.Module.InGame
                     HostIntervalOf(entry) / PartyRule.SubRateMul,
                     UnitBox(84f, 80f), isBoss: false, profile: entry);
             u.Position = at;
+            u.transform.localScale = Vector3.one * PartyRule.SubScale;   // 메인과 한눈에 갈리게 작게(PD 2026-10-29)
             u.SetState(EnemyState.Idle);
             ApplyFacingSprites(u, key);
             u.SetHpBarVisible(false);   // 보조는 체력이 없다 — 적이 노리지 않아 맞지도 않는다
             u.MarkPartySub(GetSprite("party_sub_ring"));   // 붙들어 둔 혼 — 비치는 보랏빛 · 숨쉬기 · 발밑 혼령 고리
-            PlayFx("shield", at, 128f, loop: false);
             return new PartySub { U = u, SkillCd = Random.Range(1.5f, 3f), BaseAtk = baseAtk };
         }
 
@@ -168,6 +170,7 @@ namespace Game.Module.InGame
         {
             for (int i = 0; i < _subs.Count; i++) if (_subs[i].U != null) Destroy(_subs[i].U.gameObject);
             _subs.Clear();
+            ClearPartyFx();
             _mainSwaps = 0;
             _subSwaps = 0;
             _partyPossessCost = 0;
@@ -213,7 +216,7 @@ namespace Game.Module.InGame
         /// </summary>
         public bool TryPartyTap(Vector2 screen, Camera cam)
         {
-            if (!PartyOn || !_running || _partyHold || _awaitingBuff || IsChanneling) return false;
+            if (!PartyOn || !_running || _partyHold || _awaitingBuff || IsChanneling || PartyLinking) return false;
             bool ghost = _host == null;
             if (!ghost && !PartyCanChoose()) return false;
 
@@ -316,9 +319,8 @@ namespace Game.Module.InGame
             // 지금 메인은 사라진다 — 쓰러지는 몸이 아니라 놓아준 몸이라 조각 · 사망 처리는 하지 않는다
             var old = _host;
             _ghost.Position = old.Position;
-            PlayFx("shield", old.Position, 128f, loop: false);
-            Retire(old);
             _host = null;
+            BeginRelease(old);   // 해골로 쓰러지지 않는다 — 원작 빙의 자세로 옅어지며 흩어짐
             Unit.PlayerHasHost = false;
             _possessTarget = target;
             _repossessLock = 0f;
@@ -331,20 +333,15 @@ namespace Game.Module.InGame
             PartySpend(cost, target.Position);
             if (cost == PartyRule.CostSubSwap) _subSwaps++;
 
-            var at = target.Position;
-            string key = target.Key;
-            Destroy(target.gameObject);
-            var sub = MakeSub(key, at);
-            var u = sub.U;
-
+            // 보조 교체 — 옛 보조는 놓아주고, 그 자리에서 혼 조각이 새 호스트로 옮겨 간다(BattleDirector.PartyFx)
+            Unit oldSub = null;
             if (slot < _subs.Count)
             {
-                var old = _subs[slot];
-                if (old.U != null) { PlayFx("burst", old.U.Position, 110f, loop: false); Destroy(old.U.gameObject); }
-                _subs[slot] = sub;
+                oldSub = _subs[slot].U;
+                _subs.RemoveAt(slot);
+                BeginRelease(oldSub);
             }
-            else _subs.Add(sub);
-            Debug.Log($"[빙의 파티] 보조 {slot + 1} = {key} · 공격 {u.Atk}");
+            BeginSubPossess(target, slot, oldSub);
         }
 
         // ─────────────────────────────────────────
@@ -414,6 +411,7 @@ namespace Game.Module.InGame
             RecountSynergy();
             RefreshSubAtk();
             TickPartyHud();
+            TickPartyFx(dt);
             if (!PartyOn || _subs.Count == 0) return;
             var me = Avatar;
             if (me == null) return;
@@ -456,7 +454,8 @@ namespace Game.Module.InGame
                 if (move)
                 {
                     u.SetState(EnemyState.Approach);
-                    u.Position = SlideMove(u, u.Position, u.StepToward(goal, dt));
+                    // 보조는 혼이라 방 물건을 무시하고 지나간다(PD 2026-10-29) — 걸리면 메인을 못 따라온다
+                    u.Position = u.StepToward(goal, dt);
                     u.SetMoving(true);
                 }
                 else u.SetMoving(false);

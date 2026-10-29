@@ -29,9 +29,10 @@ namespace Game.Module.InGame
         private const float ExitSeconds = 0.2f;
 
         // ── 크기 (방 좌표 px — 방 화면은 약 0.47배로 보인다) ─────────
-        private const float NormalHeight = 40f;
-        private const float CritHeight = 56f;
-        private const float MinorHeight = 24f;
+        // PD 2026-10-29 「너무 커서 방해 — 0.8 정도로」: 40 · 56 · 24 · 60 에서 0.8배로 줄였다.
+        private const float NormalHeight = 32f;
+        private const float CritHeight = 45f;
+        private const float MinorHeight = 19f;
         private const float DigitAspect = 0.8f;       // 칸 32x40
         private const float DigitOverlap = 0.14f;     // 기운 숫자끼리 살짝 겹친다
 
@@ -57,7 +58,7 @@ namespace Game.Module.InGame
         // ── 합산 숫자 (다단 히트, PD 2026-10-16 「다단 히트 느낌을 살려야」) ─────────
         // 한 적이 스킬에 연달아 맞으면 쌓이는 숫자 위에 **합계가 하나 더** 뜬다(던파 합산 표시).
         // 맞을 때마다 합계가 바뀌며 한 번씩 튀고, 연타가 끝나면 크게 한 번 꽂히고 사라진다.
-        private const float TotalHeight = 60f;
+        private const float TotalHeight = 48f;
         private const float TotalLift = 178f;         // 쌓인 숫자 4줄(26 + 33×3 + 반 줄) 위
         private const float TotalSlamFrom = 1.9f;
         private const float BumpSeconds = 0.1f;
