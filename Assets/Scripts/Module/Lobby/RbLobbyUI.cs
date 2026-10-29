@@ -81,6 +81,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             gameObject.AddComponent<BackButtonRouter>();
             if (CoreModule.TryGet<ILanguageService>(out var lang)) lang.ApplyFonts(transform);
+            ShowGhostBodies();
 
             _ui.OnClick("ChapterPrev", () => StepChapter(-1));
             _ui.OnClick("ChapterNext", () => StepChapter(+1));
@@ -645,23 +646,37 @@ namespace Game.Module.Lobby
 
         // ── 무대 — 랜덤 = 물음표 구슬 + 유령 · 유령 = 유령만(받침 위 가운데) · 몸 = 고른 몸 + 옆에 유령(PD 2026-10-26) ──────
 
-        private Sprite _ghostArt;
+        // 유령이 캐릭터로 서는 칸 — 키트 마스코트(192 px 픽셀) 대신 퀄업 큰 그림(unitl_ghost)으로 둥실거린다
+        //   (PD 2026-10-30 「다른 호스트는 다 퀄업인데 유령만 구린 픽셀 유령」). 설명 · 보상 알림의 표정 마스코트는 그대로
+        private static readonly string[] GhostBodySlots = { "StageGhost", "ColGhostArt", "GhoMascot" };   // RndArt 는 랜덤 호스트 칸이라 뺀다
+
+        private void ShowGhostBodies()
+        {
+            for (int i = 0; i < GhostBodySlots.Length; i++)
+            {
+                if (_ui.Get<Image>(GhostBodySlots[i]) is not Image img) continue;
+                if (!img.TryGetComponent<UnitShowcase>(out var show)) show = img.gameObject.AddComponent<UnitShowcase>();
+                show.SetFloat(true);
+                show.Show("ghost");
+            }
+        }
 
         private void RefreshStage()
         {
             bool random = _mode == RunStartMode.Random, ghost = _mode == RunStartMode.Ghost;
-            if (_ghostArt == null && _ui.Get<Image>("StageGhost") is Image g) _ghostArt = g.sprite;
             _ui.SetActive("StageOrb", random);
             _ui.SetActive("StagePrompt", random);
             _ui.SetActive("StageGhost", !ghost);
             _ui.SetActive("StageHost", !random);
             if (random || _ui.Get<Image>("StageHostArt") is not Image art) return;
             // 몸은 큰 몸 그림(UnitShowcase)만 세운다 — 얼굴을 대신 세웠더니 그림이 오기 전까지 얼굴만 떠 있다가
-            // 몸으로 바뀌었다(PD 2026-10-26 「대가리만 나오다가 다시 캐릭터가 나와」). 24종 모두 큰 그림이 있다
-            art.sprite = ghost ? _ghostArt : null;
-            art.enabled = ghost;
+            // 몸으로 바뀌었다(PD 2026-10-26 「대가리만 나오다가 다시 캐릭터가 나와」). 24종 모두 큰 그림이 있다.
+            // 유령 출전도 같은 큰 그림(unitl_ghost) — 예전엔 키트 마스코트를 꽂았다(PD 2026-10-30)
+            art.sprite = null;
+            art.enabled = false;
             if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
-            show.Show(ghost ? null : _host);
+            show.SetFloat(ghost);
+            show.Show(ghost ? "ghost" : _host);
         }
 
         /// <summary>「[얼굴] 출전 ⚡5 🪙200」 한 줄을 글자 폭을 재서 버튼 가운데에 세운다 — 언어 · 자릿수마다 폭이 다르다.</summary>
