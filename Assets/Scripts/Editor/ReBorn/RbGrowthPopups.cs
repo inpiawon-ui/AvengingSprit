@@ -169,7 +169,10 @@ namespace Game.Editor.ReBorn
             desc.enableWordWrapping = true;   // 설명은 두세 줄
             // 각성 옵션(액티브만 — 6성에 열리고 10성에 2배, askill.{몸}.opt) · 없으면 창을 줄인다(RbGrowthPage.ShowSkill)
             Text(Corner(Node(c, "GrwSkillInfoAwakenTitle"), 76f, 726f, 644f, 760f), null, "각성 옵션 열림", 44, White, TA.Left, heavy: true);
-            Text(Corner(Node(c, "GrwSkillInfoAwaken"), 76f, 764f, 644f, 800f), null, "표식 붙은 적이 받는 피해 +15%", 44, Green, TA.Left, heavy: true);
+            // 두 줄까지 — 인연 「켜는 법」 한 줄이 오른쪽으로 삐져나갔다(PD 2026-10-30). 상자 아래 테 안(836)까지
+            var awaken = Text(Corner(Node(c, "GrwSkillInfoAwaken"), 76f, 764f, 644f, 836f), null, "표식 붙은 적이 받는 피해 +15%", 44, Green, TA.TopLeft, heavy: true);
+            awaken.enableWordWrapping = true;
+            awaken.fontSizeMin = 18f;
         }
     }
 }
