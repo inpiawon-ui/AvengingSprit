@@ -60,7 +60,10 @@ namespace Game.Module.InGame
         /// <summary>보조 크기 배율(PD 2026-10-29 「0.8 정도」).</summary>
         public const float SubScale = 0.8f;
         /// <summary>보조가 메인에게서 벗어나지 않는 반경(m). 보면서 잡는 값(PD 2026-10-29).</summary>
-        public const float LeashMeters = 5f;
+        public const float LeashMeters = 2.5f;   // 5 → 2.5(PD 2026-10-29 「나랑 퍼지는 거리를 지금의 반으로」)
+        /// <summary>보조끼리 · 보조와 메인 사이 최소 간격(px) — 보조는 84 × 0.8 ≈ 67 px 로 그린다(PD 「보조 1 · 2 가 겹친다」).</summary>
+        public const float SubGapEach = 64f;
+        public const float SubGapMain = 56f;
         /// <summary>보조 스킬 자동 발동 간격(초).</summary>
         public const float SubSkillSeconds = 6f;
         /// <summary>메인 사망 뒤 고르는 시간(초).</summary>
@@ -473,7 +476,11 @@ namespace Game.Module.InGame
                     u.SetMoving(true);
                 }
                 else u.SetMoving(false);
-                // 메인 반경을 벗어나지 않는다(PD 2026-10-29 「5m 를 벗어나지 말아야」)
+                // 겹치지 않게 — 메인 · 다른 보조와 최소 간격만큼 밀어낸다(한 번에 다 밀지 않고 조금씩 — 튀지 않게)
+                PushApart(u, me.Position, PartyRule.SubGapMain, i == 0 ? -1f : 1f);
+                for (int j = 0; j < _subs.Count; j++)
+                    if (j != i && _subs[j].U != null) PushApart(u, _subs[j].U.Position, PartyRule.SubGapEach, i == 0 ? -1f : 1f);
+                // 메인 반경을 벗어나지 않는다(PD 2026-10-29 「5m 를 벗어나지 말아야」 → 같은 날 「반으로」 2.5 m)
                 var off = u.Position - me.Position;
                 if (off.magnitude > leash) u.Position = me.Position + off.normalized * leash;
 
@@ -495,6 +502,19 @@ namespace Game.Module.InGame
                     CastSubSkill(u, target);
                 }
             }
+        }
+
+        /// <summary>
+        /// u 를 from 에서 gap 만큼 떨어지게 민다 — 모자란 거리의 60% 씩(다음 프레임에 마저 민다).
+        /// 딱 같은 자리면 방향이 없으니 보조 1 은 왼쪽 · 2 는 오른쪽으로.
+        /// </summary>
+        private static void PushApart(Unit u, Vector2 from, float gap, float side)
+        {
+            var d = u.Position - from;
+            float m = d.magnitude;
+            if (m >= gap) return;
+            var dir = m < 0.5f ? new Vector2(side, 0f) : d / m;
+            u.Position += dir * ((gap - m) * 0.6f);
         }
 
         private void CastSubSkill(Unit u, Unit target)
