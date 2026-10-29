@@ -35,6 +35,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _tileNormal, _tileMax, _tilePoor;
         [SerializeField] private Sprite _btnReady, _btnShort;
         [SerializeField] private Sprite[] _stageBgs = Array.Empty<Sprite>();
+        // 오른쪽 인연 판(시안 2 mock1029_growth_inyeon) — `Tools/Game/RE:BORN 화면/해금 연출 부품 꽂기` 가 같이 꽂는다
+        [SerializeField] private RbGrowthInyeonPanel.Art _iyArt;
+        private RbGrowthInyeonPanel _iyPanel;
 
         // 칸 순서 — 액티브 · 패시브 / 필살기 · 인연 짝. 앞 셋은 `HostSkillSlot` 그대로
         private static readonly HostSkillSlot[] SkillOrder = { HostSkillSlot.Active, HostSkillSlot.Passive, HostSkillSlot.Ult };
@@ -113,6 +116,7 @@ namespace Game.Module.Lobby
                 var t = i == 0 ? tpl : Instantiate(tpl.gameObject, tpl.parent).transform;
                 t.name = $"GrwStat{i}";
                 ((RectTransform)t).anchoredPosition = start + new Vector2(ColPitch * (i % 2), -RowPitch * (i / 2));
+                if (i < SkillOrder.Length) PlaceSkillTile((RectTransform)t, i);
                 if (i < SkillOrder.Length)
                 {
                     var slot = SkillOrder[i];
@@ -124,6 +128,25 @@ namespace Game.Module.Lobby
                 _tiles.Add(t);
             }
             _ui.Find(_tiles[InyeonTile], "GrwStatBuy")?.gameObject.SetActive(false);
+            // 인연은 오른쪽 큰 판으로(시안 2) — 옛 인연 칸은 쓰지 않는다
+            _tiles[InyeonTile].gameObject.SetActive(false);
+            TMP_Text like = _ui.Find(tpl, "GrwStatName")?.GetComponent<TMP_Text>();
+            _iyPanel = RbGrowthInyeonPanel.Create((RectTransform)tpl.parent, MockToContent, _iyArt, like);
+            // 성급 띠(GrwStarPanel · GrwStarUp)는 스크롤 안 스킬 칸 아래에 있다 — 인연 · 무리 판 아래로 내린다(판에 덮였다, 검수 2026-10-29)
+            var iyRt = (RectTransform)_iyPanel.transform;
+            float panelBottom = iyRt.anchoredPosition.y - iyRt.sizeDelta.y * 0.5f;
+            foreach (var n in new[] { "GrwStarPanel", "GrwStarUp" })
+                if (_ui.Find(n) is RectTransform sr)
+                {
+                    float top = sr.anchoredPosition.y + sr.sizeDelta.y * 0.5f;
+                    float d = (panelBottom - 18f) - top;
+                    if (d < 0f) sr.anchoredPosition += new Vector2(0f, d);
+                    var content = (RectTransform)tpl.parent;
+                    float need = -(sr.anchoredPosition.y - sr.sizeDelta.y * 0.5f) + 24f;
+                    if (content.sizeDelta.y < need) content.sizeDelta = new Vector2(content.sizeDelta.x, need);
+                }
+            if (_iyPanel.GetComponentInChildren<Image>() is Image iyBg)
+                iyBg.gameObject.AddComponent<Button>().onClick.AddListener(ShowInyeon);   // 누르면 짝 · 켜는 법 창
             // 인연 칸은 눌러서 자세히(짝 · 켜는 법)
             if (_tiles[InyeonTile].GetComponent<Image>() is Image inyBg)
             {
@@ -322,10 +345,25 @@ namespace Game.Module.Lobby
         private static string PowerLine(float now, float next)
             => $"{(1f + now) * 100f:0.#}%<size=70%> › </size><color={NextColor}>{(1f + next) * 100f:0.#}%</color>";
 
-        /// <summary>인연 칸 — 짝 얼굴 · 인연 이름과 지금 단계(두 성급 중 낮은 쪽) · 인연이 하는 일. 누르면 짝 · 켜는 법.</summary>
+        // ── 시안 2 배치 — 스킬 칸 셋은 왼쪽 세로 한 줄(310 × 107 간격), 오른쪽은 인연 판 ─────────────
+        // 시안 720 판 px → GrwBodyContent 안 자리(가운데 · 위 기준). 첫 스킬 칸 위 718 이 지금 칸 위(-523)와 겹치는 값
+        private const float MockContentTop = 195f, MockTileW = 310f, MockTilePitch = 107f;
+        private static Vector2 MockToContent(float x, float y) => new(x - 360f, -(y - MockContentTop));
+
+        private static void PlaceSkillTile(RectTransform t, int row)
+        {
+            float shift = (t.sizeDelta.x - MockTileW) * 0.5f;   // 칸이 좁아진 만큼 안 것들을 가운데로 당긴다(가운데 기준이라)
+            t.sizeDelta = new Vector2(MockTileW, t.sizeDelta.y);
+            foreach (RectTransform c in t)
+                c.anchoredPosition += new Vector2(c.anchoredPosition.x < 0f ? shift : -shift, 0f);
+            t.anchoredPosition = MockToContent(15f + MockTileW * 0.5f, 718f + t.sizeDelta.y * 0.5f + MockTilePitch * row);
+        }
+
+        /// <summary>인연 판 — 짝 얼굴 · 인연 이름과 지금 단계(두 성급 중 낮은 쪽) · 인연이 하는 일. 누르면 짝 · 켜는 법.</summary>
         private void RefreshInyeon()
         {
-            if (_tiles.Count <= InyeonTile) return;
+            if (_iyPanel != null) _iyPanel.Fill(_player, _key, _shell, ArtOf(_key).Active);
+            if (_iyPanel != null || _tiles.Count <= InyeonTile) return;
             var t = _tiles[InyeonTile];
             string name = BattleDirector.InyeonName(_key);
             var partners = BattleDirector.InyeonPartners(_key);
@@ -393,7 +431,8 @@ namespace Game.Module.Lobby
         {
             if (!(_ui.Find(tile, "GrwStatValue") is RectTransform r)) return;
             if (_valueW < 0f) _valueW = r.sizeDelta.x;
-            float want = wide ? _valueW + 146f * 2f / 3f : _valueW;   // 인연 칸과 같은 폭(버튼 자리)
+            // 시안 2 칸(310)은 예전보다 좁다 — 칸 오른쪽 안쪽까지만(+66) 늘린다(넘어서 「· 2성 필요」 가 칸 밖으로 나갔다)
+            float want = wide ? _valueW + 66f : _valueW;
             float d = want - r.sizeDelta.x;
             if (Mathf.Abs(d) < 0.5f) return;
             r.sizeDelta = new Vector2(want, r.sizeDelta.y);

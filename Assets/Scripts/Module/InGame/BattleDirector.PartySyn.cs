@@ -38,6 +38,15 @@ namespace Game.Module.InGame
             "괴물" => "monster", "마도" => "mystic", _ => null,
         };
 
+        /// <summary>그 호스트의 무리(내부 이름) — 로비 성장 화면 무리 판이 묻는다. 없으면 null.</summary>
+        public static string HostOrg(string key) => OrgOf(key);
+
+        /// <summary>무리 언어팩 id(`ui.party.tag.{id}`).</summary>
+        public static string OrgId(string org) => TagId(org);
+
+        /// <summary>무리 세기(%) — 2명 = 약 · 3명 = 강. 실제로 거는 값과 같은 표.</summary>
+        public static int OrgTierPct(string org, bool strong) => SynTierPct(org, strong);
+
         private static string AttrName(Affinity a) => a switch
         {
             Affinity.Force => "파워", Affinity.Blade => "무기", Affinity.Magic => "마법", _ => null,

@@ -95,7 +95,65 @@ namespace Game.Editor.ReBorn
             Frames(so, "_statLava", "rbfx_statup_lava_", 8);
             Frames(so, "_statSparks", "rbfx_statup_spark_", 3);
             so.FindProperty("_statGlow").objectReferenceValue = Load("rbfx_statup_glow");
+            AttachUnlock(so);
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AttachUnlock(SerializedObject so)
+        {
+            so.FindProperty("_unlockRays").objectReferenceValue = Load("rbfx_unlock_rays");
+            so.FindProperty("_unlockRing").objectReferenceValue = Load("rbfx_unlock_ring");
+            so.FindProperty("_unlockGradePlate").objectReferenceValue = Load("rbfx_unlock_grade_plate");
+            so.FindProperty("_unlockNamePlate").objectReferenceValue = Load("rbfx_unlock_name_plate");
+            so.FindProperty("_unlockBtnBlue").objectReferenceValue = Load("rbfx_unlock_btn_blue");
+            so.FindProperty("_unlockBtnGold").objectReferenceValue = Load("rbfx_unlock_btn_gold");
+            var shards = so.FindProperty("_unlockShards");
+            string[] names = { "rbfx_unlock_shard_gold", "rbfx_unlock_shard_red", "rbfx_unlock_shard_blue" };
+            shards.arraySize = names.Length;
+            for (int i = 0; i < names.Length; i++) shards.GetArrayElementAtIndex(i).objectReferenceValue = Load(names[i]);
+        }
+
+        /// <summary>로비 전체를 다시 세우지 않고 해금 연출 부품만 꽂는다(2026-10-29) — 로비 빌더 뒤 고정 꽂기를 다시 돌리지 않아도 된다.</summary>
+        [MenuItem("Tools/Game/RE:BORN 화면/해금 연출 부품 꽂기")]
+        public static void AttachUnlockToPrefab()
+        {
+            const string prefab = "Assets/BundleResource/Prefabs/UI/Lobby/RbLobbyUI.prefab";
+            var root = PrefabUtility.LoadPrefabContents(prefab);
+            try
+            {
+                if (!root.TryGetComponent<RbOutFx>(out var fx)) { Debug.LogWarning("[해금 연출] RbOutFx 없음"); return; }
+                var so = new SerializedObject(fx);
+                AttachUnlock(so);
+                so.ApplyModifiedPropertiesWithoutUndo();
+                // 성장 화면 오른쪽 인연 판 부품(시안 2) — ReBornKit/Components/rb_iy_*
+                if (root.GetComponentInChildren<RbGrowthPage>(true) is RbGrowthPage gp)
+                {
+                    var g = new SerializedObject(gp);
+                    var art = g.FindProperty("_iyArt");
+                    string[,] map =
+                    {
+                        { "Panel", "rb_iy_panel" }, { "Box", "rb_iy_box" }, { "Step", "rb_iy_step" }, { "Link", "rb_iy_link" },
+                        { "FaceCyan", "rb_iy_face_cyan" }, { "FaceGold", "rb_iy_face_gold" }, { "Chain", "rb_iy_chain" },
+                        { "Toggle", "rb_iy_toggle" }, { "Arrow", "rb_iy_arrow" },
+                    };
+                    for (int i = 0; i < map.GetLength(0); i++)
+                        art.FindPropertyRelative(map[i, 0]).objectReferenceValue =
+                            AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/BaseResource/ReBornKit/Components/{map[i, 1]}.png");
+                    art.FindPropertyRelative("Star").objectReferenceValue = g.FindProperty("_rankGold").objectReferenceValue;
+                    art.FindPropertyRelative("Lock").objectReferenceValue =
+                        AssetDatabase.LoadAssetAtPath<Sprite>("Assets/BaseResource/ReBornKit/Components/rb_iy_lock.png");
+                    var icons = art.FindPropertyRelative("OrgIcons");
+                    string[] orgs = { "gang", "commando", "martial", "monster", "mystic" };
+                    icons.arraySize = orgs.Length;
+                    for (int i = 0; i < orgs.Length; i++)
+                        icons.GetArrayElementAtIndex(i).objectReferenceValue =
+                            AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/BaseResource/ReBornKit/Components/rb_syn_icon_{orgs[i]}.png");
+                    g.ApplyModifiedPropertiesWithoutUndo();
+                }
+                PrefabUtility.SaveAsPrefabAsset(root, prefab);
+                Debug.Log("[해금 연출] 부품 꽂음 → " + prefab);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
         }
 
         private static void Frames(SerializedObject so, string field, string prefix, int count)

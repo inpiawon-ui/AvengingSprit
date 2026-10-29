@@ -25,6 +25,18 @@ namespace Game.Module.Lobby
         // 강화(레벨업) — 용암 줄 8장 반복 · 금빛 번짐 · 반짝이 입자 3종(FX-statup-01~03)
         [SerializeField] private Sprite[] _statLava = System.Array.Empty<Sprite>(), _statSparks = System.Array.Empty<Sprite>();
         [SerializeField] private Sprite _statGlow;
+        // 호스트 해금(시안 3-가 mock1029_host_unlock) — 빛살 · 고리(빛) · 조각 셋 · 등급 판 · 이름 판 · 단추 둘
+        [SerializeField] private Sprite _unlockRays, _unlockRing, _unlockGradePlate, _unlockNamePlate, _unlockBtnBlue, _unlockBtnGold;
+        [SerializeField] private Sprite[] _unlockShards = System.Array.Empty<Sprite>();
+
+        public Material Additive => _additive;
+        public Sprite UnlockRays => _unlockRays;
+        public Sprite UnlockRing => _unlockRing;
+        public Sprite UnlockGradePlate => _unlockGradePlate;
+        public Sprite UnlockNamePlate => _unlockNamePlate;
+        public Sprite UnlockButtonBlue => _unlockBtnBlue;
+        public Sprite UnlockButtonGold => _unlockBtnGold;
+        public Sprite[] UnlockShards => _unlockShards;
 
         private static readonly Color Cyan = new(0.24f, 0.9f, 1f), Gold = new(1f, 0.79f, 0.24f);
 

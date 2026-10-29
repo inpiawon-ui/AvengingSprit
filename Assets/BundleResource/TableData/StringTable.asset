@@ -12795,3 +12795,72 @@ MonoBehaviour:
     _en: Shards {0} + Gold {1}
     _zhHant: "\u788E\u7247 {0} + \u91D1\u5E63 {1}"
     _zhHans: "\u788E\u7247 {0} + \u91D1\u5E01 {1}"
+  - _key: ui.rb.unlock.title
+    _ko: "\uC0C8 \uD638\uC2A4\uD2B8 \uD574\uAE08!"
+    _ja: "\u65B0\u30DB\u30B9\u30C8\u89E3\u653E\uFF01"
+    _en: New Host Unlocked!
+    _zhHant: "\u65B0\u5BBF\u4E3B\u89E3\u9396\uFF01"
+    _zhHans: "\u65B0\u5BBF\u4E3B\u89E3\u9501\uFF01"
+  - _key: ui.rb.unlock.ok
+    _ko: "\uD655\uC778"
+    _ja: OK
+    _en: OK
+    _zhHant: "\u78BA\u8A8D"
+    _zhHans: "\u786E\u8BA4"
+  - _key: ui.rb.unlock.growth
+    _ko: "\uC131\uC7A5\uC73C\uB85C"
+    _ja: "\u80B2\u6210\u3078"
+    _en: To Growth
+    _zhHant: "\u524D\u5F80\u57F9\u990A"
+    _zhHans: "\u524D\u5F80\u57F9\u517B"
+  - _key: ui.rb.iy.title
+    _ko: "\uC778\uC5F0 \u2013 {0}"
+    _ja: "\u7D46 \u2013 {0}"
+    _en: "Bond \u2013 {0}"
+    _zhHant: "\u7F88\u7D46 \u2013 {0}"
+    _zhHans: "\u7F81\u7ECA \u2013 {0}"
+  - _key: ui.rb.iy.step
+    _ko: "{0}\uB2E8"
+    _ja: "{0}\u6BB5"
+    _en: Tier {0}
+    _zhHant: "{0}\u968E"
+    _zhHans: "{0}\u9636"
+  - _key: ui.rb.iy.partner
+    _ko: "\uC9DD \uD638\uC2A4\uD2B8"
+    _ja: "\u76F8\u68D2\u30DB\u30B9\u30C8"
+    _en: Partner
+    _zhHant: "\u642D\u6A94\u5BBF\u4E3B"
+    _zhHans: "\u642D\u6863\u5BBF\u4E3B"
+  - _key: ui.rb.iy.hint
+    _ko: "\uC9DD \uD638\uC2A4\uD2B8\uB97C \uBCF4\uC870\uB85C \uD3B8\uC131\uD558\uBA74
+      \uD65C\uC131"
+    _ja: "\u76F8\u68D2\u3092\u30B5\u30D6\u306B\u7DE8\u6210\u3059\u308B\u3068\u767A\u52D5"
+    _en: Active when the partner is a Sub
+    _zhHant: "\u5C07\u642D\u6A94\u7DE8\u70BA\u526F\u624B\u5373\u555F\u52D5"
+    _zhHans: "\u5C06\u642D\u6863\u7F16\u4E3A\u526F\u624B\u5373\u542F\u52A8"
+  - _key: ui.rb.iy.rule
+    _ko: "<color=#FFD66B>\u2605\u2605</color> \uB2E8\uACC4 \uC870\uAC74: \uB450 \uD638\uC2A4\uD2B8
+      \uC911 \uB0AE\uC740 \uC131\uAE09"
+    _ja: "<color=#FFD66B>\u2605\u2605</color> \u6BB5\u968E\u6761\u4EF6\uFF1A2\u4EBA\u306E\u3046\u3061\u4F4E\u3044\u65B9\u306E\u661F"
+    _en: "<color=#FFD66B>\u2605\u2605</color> Tier: the lower \u2605 of the two hosts"
+    _zhHant: "<color=#FFD66B>\u2605\u2605</color> \u968E\u6BB5\u689D\u4EF6\uFF1A\u5169\u540D\u5BBF\u4E3B\u4E2D\u8F03\u4F4E\u7684\u661F\u7D1A"
+    _zhHans: "<color=#FFD66B>\u2605\u2605</color> \u9636\u6BB5\u6761\u4EF6\uFF1A\u4E24\u540D\u5BBF\u4E3B\u4E2D\u8F83\u4F4E\u7684\u661F\u7EA7"
+  - _key: ui.rb.org.title
+    _ko: "\uBB34\uB9AC \u2013 {0}"
+    _ja: "\u7FA4\u308C \u2013 {0}"
+    _en: "Group \u2013 {0}"
+    _zhHant: "\u7FA4\u9AD4 \u2013 {0}"
+    _zhHans: "\u7FA4\u4F53 \u2013 {0}"
+  - _key: ui.rb.org.need
+    _ko: "{0}\uBA85"
+    _ja: "{0}\u4EBA"
+    _en: '{0}'
+    _zhHant: "{0}\u4EBA"
+    _zhHans: "{0}\u4EBA"
+  - _key: ui.rb.org.rule
+    _ko: "\uAC19\uC740 \uBB34\uB9AC\uB97C \uBA54\uC778 \xB7 \uBCF4\uC870\uB85C \uD568\uAED8
+      \uB370\uB824\uAC00\uBA74 \uCF1C\uC9C4\uB2E4"
+    _ja: "\u540C\u3058\u7FA4\u308C\u3092\u30E1\u30A4\u30F3\u30FB\u30B5\u30D6\u306B\u4E00\u7DD2\u306B\u7DE8\u6210\u3059\u308B\u3068\u767A\u52D5"
+    _en: Active when the same group is your Main and Subs
+    _zhHant: "\u540C\u7FA4\u5BBF\u4E3B\u4E00\u8D77\u7DE8\u70BA\u4E3B\u63A7 \xB7 \u526F\u624B\u5373\u555F\u52D5"
+    _zhHans: "\u540C\u7FA4\u5BBF\u4E3B\u4E00\u8D77\u7F16\u4E3A\u4E3B\u63A7 \xB7 \u526F\u624B\u5373\u542F\u52A8"

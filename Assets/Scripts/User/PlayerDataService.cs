@@ -398,6 +398,24 @@ namespace Game.User
                 return;
             }
             _data.hostShards[i] += amount;
+            // 해금 수에 닿는 순간 저절로 풀린다 — 조각만 쓴다(PD 2026-10-29 「해금할 수 있는 조각이 되는 순간 캐릭터 해금되었습니다」).
+            // 골드는 받지 않는다: 상자 · 판 끝 보상 도중에 골드가 모자라 「조각은 찼는데 안 풀림」 이 되지 않게
+            if (_data.hostMastery[i] == 0)
+            {
+                int cost = MasteryCost(hostKey);
+                if (cost > 0 && _data.hostShards[i] >= cost && SpendShards(hostKey, cost)) _newUnlocks.Add(hostKey);
+            }
+        }
+
+        private readonly List<string> _newUnlocks = new();
+
+        public bool TryTakeNewUnlock(out string hostKey)
+        {
+            hostKey = null;
+            if (_newUnlocks.Count == 0) return false;
+            hostKey = _newUnlocks[0];
+            _newUnlocks.RemoveAt(0);
+            return true;
         }
 
         /// <summary>

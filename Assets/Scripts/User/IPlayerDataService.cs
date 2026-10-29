@@ -215,6 +215,9 @@ namespace Game.User
         /// <summary>조각 + 골드를 내고 성급(숙련도)을 한 단계 올린다. 하나라도 모자라면 아무것도 안 쓴다.</summary>
         bool TryStarUp(string hostKey);
 
+        /// <summary>조각이 해금 수에 닿아 저절로 풀린 호스트를 하나 꺼낸다(로비가 해금 연출을 띄운다). 없으면 false.</summary>
+        bool TryTakeNewUnlock(out string hostKey);
+
         IReadOnlyList<HostEntry> AllHosts { get; }
 
         /// <summary>호스트 선택 화면에 내보낼 몸. 전투 전용 배우(방패병·센서드론·엘리트)는 빠진다.</summary>

@@ -152,6 +152,37 @@ namespace Game.Module.Lobby
             if (_guide != null) _guide.ShowOnce("lobby", false, "sortie", "growth", "summon");
         }
 
+        // 조각이 해금 수에 닿아 저절로 풀린 호스트 — 판 끝 · 상자 · 소환 · 상점 어디서 풀렸든 로비에서 바로 해금 연출(시안 3-가)
+        private RbUnlockReveal _unlockReveal;
+
+        private void Update()
+        {
+            if (_player == null || (_unlockReveal != null && _unlockReveal.IsOpen)) return;
+            if (_revealPage != null && _revealPage.IsOpen) return;
+            if (!_player.TryTakeNewUnlock(out var key)) return;
+            ShowUnlock(key);
+        }
+
+        private void ShowUnlock(string key)
+        {
+            if (_unlockReveal == null)
+            {
+                TMPro.TMP_Text like = null;
+                foreach (var t in GetComponentsInChildren<TMPro.TMP_Text>(true)) if (t.name == "RvlTitle") { like = t; break; }
+                _unlockReveal = RbUnlockReveal.Create(this, _fx, like);
+            }
+            _player.SaveAsync().Forget();   // fire-and-forget: 저절로 풀린 해금을 바로 남긴다
+            _unlockReveal.Show(_player, key);
+        }
+
+        /// <summary>해금 연출을 닫았다 — 「성장으로」 면 그 호스트 성장 화면, 아니면 지금 화면을 새로 칠한다(전투 탭 카드 포함).</summary>
+        public void AfterUnlockReveal(string growthKey)
+        {
+            if (!string.IsNullOrEmpty(growthKey)) { SelectTab("Host"); OpenGrowth(growthKey); return; }
+            SelectTab(_tab ?? "Battle");
+            RefreshAll();
+        }
+
         // 화면 높이가 바뀌면(회전 · 창 크기) 양옆 아이콘 간격을 다시 잰다
         private void OnRectTransformDimensionsChange()
         {
@@ -424,8 +455,20 @@ namespace Game.Module.Lobby
 
         // ── 출전 줄 ──────────────────────────────────────────
 
+        private int _cardsOwnedSig;
+
+        /// <summary>가진 호스트 묶음의 지문 — 바뀌었을 때만 카드를 다시 세운다.</summary>
+        private int OwnedSignature()
+        {
+            int h = 17;
+            foreach (var e in _player.PlayableHosts)
+                if (e != null && !e.IsGhost && _player.IsHostOwned(e)) h = h * 31 + e.HostKey.GetHashCode();
+            return h;
+        }
+
         private void BuildCards()
         {
+            _cardsOwnedSig = OwnedSignature();
             var tpl = _ui.Find("SortieCardTemplate");
             var content = _ui.Find("SortieContent") as RectTransform;
             if (tpl == null || content == null) return;
@@ -804,6 +847,9 @@ namespace Game.Module.Lobby
                 }
             }
             _ui.SetActive("PageBattle", tab == "Battle");
+            // 해금(성장 · 소환 · 상자)으로 가진 호스트가 바뀌었으면 출전 카드를 다시 세운다 — 로비를 연 순간 한 번만 세워서
+            // 방금 해금한 호스트가 전투 탭에 안 나왔다(PD 2026-10-29 「해금되고 바로 전투에서 보니깐 리스트업이 안 된다」)
+            if (tab == "Battle" && _player != null && OwnedSignature() != _cardsOwnedSig) { BuildCards(); RefreshCards(); }
             if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }
             if (_lockedPage != null) _lockedPage.gameObject.SetActive(false);
             if (_revealPage != null) _revealPage.gameObject.SetActive(false);
@@ -881,6 +927,8 @@ namespace Game.Module.Lobby
         /// <summary>새 몸(rank 0) · 6 · 10성 각성 보여주기. 확인하면 그 몸의 성장 화면.</summary>
         public void ShowReveal(string hostKey, int rank)
         {
+            // 새 호스트(rank 0)는 해금 연출(시안 3-가)로 — 옛 「새 호스트!」 쪽은 각성(6 · 10성)만 쓴다
+            if (rank == 0) { ShowUnlock(hostKey); return; }
             if (_revealPage == null) { OpenGrowth(hostKey); return; }
             if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }
             if (_lockedPage != null) _lockedPage.gameObject.SetActive(false);

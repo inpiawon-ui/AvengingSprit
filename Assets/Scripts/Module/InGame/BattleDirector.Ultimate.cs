@@ -181,7 +181,7 @@ namespace Game.Module.InGame
                 case "commando_laser":   PrismLaser(me);        break;   // 프리즘 레이저(PD 2026-10-21)
                 case "white_wizard":     LightRain(me);         break;   // 빛기둥 비(PD 2026-10-21)
                 case "dragon_blue":      UltDragonStorm(me);    break;   // 천뢰 — 둘레 모든 적에게 낙뢰(PD 2026-10-21)
-                case "commando_mg":      MgFortress(me);        break;   // 탄막 요새(PD 2026-10-29 — 회전 난사가 폭력배와 겹쳤다)
+                case "commando_mg":      MgFortress(me);        break;   // 거치 기관포 — 앞 부채꼴 훑기(PD 2026-10-29 시안 1-A · 회전 난사와 다르게)
                 case "amazon_elite":     UltAmazonElite(me);    break;   // 역린
                 default:                 UltFallback(me);       break;   // 표에 없는 몸 — 아래 참고
             }

@@ -1968,3 +1968,14 @@ ui.rb.growth.inyeon_kind	인연 · {0}단	絆・{0}段	Bond · Tier {0}	羈絆 �
 ui.rb.growth.inyeon_how	켜는 법	発動条件	How to activate	啟動方式	启动方式
 ui.rb.growth.inyeon_how_desc	짝 {0} 을(를) 보조로 데려가면 켜진다 · 단계는 두 호스트 중 낮은 성급을 따른다	相棒{0}をサブに入れると発動・段階は2人のうち低い方の星に従う	Bring partner {0} as a Sub to activate · Tier follows the lower ★ of the two hosts	將搭檔{0}帶為副手即啟動 · 階段依兩名宿主中較低的星級	将搭档{0}带为副手即启动 · 阶段依两名宿主中较低的星级
 ui.rb.growth.star_cost	조각 {0} + 골드 {1}	かけら {0} + ゴールド {1}	Shards {0} + Gold {1}	碎片 {0} + 金幣 {1}	碎片 {0} + 金币 {1}
+ui.rb.unlock.title	새 호스트 해금!	新ホスト解放！	New Host Unlocked!	新宿主解鎖！	新宿主解锁！
+ui.rb.unlock.ok	확인	OK	OK	確認	确认
+ui.rb.unlock.growth	성장으로	育成へ	To Growth	前往培養	前往培养
+ui.rb.iy.title	인연 – {0}	絆 – {0}	Bond – {0}	羈絆 – {0}	羁绊 – {0}
+ui.rb.iy.step	{0}단	{0}段	Tier {0}	{0}階	{0}阶
+ui.rb.iy.partner	짝 호스트	相棒ホスト	Partner	搭檔宿主	搭档宿主
+ui.rb.iy.hint	짝 호스트를 보조로 편성하면 활성	相棒をサブに編成すると発動	Active when the partner is a Sub	將搭檔編為副手即啟動	将搭档编为副手即启动
+ui.rb.iy.rule	<color=#FFD66B>★★</color> 단계 조건: 두 호스트 중 낮은 성급	<color=#FFD66B>★★</color> 段階条件：2人のうち低い方の星	<color=#FFD66B>★★</color> Tier: the lower ★ of the two hosts	<color=#FFD66B>★★</color> 階段條件：兩名宿主中較低的星級	<color=#FFD66B>★★</color> 阶段条件：两名宿主中较低的星级
+ui.rb.org.title	무리 – {0}	群れ – {0}	Group – {0}	群體 – {0}	群体 – {0}
+ui.rb.org.need	{0}명	{0}人	{0}	{0}人	{0}人
+ui.rb.org.rule	같은 무리를 메인 · 보조로 함께 데려가면 켜진다	同じ群れをメイン・サブに一緒に編成すると発動	Active when the same group is your Main and Subs	同群宿主一起編為主控 · 副手即啟動	同群宿主一起编为主控 · 副手即启动

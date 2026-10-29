@@ -59,11 +59,21 @@ namespace Game.Module.InGame
         // 코만도(기관총) · 필살기 탄막 요새 — 3초 제자리 고정 · 받는 피해 −70% · 사방 연사
         private const float FortressSeconds = 3f;
         private const float FortressDamageCut = 0.7f;
-        private const float FortressVolleyGap = 0.2f;
-        private const int FortressVolleyShots = 8;
-        private const float FortressTurnDeg = 22.5f;         // 일제 사격마다 반 칸씩 돌려 빈틈을 메운다
-        private const float FortressShotMul = 0.6f;
-        private const float FortressFxSize = 150f;
+        // 거치 기관포 — 앞 60°(±30°)를 1.2초에 한 번 왕복 · 0.07초마다 관통 탄줄(3초 ≈ 43줄)
+        private const float FortressVolleyGap = 0.07f;
+        private const float FortressHalfDeg = 30f;
+        private const float FortressSweepSeconds = 1.2f;
+        private const float FortressRangeMeters = 9f;
+        private const float FortressWidthMeters = 0.45f;
+        private const float FortressShotMul = 0.32f;
+        private const int FortressSlowPercent = 35;
+        private const float FortressSlowSeconds = 0.8f;
+        private const float FortressTracerDraw = 46f;
+        private const float FortressMuzzleSize = 120f;
+        private const float FortressHitSize = 84f;
+        private const float FortressDustSize = 220f;
+        private const float FortressShellEvery = 0.09f;
+        private const float FortressShellSize = 26f;
 
         // 코만도(레이저) · 충전 레이저 — 1초 모은 뒤 일직선 관통
         private const float ChargeLaserSeconds = 1f;
@@ -283,12 +293,17 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  코만도(기관총) · 필살기 탄막 요새
+        //  코만도(기관총) · 필살기 거치 기관포 (PD 2026-10-29 시안 1-A `_exchange/in/mock1029_ult_mg_a.png`)
+        //  바닥에 거치하고 **앞쪽 60° 부채꼴만** 좌우로 훑으며 굵은 관통 탄줄을 3초 — 맞은 적은 둔해진다.
+        //  폭력배 「회전 난사」(제자리 사방)와 한눈에 달라야 한다 — 사방 · 원형 탄막을 쓰지 않는다.
+        //  그림: 탄줄 `mgtracer` · 총구 `mgmuzzle` · 맞은 자리 `mghit` · 흙먼지 `mgdust` · 탄피 `mgshell`(없으면 지금 그림으로 돈다)
         // ═══════════════════════════════════════════════════════════
 
         private float _fortressSeconds;
         private float _fortressVolley;
-        private float _fortressAngle;
+        private float _fortressAngle;     // 훑는 가운데(처음 겨눈 쪽)
+        private float _fortressSweep;     // 훑기 시계
+        private float _fortressShell;
         private Vector2 _fortressAt;
         private Impact _fortressFx;
 
@@ -297,17 +312,22 @@ namespace Game.Module.InGame
             _fortressSeconds = FortressSeconds;
             _fortressAt = me.Position;
             _fortressVolley = 0f;
-            var f = me.Facing;
+            _fortressSweep = 0f;
+            _fortressShell = 0f;
+            // 가장 가까운 적 쪽을 가운데로 — 없으면 바라보던 쪽
+            var t = NearestEnemy(me.Position, Meters(FortressRangeMeters));
+            var f = t != null ? t.Position - me.Position : me.Facing;
+            if (f.sqrMagnitude < 0.0001f) f = Vector2.up;
             _fortressAngle = Mathf.Atan2(f.y, f.x) * Mathf.Rad2Deg;
             _fortressFx?.Stop();
-            _fortressFx = TakeLoopFx("shield", me.Position, FortressFxSize);
-            _fortressFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
-            // 거치 — 바닥에 박는 흙먼지
-            _pfx?.Burst(ParticleFxKind.Smoke, ParticleElement.Dust, me.Position, 8, 160f, 34f, 0.5f, 0f);
-            Shake(4f);
+            _fortressFx = null;
+            // 거치(강) — 발밑 흙먼지가 확 퍼지고 화면이 한 번 크게 흔들린다
+            if (PlayFx("mgdust", me.Position + new Vector2(0f, -18f), FortressDustSize, loop: false) is Impact dust) dust.SetFrameSeconds(0.08f);
+            _pfx?.Burst(ParticleFxKind.Smoke, ParticleElement.Dust, me.Position, 10, 180f, 36f, 0.55f, 0f);
+            Shake(5f);
         }
 
-        /// <summary>요새가 서 있는 동안 — 걷는 입력을 되돌려 제자리에 박고, 0.2초마다 사방 8발.</summary>
+        /// <summary>거치한 동안 — 걷는 입력을 되돌려 제자리에 박고, 부채꼴을 좌우로 훑으며 0.07초마다 관통 탄줄 한 줄.</summary>
         private void TickFortress(float dt)
         {
             if (_fortressSeconds <= 0f) return;
@@ -316,21 +336,55 @@ namespace Game.Module.InGame
             _fortressSeconds -= dt;
             // 걷기(`TickPlayer`)가 이보다 먼저 돈다 — 옮겨진 자리를 그 프레임 안에 되돌린다
             me.Position = _fortressAt;
-            _fortressFx?.MoveTo(me.Position);
+
+            _fortressSweep += dt;
+            float ang = _fortressAngle + FortressHalfDeg * Mathf.Sin(_fortressSweep * Mathf.PI * 2f / FortressSweepSeconds);
+            float rad = ang * Mathf.Deg2Rad;
+            var dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+            me.SetFacing(dir);
 
             _fortressVolley -= dt;
             if (_fortressVolley <= 0f)
             {
                 _fortressVolley += FortressVolleyGap;
-                _fortressAngle += FortressTurnDeg;
-                float rad = _fortressAngle * Mathf.Deg2Rad;
-                var dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-                me.SetFacing(dir);
                 me.PlayAttack();
-                FireFan(me, me.Position + dir * 2000f, FortressVolleyShots, 360f - 360f / FortressVolleyShots,
-                        UltDamage(me, FortressShotMul), fromPlayer: true);
-                PlayFx("muzzle", me.Position + dir * 34f, 44f, loop: false);
-                Shake(1.5f);
+                var from = me.MuzzlePosition;
+                float length = Meters(FortressRangeMeters);
+                var to = from + dir * length;
+                var frames = FxFrames("mgtracer");
+                if (frames != null)
+                {
+                    var beam = FreeImpact(FortressTracerDraw);
+                    beam?.PlayBeam(from, to, frames, FortressTracerDraw);
+                    beam?.SetLoop(true);   // 한 장짜리라 돌리지 않으면 바로 끝났다 — 수명(SetLife)이 끝을 정한다(레이저 빔과 같은 방식)
+                    // 시안처럼 탄줄 네댓 줄이 부채꼴로 겹쳐 보이게 — 한 줄씩만 보이면 레이저 하나처럼 읽혔다(녹화 검수 2026-10-29)
+                    beam?.SetLife(FortressVolleyGap * 5f, 0.18f);
+                }
+                else UltBeam("laser_wide", from, to, FortressTracerDraw * 0.4f, 0.04f);
+                (PlayFx("mgmuzzle", from + dir * 18f, FortressMuzzleSize, loop: false)
+                    ?? PlayFx("muzzle", from + dir * 18f, FortressMuzzleSize * 0.6f, loop: false))?.SetFrameSeconds(0.03f);
+                int dmg = UltDamage(me, FortressShotMul);
+                var hit = new List<Unit>(EnemiesInPath(from, dir, length, Meters(FortressWidthMeters)));
+                for (int i = 0; i < hit.Count; i++)
+                {
+                    var e = hit[i];
+                    if (e == null || !e.IsAlive) continue;
+                    var at = e.Position;
+                    HitEnemyWith(e, dmg, me.Profile);
+                    e.ApplySlow(FortressSlowPercent, FortressSlowSeconds);
+                    (PlayFx("mghit", at, FortressHitSize, loop: false) ?? PlayFx("hit", at, FortressHitSize * 0.7f, loop: false))?.SetFrameSeconds(0.04f);
+                }
+                Shake(1.2f);
+            }
+
+            // 탄피 — 몸 옆으로 쉴 새 없이 튄다(약 · 계속)
+            _fortressShell -= dt;
+            if (_fortressShell <= 0f)
+            {
+                _fortressShell += FortressShellEvery;
+                var side = new Vector2(-dir.y, dir.x) * Random.Range(14f, 34f) + Random.insideUnitCircle * 8f;
+                (PlayFx("mgshell", me.Position + side - new Vector2(0f, 16f), FortressShellSize, loop: false)
+                    ?? PlayFx("thshell", me.Position + side - new Vector2(0f, 16f), FortressShellSize, loop: false))?.SetFrameSeconds(0.06f);
             }
             if (_fortressSeconds <= 0f) EndFortress();
         }

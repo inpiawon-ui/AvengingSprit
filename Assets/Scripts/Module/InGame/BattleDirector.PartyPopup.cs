@@ -591,24 +591,26 @@ namespace Game.Module.InGame
             int memberRows = Mathf.Max(1, (members.Count + 4) / 5);
             float tierH = inyeon ? 0f : 94f;
             float top = Mathf.Clamp(cellY - 58f, 160f, 900f);
-            float bottom = top + 88f + tierH + 104f * memberRows + 52f;
+            float bottom = top + 92f + tierH + 104f * memberRows + 52f;
             var pb = new MBox(120, top, 548, bottom);
             var pop = MImg("Popover", board, BoardBox, pb, "syn_pop_panel", true).rectTransform;
             pop.GetComponent<Image>().raycastTarget = true;   // 판 안을 눌러도 닫힌다(바닥 버튼)
             // 꼬리는 판 그림 왼쪽 위에 붙어 있다(9분할 위 테 안 — 판 위에서 56 아래) · 판 위를 칸 가운데 − 58 에 둬서 칸을 가리킨다
 
+            // 판 그림 왼쪽 36 은 꼬리 자리다 — 안 내용은 테 안쪽(L ~ R)에만 둔다(2026-10-29 「인연 창 캐릭터 칸이 삐져나간다」)
+            const float L = 164f, R = 534f;
             // 머리 — 문장(인연이면 메인 얼굴) · 이름 · 설명
-            var iconBox = new MBox(134, top + 18, 196, top + 80);
+            var iconBox = new MBox(L, top + 18, L + 62, top + 80);
             if (inyeon) MFace(pop, pb, iconBox, "syn_cell_on", members[0], 9f, Color.white);
             else
             {
-                MImg("Glow", pop, pb, new MBox(126, top + 10, 204, top + 88), "syn_icon_glow");
+                MImg("Glow", pop, pb, new MBox(L - 8, top + 10, L + 70, top + 88), "syn_icon_glow");
                 MImg("Icon", pop, pb, iconBox, SynIcon(tag)).preserveAspect = true;
             }
             string title = inyeon ? Tf("ui.party.inyeon.title", InyeonName(members[0])) : SynShortName(tag);
             string desc = inyeon ? InyeonDesc(members[0]) : Tx($"ui.party.tag.{TagId(tag)}.desc");
-            MTxt(pop, pb, new MBox(206, top + 18, 536, top + 54), title, 30, Color.white);
-            MTxt(pop, pb, new MBox(206, top + 54, 536, top + 84), desc, 18, PopGray, TextAlignmentOptions.MidlineLeft, true);
+            MTxt(pop, pb, new MBox(L + 72, top + 18, R, top + 54), title, 30, Color.white);
+            MTxt(pop, pb, new MBox(L + 72, top + 54, R, top + 84), desc, 18, PopGray, TextAlignmentOptions.MidlineLeft, true);
 
             float y = top + 92f;
             if (!inyeon)
@@ -622,14 +624,14 @@ namespace Game.Module.InGame
                     int need = t + 2;
                     bool on = have >= need;
                     bool next = !on && (t == 0 || have >= 2);
-                    var tb = new MBox(134, y, 536, y + 40);
+                    var tb = new MBox(L, y, R, y + 40);
                     MImg("Tier", pop, pb, tb, on ? "syn_tier_on" : "syn_tier_off", true);
                     string eff = Tf($"ui.party.p2.eff.{TagId(tag)}", SynTierPct(tag, need >= 3));
-                    MTxt(pop, pb, new MBox(148, y, next ? 430 : 526, y + 40), Tf("ui.party.p2.tier", need, eff), 24, on ? PopGold : PopGray);
+                    MTxt(pop, pb, new MBox(L + 14, y, next ? R - 96 : R - 10, y + 40), Tf("ui.party.p2.tier", need, eff), 24, on ? PopGold : PopGray);
                     if (next)
                     {
-                        MImg("More", pop, pb, new MBox(442, y + 6, 526, y + 34), "syn_more_chip", true);
-                        MTxt(pop, pb, new MBox(442, y + 6, 526, y + 34), Tf("ui.party.p2.more", need - have), 17, Color.white,
+                        MImg("More", pop, pb, new MBox(R - 88, y + 6, R - 8, y + 34), "syn_more_chip", true);
+                        MTxt(pop, pb, new MBox(R - 88, y + 6, R - 8, y + 34), Tf("ui.party.p2.more", need - have), 17, Color.white,
                              TextAlignmentOptions.Center);
                     }
                     y += 47f;
@@ -640,24 +642,26 @@ namespace Game.Module.InGame
             for (int i = 0; i < members.Count; i++)
             {
                 string k = members[i];
-                float x = 134f + (i % 5) * 81f;
+                float x = L + (i % 5) * 74f;
                 float my = y + 8f + (i / 5) * 104f;
-                var mb = new MBox(x, my, x + 72, my + 72);
+                var mb = new MBox(x, my, x + 66, my + 66);
                 int rank = PartyRank(k);
                 string frame = rank == 0 ? "syn_member_gold" : rank <= 2 ? "syn_member_purple" : "syn_member_gray";
                 MFace(pop, pb, mb, frame, k, 6f, rank <= 2 ? Color.white : new Color(0.45f, 0.47f, 0.55f));
                 if (rank <= 2)
                 {
-                    var bb = new MBox(x + 52, my - 6, x + 76, my + 18);
+                    var bb = new MBox(x + 46, my - 6, x + 70, my + 18);
                     MImg("Badge", pop, pb, bb, "syn_member_badge");
                     MTxt(pop, pb, bb, rank == 0 ? "M" : rank.ToString(), 15, PopGold, TextAlignmentOptions.Center);
                 }
-                MTxt(pop, pb, new MBox(x - 6, my + 74, x + 78, my + 98), HostName(k), 16, rank <= 2 ? Color.white : PopGray,
-                     TextAlignmentOptions.Center);
+                // 「코만도(기관총)」 처럼 긴 이름은 옆 칸과 겹쳤다 — 칸 폭 안에서 두 줄로(검수 2026-10-29)
+                var nm = MTxt(pop, pb, new MBox(x - 3, my + 67, x + 69, my + 97), HostName(k), 14, rank <= 2 ? Color.white : PopGray,
+                              TextAlignmentOptions.Top, true);
+                nm.lineSpacing = -18f;
             }
             float fy = bottom - 44f;
-            MImg("Line", pop, pb, new MBox(134, fy, 536, fy + 4), "party_divider_h", true);
-            MTxt(pop, pb, new MBox(134, fy + 8, 536, fy + 36), Tx(inyeon ? "ui.party.p2.inyeon_rule" : "ui.party.p2.syn_rule"), 15,
+            MImg("Line", pop, pb, new MBox(L, fy, R, fy + 4), "party_divider_h", true);
+            MTxt(pop, pb, new MBox(L, fy + 8, R, fy + 36), Tx(inyeon ? "ui.party.p2.inyeon_rule" : "ui.party.p2.syn_rule"), 15,
                  PopGray, TextAlignmentOptions.Center);
             FinishPopup();
         }
