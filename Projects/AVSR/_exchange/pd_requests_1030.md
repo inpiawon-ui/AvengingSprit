@@ -81,6 +81,9 @@
 2. [ ] 레벨업 창 「방이 다 비어야 뜬다」 규칙 — PD 가 다시 보기로(결정 대기, 손대지 않음)
 3. [ ] 소환 카드 「새 호스트!」 배지 5언어 넘침 — 문구를 줄일지 칸을 키울지 PD 결정 대기
 
+4. [ ] 1-23 튜토리얼 그림 바뀐 시스템대로 새로 — 정리 `_exchange/ref/tutorial_1030/tutorial_images_1030.png`.
+   다시 그릴 것 possess · ghost_hp, 뺄 후보 lock · release, 새로 party · main_down · synergy · ultimate, 보강 growth(인연 · 무리 판). 세트 확정 뒤 코덱스 발주(PD 결정 대기)
+
 ## 크래시 기록 받는 법(PD 테스트 PC — 이 세션과 다른 PC)
 - LD플레이어: 설정 → 기타 설정 → ADB 디버깅 「로컬 연결 열기」 → 크래시 직후 그 PC 에서
   `adb connect 127.0.0.1:5555` → `adb logcat -d > crash.txt` → 파일을 보내 주면 원인을 확정한다
