@@ -99,7 +99,8 @@ namespace Game.EditorTools
         ///
         /// 새 무대 그림이 오면 여기에 한 줄을 더하는 것이 아니라 **배정표에 그 무대의 방 넷을 더한다.**
         /// </summary>
-        private static int SourceChapterOf(string stage) => stage switch
+        // 7~12챕터 변형 무대(`junkyardv2` 등)는 그림만 다르고 틀은 원래 무대와 같다(배경 심플화 2026-10-29)
+        private static int SourceChapterOf(string stage) => BaseStageOf(stage) switch
         {
             "junkyard" => 1,
             "missile" => 2,
@@ -109,6 +110,16 @@ namespace Game.EditorTools
             "refinery" => 6,
             _ => 1,
         };
+
+        private static string BaseStageOf(string stage)
+            => stage != null && stage.EndsWith("v2") ? stage.Substring(0, stage.Length - 2) : stage;
+
+        /// <summary>빌려 온 방의 무대 바닥을 이 챕터 무대 것으로 바꾼다. 무대 바닥이 아닌 방(대기실 등)은 그대로.</summary>
+        private static string StageFloorOf(string sourceFloor, string stage)
+        {
+            string from = "roomfloor_env_" + BaseStageOf(stage);
+            return sourceFloor == from && stage != BaseStageOf(stage) ? "roomfloor_env_" + stage : sourceFloor;
+        }
 
         /// <summary>지금 굽는 챕터 표. `Import` 가 채운다 — 굽는 동안 여러 곳이 본다.</summary>
         private static List<ChapterTsv.Row> s_chapters = new();
@@ -147,7 +158,7 @@ namespace Game.EditorTools
                         Kind = s.Kind == "엘리트" ? "전투" : s.Kind,
                         // 보스방 바닥은 **보스의 것**이다(`roomfloor_{보스}`) — 빌려 온 무대의 원래 보스 바닥을 쓰면
                         // 파이썬이 로봇 스네이크의 아레나에 선다.
-                        Floor = isBoss && !string.IsNullOrEmpty(row.Boss) ? "roomfloor_" + row.Boss : s.Floor,
+                        Floor = isBoss && !string.IsNullOrEmpty(row.Boss) ? "roomfloor_" + row.Boss : StageFloorOf(s.Floor, row.Stage),
                         Layout = s.Layout,
                         LayoutKo = s.LayoutKo,
                         Comp = s.Comp,

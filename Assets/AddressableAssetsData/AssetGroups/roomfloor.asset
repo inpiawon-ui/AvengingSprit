@@ -45,6 +45,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33637e54086e0274195b7769e8727e6a
+    m_Address: roomfloor/roomfloor_env_labv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 34fbe961938d17e46b7592692f7e27ae
     m_Address: roomfloor/roomfloor_ch3_twin_platform
     m_ReadOnly: 0
@@ -80,6 +86,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4615fc9d4adbace41aa7e0e33e020d51
+    m_Address: roomfloor/roomfloor_env_rooftopv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 482b4d86d6629ac4d83bfd6a7bc9f34d
     m_Address: roomfloor/roomfloor_ch1_offset_cover
     m_ReadOnly: 0
@@ -88,6 +100,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4919b4bb6498c0e47854b10f3bf0265e
     m_Address: roomfloor/roomfloor_ch2_pillar_cross
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f4904066f04f9e4c8c35a78e7f70beb
+    m_Address: roomfloor/roomapron_refineryv2
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -122,6 +140,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6876a26e21354bd4e80e26a0f41a72a0
+    m_Address: roomfloor/roomapron_streetv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a906ea1c1284df488678cc1127405da
+    m_Address: roomfloor/roomside_junkyardv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6cc8c3ad4ac615b48b3d80b001803903
     m_Address: roomfloor/roomside_junkyard
     m_ReadOnly: 0
@@ -133,8 +163,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e7beb0cb30f8f043acb8656ea566baa
+    m_Address: roomfloor/roomapron_labv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6e8363f2014b5144784f3bbd189808a1
     m_Address: roomfloor/roomfloor_env_lab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e8766125264c0e48b4ea8b03ffdfa9d
+    m_Address: roomfloor/roomside_refineryv2
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -161,8 +203,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 772dd9df3d5264548815bb25c45bf154
+    m_Address: roomfloor/roomfloor_env_streetv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 77fe3cf525e7ae949a9ef54d9fa8a2c9
+    m_Address: roomfloor/roomapron_rooftopv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7aadd202cfc48ef47babdad431a40107
     m_Address: roomfloor/roomfloor_ch1_split_level
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ba0a1afaf6af034f981f5a692ed137b
+    m_Address: roomfloor/roomfloor_env_missilev2
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -183,6 +243,12 @@ MonoBehaviour:
     m_Address: roomfloor/roomside_missile
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a1e8015632fdc943a589d2d6871b03e
+    m_Address: roomfloor/roomapron_missilev2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 919ecb89747bfaa4ab6886156e45a0dc
     m_Address: roomfloor/roomfloor_ch3_pillar_cross
@@ -219,6 +285,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b31e3dcc45a20484fbb57666e638d4d4
+    m_Address: roomfloor/roomside_labv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b79a4ec608d907c46ba8a1e245b5a70d
+    m_Address: roomfloor/roomfloor_env_refineryv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbc783f1528fb59499b6e97cfb535d14
+    m_Address: roomfloor/roomside_streetv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bec60900ce87aa84e814a176a57fa37e
     m_Address: roomfloor/roomfloor_env_holding
     m_ReadOnly: 0
@@ -238,6 +322,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2f653a29ef1bb740a844831a9a16b47
     m_Address: roomfloor/roomfloor_kingpin
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c366d29f360b9b643a146b752ae25f50
+    m_Address: roomfloor/roomfloor_env_junkyardv2
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -268,6 +358,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d29c592cb08598f4e817a7413c0ea3bd
     m_Address: roomfloor/roomfloor_env_street
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d33c8972bdf1f924fbe2b525c72cba93
+    m_Address: roomfloor/roomside_missilev2
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -307,6 +403,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e400dd6466695864e8c7a13c6985c172
+    m_Address: roomfloor/roomside_rooftopv2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e80cdd5f75abe37499b8f5d57ab136a1
     m_Address: roomfloor/roomfloor_ch3_ring
     m_ReadOnly: 0
@@ -321,6 +423,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ecbea6df309b8d14986e7d38866ec75b
     m_Address: roomfloor/roomapron_boss_robot_snakes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0feb85aeae063a4795b6515fd500722
+    m_Address: roomfloor/roomapron_junkyardv2
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor

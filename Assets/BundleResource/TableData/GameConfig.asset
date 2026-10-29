@@ -386,7 +386,7 @@ MonoBehaviour:
     Name: "\uBD88\uD0C0\uB294 \uC9D1\uC801\uC7A5"
     Desc: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBD88\uC774 \uACE0\uCCA0\uC744 \uB179\uC778\uB2E4\n\uAE38\uC740
       \uD130\uB728\uB824\uC11C \uC5EC\uB294 \uC218\uBC16\uC5D0 \uC5C6\uB2E4."
-    Stage: junkyard
+    Stage: junkyardv2
     Boss: python
     Leader: baseball
     Leader2: commando_missile
@@ -429,7 +429,7 @@ MonoBehaviour:
     Name: "\uBD09\uC1C4\uB41C \uC800\uC7A5\uAE30\uC9C0"
     Desc: "\uBB38\uC774 \uC804\uBD80 \uC7A0\uAE34 \uAE30\uC9C0 \uAE4A\uC740 \uACF3\n\uC0AC\uC120\uACFC
       \uBC15\uC790\uB97C \uC77D\uC5B4\uC57C \uC9C0\uB098\uAC04\uB2E4."
-    Stage: missile
+    Stage: missilev2
     Boss: sludge
     Leader: commando_missile
     Leader2: dragoon
@@ -470,7 +470,7 @@ MonoBehaviour:
     Name: "\uB9DD\uB839\uC758 \uAC70\uB9AC"
     Desc: "\uBD88\uC774 \uAEBC\uC9C4 \uAC70\uB9AC\uC5D0 \uB9DD\uC790\uAC00 \uAC77\uB294\uB2E4\n\uC774\uC81C\uB294
       \uBC14\uB2E5\uB9C8\uC800 \uC801\uC774\uB2E4."
-    Stage: street
+    Stage: streetv2
     Boss: guardian
     Leader: dragoon
     Leader2: amazon
@@ -512,7 +512,7 @@ MonoBehaviour:
     Name: "\uCD5C\uD6C4\uC758 \uC625\uC0C1"
     Desc: "\uBAA8\uB4E0 \uAC83\uC774 \uC2DC\uC791\uB41C \uC625\uC0C1\n\uBC30\uC6B4
       \uAC83\uC744 \uC804\uBD80 \uAEBC\uB0B4\uC57C \uD55C\uB2E4."
-    Stage: rooftop
+    Stage: rooftopv2
     Boss: kingpin
     Leader: death
     Leader2: guru
@@ -557,7 +557,7 @@ MonoBehaviour:
     Name: "\uAC10\uC2DC \uAD6C\uC5ED"
     Desc: "\uCC9C\uC7A5\uC758 \uB208\uC774 \uBAA8\uB4E0 \uAC78 \uC9C0\uCF1C\uBCF8\uB2E4\n\uBD89\uC740
       \uB80C\uC988\uAC00 \uCF1C\uC9C0\uBA74 \uC774\uBBF8 \uB2A6\uC5C8\uB2E4."
-    Stage: lab
+    Stage: labv2
     Boss: robot_snakes
     Leader: guru
     Leader2: commando_mg
@@ -598,7 +598,7 @@ MonoBehaviour:
     Name: "\uADF8\uB9BC\uC790 \uACF5\uC7A5"
     Desc: "\uBD88 \uAEBC\uC9C4 \uACF5\uC7A5 \uBC14\uB2E5\uC744\n\uBB34\uC5B8\uAC00
       \uC18C\uB9AC \uC5C6\uC774 \uAC74\uB10C\uB2E4."
-    Stage: refinery
+    Stage: refineryv2
     Boss: crusher
     Leader: commando_mg
     Leader2: snowwoman
@@ -1066,21 +1066,36 @@ MonoBehaviour:
   - HostKey: robot
     Color: {r: 0.35, g: 1, b: 0.9, a: 1}
   _ghostStatMax: 50
-  _hostStatMax: 50
-  _hostStatPerStep: 5
-  _statPercentPerLevel:
+  _ghostStepValue:
   - 2
   - 2
-  - 2
-  - 1
-  - 1
-  - 1
-  _critDamagePerLevel: 1
-  _defensePerLevel: 0.2
+  - 0.3
+  - 0.6
+  - 0
+  - 0.3
+  - 0
+  - 0.3
   _ghostStatCostStep: 30
-  _hostStatCostStep: 60
-  _ghostStatShare: 0.2
-  _hostStatShare: 1.75
+  _activeSkillMax: 10
+  _passiveSkillMax: 5
+  _ultSkillMax: 5
+  _activePowerPerLevel: 0.06
+  _ultPowerPerLevel: 0.08
+  _ultEnhancedLevel: 5
+  _ultEnhancedMul: 1.2
+  _activeInyeonLevel: 10
+  _activeInyeonMul: 1.25
+  _activeSkillGold: 400
+  _passiveSkillGold: 800
+  _ultSkillGold: 800
+  _skillGoldGradeMul:
+  - 1
+  - 1.5
+  - 2
+  _partyRunShards: 1
+  _partyClearShards: 2
+  _inyeonFirstShards: 2
+  _inyeonTierFrom: 0400000008000000
   _userExpBase: 100
   _userExpStep: 60
   _chapterClearExp: 2c010000f401000020030000b0040000a4060000fc080000

@@ -9171,7 +9171,7 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9237,7 +9237,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9590,7 +9590,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9948,7 +9948,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10189,7 +10189,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10477,7 +10477,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10543,7 +10543,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10831,7 +10831,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10957,7 +10957,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11245,7 +11245,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11541,7 +11541,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11657,7 +11657,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11909,7 +11909,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12124,7 +12124,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12391,7 +12391,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12965,7 +12965,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13031,7 +13031,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13247,7 +13247,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13637,7 +13637,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14198,7 +14198,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14596,7 +14596,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14712,7 +14712,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -15045,7 +15045,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -15240,7 +15240,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -15619,7 +15619,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16110,7 +16110,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16176,7 +16176,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16520,7 +16520,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16871,7 +16871,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -17659,7 +17659,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 825
+    _bossHp: 1650
     _bossAtk: 36
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -55264,7 +55264,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -55401,7 +55401,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -55785,7 +55785,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -56052,7 +56052,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -56436,7 +56436,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -56502,7 +56502,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -56790,7 +56790,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -57182,7 +57182,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -57468,7 +57468,7 @@ MonoBehaviour:
       - {x: 8.636, y: 5.173}
       - {x: 8.636, y: 4.264}
       - {x: 8.636, y: 3.355}
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -57706,7 +57706,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -58153,7 +58153,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -58420,7 +58420,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -59010,7 +59010,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -59667,7 +59667,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 0
     _exp: 124
@@ -59733,7 +59733,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -60037,7 +60037,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -60975,7 +60975,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -61513,7 +61513,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -62097,7 +62097,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -62791,7 +62791,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -63142,7 +63142,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -63682,7 +63682,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -64173,7 +64173,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -64239,7 +64239,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -64541,7 +64541,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -64881,7 +64881,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -65669,7 +65669,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_junkyard
+    _floor: roomfloor_env_junkyardv2
     _eventPool: 
     _gold: 24
     _exp: 124
@@ -65971,7 +65971,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -66233,7 +66233,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -66487,7 +66487,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -66871,7 +66871,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -67000,7 +67000,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -67066,7 +67066,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -67487,7 +67487,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -67749,7 +67749,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -68113,7 +68113,7 @@ MonoBehaviour:
       - {x: 8.636, y: 5.173}
       - {x: 8.636, y: 4.264}
       - {x: 8.636, y: 3.355}
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -68351,7 +68351,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -68941,7 +68941,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -69203,7 +69203,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -69439,7 +69439,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -69886,7 +69886,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 0
     _exp: 138
@@ -69952,7 +69952,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -70342,7 +70342,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -70768,7 +70768,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -71316,7 +71316,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -72181,7 +72181,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -72376,7 +72376,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -73067,7 +73067,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -73462,7 +73462,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -73719,7 +73719,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -73785,7 +73785,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -74573,7 +74573,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -74913,7 +74913,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -75257,7 +75257,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_missile
+    _floor: roomfloor_env_missilev2
     _eventPool: 
     _gold: 28
     _exp: 138
@@ -75559,7 +75559,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -75769,7 +75769,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -76023,7 +76023,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -76420,7 +76420,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -76877,7 +76877,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -76943,7 +76943,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -77153,7 +77153,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -77574,7 +77574,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -77881,7 +77881,7 @@ MonoBehaviour:
       - {x: 3.182, y: 7.9}
       - {x: 3.182, y: 8.809}
       - {x: 3.182, y: 9.718}
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -78301,7 +78301,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -78748,7 +78748,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -78984,7 +78984,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -79428,7 +79428,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -79695,7 +79695,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 0
     _exp: 152
@@ -79761,7 +79761,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -79987,7 +79987,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -80413,7 +80413,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -81021,7 +81021,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -81597,7 +81597,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -81792,7 +81792,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -82119,7 +82119,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -82498,7 +82498,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -82721,7 +82721,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -82787,7 +82787,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -83138,7 +83138,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -83382,7 +83382,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -83726,7 +83726,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_street
+    _floor: roomfloor_env_streetv2
     _eventPool: 
     _gold: 34
     _exp: 152
@@ -84106,7 +84106,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -84368,7 +84368,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -84726,7 +84726,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -85071,7 +85071,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -85312,7 +85312,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -85378,7 +85378,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -85634,7 +85634,7 @@ MonoBehaviour:
       - {x: 5.909, y: 6.082}
       - {x: 5, y: 6.082}
       - {x: 4.091, y: 6.082}
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -85740,7 +85740,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -85884,7 +85884,7 @@ MonoBehaviour:
       - {x: 3.182, y: 13.355}
       - {x: 2.273, y: 13.355}
       - {x: 1.364, y: 13.355}
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -86374,7 +86374,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -86678,7 +86678,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -86945,7 +86945,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -87108,7 +87108,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -87474,7 +87474,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 0
     _exp: 166
@@ -87540,7 +87540,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -87756,7 +87756,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -88239,7 +88239,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -88847,7 +88847,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -89530,7 +89530,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -89972,7 +89972,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -90195,7 +90195,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -90522,7 +90522,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -91013,7 +91013,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -91079,7 +91079,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -91423,7 +91423,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -91725,7 +91725,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -92089,7 +92089,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_rooftop
+    _floor: roomfloor_env_rooftopv2
     _eventPool: 
     _gold: 40
     _exp: 166
@@ -92391,7 +92391,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -92666,7 +92666,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -93050,7 +93050,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -93434,7 +93434,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -93688,7 +93688,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -93754,7 +93754,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -93964,7 +93964,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -94252,7 +94252,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -94720,7 +94720,7 @@ MonoBehaviour:
       - {x: 8.636, y: 5.173}
       - {x: 8.636, y: 4.264}
       - {x: 8.636, y: 3.355}
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -94982,7 +94982,7 @@ MonoBehaviour:
       - {x: 0.455, y: 8.809}
       - {x: 0.455, y: 9.718}
       - {x: 0.455, y: 10.627}
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -95351,7 +95351,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -95795,7 +95795,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -96057,7 +96057,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -96647,7 +96647,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 0
     _exp: 180
@@ -96713,7 +96713,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -97103,7 +97103,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -97620,7 +97620,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -98158,7 +98158,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -98734,7 +98734,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -99428,7 +99428,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -99698,7 +99698,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -100085,7 +100085,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -100436,7 +100436,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -100502,7 +100502,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -101290,7 +101290,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -101534,7 +101534,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -101898,7 +101898,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_lab
+    _floor: roomfloor_env_labv2
     _eventPool: 
     _gold: 44
     _exp: 180
@@ -102416,7 +102416,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -102808,7 +102808,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -103192,7 +103192,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -103446,7 +103446,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -103575,7 +103575,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -103641,7 +103641,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -104033,7 +104033,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -104482,7 +104482,7 @@ MonoBehaviour:
       - {x: 2.273, y: 6.082}
       - {x: 1.364, y: 6.082}
       - {x: 0.455, y: 6.082}
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -104664,7 +104664,7 @@ MonoBehaviour:
       - {x: 8.636, y: 5.173}
       - {x: 8.636, y: 4.264}
       - {x: 8.636, y: 3.355}
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -104926,7 +104926,7 @@ MonoBehaviour:
       - {x: 0.455, y: 8.809}
       - {x: 0.455, y: 9.718}
       - {x: 0.455, y: 10.627}
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -105295,7 +105295,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -105458,7 +105458,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -105905,7 +105905,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -106167,7 +106167,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 0
     _exp: 194
@@ -106233,7 +106233,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -106623,7 +106623,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -107236,7 +107236,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -107774,7 +107774,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -108358,7 +108358,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -109052,7 +109052,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -109335,7 +109335,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -109592,7 +109592,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -109815,7 +109815,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 0
     _exp: 0
@@ -109881,7 +109881,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -110232,7 +110232,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -110534,7 +110534,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
@@ -110898,7 +110898,7 @@ MonoBehaviour:
     _midBossKey: 
     _devilAltar: 0
     _tracks: []
-    _floor: roomfloor_env_refinery
+    _floor: roomfloor_env_refineryv2
     _eventPool: 
     _gold: 47
     _exp: 194
