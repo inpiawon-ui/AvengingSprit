@@ -1967,3 +1967,4 @@ ui.party.p2.hint	{0} {1}/3 · {2}	{0} {1}/3・{2}	{0} {1}/3 · {2}	{0} {1}/3 · 
 ui.rb.growth.inyeon_kind	인연 · {0}단	絆・{0}段	Bond · Tier {0}	羈絆 · {0}階	羁绊 · {0}阶
 ui.rb.growth.inyeon_how	켜는 법	発動条件	How to activate	啟動方式	启动方式
 ui.rb.growth.inyeon_how_desc	짝 {0} 을(를) 보조로 데려가면 켜진다 · 단계는 두 호스트 중 낮은 성급을 따른다	相棒{0}をサブに入れると発動・段階は2人のうち低い方の星に従う	Bring partner {0} as a Sub to activate · Tier follows the lower ★ of the two hosts	將搭檔{0}帶為副手即啟動 · 階段依兩名宿主中較低的星級	将搭档{0}带为副手即启动 · 阶段依两名宿主中较低的星级
+ui.rb.growth.star_cost	조각 {0} + 골드 {1}	かけら {0} + ゴールド {1}	Shards {0} + Gold {1}	碎片 {0} + 金幣 {1}	碎片 {0} + 金币 {1}

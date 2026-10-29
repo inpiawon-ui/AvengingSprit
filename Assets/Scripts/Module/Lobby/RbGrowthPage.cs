@@ -142,6 +142,8 @@ namespace Game.Module.Lobby
                     r.sizeDelta += new Vector2(widen, 0f);
                     r.anchoredPosition += new Vector2(widen * r.pivot.x, 0f);   // 왼쪽 끝은 그대로
                 }
+            // 성급 단추 아랫줄 「조각 16 + 골드 3,000」 — 일본어가 가장 길다(17.5 까지 줄어야 들어간다, 5언어 재 봄)
+            if (_ui.Get<TextMeshProUGUI>("GrwStarUpSub") is TextMeshProUGUI starSub) starSub.fontSizeMin = 14f;
             // 머리 · 안내 글자도 스킬 쪽으로(프리팹에 박힌 글자라 언어 키를 바꿔 끼운다)
             if (_ui.Find("GrwStatHeader")?.GetComponent<LocalizedText>() is LocalizedText head) head.SetKey("ui.rb.growth.skill_header");
             if (_ui.Find("GrwStatHint")?.GetComponent<LocalizedText>() is LocalizedText hint) hint.SetKey("ui.rb.growth.skill_hint");
@@ -456,10 +458,12 @@ namespace Game.Module.Lobby
             }
             if (sub != null)
             {
+                // 조각과 골드를 **둘 다** 낸다는 것을 늘 보인다 — 조각이 모자랄 때 골드 값이 숨어 「골드도 드는지」 몰랐다(PD 2026-10-29).
+                // 모자란 쪽만 빨갛게
+                string shardPart = shards < need ? $"<color=#FF6B6B>{need}</color>" : need.ToString();
+                string goldPart = _player.Gold < gold ? $"<color=#FF6B6B>{gold:N0}</color>" : gold.ToString("N0");
                 sub.text = maxed ? Localize.FromTable("ui.rb.growth.max_sub", "최대 성급")
-                         : shards < need ? string.Format(Localize.FromTable("ui.rb.growth.shard_short", "조각 {0}개 부족"), need - shards)
-                         : _player.Gold < gold ? string.Format(Localize.FromTable("ui.rb.growth.gold_short", "골드 {0:N0} 부족"), gold - _player.Gold)
-                         : string.Format(Localize.FromTable("ui.rb.growth.cost", "골드 {0:N0}"), gold);
+                         : string.Format(Localize.FromTable("ui.rb.growth.star_cost", "조각 {0} + 골드 {1}"), shardPart, goldPart);
                 sub.color = ready ? new Color(0.16f, 0.11f, 0.03f) : new Color(0.70f, 0.74f, 0.84f);
             }
         }

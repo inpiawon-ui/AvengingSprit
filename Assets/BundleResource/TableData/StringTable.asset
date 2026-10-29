@@ -12789,3 +12789,9 @@ MonoBehaviour:
       \u968E\u6BB5\u4F9D\u5169\u540D\u5BBF\u4E3B\u4E2D\u8F03\u4F4E\u7684\u661F\u7D1A"
     _zhHans: "\u5C06\u642D\u6863{0}\u5E26\u4E3A\u526F\u624B\u5373\u542F\u52A8 \xB7
       \u9636\u6BB5\u4F9D\u4E24\u540D\u5BBF\u4E3B\u4E2D\u8F83\u4F4E\u7684\u661F\u7EA7"
+  - _key: ui.rb.growth.star_cost
+    _ko: "\uC870\uAC01 {0} + \uACE8\uB4DC {1}"
+    _ja: "\u304B\u3051\u3089 {0} + \u30B4\u30FC\u30EB\u30C9 {1}"
+    _en: Shards {0} + Gold {1}
+    _zhHant: "\u788E\u7247 {0} + \u91D1\u5E63 {1}"
+    _zhHans: "\u788E\u7247 {0} + \u91D1\u5E01 {1}"
