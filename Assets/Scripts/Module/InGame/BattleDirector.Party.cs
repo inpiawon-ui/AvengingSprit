@@ -390,8 +390,10 @@ namespace Game.Module.InGame
                 u.TickFlash(dt);
                 u.TickAnim(dt);
 
-                // 자리: 메인 양옆 조금 아래
-                var home = me.Position + new Vector2(i == 0 ? -78f : 78f, -36f);
+                // 자리: 메인 왼쪽(보조 1) · 오른쪽(보조 2), 조금 아래. 몸 크기만큼 벌려 그림이 겹치지 않게(PD 2026-10-30)
+                float side = i == 0 ? -1f : 1f;
+                float gapMain = Mathf.Max(PartyRule.SubGapMain, me.BodyRadius + u.BodyRadius);
+                var home = me.Position + new Vector2(side * Mathf.Max(78f, gapMain + 8f), -36f);
                 // 혼이라 바닥에서 떠 있다 — 자리는 그대로, 그림만 둥실(둘이 엇박으로). 그림자가 실제 자리다
                 u.SetSpriteLift(14f + 6f * Mathf.Sin(Time.time * 2.2f + i * 1.7f));
                 u.TickPartyRing(Time.time * 3f + i * 1.3f);
@@ -419,24 +421,41 @@ namespace Game.Module.InGame
                 if (target != null) best = Vector2.Distance(target.Position, u.Position);
 
                 bool inRange = target != null && best <= u.AttackRange;
-                // 사거리 밖이면 적에게 다가간다(근접도 나가서 친다). 적이 없으면 메인 곁으로 돌아온다
-                Vector2 goal = target != null ? target.Position : home;
-                bool move = target != null ? !inRange : Vector2.Distance(u.Position, home) > 8f;
+                // 사거리 밖이면 적에게 다가간다(근접도 나가서 친다). 적이 없으면 메인 곁으로 돌아온다.
+                // ⚠ 적 한가운데로 가지 않는다 — 보조 둘이 같은 적을 고르면 그 자리에 포개졌다(PD 2026-10-30 「보조끼리 겹친다」).
+                //   보조 1 은 적의 왼쪽, 2 는 오른쪽 — 제 사거리 안쪽(원거리는 떨어져서, 근접은 몸이 닿는 자리)에 선다
+                Vector2 goal = home;
+                if (target != null)
+                {
+                    float reach = Mathf.Max(u.AttackRange * 0.85f, target.BodyRadius + u.BodyRadius);
+                    goal = target.Position + new Vector2(side * Mathf.Min(reach, u.AttackRange), 0f);
+                }
+                // 반경(2.5 m)은 「그 밖으로 나가 싸우지 않는다」는 뜻이다 — 몸을 반경 끝으로 끌어당기지 않는다(PD 2026-10-30).
+                //   가려는 자리만 반경 안으로 잡고, 거기까지 자연스럽게 걸어가 멈춘다
+                var toGoal = goal - me.Position;
+                if (toGoal.magnitude > leash) goal = me.Position + toGoal.normalized * leash;
+                bool move = target != null ? !inRange && Vector2.Distance(u.Position, goal) > 8f
+                                           : Vector2.Distance(u.Position, home) > 8f;
                 if (move)
                 {
                     u.SetState(EnemyState.Approach);
                     // 보조는 혼이라 방 물건을 무시하고 지나간다(PD 2026-10-29) — 걸리면 메인을 못 따라온다
-                    u.Position = u.StepToward(goal, dt);
+                    // ⚠ StepToward 는 「이번 프레임에 갈 거리」를 돌려준다. 예전에 그 값을 위치로 넣어(u.Position = StepToward)
+                    //   보조가 매 프레임 화면 원점으로 튀고, 반경 제한이 메인 반경 끝 한 점으로 끌어와 둘이 포개졌다(2026-10-30 실측)
+                    u.MoveToward(goal, dt);
                     u.SetMoving(true);
                 }
                 else u.SetMoving(false);
-                // 겹치지 않게 — 메인 · 다른 보조와 최소 간격만큼 밀어낸다(한 번에 다 밀지 않고 조금씩 — 튀지 않게)
-                PushApart(u, me.Position, PartyRule.SubGapMain, i == 0 ? -1f : 1f);
+                // 겹치지 않게 — 메인 · 다른 보조와 몸 크기만큼 밀어낸다.
+                // 간격은 몸 크기로 잰다 — 고정 56 · 64 px 은 그림 폭보다 작아 밀어내도 반쯤 겹쳐 보였다.
+                // 메인과는 조금씩(튀지 않게), 보조끼리는 모자란 만큼 한 번에(같은 자리로 모일 때 반만 밀면 반쯤 겹친 채 멈춘다)
+                PushApart(u, me.Position, gapMain, side);
                 for (int j = 0; j < _subs.Count; j++)
-                    if (j != i && _subs[j].U != null) PushApart(u, _subs[j].U.Position, PartyRule.SubGapEach, i == 0 ? -1f : 1f);
-                // 메인 반경을 벗어나지 않는다(PD 2026-10-29 「5m 를 벗어나지 말아야」 → 같은 날 「반으로」 2.5 m)
-                var off = u.Position - me.Position;
-                if (off.magnitude > leash) u.Position = me.Position + off.normalized * leash;
+                {
+                    var other = _subs[j].U;
+                    if (j != i && other != null)
+                        PushApart(u, other.Position, Mathf.Max(PartyRule.SubGapEach, u.BodyRadius + other.BodyRadius), side, 1f);
+                }
 
                 if (target != null)
                 {
@@ -459,16 +478,16 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// u 를 from 에서 gap 만큼 떨어지게 민다 — 모자란 거리의 60% 씩(다음 프레임에 마저 민다).
+        /// u 를 from 에서 gap 만큼 떨어지게 민다 — 기본은 모자란 거리의 60% 씩(다음 프레임에 마저 민다, 튀지 않게).
         /// 딱 같은 자리면 방향이 없으니 보조 1 은 왼쪽 · 2 는 오른쪽으로.
         /// </summary>
-        private static void PushApart(Unit u, Vector2 from, float gap, float side)
+        private static void PushApart(Unit u, Vector2 from, float gap, float side, float share = 0.6f)
         {
             var d = u.Position - from;
             float m = d.magnitude;
             if (m >= gap) return;
             var dir = m < 0.5f ? new Vector2(side, 0f) : d / m;
-            u.Position += dir * ((gap - m) * 0.6f);
+            u.Position += dir * ((gap - m) * share);
         }
 
         private void CastSubSkill(Unit u, Unit target)

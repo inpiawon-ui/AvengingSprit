@@ -609,7 +609,18 @@ namespace Game.Module.InGame
             }
             string title = inyeon ? Tf("ui.party.inyeon.title", InyeonName(members[0])) : SynShortName(tag);
             string desc = inyeon ? InyeonDesc(members[0]) : Tx($"ui.party.tag.{TagId(tag)}.desc");
-            MTxt(pop, pb, new MBox(L + 72, top + 18, R, top + 54), title, 30, Color.white);
+            // 제목은 오른쪽 위 닫기(X) 자리(44)를 비운다
+            MTxt(pop, pb, new MBox(L + 72, top + 18, R - 48, top + 54), title, 30, Color.white);
+            // 닫기 — 판 아무 데나 눌러도 닫히지만 그걸 알 길이 없어 「어떻게 꺼야 될지 모르겠다」(PD 2026-10-30).
+            //   그림은 일시정지 창 닫기와 같은 키트 아이콘(rb_icon_sys_close_48)을 빌려 쓴다
+            if (_popUi != null && _popUi.CloseIcon is Sprite closeIcon)
+            {
+                var x = Mx("Close", pop, pb, new MBox(R - 40, top + 14, R + 4, top + 58));
+                var xi = x.gameObject.AddComponent<Image>();
+                xi.sprite = closeIcon;
+                xi.preserveAspect = true;
+                x.gameObject.AddComponent<Button>().onClick.AddListener(ClosePartyPopup);
+            }
             MTxt(pop, pb, new MBox(L + 72, top + 54, R, top + 84), desc, 18, PopGray, TextAlignmentOptions.MidlineLeft, true);
 
             float y = top + 92f;

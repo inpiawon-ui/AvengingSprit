@@ -104,14 +104,32 @@ namespace Game.EditorTools
             string version = BumpVersion();
             var apk = Path.Combine(dir, $"AVSR_{version}.apk");
 
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            // 일반 · 경고 로그는 호출 경로를 모으지 않는다(폰에서 무겁다) — 오류 · 예외만 크래시 원인용으로 남긴다.
+            // 빌드에서 일반 · 경고 출력 자체는 ReleaseLogFilter 가 끈다(2026-10-30).
+            // 이 설정은 에디터 콘솔에도 걸리므로 굽는 동안만 바꾸고 되돌린다
+            var logTypes = new[] { LogType.Log, LogType.Warning, LogType.Assert, LogType.Error, LogType.Exception };
+            var keepTrace = logTypes.Select(PlayerSettings.GetStackTraceLogType).ToArray();
+            PlayerSettings.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+            PlayerSettings.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
+            PlayerSettings.SetStackTraceLogType(LogType.Assert, StackTraceLogType.None);
+            PlayerSettings.SetStackTraceLogType(LogType.Error, StackTraceLogType.ScriptOnly);
+            PlayerSettings.SetStackTraceLogType(LogType.Exception, StackTraceLogType.ScriptOnly);
+            BuildReport report;
+            try
             {
-                scenes = scenes,
-                locationPathName = apk,
-                target = BuildTarget.Android,
-                targetGroup = BuildTargetGroup.Android,
-                options = BuildOptions.None,
-            });
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = scenes,
+                    locationPathName = apk,
+                    target = BuildTarget.Android,
+                    targetGroup = BuildTargetGroup.Android,
+                    options = BuildOptions.None,
+                });
+            }
+            finally
+            {
+                for (int i = 0; i < logTypes.Length; i++) PlayerSettings.SetStackTraceLogType(logTypes[i], keepTrace[i]);
+            }
 
             var s = report.summary;
             if (s.result != BuildResult.Succeeded)

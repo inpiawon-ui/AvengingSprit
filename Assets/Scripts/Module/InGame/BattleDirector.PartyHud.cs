@@ -65,35 +65,24 @@ namespace Game.Module.InGame
         private static string SynShortName(string tag) => TagId(tag) is string id ? Tx($"ui.party.tag.{id}") : tag;
 
         /// <summary>
-        /// 태그 시너지 칸을 채운다 — 화면이 「무도가 2/3」 으로 그린다.
-        /// 메인만 있어도(1명) 그 태그를 「1/2」 로 보여 준다(PD 2026-10-29 「메인만 빙의하면 보여야 어떤 애를 얻어야 할지 목표를 정하지」).
-        /// 켜진 것(2명 이상)을 앞에, 아직인 것(1명)을 뒤에 — 칸이 모자라면 아직인 것부터 빠진다.
+        /// 무리 시너지 칸을 채운다 — 화면이 「무도가 2/3」 으로 그린다.
+        /// **메인의 무리 하나만**(PD 2026-10-30 「왼쪽은 메인 호스트 기준이니 무조건 2개만 — 인연 · 무리」).
+        ///   예전에는 파티 전원의 무리마다 칸을 만들어, 보조 무리까지 「1→2」 칸이 셋 넘게 떴다.
+        /// 메인만 있어도(1명) 「1→2」 목표 칸으로 보여 준다(PD 2026-10-29 「어떤 애를 얻어야 할지 목표를 정하지」).
         /// </summary>
         public void FillSynergyCells(List<PartySynCell> into)
         {
             into.Clear();
             SyncPartyKeys();   // 화면이 전투 틱보다 먼저 물으면 지난 몸의 무리가 남았다(2026-10-29 검수)
-            if (!PartyOn || Unit.PartyKeys.Count < 1) return;
-            _cellTagCount.Clear();
+            if (!PartyOn || _host == null) return;
+            var org = OrgOf(_host.Key);
+            if (org == null) return;
+            int n = 0;
             foreach (var k in Unit.PartyKeys)
-            {
-                var o = OrgOf(k);
-                if (o != null) _cellTagCount[o] = _cellTagCount.TryGetValue(o, out int n) ? n + 1 : 1;
-            }
-            for (int pass = 0; pass < 2; pass++)
-            {
-                bool on = pass == 0;
-                foreach (var kv in _cellTagCount) AddCell(into, kv.Key, kv.Value, on);
-            }
+                if (OrgOf(k) == org) n++;
+            n = Mathf.Max(n, 1);
+            into.Add(new PartySynCell(SynIcon(org), SynShortName(org), n, n >= 2 ? 3 : 2, org));
         }
-
-        private static void AddCell(List<PartySynCell> into, string tag, int n, bool on)
-        {
-            if (n < 1 || (n >= 2) != on) return;
-            into.Add(new PartySynCell(SynIcon(tag), SynShortName(tag), n, n >= 2 ? 3 : 2, tag));
-        }
-
-        private readonly Dictionary<string, int> _cellTagCount = new();
 
         /// <summary>지금 켜진 태그 시너지 효과 줄(시너지 설명 창이 띄운다).</summary>
         public IReadOnlyList<string> PartySynergyLines => _synLines;

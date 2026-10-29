@@ -1918,6 +1918,9 @@ namespace Game.Module.InGame
         public string ShownHostKey => _hasRealHost ? _affinityHostKey : null;
         public Sprite FaceOf(string hostKey) => _faceAtlas != null && hostKey != null ? _faceAtlas.GetSprite($"face_{hostKey}") : null;
 
+        /// <summary>창 닫기(X) 그림 — 일시정지 창과 같은 키트 아이콘. 코드로 띄우는 창(빙의 파티 설명)이 빌려 쓴다.</summary>
+        public Sprite CloseIcon => _ui.Get<Image>("RbPauseCloseIcon") is Image i ? i.sprite : null;
+
         /// <summary>카드 그림(card_{CardId}) — 표가 아직 안 왔으면 null.</summary>
         public Sprite CardIconOf(string buffKey)
         {
