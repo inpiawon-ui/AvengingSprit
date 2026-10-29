@@ -273,6 +273,7 @@ namespace Game.Module.InGame
             u.SetState(EnemyState.Idle);
             ApplyFacingSprites(u, key);
             u.SetHpBarVisible(false);   // 보조는 체력이 없다 — 적이 노리지 않아 맞지도 않는다
+            u.MarkPartySub();           // 붙들어 둔 혼 — 비치는 보랏빛 · 숨쉬기
             PlayFx("shield", at, 128f, loop: false);
 
             var sub = new PartySub { U = u, SkillCd = Random.Range(1.5f, 3f) };
@@ -364,6 +365,8 @@ namespace Game.Module.InGame
 
                 // 자리: 메인 양옆 조금 아래
                 var home = me.Position + new Vector2(i == 0 ? -78f : 78f, -36f);
+                // 혼이라 바닥에서 떠 있다 — 자리는 그대로, 그림만 둥실(둘이 엇박으로). 그림자가 실제 자리다
+                u.SetSpriteLift(14f + 6f * Mathf.Sin(Time.time * 2.2f + i * 1.7f));
                 // 방이 바뀌어 멀리 떨어졌으면 곁으로 옮긴다
                 if (Vector2.Distance(u.Position, me.Position) > 600f) u.Position = home;
 

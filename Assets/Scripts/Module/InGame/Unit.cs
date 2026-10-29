@@ -1803,8 +1803,31 @@ namespace Game.Module.InGame
             if (_body != null) _body.color = SpiritColor;
         }
 
-        /// <summary>아무 일도 없을 때의 색. 분신 · 내 해골만 흰색이 아니다.</summary>
-        private Color RestColor => IsPhantom ? PhantomColor : IsSpirit ? SpiritColor : Color.white;
+        // 빙의 파티 보조 — 붙들어 둔 혼이라 보랏빛으로 비친다. 분신(청록) · 해골(민트)과 갈리게 보라로(PD 2026-10-29 「빙의된 보조라는 느낌」)
+        private static readonly Color PartySubColor = new(0.80f, 0.68f, 1f, 1f);
+
+        /// <summary>빙의 파티의 보조 호스트인가. 비치는 보랏빛으로 숨쉬듯 깜빡인다.</summary>
+        public bool IsPartySub { get; private set; }
+
+        public void MarkPartySub()
+        {
+            IsPartySub = true;
+            if (_body != null) _body.color = RestColor;
+        }
+
+        /// <summary>보조 색 — 투명도가 0.5~0.68 사이로 천천히 오르내린다(숨쉬기).</summary>
+        private Color PartySubTint
+        {
+            get
+            {
+                var c = PartySubColor;
+                c.a = 0.59f + 0.09f * Mathf.Sin(Time.time * 2.6f + _rect.anchoredPosition.x * 0.01f);
+                return c;
+            }
+        }
+
+        /// <summary>아무 일도 없을 때의 색. 분신 · 내 해골 · 보조만 흰색이 아니다.</summary>
+        private Color RestColor => IsPartySub ? PartySubTint : IsPhantom ? PhantomColor : IsSpirit ? SpiritColor : Color.white;
 
         /// <summary>
         /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.
