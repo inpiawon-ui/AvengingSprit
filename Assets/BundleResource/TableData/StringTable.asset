@@ -12821,3 +12821,9 @@ MonoBehaviour:
       to use'
     _zhHant: "\u89E3\u9396\u5BBF\u4E3B\u5F8C\n\u89E3\u9664"
     _zhHans: "\u89E3\u9501\u5BBF\u4E3B\u540E\n\u89E3\u9664"
+  - _key: ui.party.choice.main_swap_hp
+    _ko: "\uBA54\uC778\uACFC \uBC14\uAFB8\uAE30 \xB7 \uC720\uB839 HP \u2212{0}"
+    _ja: "\u30E1\u30A4\u30F3\u3068\u4EA4\u4EE3\u30FB\u30B4\u30FC\u30B9\u30C8HP \u2212{0}"
+    _en: "Swap with Main \xB7 Ghost HP \u2212{0}"
+    _zhHant: "\u8207\u4E3B\u63A7\u4EA4\u63DB \xB7 \u5E7D\u9748HP \u2212{0}"
+    _zhHans: "\u4E0E\u4E3B\u63A7\u4EA4\u6362 \xB7 \u5E7D\u7075HP \u2212{0}"

@@ -221,15 +221,14 @@ namespace Game.Module.InGame
             _partyPick = target;
             var entry = _player != null ? _player.GetHost(target.Key) : null;
             string name = entry != null ? entry.DisplayName : target.DisplayName;
-            int mainLeft = PartyRule.MainSwapMax - _mainSwaps;
-            int subLeft = PartyRule.SubSwapMax - _subSwaps;
+            // 교체 횟수 제한 없음 — 유령 HP 만 본다(PD 2026-10-30). 「남은 n회」도 안 붙인다(Left = −1)
             var rows = new List<ChoiceRow>
             {
                 new()
                 {
                     Frame = "partyhud_main_frame", FaceKey = _host.Key, Title = Tx("ui.party.p2.main_swap"),
-                    Cost = PartyRule.CostMainSwap, Left = mainLeft, Deltas = SynChange(_host.Key, target.Key),
-                    Enabled = mainLeft > 0 && _ghostHp > PartyRule.CostMainSwap, Act = () => PartySwapMain(target),
+                    Cost = PartyRule.CostMainSwap, Deltas = SynChange(_host.Key, target.Key),
+                    Enabled = _ghostHp > PartyRule.CostMainSwap, Act = () => PartySwapMain(target),
                 },
             };
             for (int i = 0; i < PartyRule.SubSlots; i++)
@@ -241,8 +240,8 @@ namespace Game.Module.InGame
                     rows.Add(new ChoiceRow
                     {
                         Frame = "partyhud_sub_frame", FaceKey = old, Title = Tf("ui.party.p2.sub_swap", i + 1),
-                        Cost = PartyRule.CostSubSwap, Left = subLeft, Deltas = SynChange(old, target.Key),
-                        Enabled = subLeft > 0 && _ghostHp > PartyRule.CostSubSwap,
+                        Cost = PartyRule.CostSubSwap, Deltas = SynChange(old, target.Key),
+                        Enabled = _ghostHp > PartyRule.CostSubSwap,
                         Act = () => PartySetSub(target, slot, PartyRule.CostSubSwap),
                     });
                 }

@@ -45,8 +45,6 @@ namespace Game.Module.InGame
         public const int CostDeathNew = 20;
         public const int CostDeathPromote = 5;
         public const int CostDeathRevive = 40;
-        public const int MainSwapMax = 2;
-        public const int SubSwapMax = 1;
         public const int SubSlots = 2;
 
         /// <summary>적 호스트의 체력이 이 비율 아래면 빙의 가능. 35% 는 너무 빨리 죽어 60% 로 올렸다(PD 2026-10-29).</summary>
@@ -107,8 +105,6 @@ namespace Game.Module.InGame
         private readonly List<PartySub> _subs = new();
         /// <summary>보조가 액티브를 자동으로 쓰는 동안 그 보조(스킬 레벨 · 배율이 보조 호스트를 따르게).</summary>
         private Unit _subCaster;
-        private int _mainSwaps;
-        private int _subSwaps;
         /// <summary>메인 사망 뒤 A(새 빙의)를 골랐다 — 다음 빙의에 이 값을 치른다.</summary>
         private int _partyPossessCost;
         private bool _partyStartCharged;
@@ -210,8 +206,6 @@ namespace Game.Module.InGame
             for (int i = 0; i < _subs.Count; i++) if (_subs[i].U != null) Destroy(_subs[i].U.gameObject);
             _subs.Clear();
             ClearPartyFx();
-            _mainSwaps = 0;
-            _subSwaps = 0;
             _partyPossessCost = 0;
             _partyStartCharged = false;
             _subLv.Clear();
@@ -241,9 +235,10 @@ namespace Game.Module.InGame
         private bool PartyCanChoose()
         {
             if (!PartyOn || _host == null) return false;
-            if (_mainSwaps < PartyRule.MainSwapMax && _ghostHp > PartyRule.CostMainSwap) return true;
+            // 교체 횟수 제한은 없다 — 유령 HP 비용이 곧 제한이다(PD 2026-10-30 「HP 로 제한되니 그런 규칙은 필요 없다」)
+            if (_ghostHp > PartyRule.CostMainSwap) return true;
             if (_subs.Count < PartyRule.SubSlots) return _ghostHp > PartyRule.CostSub;
-            return _subSwaps < PartyRule.SubSwapMax && _ghostHp > PartyRule.CostSubSwap;
+            return _ghostHp > PartyRule.CostSubSwap;
         }
 
         // ─────────────────────────────────────────
@@ -314,7 +309,6 @@ namespace Game.Module.InGame
         {
             if (_host == null || target == null || !target.IsAlive) return;
             PartySpend(PartyRule.CostMainSwap, _host.Position);
-            _mainSwaps++;
             // 지금 메인은 사라진다 — 쓰러지는 몸이 아니라 놓아준 몸이라 조각 · 사망 처리는 하지 않는다
             var old = _host;
             _ghost.Position = old.Position;
@@ -330,7 +324,6 @@ namespace Game.Module.InGame
         {
             if (_host == null || !TakeFromEnemies(target)) return;
             PartySpend(cost, target.Position);
-            if (cost == PartyRule.CostSubSwap) _subSwaps++;
 
             // 보조 교체 — 옛 보조는 놓아주고, 그 자리에서 혼 조각이 새 호스트로 옮겨 간다(BattleDirector.PartyFx)
             Unit oldSub = null;

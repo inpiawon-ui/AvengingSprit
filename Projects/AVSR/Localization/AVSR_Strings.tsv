@@ -1980,3 +1980,4 @@ ui.rb.org.title	무리 – {0}	群れ – {0}	Group – {0}	群體 – {0}	群�
 ui.rb.org.need	{0}명	{0}人	{0}	{0}人	{0}人
 ui.rb.org.rule	같은 무리를 메인 · 보조로 함께 데려가면 켜진다	同じ群れをメイン・サブに一緒に編成すると発動	Active when the same group is your Main and Subs	同群宿主一起編為主控 · 副手即啟動	同群宿主一起编为主控 · 副手即启动
 ui.ingame.ult_locked_hint	호스트 해금 후\n해제	ホスト解放で\n解除	Unlock host\nto use	解鎖宿主後\n解除	解锁宿主后\n解除
+ui.party.choice.main_swap_hp	메인과 바꾸기 · 유령 HP −{0}	メインと交代・ゴーストHP −{0}	Swap with Main · Ghost HP −{0}	與主控交換 · 幽靈HP −{0}	与主控交换 · 幽灵HP −{0}

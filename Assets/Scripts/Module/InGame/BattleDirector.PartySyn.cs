@@ -267,18 +267,17 @@ namespace Game.Module.InGame
         }
 
         // ─────────────────────────────────────────
-        // 자리 바꾸기 — 초상화를 길게 누르면 메인과 보조가 서로 바뀐다(−25, 메인 교체 횟수)
+        // 자리 바꾸기 — 초상화를 길게 누르면 메인과 보조가 서로 바뀐다(−25). 횟수 제한 없음 — 유령 HP 만 본다(PD 2026-10-30)
         // ─────────────────────────────────────────
         private void OpenPartyPortraitSwap(int slot)
         {
             if (!PartyOn || _host == null || slot >= _subs.Count || _partyHold || IsChanneling) return;
-            int left = PartyRule.MainSwapMax - _mainSwaps;
             string sub = HostName(_subs[slot].U.Key), main = HostName(_host.Key);
             var opts = new List<PartyOption>
             {
-                new PartyOption(Tf("ui.party.choice.main_swap", PartyRule.CostMainSwap, left),
+                new PartyOption(Tf("ui.party.choice.main_swap_hp", PartyRule.CostMainSwap),
                                 Tf("ui.party.swap.desc", sub, main, slot + 1),
-                                left > 0 && _ghostHp > PartyRule.CostMainSwap, () => PartySwapWithSub(slot)),
+                                _ghostHp > PartyRule.CostMainSwap, () => PartySwapWithSub(slot)),
                 new PartyOption(Tx("ui.party.cancel"), string.Empty, true, null),
             };
             ShowPartyPopup(Tf("ui.party.swap.title", slot + 1, sub), Tf("ui.party.ghost_left", _ghostHp), opts, -1f);
@@ -292,7 +291,6 @@ namespace Game.Module.InGame
             var subAt = s.U.Position;
             var mainAt = _host.Position;
             PartySpend(PartyRule.CostMainSwap, mainAt);
-            _mainSwaps++;
             Destroy(s.U.gameObject);
             _subs[slot] = MakeSub(mainKey, subAt);
             var old = _host;
