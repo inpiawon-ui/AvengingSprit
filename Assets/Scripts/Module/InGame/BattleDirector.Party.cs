@@ -74,6 +74,29 @@ namespace Game.Module.InGame
         {
             public Unit U;
             public float SkillCd;
+            /// <summary>보조 배수를 곱하기 전 공격력(메인으로 입었을 때와 같은 식). 카드 · 시너지가 바뀌면 여기서 다시 곱한다.</summary>
+            public int BaseAtk;
+        }
+
+        /// <summary>보조 하나를 세운다 — 체력 없음 · 공격 30% · 공격 속도 50% · 사거리 1.3배 · 보랏빛 · 발밑 고리.</summary>
+        private PartySub MakeSub(string key, Vector2 at)
+        {
+            var entry = _player != null ? _player.GetHost(key) : null;
+            var u = NewUnit($"PartySub_{key}");
+            // 메인으로 입었을 때와 같은 식(로비 강화 · 성급 포함)이 바탕 — 기본값의 30% 면 메인보다 훨씬 약해진다
+            int baseAtk = Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk) * MasteryStatMulOf(key)));
+            int atk = Mathf.Max(1, Mathf.RoundToInt(baseAtk * SubPowerOf(key)));
+            u.Setup(UnitSide.Player, key, entry != null ? entry.DisplayName : key, UnitGet(key),
+                    9999, atk, HostSpeedOf(entry) * 1.15f, HostRangeOf(entry) * PartyRule.SubRangeMul,
+                    HostIntervalOf(entry) / PartyRule.SubRateMul,
+                    UnitBox(84f, 80f), isBoss: false, profile: entry);
+            u.Position = at;
+            u.SetState(EnemyState.Idle);
+            ApplyFacingSprites(u, key);
+            u.SetHpBarVisible(false);   // 보조는 체력이 없다 — 적이 노리지 않아 맞지도 않는다
+            u.MarkPartySub(GetSprite("party_sub_ring"));   // 붙들어 둔 혼 — 비치는 보랏빛 · 숨쉬기 · 발밑 혼령 고리
+            PlayFx("shield", at, 128f, loop: false);
+            return new PartySub { U = u, SkillCd = Random.Range(1.5f, 3f), BaseAtk = baseAtk };
         }
 
         private readonly List<PartySub> _subs = new();
@@ -149,6 +172,10 @@ namespace Game.Module.InGame
             _subSwaps = 0;
             _partyPossessCost = 0;
             _partyStartCharged = false;
+            _subLv.Clear();
+            _subPowCard = 0f;
+            _syn = default;
+            _synLines.Clear();
             ClosePartyPopup();
             Unit.PartyActive = PartyOn;
         }
@@ -304,27 +331,12 @@ namespace Game.Module.InGame
             PartySpend(cost, target.Position);
             if (cost == PartyRule.CostSubSwap) _subSwaps++;
 
-            var entry = _player != null ? _player.GetHost(target.Key) : null;
             var at = target.Position;
             string key = target.Key;
             Destroy(target.gameObject);
+            var sub = MakeSub(key, at);
+            var u = sub.U;
 
-            var u = NewUnit($"PartySub_{key}");
-            // 메인으로 입었을 때와 같은 식(로비 강화 · 성급 포함)의 30% — 기본값의 30% 면 메인보다 훨씬 약해진다
-            int atk = Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk)
-                                                    * MasteryStatMulOf(key) * PartyRule.SubPower));
-            u.Setup(UnitSide.Player, key, entry != null ? entry.DisplayName : key, UnitGet(key),
-                    9999, atk, HostSpeedOf(entry) * 1.15f, HostRangeOf(entry) * PartyRule.SubRangeMul,
-                    HostIntervalOf(entry) / PartyRule.SubRateMul,
-                    UnitBox(84f, 80f), isBoss: false, profile: entry);
-            u.Position = at;
-            u.SetState(EnemyState.Idle);
-            ApplyFacingSprites(u, key);
-            u.SetHpBarVisible(false);   // 보조는 체력이 없다 — 적이 노리지 않아 맞지도 않는다
-            u.MarkPartySub(GetSprite("party_sub_ring"));   // 붙들어 둔 혼 — 비치는 보랏빛 · 숨쉬기 · 발밑 혼령 고리
-            PlayFx("shield", at, 128f, loop: false);
-
-            var sub = new PartySub { U = u, SkillCd = Random.Range(1.5f, 3f) };
             if (slot < _subs.Count)
             {
                 var old = _subs[slot];
@@ -332,7 +344,7 @@ namespace Game.Module.InGame
                 _subs[slot] = sub;
             }
             else _subs.Add(sub);
-            Debug.Log($"[빙의 파티] 보조 {slot + 1} = {key} · 공격 {atk}");
+            Debug.Log($"[빙의 파티] 보조 {slot + 1} = {key} · 공격 {u.Atk}");
         }
 
         // ─────────────────────────────────────────
@@ -399,6 +411,9 @@ namespace Game.Module.InGame
         private void TickParty(float dt)
         {
             SyncPartyKeys();
+            RecountSynergy();
+            RefreshSubAtk();
+            TickPartyHud();
             if (!PartyOn || _subs.Count == 0) return;
             var me = Avatar;
             if (me == null) return;
@@ -463,7 +478,7 @@ namespace Game.Module.InGame
                 s.SkillCd -= dt;
                 if (s.SkillCd <= 0f && target != null)
                 {
-                    s.SkillCd = PartyRule.SubSkillSeconds;
+                    s.SkillCd = SubSkillCdOf(u.Key);
                     CastSubSkill(u, target);
                 }
             }

@@ -1593,6 +1593,9 @@ namespace Game.Module.InGame
                 _ui.SetActive($"BuffCard{i}", has);
                 if (!has) continue;
 
+                // 빙의 파티 카드 — 카드 표에 없다. 이름 · 설명 · 그림을 전투에서 받아 채운다
+                if (BattleDirector.IsPartyCard(e.OfferedKeys[i]) && FillPartyCard(i, e.OfferedKeys[i])) continue;
+
                 var entry = _buffTable.Get(e.OfferedKeys[i]);
                 if (entry == null) { _ui.SetActive($"BuffCard{i}", false); continue; }
 
@@ -1635,6 +1638,29 @@ namespace Game.Module.InGame
             EqualizeText("BuffCard0ChipText", "BuffCard1ChipText", "BuffCard2ChipText");
             SetPanel("BuffChoicePanel", true);
             _ui.Find("BuffChoicePanel")?.SetAsLastSibling();
+        }
+
+        /// <summary>빙의 파티 카드 한 장을 채운다. 등급 줄 · 효과 줄은 비우고 꼬리표는 「파티」, 그림은 그 보조의 얼굴.</summary>
+        private bool FillPartyCard(int i, string key)
+        {
+            if (_battle == null || !_battle.PartyCardInfo(key, out var name, out var desc, out var chip, out var icon)) return false;
+            _ui.SetText($"BuffCard{i}ChipText", chip);
+            if (_reborn && _ui.Find(_ui.Find($"BuffCard{i}"), $"BuffCard{i}Rarity")?.GetComponent<TMPro.TMP_Text>() is TMPro.TMP_Text rare)
+            { rare.text = "PARTY"; rare.color = new Color(0.8f, 0.68f, 1f); }
+            _ui.SetText($"BuffCard{i}Name", name);
+            _ui.SetText($"BuffCard{i}Desc", desc);
+            _ui.SetActive($"BuffCard{i}Delta", false);
+            if (_reborn) RbFitTag(i);
+            var img = _ui.Get<Image>($"BuffCard{i}Icon");
+            if (img != null) { img.sprite = icon; img.enabled = icon != null; img.color = Color.white; img.preserveAspect = true; }
+            var btn = _ui.Get<Button>($"BuffCard{i}");
+            if (btn != null)
+            {
+                var slot = $"BuffCard{i}";
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
+            }
+            return true;
         }
 
         /// <summary>

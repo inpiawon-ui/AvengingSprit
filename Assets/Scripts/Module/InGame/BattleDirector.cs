@@ -121,7 +121,7 @@ namespace Game.Module.InGame
         /// ⚠ 카드 몫은 <see cref="SkillCooldownOf"/> 에 넣지 않는다 — 그 값으로 액티브 위력 배율(쿨 비례)을 재므로
         ///   카드를 먹을수록 액티브가 약해진다.
         /// </summary>
-        private float PlayerSkillCooldown => SkillCooldownOf(_host?.Profile) * _buffs.ActiveCooldownMul;
+        private float PlayerSkillCooldown => SkillCooldownOf(_host?.Profile) * _buffs.ActiveCooldownMul * PartyCdMul;   // 빙의 파티 — 마도 시너지
 
         private void TickSkillCharge(float dt)
         {
@@ -6093,6 +6093,7 @@ namespace Game.Module.InGame
         private float CardDamageMul(Unit victim)
         {
             float m = GritDamageMul;   // 궁지 — 내 체력이 절반 아래면
+            m *= PartyDamageMul;       // 빙의 파티 — 속성 · 무도가 · 균형 시너지
 
             if (_buffs.SingleTargetBonus > 0f)
             {
@@ -7776,6 +7777,8 @@ namespace Game.Module.InGame
 
             // 맞을 때도 상성(PD 2026-10-13) — 내 몸이 이기는 적에게는 덜, 지는 적에게는 더 아프다
             amount = WithDefenseAffinity(amount, sourceKey);
+            // 빙의 파티 — 코만도 · 균형 시너지
+            if (PartyOn) amount = Mathf.Max(1, Mathf.RoundToInt(amount * PartyDefMul));
 
             // 회피 — 깎는 것이 아니라 **없던 일**이 된다(닌자(사슬) 패시브).
             // 동료·방벽보다 먼저 본다: 흘릴 피해에 동료가 맞거나 방벽이 닳으면 안 된다.
@@ -8329,6 +8332,7 @@ namespace Game.Module.InGame
             _awaitingBuff = true;
             var keys = new string[_offer.Count];
             for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
+            MixPartyCards(keys);   // 빙의 파티 — 3장 안에 파티 카드가 랜덤으로 섞인다
             _bus.Publish(new BuffOfferEvent { OfferedKeys = keys, Level = _level });
         }
 
@@ -8479,7 +8483,8 @@ namespace Game.Module.InGame
         /// <summary>지금 몸의 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
         private float CritPercent =>
             HostStats.CritPercent(_config, _host?.Profile)
-            * UpgradeMul(_host?.Profile?.HostKey, HostStat.Crit);
+            * UpgradeMul(_host?.Profile?.HostKey, HostStat.Crit)
+            + PartyCritAdd;   // 빙의 파티 — 갱단 시너지(%p)
 
         /// <summary>
         /// 로비 능력치 골드 강화 배율 — 유령 탭(모든 몸) + 이 몸의 호스트 탭. 저장이 없으면 1.
@@ -10004,6 +10009,17 @@ namespace Game.Module.InGame
         public void ChooseBuff(string buffKey)
         {
             if (!_awaitingBuff) return;
+
+            // 빙의 파티 카드 — 카드 표에 없는 키다. 따로 적용하고 같은 길로 닫는다
+            if (IsPartyCard(buffKey))
+            {
+                ApplyPartyCard(buffKey);
+                PlayUpgradeFx();
+                _awaitingBuff = false;
+                _offer.Clear();
+                _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
+                return;
+            }
 
             var e = _buffTable?.Get(buffKey);
             if (e == null) return;
