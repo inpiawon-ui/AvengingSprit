@@ -132,19 +132,7 @@ namespace Game.Module.Lobby
             _tiles[InyeonTile].gameObject.SetActive(false);
             TMP_Text like = _ui.Find(tpl, "GrwStatName")?.GetComponent<TMP_Text>();
             _iyPanel = RbGrowthInyeonPanel.Create((RectTransform)tpl.parent, MockToContent, _iyArt, like);
-            // 성급 띠(GrwStarPanel · GrwStarUp)는 스크롤 안 스킬 칸 아래에 있다 — 인연 · 무리 판 아래로 내린다(판에 덮였다, 검수 2026-10-29)
-            var iyRt = (RectTransform)_iyPanel.transform;
-            float panelBottom = iyRt.anchoredPosition.y - iyRt.sizeDelta.y * 0.5f;
-            foreach (var n in new[] { "GrwStarPanel", "GrwStarUp" })
-                if (_ui.Find(n) is RectTransform sr)
-                {
-                    float top = sr.anchoredPosition.y + sr.sizeDelta.y * 0.5f;
-                    float d = (panelBottom - 18f) - top;
-                    if (d < 0f) sr.anchoredPosition += new Vector2(0f, d);
-                    var content = (RectTransform)tpl.parent;
-                    float need = -(sr.anchoredPosition.y - sr.sizeDelta.y * 0.5f) + 24f;
-                    if (content.sizeDelta.y < need) content.sizeDelta = new Vector2(content.sizeDelta.x, need);
-                }
+            LayOneScreen((RectTransform)tpl.parent);
             if (_iyPanel.GetComponentInChildren<Image>() is Image iyBg)
                 iyBg.gameObject.AddComponent<Button>().onClick.AddListener(ShowInyeon);   // 누르면 짝 · 켜는 법 창
             // 인연 칸은 눌러서 자세히(짝 · 켜는 법)
@@ -289,7 +277,14 @@ namespace Game.Module.Lobby
                 TextIn(t, "GrwStatValue", SkillLine(e, slot, lv, cap, max, locked));
                 // 상한에 막히면 사기 단추가 빠진다 — 그 자리까지 줄을 늘려 「106% › 112% · 3성 필요」 가 작아지지 않게(5언어 재 봄)
                 WidenValue(t, capped);
-                if (t.GetComponent<Image>() is Image bg) bg.sprite = full ? _tileMax : poor ? _tilePoor : _tileNormal;
+                if (t.GetComponent<Image>() is Image bg)
+                {
+                    // 한 화면 시안의 줄은 인연 · 무리 판과 같은 청록 테 — 보통 줄만 그 판으로(다 키움 · 골드 모자람은 예전 색 그대로)
+                    bool plain = !full && !poor && _iyArt.Panel != null;
+                    bg.sprite = full ? _tileMax : poor ? _tilePoor : plain ? _iyArt.Panel : _tileNormal;
+                    bg.type = Image.Type.Sliced;
+                    bg.pixelsPerUnitMultiplier = plain ? 2.6f : 1f;
+                }
                 var buy = _ui.Find(t, "GrwStatBuy");
                 bool showBuy = locked || cost > 0;
                 if (buy != null) buy.gameObject.SetActive(showBuy && !capped);
@@ -345,18 +340,80 @@ namespace Game.Module.Lobby
         private static string PowerLine(float now, float next)
             => $"{(1f + now) * 100f:0.#}%<size=70%> › </size><color={NextColor}>{(1f + next) * 100f:0.#}%</color>";
 
-        // ── 시안 2 배치 — 스킬 칸 셋은 왼쪽 세로 한 줄(310 × 107 간격), 오른쪽은 인연 판 ─────────────
-        // 시안 720 판 px → GrwBodyContent 안 자리(가운데 · 위 기준). 첫 스킬 칸 위 718 이 지금 칸 위(-523)와 겹치는 값
-        private const float MockContentTop = 195f, MockTileW = 310f, MockTilePitch = 107f;
-        private static Vector2 MockToContent(float x, float y) => new(x - 360f, -(y - MockContentTop));
+        // ── 한 화면 배치(PD 2026-10-29 「스크롤 없이 한눈에」 · 시안 `_exchange/in/mock1029_growth_onescreen.png`) ─────────
+        // 시안 720 판 px 그대로 놓고(위 158 = 내용 맨 위), 내용 전체를 보이는 높이에 맞춰 같은 배율로 줄인다(시안 1002 → 보이는 960).
+        // 스크롤은 끈다 — 성급 띠가 스크롤 맨 아래에 숨어 있는 줄도 몰랐다(PD).
+        private const float MockTop = 158f, MockBottom = 1160f;
+        private static Vector2 MockToContent(float x, float y) => new(x - 360f, -(y - MockTop));
 
+        private static void Put(RectTransform r, float x0, float y0, float x1, float y1)
+        {
+            if (r == null) return;
+            r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
+            r.pivot = new Vector2(0.5f, 0.5f);
+            r.sizeDelta = new Vector2(x1 - x0, y1 - y0);
+            r.anchoredPosition = MockToContent((x0 + x1) * 0.5f, (y0 + y1) * 0.5f);
+        }
+
+        /// <summary>안 것들의 세로 자리 · 크기를 줄인다(가운데 기준 자식이라 자리만 곱하면 된다). 그림 칸은 가로세로 같이.</summary>
+        private static void Squash(RectTransform parent, float k, params string[] uniform)
+        {
+            foreach (RectTransform c in parent)
+            {
+                c.anchoredPosition = new Vector2(c.anchoredPosition.x, c.anchoredPosition.y * k);
+                if (Array.IndexOf(uniform, c.name) >= 0) c.sizeDelta *= k;
+                else if (c.sizeDelta.y > parent.sizeDelta.y * 0.8f) c.sizeDelta = new Vector2(c.sizeDelta.x, c.sizeDelta.y * k);
+            }
+        }
+
+        private void LayOneScreen(RectTransform content)
+        {
+            // 호스트 칸 — 263 → 220(시안), 그림 · 빛 띠도 같이 줄인다
+            if (_ui.Find("GrwHero") is RectTransform hero)
+            {
+                float k = 220f / hero.sizeDelta.y;
+                Squash(hero, k, "GrwHostArt", "GrwHeroEdge");
+                Put(hero, 15, 158, 705, 378);
+            }
+            // 스킬 셋 — 187 → 165
+            string[] cards = { "GrwSkillUlt", "GrwSkillAct", "GrwSkillPas" };
+            float[] cx = { 18, 250, 480 };
+            for (int i = 0; i < cards.Length; i++)
+                if (_ui.Find(cards[i]) is RectTransform card)
+                {
+                    float k = 165f / card.sizeDelta.y;
+                    Squash(card, k, cards[i] + "Icon", cards[i] + "Ring");
+                    Put(card, cx[i], 390, cx[i] + 222, 555);
+                }
+            // 「스킬 레벨」 머리 줄은 시안에서 뺐다(칸 셋이 바로 온다)
+            _ui.Find("GrwStatHeader")?.gameObject.SetActive(false);
+            _ui.Find("GrwStatHint")?.gameObject.SetActive(false);
+            // 성급 띠 — 시안 맨 아래, 눈에 띄게
+            Put(_ui.Find("GrwStarPanel") as RectTransform, 15, 1053, 425, 1160);
+            Put(_ui.Find("GrwStarUp") as RectTransform, 430, 1053, 702, 1160);
+
+            content.sizeDelta = new Vector2(content.sizeDelta.x, MockBottom - MockTop);
+            // 배율은 넓은 화면 부품(RbWideContent)이 매 프레임 정한다 — 폭 맞춤에 「설계 높이가 다 들어가게」를 더한다
+            content.pivot = new Vector2(0.5f, 1f);
+            if (!content.TryGetComponent<RbWideContent>(out var wide)) wide = content.gameObject.AddComponent<RbWideContent>();
+            wide.FitHeight = MockBottom - MockTop;
+            if (_ui.Find("GrwBody") is RectTransform body && body.TryGetComponent<ScrollRect>(out var sr)) sr.vertical = false;
+        }
+
+        // 스킬 레벨 줄 — 시안의 가로로 긴 세 줄(684 × 64, 70 간격). 왼쪽 아이콘 · 이름 / 값 두 줄 · 오른쪽 금화 단추
         private static void PlaceSkillTile(RectTransform t, int row)
         {
-            float shift = (t.sizeDelta.x - MockTileW) * 0.5f;   // 칸이 좁아진 만큼 안 것들을 가운데로 당긴다(가운데 기준이라)
-            t.sizeDelta = new Vector2(MockTileW, t.sizeDelta.y);
+            float y0 = 565f + 70f * row;
+            Put(t, 18, y0, 702, y0 + 64);
+            const float half = 342f;
             foreach (RectTransform c in t)
-                c.anchoredPosition += new Vector2(c.anchoredPosition.x < 0f ? shift : -shift, 0f);
-            t.anchoredPosition = MockToContent(15f + MockTileW * 0.5f, 718f + t.sizeDelta.y * 0.5f + MockTilePitch * row);
+                switch (c.name)
+                {
+                    case "GrwStatIcon": c.sizeDelta = new Vector2(44f, 44f); c.anchoredPosition = new Vector2(-half + 38f, 0f); break;
+                    case "GrwStatName": c.sizeDelta = new Vector2(300f, 26f); c.anchoredPosition = new Vector2(-half + 72f + 150f, 14f); break;
+                    case "GrwStatValue": c.sizeDelta = new Vector2(300f, 30f); c.anchoredPosition = new Vector2(-half + 72f + 150f, -13f); break;
+                    case "GrwStatBuy": c.sizeDelta = new Vector2(140f, 46f); c.anchoredPosition = new Vector2(half - 82f, 0f); break;
+                }
         }
 
         /// <summary>인연 판 — 짝 얼굴 · 인연 이름과 지금 단계(두 성급 중 낮은 쪽) · 인연이 하는 일. 누르면 짝 · 켜는 법.</summary>
@@ -431,8 +488,8 @@ namespace Game.Module.Lobby
         {
             if (!(_ui.Find(tile, "GrwStatValue") is RectTransform r)) return;
             if (_valueW < 0f) _valueW = r.sizeDelta.x;
-            // 시안 2 칸(310)은 예전보다 좁다 — 칸 오른쪽 안쪽까지만(+66) 늘린다(넘어서 「· 2성 필요」 가 칸 밖으로 나갔다)
-            float want = wide ? _valueW + 66f : _valueW;
+            // 한 화면 줄(684)은 넓다 — 단추 자리(140)만큼 늘린다
+            float want = wide ? _valueW + 140f : _valueW;
             float d = want - r.sizeDelta.x;
             if (Mathf.Abs(d) < 0.5f) return;
             r.sizeDelta = new Vector2(want, r.sizeDelta.y);

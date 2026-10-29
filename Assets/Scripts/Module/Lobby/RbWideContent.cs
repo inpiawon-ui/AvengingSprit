@@ -15,6 +15,12 @@ namespace Game.Module.Lobby
         private RectTransform _view;
         private float _scale = 1f;
 
+        /// <summary>
+        /// 0 이면 예전처럼 폭만 맞춘다. 값이 있으면 그 설계 높이가 보기 칸에 다 들어가게 세로로도 줄인다 —
+        /// 스크롤 없는 한 화면(호스트 성장, PD 2026-10-29). 4:3 에서 폭으로 1.33배 키우면 아래가 잘렸다.
+        /// </summary>
+        public float FitHeight { get; set; }
+
         private void Awake()
         {
             _rt = (RectTransform)transform;
@@ -26,6 +32,7 @@ namespace Game.Module.Lobby
         {
             if (_view == null) return;
             float k = Mathf.Max(1f, _view.rect.width / DesignWidth);
+            if (FitHeight > 0f && _view.rect.height > 0f) k = Mathf.Min(k, _view.rect.height / FitHeight);
             if (Mathf.Approximately(k, _scale)) return;
             _scale = k;
             _rt.localScale = new Vector3(k, k, 1f);

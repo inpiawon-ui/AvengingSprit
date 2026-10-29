@@ -14,7 +14,7 @@ namespace Game.Module.Lobby
     /// 「인연이랑 우리가 추가하는 시너지도 · 2마리일 때 3마리일 때 효과 · 둘 다 저기서 설명」).
     ///   인연 판: 사슬 · 「인연 – 이름」 · 단계 / 내 얼굴 ─사슬→ 짝 얼굴 · 켜짐 스위치 / 액티브 → 짝 · 효과 두 줄 / 단계 조건
     ///   무리 판: 문장 · 「무리 – 이름」 · 가진 수/3 / 설명 / 2명 · 3명 효과 / 무리 호스트 얼굴(가진 것 밝게 · 없는 것 자물쇠) / 켜는 법
-    /// 좌표는 시안 720 판 px — 시안의 인연 판 위(588)가 우리 화면(712)보다 124 위라 세로로 <see cref="Dy"/> 만큼 내린다.
+    /// 좌표는 한 화면 시안(`mock1029_growth_onescreen.png`) 720 판 px 그대로 — 인연 · 무리 두 판이 가로로 나란히(PD 「가로로 정리해서 스크롤 없이」).
     /// </summary>
     public sealed class RbGrowthInyeonPanel : MonoBehaviour
     {
@@ -25,11 +25,10 @@ namespace Game.Module.Lobby
             public Sprite[] OrgIcons;   // rb_syn_icon_{gang,commando,martial,monster,mystic}
         }
 
-        private const float Dy = 124f;
         private const float SliceScale = 2.6f;
-        private static readonly Box Area = new(340, 588, 702, 1187);   // 두 판을 묶는 틀
-        private static readonly Box IyBox = new(340, 588, 702, 915);
-        private static readonly Box OrgBox = new(340, 925, 702, 1187);
+        private static readonly Box Area = new(15, 780, 705, 1043);   // 두 판을 묶는 틀
+        private static readonly Box IyBox = new(15, 780, 357, 1043);
+        private static readonly Box OrgBox = new(365, 780, 705, 1043);
 
         private Art _art;
         private TMP_Text _like;
@@ -47,10 +46,7 @@ namespace Game.Module.Lobby
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.sizeDelta = new Vector2(Area.W, Area.H);
-            rt.anchoredPosition = toContent((Area.X0 + Area.X1) * 0.5f, (Area.Y0 + Area.Y1) * 0.5f + Dy);
-            // 무리 판까지 보이게 스크롤 내용을 늘린다(성급 띠는 성장 화면이 판 아래로 내린다)
-            float need = -(rt.anchoredPosition.y - Area.H * 0.5f) + 24f;
-            if (parent.sizeDelta.y < need) parent.sizeDelta = new Vector2(parent.sizeDelta.x, need);
+            rt.anchoredPosition = toContent((Area.X0 + Area.X1) * 0.5f, (Area.Y0 + Area.Y1) * 0.5f);
             var p = go.AddComponent<RbGrowthInyeonPanel>();
             p._art = art;
             p._like = like;
@@ -64,43 +60,43 @@ namespace Game.Module.Lobby
         private void Build()
         {
             var root = (RectTransform)transform;
-            // ── 인연 판 ──
+            // ── 인연 판(왼쪽) ──
             _iy = New("Inyeon", root, Area, IyBox);
             Img(_iy, IyBox, IyBox, _art.Panel, true).raycastTarget = true;
-            Img(_iy, IyBox, new Box(352, 595, 388, 621), _art.Link, false).preserveAspect = true;
-            _title = Txt(_iy, IyBox, new Box(396, 593, 610, 623), 22, Color.white, TextAlignmentOptions.MidlineLeft);
-            Img(_iy, IyBox, new Box(616, 596, 688, 620), _art.Step, true);
-            _step = Txt(_iy, IyBox, new Box(616, 596, 688, 620), 17, new Color(0.24f, 0.13f, 0.02f), TextAlignmentOptions.Center);
-            Img(_iy, IyBox, new Box(352, 628, 690, 770), _art.Box, true);
-            _partnerLabel = Txt(_iy, IyBox, new Box(578, 631, 688, 646), 13, new Color(0.7f, 0.74f, 0.84f), TextAlignmentOptions.Center);
-            Img(_iy, IyBox, new Box(366, 648, 458, 730), _art.FaceCyan, false);
-            _myFace = Img(_iy, IyBox, new Box(374, 655, 450, 723), null, false);
-            Img(_iy, IyBox, new Box(478, 674, 568, 706), _art.Chain, false).preserveAspect = true;
-            Img(_iy, IyBox, new Box(588, 648, 680, 730), _art.FaceGold, false);
-            _partnerFace = Img(_iy, IyBox, new Box(596, 655, 672, 723), null, false);
-            Img(_iy, IyBox, new Box(366, 741, 402, 759), _art.Toggle, false).preserveAspect = true;
-            _hint = Txt(_iy, IyBox, new Box(408, 738, 684, 762), 15, new Color(0.62f, 0.92f, 1f), TextAlignmentOptions.MidlineLeft);
-            _hint.fontSizeMin = 9f;   // 영어 「Active when the partner is a Sub」 가 가장 길다
-            Img(_iy, IyBox, new Box(352, 776, 690, 882), _art.Box, true);
-            _skillIcon = Img(_iy, IyBox, new Box(402, 782, 452, 832), null, false);
-            Img(_iy, IyBox, new Box(474, 799, 502, 817), _art.Arrow, false).preserveAspect = true;
-            _effectFace = Img(_iy, IyBox, new Box(522, 780, 574, 832), null, false);
-            _desc = Txt(_iy, IyBox, new Box(362, 834, 680, 880), 17, Color.white, TextAlignmentOptions.Center, wrap: true);
-            _rule = Txt(_iy, IyBox, new Box(352, 886, 690, 908), 13, new Color(0.7f, 0.74f, 0.84f), TextAlignmentOptions.Center);
+            Img(_iy, IyBox, new Box(26, 789, 52, 813), _art.Link, false).preserveAspect = true;
+            _title = Txt(_iy, IyBox, new Box(58, 787, 270, 815), 19, Color.white, TextAlignmentOptions.MidlineLeft);
+            Img(_iy, IyBox, new Box(276, 791, 346, 811), _art.Step, true);
+            _step = Txt(_iy, IyBox, new Box(276, 791, 346, 811), 15, new Color(0.24f, 0.13f, 0.02f), TextAlignmentOptions.Center);
+            Img(_iy, IyBox, new Box(24, 820, 348, 940), _art.Box, true);
+            _partnerLabel = Txt(_iy, IyBox, new Box(232, 822, 344, 834), 11, new Color(0.7f, 0.74f, 0.84f), TextAlignmentOptions.Center);
+            Img(_iy, IyBox, new Box(36, 834, 120, 904), _art.FaceCyan, false);
+            _myFace = Img(_iy, IyBox, new Box(43, 840, 113, 898), null, false);
+            Img(_iy, IyBox, new Box(138, 856, 222, 882), _art.Chain, false).preserveAspect = true;
+            Img(_iy, IyBox, new Box(248, 834, 332, 904), _art.FaceGold, false);
+            _partnerFace = Img(_iy, IyBox, new Box(255, 840, 325, 898), null, false);
+            Img(_iy, IyBox, new Box(36, 912, 66, 928), _art.Toggle, false).preserveAspect = true;
+            _hint = Txt(_iy, IyBox, new Box(72, 908, 344, 934), 14, new Color(0.62f, 0.92f, 1f), TextAlignmentOptions.MidlineLeft);
+            _hint.fontSizeMin = 8f;   // 영어 「Active when the partner is a Sub」 가 가장 길다
+            Img(_iy, IyBox, new Box(24, 946, 348, 1036), _art.Box, true);
+            _skillIcon = Img(_iy, IyBox, new Box(78, 950, 116, 988), null, false);
+            Img(_iy, IyBox, new Box(150, 961, 176, 977), _art.Arrow, false).preserveAspect = true;
+            _effectFace = Img(_iy, IyBox, new Box(204, 950, 242, 988), null, false);
+            _desc = Txt(_iy, IyBox, new Box(32, 990, 340, 1034), 15, Color.white, TextAlignmentOptions.Center, wrap: true);
+            _rule = null;   // 한 화면 시안에서 뺐다(인연 창을 누르면 단계 조건이 나온다)
 
-            // ── 무리 판 ──
+            // ── 무리 판(오른쪽) ──
             _org = New("Org", root, Area, OrgBox);
             Img(_org, OrgBox, OrgBox, _art.Panel, true);
-            _orgIcon = Img(_org, OrgBox, new Box(352, 931, 392, 967), null, false);
-            _orgTitle = Txt(_org, OrgBox, new Box(400, 932, 610, 966), 22, Color.white, TextAlignmentOptions.MidlineLeft);
-            Img(_org, OrgBox, new Box(616, 936, 688, 962), _art.Step, true);
-            _orgCount = Txt(_org, OrgBox, new Box(616, 936, 688, 962), 17, new Color(0.24f, 0.13f, 0.02f), TextAlignmentOptions.Center);
-            _orgDesc = Txt(_org, OrgBox, new Box(356, 970, 690, 992), 15, new Color(0.78f, 0.82f, 0.9f), TextAlignmentOptions.MidlineLeft);
-            Img(_org, OrgBox, new Box(354, 997, 690, 1057), _art.Box, true);
-            _orgTier2 = Txt(_org, OrgBox, new Box(372, 1000, 680, 1027), 18, Color.white, TextAlignmentOptions.MidlineLeft);
-            _orgTier3 = Txt(_org, OrgBox, new Box(372, 1027, 680, 1054), 18, Color.white, TextAlignmentOptions.MidlineLeft);
-            _members = New("Members", _org, OrgBox, new Box(354, 1062, 690, 1158));
-            _orgRule = Txt(_org, OrgBox, new Box(352, 1160, 690, 1181), 13, new Color(0.7f, 0.74f, 0.84f), TextAlignmentOptions.Center);
+            _orgIcon = Img(_org, OrgBox, new Box(376, 787, 404, 815), null, false);
+            _orgTitle = Txt(_org, OrgBox, new Box(410, 787, 614, 815), 19, Color.white, TextAlignmentOptions.MidlineLeft);
+            Img(_org, OrgBox, new Box(620, 791, 694, 811), _art.Step, true);
+            _orgCount = Txt(_org, OrgBox, new Box(620, 791, 694, 811), 15, new Color(0.24f, 0.13f, 0.02f), TextAlignmentOptions.Center);
+            _orgDesc = Txt(_org, OrgBox, new Box(378, 819, 692, 843), 14, new Color(0.78f, 0.82f, 0.9f), TextAlignmentOptions.MidlineLeft);
+            Img(_org, OrgBox, new Box(376, 849, 694, 907), _art.Box, true);
+            _orgTier2 = Txt(_org, OrgBox, new Box(390, 852, 684, 878), 16, Color.white, TextAlignmentOptions.MidlineLeft);
+            _orgTier3 = Txt(_org, OrgBox, new Box(390, 878, 684, 904), 16, Color.white, TextAlignmentOptions.MidlineLeft);
+            _members = New("Members", _org, OrgBox, new Box(376, 912, 694, 1008));
+            _orgRule = Txt(_org, OrgBox, new Box(370, 1012, 700, 1034), 12, new Color(0.7f, 0.74f, 0.84f), TextAlignmentOptions.Center);
         }
 
         /// <summary>그 호스트의 인연 · 무리를 채운다. 인연이 없으면 인연 판만, 무리가 없으면 무리 판만 숨긴다.</summary>
@@ -133,7 +129,7 @@ namespace Game.Module.Lobby
             SetFace(_skillIcon, activeIcon);
             _hint.text = Localize.FromTable("ui.rb.iy.hint", "짝 호스트를 보조로 편성하면 활성");
             _desc.text = BattleDirector.InyeonDesc(key);
-            _rule.text = Localize.FromTable("ui.rb.iy.rule", "<color=#FFD66B>★★</color> 단계 조건: 두 호스트 중 낮은 성급");
+            if (_rule != null) _rule.text = Localize.FromTable("ui.rb.iy.rule", "<color=#FFD66B>★★</color> 단계 조건: 두 호스트 중 낮은 성급");
         }
 
         private readonly List<string> _orgMembers = new();
@@ -168,7 +164,7 @@ namespace Game.Module.Lobby
 
             for (int i = _members.childCount - 1; i >= 0; i--) Destroy(_members.GetChild(i).gameObject);
             int n = Mathf.Min(_orgMembers.Count, 5);
-            float cell = n >= 5 ? 58f : 70f, pitch = n >= 5 ? 66f : 82f;
+            float cell = n >= 5 ? 52f : 62f, pitch = n >= 5 ? 62f : 78f;
             float x0 = -(pitch * (n - 1)) * 0.5f;
             for (int i = 0; i < n; i++)
             {
