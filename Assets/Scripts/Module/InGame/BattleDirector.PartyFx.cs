@@ -27,7 +27,47 @@ namespace Game.Module.InGame
 
         /// <summary>상시 혼줄 — 전투를 가리지 않게 얇고 옅게, 캐릭터 뒤(바닥 층)에.</summary>
         private const float LinkThickness = 6f;
-        private const float LinkAlpha = 0.42f;
+        /// <summary>상시 실 전용 그림(A안 곧은 토막 `fx_partythread_1`, 512 × 64 칸에 심 2~3 px)을 그리는 높이.</summary>
+        private const float ThreadThickness = 26f;
+
+        // ── 상시 실 = 마디 줄 (PD 2026-10-29 「계속 움직이니 자연스럽게 — 위치도 길이도 계속 바뀐다」) ──
+        // 그림 한 장을 두 점 사이에 늘이면 길이가 바뀔 때 물결 간격이 늘었다 줄고, 실이 막대기처럼 통째로 돈다.
+        // 마디 줄로 계산해 끝은 가슴에 붙이고 가운데는 늦게 따라오게 하면 끌리며 휘었다가 천천히 제자리를 찾는다.
+        private const int RopeNodes = 20;
+        /// <summary>마디 속도가 남는 비율 — 작으면 뻣뻣하고, 크면 오래 출렁인다.</summary>
+        private const float RopeDamping = 0.86f;
+        /// <summary>마디 사이 길이 = 곧은 길이 × 이 값. 1 보다 조금 커야 살짝 늘어진다.</summary>
+        private const float RopeSlack = 1.05f;
+        /// <summary>곧은 자리로 돌아가려는 힘 — 없으면 마디가 한쪽에 뭉친다.</summary>
+        private const float RopeStraighten = 0.05f;
+        /// <summary>줄 위를 흐르는 작은 일렁임. 길이와 상관없이 굽이 크기가 같다(굽이 수만 늘어난다).</summary>
+        private const float RopeWaveAmp = 4f;
+        private const float RopeWaveSpeed = 3.2f;
+        private const float RopeWaveLength = 140f;
+        /// <summary>한 틱에 이보다 멀리 끝이 튀면(순간 이동 · 방 바뀜) 줄을 곧게 새로 편다.</summary>
+        private const float RopeSnapJump = 160f;
+
+        private sealed class PartyRope
+        {
+            public readonly Vector2[] P = new Vector2[RopeNodes];
+            public readonly Vector2[] Prev = new Vector2[RopeNodes];
+            public readonly RectTransform[] Seg = new RectTransform[RopeNodes - 1];
+            public readonly Image[] Img = new Image[RopeNodes - 1];
+            public Unit Sub;
+            public bool Ready;
+            public bool Visible = true;
+        }
+
+        private readonly List<PartyRope> _ropes = new();
+        // 그리기용 재사용 버퍼 — 매 프레임 배열을 새로 만들지 않는다
+        private static readonly Vector2[] s_ropeRaw = new Vector2[RopeNodes];
+        private static readonly Vector2[] s_ropeDraw = new Vector2[RopeNodes];
+        /// <summary>PD 2026-10-29 「알파 좀 빼고」 — 0.42 에서 내렸다.</summary>
+        private const float LinkAlpha = 0.3f;
+        /// <summary>실을 따라 떠오르는 빛 점 — 실마다 이 간격으로 하나(PD 「파티클 같은 걸 약간만」).</summary>
+        private const float LinkMoteGap = 0.35f;
+        private static readonly Color LinkMoteColor = new(0.73f, 0.55f, 1f, 0.8f);
+        private float _linkMoteTimer;
         private const float ReleaseSeconds = 0.5f;
 
         private sealed class PartyLink
@@ -54,8 +94,6 @@ namespace Game.Module.InGame
 
         private readonly List<PartyLink> _partyLinks = new();
         private readonly List<PartyRelease> _partyReleases = new();
-        private readonly List<RectTransform> _linkRects = new();
-        private readonly List<Image> _linkImages = new();
 
         /// <summary>혼이 날아가는 중이면 새 빙의를 받지 않는다 — 빈 칸을 둘이 동시에 노린다.</summary>
         private bool PartyLinking => _partyLinks.Count > 0;
@@ -174,25 +212,137 @@ namespace Game.Module.InGame
             if (l.CordRect != null) Destroy(l.CordRect.gameObject);
         }
 
-        /// <summary>메인 ↔ 보조 상시 혼줄. 메인이 없으면(유령 · 빙의 중) 감춘다.</summary>
+        /// <summary>메인 ↔ 보조 상시 혼줄(마디 줄). 메인이 없으면(유령 · 빙의 중) 감춘다.</summary>
         private void DrawPartyLinks()
         {
             int need = _host != null && PartyOn ? _subs.Count : 0;
-            while (_linkRects.Count < need)
+            while (_ropes.Count < need) _ropes.Add(NewRope());
+
+            var thread = FxFrames("partythread");
+            var fallback = FxFrames("soulcord");
+            var segSprite = thread != null ? thread[0] : fallback != null ? fallback[0] : null;
+            float thick = thread != null ? ThreadThickness : LinkThickness;
+            float dt = Mathf.Min(Time.deltaTime, 0.05f);
+
+            _linkMoteTimer -= dt;
+            bool mote = _linkMoteTimer <= 0f;
+            if (mote) _linkMoteTimer = LinkMoteGap;
+
+            for (int i = 0; i < _ropes.Count; i++)
             {
-                var (rt, img) = NewCordImage("PartyLinkCord", _fieldLayer);
-                _linkRects.Add(rt);
-                _linkImages.Add(img);
-            }
-            for (int i = 0; i < _linkRects.Count; i++)
-            {
+                var r = _ropes[i];
                 var u = i < need ? _subs[i].U : null;
-                bool show = u != null;
-                if (_linkRects[i].gameObject.activeSelf != show) _linkRects[i].gameObject.SetActive(show);
-                if (!show) continue;
+                bool show = u != null && segSprite != null;
+                SetRopeVisible(r, show);
+                if (!show) { r.Ready = false; continue; }
+
+                var from = ChestOf(_host);
+                var to = ChestOf(u);
+                if (!r.Ready || r.Sub != u || (r.P[0] - from).sqrMagnitude > RopeSnapJump * RopeSnapJump
+                    || (r.P[RopeNodes - 1] - to).sqrMagnitude > RopeSnapJump * RopeSnapJump)
+                    LayRope(r, u, from, to);
+                StepRope(r, from, to);
+
                 // 혼줄이 숨쉬듯 아주 조금 짙어졌다 옅어진다 — 멈춘 선이면 바닥 무늬로 읽힌다
                 float a = LinkAlpha * (0.85f + 0.15f * Mathf.Sin(Time.time * 2.4f + i));
-                DrawCord(_linkRects[i], _linkImages[i], ChestOf(_host), ChestOf(u), LinkThickness, a);
+                DrawRope(r, segSprite, thick, a);
+
+                // 실 위 아무 마디에서 빛 점 하나가 천천히 떠올라 사라진다 — 양 끝(몸 가까이)은 피한다
+                if (mote && _pfx != null)
+                    _pfx.Spray(ParticleFxKind.HxDot, RopePoint(r, Random.Range(4, RopeNodes - 4)), Vector2.up, 35f, 1,
+                               10f, 22f, new Vector2(12f, 12f), 0.9f, LinkMoteColor);
+            }
+        }
+
+        private PartyRope NewRope()
+        {
+            var r = new PartyRope();
+            for (int k = 0; k < r.Seg.Length; k++) (r.Seg[k], r.Img[k]) = NewCordImage("PartyRopeSeg", _fieldLayer);
+            return r;
+        }
+
+        private static void SetRopeVisible(PartyRope r, bool on)
+        {
+            if (r.Visible == on) return;
+            r.Visible = on;
+            for (int k = 0; k < r.Seg.Length; k++) r.Seg[k].gameObject.SetActive(on);
+        }
+
+        /// <summary>곧게 새로 편다 — 처음 · 보조가 바뀜 · 끝이 멀리 튐.</summary>
+        private static void LayRope(PartyRope r, Unit sub, Vector2 from, Vector2 to)
+        {
+            for (int k = 0; k < RopeNodes; k++)
+                r.P[k] = r.Prev[k] = Vector2.Lerp(from, to, k / (RopeNodes - 1f));
+            r.Sub = sub;
+            r.Ready = true;
+        }
+
+        private static void StepRope(PartyRope r, Vector2 from, Vector2 to)
+        {
+            int last = RopeNodes - 1;
+            // 가운데 마디는 제 관성으로 움직인다 — 끝이 움직이면 늦게 따라오며 휜다
+            for (int k = 1; k < last; k++)
+            {
+                var v = (r.P[k] - r.Prev[k]) * RopeDamping;
+                r.Prev[k] = r.P[k];
+                r.P[k] += v;
+                r.P[k] = Vector2.Lerp(r.P[k], Vector2.Lerp(from, to, k / (float)last), RopeStraighten);
+            }
+            r.P[0] = r.Prev[0] = from;
+            r.P[last] = r.Prev[last] = to;
+
+            float rest = Vector2.Distance(from, to) / last * RopeSlack;
+            for (int it = 0; it < 4; it++)
+                for (int k = 0; k < last; k++)
+                {
+                    var d = r.P[k + 1] - r.P[k];
+                    float len = d.magnitude;
+                    if (len < 0.001f) continue;
+                    var fix = d * ((len - rest) / len * 0.5f);
+                    if (k > 0) r.P[k] += fix;
+                    if (k + 1 < last) r.P[k + 1] -= fix;
+                }
+        }
+
+        /// <summary>마디 자리 + 줄을 따라 흐르는 작은 일렁임(양 끝은 0 — 몸에 붙은 곳은 흔들리지 않는다).</summary>
+        private static Vector2 RopePoint(PartyRope r, int k)
+        {
+            int last = RopeNodes - 1;
+            var along = r.P[last] - r.P[0];
+            float total = along.magnitude;
+            if (total < 1f) return r.P[k];
+            var n = new Vector2(-along.y, along.x) / total;
+            float dist = total * k / last;
+            float w = Mathf.Sin(dist / RopeWaveLength * Mathf.PI * 2f - Time.time * RopeWaveSpeed)
+                      * RopeWaveAmp * Mathf.Sin(Mathf.PI * k / last);
+            return r.P[k] + n * w;
+        }
+
+        private static void DrawRope(PartyRope r, Sprite seg, float thickness, float alpha)
+        {
+            int segs = RopeNodes - 1;
+            // 그리는 점은 이웃과 평균 낸다 — 마디가 꺾인 자리가 각지게 보였다(2026-10-29 확대 검수)
+            for (int k = 0; k < RopeNodes; k++) s_ropeRaw[k] = RopePoint(r, k);
+            s_ropeDraw[0] = s_ropeRaw[0];
+            s_ropeDraw[segs] = s_ropeRaw[segs];
+            for (int k = 1; k < segs; k++)
+                s_ropeDraw[k] = (s_ropeRaw[k - 1] + s_ropeRaw[k] * 2f + s_ropeRaw[k + 1]) * 0.25f;
+            for (int k = 0; k < segs; k++)
+            {
+                var a = s_ropeDraw[k];
+                var b = s_ropeDraw[k + 1];
+                var d = b - a;
+                var rt = r.Seg[k];
+                rt.anchoredPosition = (a + b) * 0.5f;
+                // 마디끼리 1.5 px 겹친다 — 꺾인 곳에 틈이 보이지 않게
+                rt.sizeDelta = new Vector2(d.magnitude + 1.5f, thickness);
+                rt.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+                // 양 끝 두 마디는 옅게 — 몸에 붙는 쪽이 딱 끊기지 않게
+                int edge = Mathf.Min(k, segs - 1 - k);
+                float fade = edge == 0 ? 0.3f : edge == 1 ? 0.7f : 1f;
+                var img = r.Img[k];
+                img.sprite = seg;
+                img.color = new Color(1f, 1f, 1f, alpha * fade);
             }
         }
 
@@ -209,15 +359,17 @@ namespace Game.Module.InGame
         }
 
         /// <summary>혼줄 그림(가로 · 왼쪽 = 나온 곳)을 두 점 사이에 늘여 놓는다. 일렁임은 빠져나오기 혼줄과 같은 빠르기.</summary>
-        private void DrawCord(RectTransform rt, Image img, Vector2 from, Vector2 to, float thickness, float alpha)
+        private void DrawCord(RectTransform rt, Image img, Vector2 from, Vector2 to, float thickness, float alpha,
+                              Sprite[] frames = null, int loop = 3)
         {
-            var frames = FxFrames("soulcord");
-            if (rt == null || frames == null || frames.Length < 3) return;
+            // 빠져나오기 혼줄은 4 장 중 앞 3 장이 일렁임(4 번째는 끊김) — 상시 실은 4 장 모두 반복
+            frames ??= FxFrames("soulcord");
+            if (rt == null || frames == null || frames.Length < loop) return;
             var d = to - from;
             rt.anchoredPosition = (from + to) * 0.5f;
             rt.sizeDelta = new Vector2(d.magnitude, thickness);
             rt.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
-            img.sprite = frames[Mathf.FloorToInt(Time.time / SoulCordFrameSeconds) % 3];
+            img.sprite = frames[Mathf.FloorToInt(Time.time / SoulCordFrameSeconds) % loop];
             img.color = new Color(1f, 1f, 1f, alpha);
         }
 
@@ -232,10 +384,10 @@ namespace Game.Module.InGame
             for (int i = 0; i < _partyReleases.Count; i++)
                 if (_partyReleases[i].U != null) Destroy(_partyReleases[i].U.gameObject);
             _partyReleases.Clear();
-            for (int i = 0; i < _linkRects.Count; i++)
-                if (_linkRects[i] != null) Destroy(_linkRects[i].gameObject);
-            _linkRects.Clear();
-            _linkImages.Clear();
+            for (int i = 0; i < _ropes.Count; i++)
+                for (int k = 0; k < _ropes[i].Seg.Length; k++)
+                    if (_ropes[i].Seg[k] != null) Destroy(_ropes[i].Seg[k].gameObject);
+            _ropes.Clear();
         }
     }
 }
