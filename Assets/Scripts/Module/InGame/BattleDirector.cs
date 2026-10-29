@@ -9256,7 +9256,10 @@ namespace Game.Module.InGame
         /// 못 가진 몸은 1. 저장이 없으면 1.
         /// </summary>
         private int HostMastery
-            => _player != null && _host != null ? _player.SkillLevel(_host.Key, Game.User.HostSkillSlot.Active) : 1;
+            => _player != null && SkillCasterKey != null ? _player.SkillLevel(SkillCasterKey, Game.User.HostSkillSlot.Active) : 1;
+
+        /// <summary>지금 스킬을 쓰는 몸 — 보조가 자동 시전하는 동안은 그 보조(자기 호스트의 스킬 레벨을 따른다), 아니면 메인.</summary>
+        private string SkillCasterKey => _subCaster != null ? _subCaster.Key : _host != null ? _host.Key : null;
 
         private int MasteryMaxOrDefault => _player != null ? _player.SkillLevelMax(Game.User.HostSkillSlot.Active) : 10;
 

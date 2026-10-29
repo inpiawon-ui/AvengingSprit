@@ -10,7 +10,7 @@ namespace Game.Module.InGame
     ///   · 태그 시너지(스탯)와 겹치지 않는다 — 인연은 스킬만 바꾼다.
     /// 액티브가 실제로 어떻게 바뀌는지는 각 스킬 함수가 `InyeonOn(me)` 을 보고 정한다.
     ///
-    /// ⚠ 이름 · 설명은 아직 한국어만 코드에 있다 — 언어팩 키(`inyeon.{키}.name/.desc`)로 옮길 것(스킬 문자열 작업이 끝난 뒤).
+    /// 이름은 언어팩 `inyeon.{키}.name` 으로 번역한다. ⚠ 설명(`Desc`)은 아직 한국어만 — `inyeon.{키}.desc` 로 옮길 것.
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -53,7 +53,12 @@ namespace Game.Module.InGame
         private static Inyeon InyeonOf(string key) => key != null && s_inyeon.TryGetValue(key, out var y) ? y : null;
 
         /// <summary>그 호스트의 인연 이름(없으면 null) — 화면이 묻는다.</summary>
-        public static string InyeonName(string key) => InyeonOf(key)?.Name;
+        public static string InyeonName(string key)
+        {
+            var y = InyeonOf(key);
+            // 번역은 언어팩 `inyeon.{키}.name`(5언어) — 표의 한국어가 원문
+            return y == null ? null : Game.Module.Common.Localize.FromTable($"inyeon.{key}.name", y.Name);
+        }
 
         public static string InyeonDesc(string key) => InyeonOf(key)?.Desc;
 

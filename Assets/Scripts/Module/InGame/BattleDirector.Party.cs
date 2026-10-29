@@ -102,6 +102,8 @@ namespace Game.Module.InGame
         }
 
         private readonly List<PartySub> _subs = new();
+        /// <summary>보조가 액티브를 자동으로 쓰는 동안 그 보조(스킬 레벨 · 배율이 보조 호스트를 따르게).</summary>
+        private Unit _subCaster;
         private int _mainSwaps;
         private int _subSwaps;
         /// <summary>메인 사망 뒤 A(새 빙의)를 골랐다 — 다음 빙의에 이 값을 치른다.</summary>
@@ -500,7 +502,10 @@ namespace Game.Module.InGame
             ShowSubSkillName(u);
             if (SubSafeSkills.Contains(u.Key))
             {
-                CastActiveSkill(u);
+                // 보조는 자기 호스트의 액티브 레벨로 쓴다(메인 레벨을 빌리지 않는다 — 육성 개편 2026-10-29)
+                _subCaster = u;
+                try { CastActiveSkill(u); }
+                finally { _subCaster = null; }
                 return;
             }
             // 보조 전용 「연사」 — 자기 몸에 거는 스킬 대신 가까운 적에게 세 번 몰아친다
