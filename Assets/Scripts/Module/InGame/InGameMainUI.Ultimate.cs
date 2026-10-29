@@ -43,6 +43,7 @@ namespace Game.Module.InGame
                     if (offBtn != null) offBtn.interactable = true;
                     if (_ultButtonImage != null) _ultButtonImage.color = UltUsedTint;
                     SetUltGlow(false);
+                    SetUltLockHint(false);
                 }
                 return;
             }
@@ -71,12 +72,44 @@ namespace Game.Module.InGame
             }
             _ui.SetText("UltButtonLabel", trial ? Localize.Get("ui.ingame.ult_trial")
                                          : spent ? Localize.Get("ui.ingame.ult_locked") : UltLabel);
+            SetUltLockHint(spent);
             // ⚠ 다 쓴 필살기도 interactable 은 켜 둔다 — 버튼의 비활성 색(반투명)이 회색 위에 겹쳐 버튼이 통째로 사라져 보였다(녹화 tb_medium1).
             //   눌러도 `TryUltimate` 가 1회 규칙으로 거른다
             var btn = _ui.Get<Button>("UltButton");
             if (btn != null) btn.interactable = true;
             if (_ultButtonImage != null) _ultButtonImage.color = ready ? Color.white : UltUsedTint;
             SetUltGlow(ready);
+        }
+
+        private TMPro.TMP_Text _ultLockText;
+
+        /// <summary>
+        /// 잠긴 필살기 단추 아래쪽에 「호스트 해금 후 해제」 두 줄(PD 2026-10-30 「그냥 봐서는 왜 잠겼는지 모르겠다」).
+        /// RE:BORN 판은 단추 글자 칸(`UltButtonLabel`)을 꺼 둬서 자물쇠 그림만 보였다.
+        /// 같은 모양의 「호스트 없음」 칸(`UltNoBodyText`)을 처음 한 번 복제해 쓴다 — 그 칸은 언어팩 글자가 고정으로 붙어 있어 같이 쓰면 다툰다.
+        /// </summary>
+        private void SetUltLockHint(bool on)
+        {
+            if (_ultLockText == null)
+            {
+                if (!on) return;
+                var src = _ui.Get<TMPro.TMP_Text>("UltNoBodyText");
+                if (src == null) return;
+                var go = Instantiate(src.gameObject, src.transform.parent);
+                go.name = "UltLockText";
+                if (go.TryGetComponent<LocalizedText>(out var fixedText)) Destroy(fixedText);
+                var rt = (RectTransform)go.transform;
+                rt.sizeDelta = new Vector2(96f, 44f);
+                rt.anchoredPosition = ((RectTransform)src.transform).anchoredPosition + new Vector2(0f, -22f);   // 자물쇠를 다 가리지 않게 아래쪽
+                _ultLockText = go.GetComponent<TMPro.TMP_Text>();
+                _ultLockText.enableAutoSizing = true;
+                _ultLockText.fontSizeMin = 11f;
+                _ultLockText.fontSizeMax = 16f;
+                _ultLockText.lineSpacing = -12f;
+                _ultLockText.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            }
+            if (on) _ultLockText.text = Localize.Get("ui.ingame.ult_locked_hint");   // 켤 때마다 — 언어를 바꿨어도 지금 언어로
+            _ultLockText.gameObject.SetActive(on);
         }
 
         private Image _ultCooldownFill;

@@ -12813,3 +12813,11 @@ MonoBehaviour:
     _en: Active when the same group is your Main and Subs
     _zhHant: "\u540C\u7FA4\u5BBF\u4E3B\u4E00\u8D77\u7DE8\u70BA\u4E3B\u63A7 \xB7 \u526F\u624B\u5373\u555F\u52D5"
     _zhHans: "\u540C\u7FA4\u5BBF\u4E3B\u4E00\u8D77\u7F16\u4E3A\u4E3B\u63A7 \xB7 \u526F\u624B\u5373\u542F\u52A8"
+  - _key: ui.ingame.ult_locked_hint
+    _ko: "\uD638\uC2A4\uD2B8 \uD574\uAE08 \uD6C4\n\uD574\uC81C"
+    _ja: "\u30DB\u30B9\u30C8\u89E3\u653E\u3067\n\u89E3\u9664"
+    _en: 'Unlock host
+
+      to use'
+    _zhHant: "\u89E3\u9396\u5BBF\u4E3B\u5F8C\n\u89E3\u9664"
+    _zhHans: "\u89E3\u9501\u5BBF\u4E3B\u540E\n\u89E3\u9664"
