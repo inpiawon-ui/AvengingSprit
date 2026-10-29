@@ -252,7 +252,10 @@ namespace Game.Editor.ReBorn
             Text(Local(Node(star, "GrwStarRank"), px0, py0, px1, py1, 120, 1884, 420, 1946), null, "성급 2 › 3", 48, White, TA.Left, heavy: true);
             var where = Local(Node(star, "GrwStarWhere"), px0, py0, px1, py1, 428, 1884, 634, 1950);
             Btn(where, "Components/rb_btn_chip");
-            Text(Stretch(Node(where, "GrwStarWhereText")), "ui.rb.growth.shard_where", "조각 획득처 ›", 34, White, TA.Center, heavy: true);
+            // 단추 테(9분할 24) 안쪽에만 — 글자가 테를 넘어 삐져나가 보였다(PD 2026-10-30). 길면 16 까지 줄인다
+            var whereText = Text(Stretch(Node(where, "GrwStarWhereText")), "ui.rb.growth.shard_where", "조각 획득처 ›", 34, White, TA.Center, heavy: true);
+            whereText.margin = new Vector4(12f, 0f, 12f, 0f);
+            whereText.fontSizeMin = 16f;
             Bar(Local(Node(star, "GrwStarBar"), px0, py0, px1, py1, 124, 1958, 426, 1972), "GrwStarBarFill", "Components/rb_bar_fill_cyan");
             Text(Local(Node(star, "GrwStarInfo"), px0, py0, px1, py1, 120, 1976, 632, 2018), null, "12/20 · 체력·공격 +7%", 38, White, TA.Left).fontSizeMin = 26f * S;
 

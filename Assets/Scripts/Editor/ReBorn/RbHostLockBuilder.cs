@@ -65,7 +65,9 @@ namespace Game.Editor.ReBorn
             Text(PlaceIn(Node(body, "LckShardCount"), T, 60, 1640, 680, 1704), null, "조각 12 /20", 60, White, TA.Left, number: true);
             var where = PlaceIn(Node(body, "LckWhere"), T, 768, 1607, 1018, 1733);
             Btn(where, "Components/rb_btn_secondary");
-            Text(Stretch(Node(where, "LckWhereText")), "ui.rb.growth.shard_where", "조각 획득처 ›", 40, White, TA.Center, heavy: true).margin = new Vector4(10f, 0f, 10f, 0f);
+            var lckWhere = Text(Stretch(Node(where, "LckWhereText")), "ui.rb.growth.shard_where", "조각 획득처 ›", 40, White, TA.Center, heavy: true);
+            lckWhere.margin = new Vector4(12f, 0f, 12f, 0f);   // 단추 테 안쪽에만(PD 2026-10-30 「삐져나간다」)
+            lckWhere.fontSizeMin = 16f;
             Bar(PlaceIn(Node(body, "LckBar"), T, 60, 1764, 1020, 1784), "LckBarFill", "Components/rb_bar_fill_cyan");
             Text(PlaceIn(Node(body, "LckSources"), T, 60, 1806, 1020, 1852), "ui.rb.lock.sources", "얻는 곳: 소환 · 망령의 탑 · 망령의 밤", 42, Dim, TA.Left, heavy: true);
 
