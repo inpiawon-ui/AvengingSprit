@@ -56,7 +56,7 @@ namespace Game.Module.InGame
         /// <summary>보조의 공격 속도(메인 대비). 0.5 = 두 번 칠 시간에 한 번.</summary>
         public const float SubRateMul = 0.5f;
         /// <summary>보조의 공격 사거리(메인 대비). 능력치는 다 낮추고 사거리만 넓힌다(PD 2026-10-29).</summary>
-        public const float SubRangeMul = 1.3f;
+        public const float SubRangeMul = 0.65f;   // 1.3 → 0.65(PD 2026-10-29 「보조 사거리가 너무 길다 — 반으로 · 보조 위주로 게임이 굴러가면 안 된다」)
         /// <summary>보조 크기 배율(PD 2026-10-29 「0.8 정도」).</summary>
         public const float SubScale = 0.8f;
         /// <summary>보조가 메인에게서 벗어나지 않는 반경(m). 보면서 잡는 값(PD 2026-10-29).</summary>
@@ -263,47 +263,7 @@ namespace Game.Module.InGame
         // 선택창 — 메인과 바꾸기 · 보조 1 · 2 와 바꾸기(빈 칸이면 넣기) · 놔두기
         // ─────────────────────────────────────────
 
-        private void OpenPartyChoice(Unit target)
-        {
-            _partyPick = target;
-            var entry = _player != null ? _player.GetHost(target.Key) : null;
-            string name = entry != null ? entry.DisplayName : target.DisplayName;
-            int mainLeft = PartyRule.MainSwapMax - _mainSwaps;
-            int subLeft = PartyRule.SubSwapMax - _subSwaps;
-            var opts = new List<PartyOption>();
-
-            opts.Add(new PartyOption(
-                Tf("ui.party.choice.main_swap", PartyRule.CostMainSwap, mainLeft),
-                Tf("ui.party.choice.main_swap_desc", HostName(_host.Key), name),
-                mainLeft > 0 && _ghostHp > PartyRule.CostMainSwap,
-                () => PartySwapMain(target)));
-
-            for (int i = 0; i < PartyRule.SubSlots; i++)
-            {
-                int slot = i;
-                if (i < _subs.Count)
-                {
-                    string old = HostName(_subs[i].U.Key);
-                    opts.Add(new PartyOption(
-                        Tf(i == 0 ? "ui.party.choice.sub1_swap" : "ui.party.choice.sub2_swap", PartyRule.CostSubSwap, subLeft),
-                        Tf("ui.party.choice.sub_swap_desc", old, name),
-                        subLeft > 0 && _ghostHp > PartyRule.CostSubSwap,
-                        () => PartySetSub(target, slot, PartyRule.CostSubSwap), true));
-                }
-                else
-                {
-                    opts.Add(new PartyOption(
-                        Tf("ui.party.choice.sub_add", i + 1, PartyRule.CostSub),
-                        Tf("ui.party.choice.sub_add_desc", name),
-                        _ghostHp > PartyRule.CostSub,
-                        () => PartySetSub(target, slot, PartyRule.CostSub), true));
-                    break;   // 빈 칸은 앞에서부터 하나만 보인다
-                }
-            }
-            opts.Add(new PartyOption(Tx("ui.party.choice.leave"), Tx("ui.party.choice.leave_desc"), true, null));
-
-            ShowPartyPopup(Tf("ui.party.choice.title", name), Tf("ui.party.ghost_left", _ghostHp), opts, -1f);
-        }
+        // 선택창은 BattleDirector.PartyPopup(시안 F_choice 그대로)
 
         private string HostName(string key)
         {
@@ -359,38 +319,7 @@ namespace Game.Module.InGame
         // 메인 사망 — 8초 안에 A · B · C
         // ─────────────────────────────────────────
 
-        /// <summary>LoseHost 끝에서 부른다. 유령 HP 가 남았을 때만 고른다.</summary>
-        private void OpenPartyDeath(string lostKey, Vector2 pos)
-        {
-            if (_ghostHp <= 0) return;
-            var opts = new List<PartyOption>();
-            opts.Add(new PartyOption(
-                Tf("ui.party.death.new", PartyRule.CostDeathNew),
-                Tx("ui.party.death.new_desc"),
-                _ghostHp > PartyRule.CostDeathNew,
-                () => _partyPossessCost = PartyRule.CostDeathNew));
-            for (int i = 0; i < _subs.Count; i++)
-            {
-                int slot = i;
-                opts.Add(new PartyOption(
-                    Tf("ui.party.death.promote", i + 1, HostName(_subs[i].U.Key), PartyRule.CostDeathPromote),
-                    Tx("ui.party.death.promote_desc"),
-                    _ghostHp > PartyRule.CostDeathPromote,
-                    () => PartyPromote(slot, pos)));
-            }
-            opts.Add(new PartyOption(
-                Tf("ui.party.death.revive", HostName(lostKey), PartyRule.CostDeathRevive),
-                Tx("ui.party.death.revive_desc"),
-                _ghostHp > PartyRule.CostDeathRevive,
-                () => PartyRevive(lostKey, pos)));
-
-            bool any = false;
-            for (int i = 0; i < opts.Count; i++) any |= opts[i].Enabled;
-            if (!any) return;   // 고를 길이 없다 — 유령으로 남고 다음 틱 규칙대로
-            ShowPartyPopup(Tf("ui.party.death.title", HostName(lostKey), PartyRule.CostDeath),
-                           Tf("ui.party.death.sub", _ghostHp, PartyRule.DeathChoiceSeconds),
-                           opts, PartyRule.DeathChoiceSeconds);
-        }
+        // 사망창은 BattleDirector.PartyPopup(시안 F_death 그대로)
 
         private void PartyPromote(int slot, Vector2 pos)
         {
@@ -568,7 +497,7 @@ namespace Game.Module.InGame
         {
             if (_partyTimer < 0f) return;
             _partyTimer -= Time.unscaledDeltaTime;
-            if (_partyTimerText != null) _partyTimerText.text = Tf("ui.party.timer", Mathf.Max(0f, _partyTimer));
+            if (_partyTimerText != null) _partyTimerText.text = Tf("ui.party.p2.seconds", Mathf.Max(0f, _partyTimer));
             if (_partyTimerFill != null) _partyTimerFill.fillAmount = Mathf.Clamp01(_partyTimer / Mathf.Max(0.01f, _partyTimerTotal));
             if (_partyTimer > 0f) return;
             ClosePartyPopup();

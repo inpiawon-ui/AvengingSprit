@@ -62,3 +62,37 @@ UI-PARTY-11  party_timer_ring      사망창 원형 시계 테(채움은 코드�
 바탕: 분홍(#FF00FF) — 받으면 뚫는다
 상태: 발주
 ```
+
+### 창 안 부품 — 2차(PD 2026-10-29 「시안을 컨펌했는데 너무 대충 적용」)
+창 판 · 줄만 받고 창 **안의 부품**을 빠뜨려 선택 · 사망 · 시너지 설명 창이 글자 목록이 됐다. 시안 요소 하나하나를 부품으로 받는다.
+앵커: `ref/party_ui_1029/anchor/p4_*.png` (시안 3배 크롭 · `Tools/partyui_popup2_anchor.py`)
+
+시트 A — `in/parts_partyui_popup2.png` (선택창 · 사망창)
+UI-PARTY-12  party_tag_gold / party_tag_red     이름 아래 태그 칩 — 금 테(상성) · 붉은 테(시너지 무리). 9분할 가로 · 글자는 코드. 앵커 p4_choice_tags
+UI-PARTY-13  party_box_cyan / party_box_gray    정사각 얼굴 · 스킬 칸 — 청록 테 · 회색 테(못 고름). 약 64×64. 앵커 p4_choice_skillbox · p4_death_rows
+UI-PARTY-14  party_hp_pill                      「남은 유령 HP 35」 어두운 남색 칸. 9분할 가로. 앵커 p4_choice_hppill
+UI-PARTY-15  party_badge_best                   「추천」 금빛 둥근 딱지(글자는 코드). 앵커 p4_choice_badge
+UI-PARTY-16  party_divider_v                    머리 칸 세로 구분선(얇은 청록). 앵커 p4_choice_header
+UI-PARTY-17  party_death_splat                  「메인 사망」 뒤 피 튄 판(붉은 얼룩 · 글자 없음). 앵커 p4_death_title
+UI-PARTY-18  party_chain                        못 고름 줄 오른쪽을 감는 사슬 장식(자물쇠 빼고). 앵커 p4_death_chain
+UI-PARTY-19  party_best_hex                     사망창 추천 줄 왼쪽 육각 꼬리표(왕관 + 아래 「추천」 글자 자리 비움). 앵커 p4_death_rows
+
+시트 B — `in/parts_partyui_popup3.png` (시너지 설명)
+UI-PARTY-20  syn_pop_panel / syn_pop_tail       말풍선 판(9분할) + 왼쪽 위 꼬리(따로). 앵커 p4_syn_popover
+UI-PARTY-21  syn_tier_on / syn_tier_off         단계 줄 — 켜짐(금 테 + 호박색 안) · 꺼짐(남색 + 회청 테). 9분할 가로. 앵커 p4_syn_tiers
+UI-PARTY-22  syn_more_chip                      「1명 더」 회청 테 작은 칩. 앵커 p4_syn_tiers
+UI-PARTY-23  syn_member_gold / syn_member_purple / syn_member_gray   무리 몸 칸 — 메인(금) · 보조(보라) · 아직 없음(회색). 약 72×72. 앵커 p4_syn_members
+UI-PARTY-24  syn_member_badge                   칸 오른쪽 위 금빛 작은 딱지(「M」 · 「1」 글자는 코드). 앵커 p4_syn_members
+UI-PARTY-25  party_divider_h                    아래 규칙 줄 위 가는 가로선. 앵커 p4_syn_popover
+
+시트 C — `in/parts_partyui_popup4.png`
+UI-PARTY-10b party_row_gold                   추천 금 테 줄에서 왕관 꼬리표를 뺀 것(선택창 추천 줄 · 사망창 추천 줄 + UI-PARTY-19). 앵커 p4_choice_best
+UI-PARTY-26  party_ghost_mini                 사망창 비용 앞 작은 유령 얼굴. 앵커 p4_death_rows
+
+시트 D — `in/parts_partyui_popup5.png` (빙의 가능 표시 — 정답 S1b)
+UI-PARTY-27  possess_pill                   보라 알약 꼬리표 + 유령 얼굴(「빙의 가능」 글자는 코드). 앵커 p4_possess_bubble
+UI-PARTY-28  possess_bubble_light           밝은 회백 말풍선 · 왼쪽 아래 꼬리(「데려오면 ▶ / 무리 2/3 · 효과」 글자는 코드). 앵커 p4_possess_bubble
+
+시트 E — `in/parts_partyui_popup7.png`
+UI-PARTY-10c party_row_locked              못 고름 줄 — 자물쇠 뺀 것(자물쇠는 시안처럼 사슬 왼쪽 끝에 따로). 앵커 p4_death_rows C 줄
+UI-PARTY-29  party_lock                    작은 은색 자물쇠. 앵커 p4_death_rows

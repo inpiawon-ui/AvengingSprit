@@ -1931,3 +1931,39 @@ inyeon.robot.desc	포탑이 꿰뚫는 레이저를 쏜다	タレットが貫通�
 inyeon.baseball.desc	라인 드라이브에 맞은 적이 언다	ライナーが当たった敵が凍る	Foes hit by the line drive freeze	被平飛球擊中的敵人會凍結	被平飞球击中的敌人会冻结
 inyeon.snowwoman.desc	눈보라 범위 2배	吹雪の範囲2倍	Blizzard range ×2	暴風雪範圍2倍	暴风雪范围2倍
 inyeon.vampire.desc	박쥐가 두 배 · 중독된 적에게서 더 빨아 온다	コウモリが2倍・毒状態の敵からさらに吸い取る	Twice the bats · Drain more from poisoned foes	蝙蝠數量兩倍 · 從中毒敵人身上吸取更多	蝙蝠数量两倍 · 从中毒敌人身上吸取更多
+ui.party.p2.main_swap	<color=#FFC94A>메인</color>과 바꾸기	<color=#FFC94A>メイン</color>と交代	Swap with <color=#FFC94A>Main</color>	與<color=#FFC94A>主控</color>交換	与<color=#FFC94A>主控</color>交换
+ui.party.p2.sub_swap	<color=#5FD8FF>보조 {0}</color> 과 바꾸기	<color=#5FD8FF>サブ{0}</color>と交代	Swap with <color=#5FD8FF>Sub {0}</color>	與<color=#5FD8FF>副手{0}</color>交換	与<color=#5FD8FF>副手{0}</color>交换
+ui.party.p2.sub_add	<color=#5FD8FF>보조 {0}</color> 에 넣기	<color=#5FD8FF>サブ{0}</color>に入れる	Add as <color=#5FD8FF>Sub {0}</color>	放入<color=#5FD8FF>副手{0}</color>	放入<color=#5FD8FF>副手{0}</color>
+ui.party.p2.leave	놔두기	見送る	Leave it	放著不管	放着不管
+ui.party.p2.left_times	(남은 {0}회)	(残り{0}回)	({0} left)	(剩餘{0}次)	(剩余{0}次)
+ui.party.p2.hp_left	남은 유령 HP	残りゴーストHP	Ghost HP left	剩餘幽靈HP	剩余幽灵HP
+ui.party.p2.hp_keep	유령 HP {0} 유지	ゴーストHP {0} 維持	Keep Ghost HP {0}	維持幽靈HP {0}	维持幽灵HP {0}
+ui.party.p2.sub_skill	보조 자동 스킬	サブ自動スキル	Sub Auto Skill	副手自動技能	副手自动技能
+ui.party.p2.best	추천	おすすめ	Best	推薦	推荐
+ui.party.p2.death_title	메인 사망	メイン死亡	Main Down	主控陣亡	主控阵亡
+ui.party.p2.death_sub	{0}초 안에 선택	{0}秒以内に選択	Choose within {0}s	{0}秒內選擇	{0}秒内选择
+ui.party.p2.seconds	{0:0.0}초	{0:0.0}秒	{0:0.0}s	{0:0.0}秒	{0:0.0}秒
+ui.party.p2.death_new	근처 호스트에 새로 빙의	近くのホストに新たに憑依	Possess a nearby host	附身附近的宿主	附身附近的宿主
+ui.party.p2.death_promote	보조 {0} 「{1}」 을(를) 메인으로	サブ{0}「{1}」をメインに	Make Sub {0} "{1}" Main	將副手{0}「{1}」設為主控	将副手{0}「{1}」设为主控
+ui.party.p2.death_revive	그 자리에서 {0} 부활	その場で{0}を復活	Revive {0} here	原地復活{0}	原地复活{0}
+ui.party.p2.hp_short	유령 HP 부족	ゴーストHP不足	Not enough Ghost HP	幽靈HP不足	幽灵HP不足
+ui.party.p2.hp_after	남는 유령 HP	残るゴーストHP	Ghost HP after	剩下幽靈HP	剩下幽灵HP
+ui.party.p2.tier	{0}명 — {1}	{0}人 — {1}	{0} — {1}	{0}人 — {1}	{0}人 — {1}
+ui.party.p2.more	{0}명 더	あと{0}人	{0} more	再{0}人	再{0}人
+ui.party.p2.eff.gang	치명타 +{0}%	クリティカル +{0}%	Crit +{0}%	暴擊 +{0}%	暴击 +{0}%
+ui.party.p2.eff.commando	최대 체력 +{0}%	最大HP +{0}%	Max HP +{0}%	最大體力 +{0}%	最大体力 +{0}%
+ui.party.p2.eff.martial	회피 +{0}%	回避 +{0}%	Dodge +{0}%	閃避 +{0}%	闪避 +{0}%
+ui.party.p2.eff.monster	처치마다 체력 {0}% 회복	撃破ごとにHP {0}%回復	Heal {0}% HP per kill	每次擊倒回復{0}%體力	每次击倒回复{0}%体力
+ui.party.p2.eff.mystic	보조 스킬 간격 −{0}%	サブスキル間隔 −{0}%	Sub skill interval −{0}%	副手技能間隔 −{0}%	副手技能间隔 −{0}%
+ui.party.p2.syn_rule	같은 무리 2명 = 약 · 3명 = 강 · 메인에게 걸린다	同じ群れ2人=弱・3人=強・メインにかかる	Same group: 2 = weak · 3 = strong · applies to Main	同群2人=弱 · 3人=強 · 作用於主控	同群2人=弱 · 3人=强 · 作用于主控
+ui.party.p2.inyeon_rule	짝을 보조로 데려오면 켜진다 · 메인 스킬이 바뀐다	相棒をサブに入れると発動・メインのスキルが変わる	Bring a partner as Sub to activate · changes Main skill	將搭檔帶為副手即啟動 · 主控技能改變	将搭档带为副手即启动 · 主控技能改变
+ui.party.tag.gang.desc	뒷골목 갱단 — 급소를 노린다	路地裏のギャング — 急所を狙う	Back-alley gang — goes for weak spots	暗巷幫派 — 專攻要害	暗巷帮派 — 专攻要害
+ui.party.tag.commando.desc	중화기로 무장한 특수 부대	重火器で武装した特殊部隊	Special forces armed with heavy weapons	以重火器武裝的特種部隊	以重火器武装的特种部队
+ui.party.tag.martial.desc	맨몸 · 칼 · 방망이로 싸우는 무술가	素手・刀・バットで戦う武術家	Fighters with fists, blades and bats	以赤手 · 刀 · 球棒戰鬥的武術家	以赤手 · 刀 · 球棒战斗的武术家
+ui.party.tag.monster.desc	사람이 아닌 것들 — 쓰러뜨릴수록 기운을 얻는다	人ならざるもの — 倒すほど力を得る	Not human — grows stronger with each kill	非人之物 — 擊倒越多越有力	非人之物 — 击倒越多越有力
+ui.party.tag.mystic.desc	영혼과 술법을 다루는 자들	魂と術を操る者たち	Those who wield spirits and sorcery	操縱靈魂與術法之人	操纵灵魂与术法之人
+ui.party.p2.possess_tag	빙의 가능	憑依可能	Possessable	可附身	可附身
+ui.party.p2.hint	{0} {1}/3 · {2}	{0} {1}/3・{2}	{0} {1}/3 · {2}	{0} {1}/3 · {2}	{0} {1}/3 · {2}
+ui.rb.growth.inyeon_kind	인연 · {0}단	絆・{0}段	Bond · Tier {0}	羈絆 · {0}階	羁绊 · {0}阶
+ui.rb.growth.inyeon_how	켜는 법	発動条件	How to activate	啟動方式	启动方式
+ui.rb.growth.inyeon_how_desc	짝 {0} 을(를) 보조로 데려가면 켜진다 · 단계는 두 호스트 중 낮은 성급을 따른다	相棒{0}をサブに入れると発動・段階は2人のうち低い方の星に従う	Bring partner {0} as a Sub to activate · Tier follows the lower ★ of the two hosts	將搭檔{0}帶為副手即啟動 · 階段依兩名宿主中較低的星級	将搭档{0}带为副手即启动 · 阶段依两名宿主中较低的星级

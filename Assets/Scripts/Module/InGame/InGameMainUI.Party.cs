@@ -33,6 +33,16 @@ namespace Game.Module.InGame
         private readonly TextMeshProUGUI[] _partySynName = new TextMeshProUGUI[PartySynCells];
         private readonly TextMeshProUGUI[] _partySynLabel = new TextMeshProUGUI[PartySynCells];
         private readonly List<BattleDirector.PartySynCell> _partyCells = new();
+        private readonly GameObject[] _partySynGlow = new GameObject[PartySynCells];
+        private Material _partySynGray;
+
+        private static void CellButton(GameObject go, UnityEngine.Events.UnityAction act)
+        {
+            if (!go.TryGetComponent<Button>(out var b)) b = go.AddComponent<Button>();
+            if (go.TryGetComponent<Image>(out var img)) { img.raycastTarget = true; b.targetGraphic = img; }
+            b.transition = Selectable.Transition.None;
+            b.onClick.AddListener(act);
+        }
 
         private void EnsurePartyHud()
         {
@@ -50,17 +60,27 @@ namespace Game.Module.InGame
                 if (btn != null) btn.onClick.AddListener(() => _battle?.PartyTapSub(slot));
             }
             _partySynColumn = _ui.Get<RectTransform>("PartySynColumn");
+            _partySynGray = _ui.Get<Image>("PartySynGrayMat")?.material;
             var colBtn = _ui.Get<Button>("PartySynColumn");
-            if (colBtn != null) colBtn.onClick.AddListener(() => _battle?.PartyOpenSynergyDetail());
+            // 칸마다 눌러서 그 칸 옆에 설명(시안 F_syndetail) — 줄 전체 버튼은 끈다
+            if (colBtn != null) colBtn.enabled = false;
             _partyInyeonCell = _ui.Get<RectTransform>("PartyInyeonCell")?.gameObject;
             _partyInyeonFace = _ui.Get<Image>("PartyInyeonFace");
             _partyInyeonLabel = _ui.Get<TextMeshProUGUI>("PartyInyeonLabel");
+            if (_partyInyeonCell != null) CellButton(_partyInyeonCell, () => _battle?.PartyOpenSynergyDetail(null, _partyInyeonCell.transform as RectTransform));
             for (int i = 0; i < PartySynCells; i++)
             {
                 _partySynBg[i] = _ui.Get<Image>($"PartySynCell{i}");
                 _partySynIcon[i] = _ui.Get<Image>($"PartySynIcon{i}");
                 _partySynName[i] = _ui.Get<TextMeshProUGUI>($"PartySynName{i}");
                 _partySynLabel[i] = _ui.Get<TextMeshProUGUI>($"PartySynLabel{i}");
+                _partySynGlow[i] = _ui.Get<RectTransform>($"PartySynGlow{i}")?.gameObject;
+                int cell = i;
+                if (_partySynBg[i] != null)
+                    CellButton(_partySynBg[i].gameObject, () =>
+                    {
+                        if (cell < _partyCells.Count) _battle?.PartyOpenSynergyDetail(_partyCells[cell].Tag, _partySynBg[cell].rectTransform);
+                    });
             }
         }
 
@@ -181,7 +201,12 @@ namespace Game.Module.InGame
             if (iy != null)
             {
                 if (_partyInyeonFace != null) { _partyInyeonFace.sprite = FaceOf(iy); _partyInyeonFace.enabled = _partyInyeonFace.sprite != null; }
-                if (_partyInyeonLabel != null) _partyInyeonLabel.text = BattleDirector.InyeonName(iy);
+                // 「엄호 화망」 만 있으면 무엇인지 모른다(PD 2026-10-29 「엄호 화망은 뭐야?」) — 윗줄에 「인연」 꼬리표, 이름은 한 줄로 줄여 넣는다
+                if (_partyInyeonLabel != null)
+                {
+                    _partyInyeonLabel.enableWordWrapping = false;
+                    _partyInyeonLabel.text = $"<size=85%>{Game.Module.Common.Localize.Get("ui.party.hud.inyeon_tag")}</size>\n<color=#FFFFFF>{BattleDirector.InyeonName(iy)}</color>";
+                }
             }
 
             _battle.FillSynergyCells(_partyCells);
@@ -191,9 +216,16 @@ namespace Game.Module.InGame
                 if (_partySynBg[i] != null) _partySynBg[i].gameObject.SetActive(on);
                 if (!on) continue;
                 var c = _partyCells[i];
+                // 아직 안 켜진 태그(1명)는 점선 칸 · 흐린 문장 — 「이걸 하나 더 모으면 켜진다」 목표 표시
+                // 시안 F_possess — 같은 칸 상자에 잿빛 문장 · 「무기 1→2」
+                bool lit = c.Count >= 2;
+                if (_partySynIcon[i] != null) _partySynIcon[i].material = lit ? null : _partySynGray;
+                if (_partySynLabel[i] != null) _partySynLabel[i].color = lit ? Color.white : new Color(0.7f, 0.74f, 0.84f);
+                if (_partySynName[i] != null) _partySynName[i].color = lit ? new Color(1f, 0.84f, 0.42f) : new Color(0.7f, 0.74f, 0.84f);
+                if (_partySynGlow[i] != null) _partySynGlow[i].SetActive(lit);
                 if (_partySynIcon[i] != null) _partySynIcon[i].sprite = _battle.PartySprite(c.Icon);
                 if (_partySynName[i] != null) _partySynName[i].text = c.Name;
-                if (_partySynLabel[i] != null) _partySynLabel[i].text = $"{c.Count}/{c.Next}";
+                if (_partySynLabel[i] != null) _partySynLabel[i].text = lit ? $"{c.Count}/{c.Next}" : $"{c.Count}→{c.Next}";
             }
             if (_partySynColumn != null) _partySynColumn.gameObject.SetActive(iy != null || _partyCells.Count > 0);
         }

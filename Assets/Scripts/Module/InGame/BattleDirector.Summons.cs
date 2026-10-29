@@ -62,6 +62,8 @@ namespace Game.Module.InGame
             public bool Attacks;
             public bool Mobile;
             public bool Taunt;
+            /// <summary>불러낸 몸(보조가 불렀으면 그 보조) — 빙의 파티에서는 이 몸 곁에서만 싸운다(PD 2026-10-29 「골렘도 소환한 애 근처에」).</summary>
+            public Unit Owner;
         }
 
         private readonly List<Summon> _summons = new();
@@ -135,7 +137,8 @@ namespace Game.Module.InGame
             ApplyFacingSprites(u, key);
 
             _summons.Add(new Summon { U = u, Life = life, LifeMax = life, Drains = drains,
-                                      Attacks = attacks, Mobile = mobile, Taunt = taunt });
+                                      Attacks = attacks, Mobile = mobile, Taunt = taunt,
+                                      Owner = _subCaster != null ? _subCaster : _host });
             // 골렘은 룬 원에서 솟는다(영매 퀄업 2026-10-07) — 돌 파편 · 보라 빛
             if (!(key == GolemKey && QxGolemRise(u.Position)))
                 PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
@@ -160,11 +163,15 @@ namespace Game.Module.InGame
 
                 if (!s.Attacks && !s.Mobile) { s.U.SetMoving(false); continue; }
 
-                var target = NearestEnemyTo(s.U.Position);
+                // 빙의 파티 — 불러낸 몸(없어졌으면 메인) 둘레 보조 반경 안에서만 싸운다. 맵 끝까지 쫓아가지 않는다
+                var anchor = PartyOn ? SummonAnchor(s) : null;
+                float leash = PartyRule.LeashMeters * _pxPerMeter;
+                var target = anchor != null ? NearestEnemyWithin(anchor.Position, leash + s.U.AttackRange, s.U.Position)
+                                            : NearestEnemyTo(s.U.Position);
                 if (target == null)
                 {
                     // 칠 것이 없으면 내 곁으로 — 방을 비운 뒤 제자리에 서 있으면 데리고 다니는 느낌이 안 났다
-                    var me = Avatar;
+                    var me = anchor != null ? anchor : Avatar;
                     if (s.Mobile && me != null && Vector2.Distance(me.Position, s.U.Position) > Meters(SummonFollowMeters))
                     {
                         s.U.SetFacing(me.Position - s.U.Position);
@@ -183,6 +190,7 @@ namespace Game.Module.InGame
                 {
                     s.U.SetState(EnemyState.Approach);
                     s.U.Position = SlideMove(s.U, s.U.Position, s.U.StepToward(target.Position, dt));
+                    if (anchor != null) ClampToLeash(s.U, anchor.Position, leash);
                     s.U.SetMoving(true);
                     continue;
                 }
@@ -199,6 +207,41 @@ namespace Game.Module.InGame
                 }
                 else s.U.SetState(EnemyState.Cooldown);
             }
+        }
+
+        /// <summary>소환물이 기대는 몸 — 불러낸 보조가 아직 파티에 있으면 그 보조, 아니면 메인.</summary>
+        private Unit SummonAnchor(Summon s)
+        {
+            if (s.Owner != null && s.Owner.IsAlive && (s.Owner == _host || IsPartySubUnit(s.Owner))) return s.Owner;
+            return _host;
+        }
+
+        private bool IsPartySubUnit(Unit u)
+        {
+            for (int i = 0; i < _subs.Count; i++) if (_subs[i].U == u) return true;
+            return false;
+        }
+
+        /// <summary>center 둘레 radius 안의 적 중 from 에 가장 가까운 것.</summary>
+        private Unit NearestEnemyWithin(Vector2 center, float radius, Vector2 from)
+        {
+            Unit best = null;
+            float bestD = float.MaxValue;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.IsDying) continue;
+                if (Vector2.Distance(e.Position, center) > radius) continue;
+                float d = Vector2.Distance(e.Position, from);
+                if (d < bestD) { bestD = d; best = e; }
+            }
+            return best;
+        }
+
+        private static void ClampToLeash(Unit u, Vector2 center, float leash)
+        {
+            var off = u.Position - center;
+            if (off.magnitude > leash) u.Position = center + off.normalized * leash;
         }
 
         private Unit NearestEnemyTo(Vector2 from)

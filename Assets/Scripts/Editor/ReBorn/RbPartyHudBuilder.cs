@@ -176,6 +176,12 @@ namespace Game.Editor.ReBorn
                 Order(c, $"PartySynGlow{i}", $"PartySynIcon{i}", $"PartySynName{i}", $"PartySynLabel{i}");
                 c.gameObject.SetActive(false);
             }
+            // 아직 안 켜진 무리 칸의 문장을 잿빛으로 — 흑백 재질을 프리팹에 걸어 둬야 빌드에 들어간다(09_import 3절 「이름으로 꺼내는 것은 빌드에」)
+            var gray = Node(col, "PartySynGrayMat");
+            var gimg = gray.GetComponent<Image>() ?? gray.gameObject.AddComponent<Image>();
+            gimg.material = AssetDatabase.LoadAssetAtPath<Material>("Assets/BundleResource/Materials/UIGrayscale.mat");
+            gimg.raycastTarget = false;
+            gray.gameObject.SetActive(false);
             col.gameObject.SetActive(false);
         }
 

@@ -124,6 +124,16 @@ namespace Game.Module.Lobby
                 _tiles.Add(t);
             }
             _ui.Find(_tiles[InyeonTile], "GrwStatBuy")?.gameObject.SetActive(false);
+            // 인연 칸은 눌러서 자세히(짝 · 켜는 법)
+            if (_tiles[InyeonTile].GetComponent<Image>() is Image inyBg)
+            {
+                inyBg.raycastTarget = true;
+                var inyBtn = _tiles[InyeonTile].gameObject.GetComponent<Button>() ?? _tiles[InyeonTile].gameObject.AddComponent<Button>();
+                inyBtn.targetGraphic = inyBg;
+                inyBtn.onClick.AddListener(ShowInyeon);
+            }
+            if (_ui.Find(_tiles[InyeonTile], "GrwStatValue")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI inyVal)
+                inyVal.enableWordWrapping = true;   // 효과 한 줄이 길면 두 줄로(5언어)
             // 인연 칸은 버튼이 없다 — 이름 · 값 줄을 버튼 자리(오른쪽 끝)까지 늘린다(영어 「Bond · Unyielding Roar」 가 길다)
             float widen = 146f * 2f / 3f;   // 1080 기준 372 → 518
             foreach (var n in new[] { "GrwStatName", "GrwStatValue" })
@@ -252,6 +262,8 @@ namespace Game.Module.Lobby
                 TextIn(t, "GrwStatName", string.Format(Localize.FromTable("ui.rb.growth.skill_lv", "{0} Lv {1}/{2}"),
                                                        Localize.FromTable(kinds[i], kindKo[i]), lv, locked ? max : cap));
                 TextIn(t, "GrwStatValue", SkillLine(e, slot, lv, cap, max, locked));
+                // 상한에 막히면 사기 단추가 빠진다 — 그 자리까지 줄을 늘려 「106% › 112% · 3성 필요」 가 작아지지 않게(5언어 재 봄)
+                WidenValue(t, capped);
                 if (t.GetComponent<Image>() is Image bg) bg.sprite = full ? _tileMax : poor ? _tilePoor : _tileNormal;
                 var buy = _ui.Find(t, "GrwStatBuy");
                 bool showBuy = locked || cost > 0;
@@ -268,18 +280,23 @@ namespace Game.Module.Lobby
 
         /// <summary>
         /// 칸 아래 줄 — 다음 마디가 오면 마디를(Lv5 추가 옵션 · Lv10 인연 강화 · Lv5 강화형), 아니면 「지금 › 다음」 위력.
-        /// 상한에 막혔으면 무엇이 필요한지(성급 n).
+        /// 상한에 막혔으면 그 줄 뒤에 무엇이 필요한지(성급 n)를 붙인다 — 「n성 필요」 만 있으면 올리면 무엇이 되는지 안 보였다
+        /// (PD 2026-10-29 「수치 표기도 유지하고 2성 필요도 같이」).
         /// </summary>
         private string SkillLine(HostEntry e, HostSkillSlot slot, int lv, int cap, int max, bool locked)
         {
-            var c = _player.Config;
             if (lv >= max) return "MAX";
+            string line = NextLine(e, slot, lv, max);
+            if (locked || lv < cap) return line;
+            int needRank = slot == HostSkillSlot.Active ? lv + 1 : lv * 2;   // 패시브 · 필살기 상한 = 1 + 성급 ÷ 2
+            string need = string.Format(Localize.FromTable("ui.rb.growth.skill_need_rank", "{0}성 필요"), needRank);
+            return $"{line} <size=75%><color=#FF8A5C>· {need}</color></size>";
+        }
+
+        private string NextLine(HostEntry e, HostSkillSlot slot, int lv, int max)
+        {
+            var c = _player.Config;
             int next = lv + 1;
-            if (!locked && lv >= cap)
-            {
-                int needRank = slot == HostSkillSlot.Active ? next : next * 2 - 2;   // 패시브 · 필살기 상한 = 1 + 성급 ÷ 2
-                return string.Format(Localize.FromTable("ui.rb.growth.skill_need_rank", "{0}성 필요"), needRank);
-            }
             if (slot == HostSkillSlot.Active)
             {
                 if (next == SkillScaling.SpecLevel) return $"<color={NextColor}>{Localize.Format("ui.rb.growth.node_opt", next)}</color>";
@@ -303,7 +320,7 @@ namespace Game.Module.Lobby
         private static string PowerLine(float now, float next)
             => $"{(1f + now) * 100f:0.#}%<size=70%> › </size><color={NextColor}>{(1f + next) * 100f:0.#}%</color>";
 
-        /// <summary>인연 짝 칸 — 짝 얼굴 · 짝 이름과 성급 · 지금 세기(두 성급 중 낮은 쪽).</summary>
+        /// <summary>인연 칸 — 짝 얼굴 · 인연 이름과 지금 단계(두 성급 중 낮은 쪽) · 인연이 하는 일. 누르면 짝 · 켜는 법.</summary>
         private void RefreshInyeon()
         {
             if (_tiles.Count <= InyeonTile) return;
@@ -313,7 +330,7 @@ namespace Game.Module.Lobby
             t.gameObject.SetActive(!string.IsNullOrEmpty(name) && partners.Count > 0);
             if (!t.gameObject.activeSelf) return;
             var cfg = _player.Config;
-            // 짝이 둘이면 성급이 높은 짝을 보여 주고 「+1」 — 둘을 다 적으면 칸에 안 들어간다(3언어)
+            // 짝이 둘이면 성급이 높은 짝 얼굴을 보인다
             int mine = _player.GetMastery(_key), bestAt = 0;
             for (int i = 1; i < partners.Count; i++)
                 if (_player.GetMastery(partners[i]) > _player.GetMastery(partners[bestAt])) bestAt = i;
@@ -324,12 +341,61 @@ namespace Game.Module.Lobby
                 icon.sprite = face;
                 icon.preserveAspect = true;
             }
-            var ph = _player.GetHost(partner);
-            string line = $"{(ph != null ? ph.DisplayName : partner)} ★{pm}" + (partners.Count > 1 ? $" <size=75%>+{partners.Count - 1}</size>" : string.Empty);
             int tier = cfg != null ? cfg.InyeonTierOf(Mathf.Min(mine, pm)) : 1;
             TextIn(t, "GrwStatName", string.Format(Localize.FromTable("ui.rb.growth.inyeon_tile", "인연 · {0} <size=75%><color=#B3BDD6>{1}단</color></size>"),
                                                    Localize.FromTable($"inyeon.{_key}.name", name), tier));
-            TextIn(t, "GrwStatValue", line);
+            // 아랫줄은 인연이 **무엇을 하는지**(PD 2026-10-29 「인연이 뭔지 알 수 있게」) — 짝 · 켜는 법은 칸을 눌러 창으로
+            TextIn(t, "GrwStatValue", BattleDirector.InyeonDesc(_key));
+        }
+
+        /// <summary>인연 칸을 눌렀다 — 스킬 설명 창을 빌려 인연 이름 · 효과 · 켜는 법(짝 · 단계)을 보인다.</summary>
+        private void ShowInyeon()
+        {
+            if (_modals == null || string.IsNullOrEmpty(_key)) return;
+            var partners = BattleDirector.InyeonPartners(_key);
+            if (partners.Count == 0) return;
+            var cfg = _player.Config;
+            int mine = _player.GetMastery(_key), best = 0;
+            var names = new System.Text.StringBuilder();
+            for (int i = 0; i < partners.Count; i++)
+            {
+                int pm = _player.GetMastery(partners[i]);
+                best = Mathf.Max(best, pm);
+                var ph = _player.GetHost(partners[i]);
+                if (i > 0) names.Append(" · ");
+                names.Append($"{(ph != null ? ph.DisplayName : partners[i])} ★{pm}");
+            }
+            int tier = cfg != null ? cfg.InyeonTierOf(Mathf.Min(mine, best)) : 1;
+            if (_modals.Get<Image>("GrwSkillInfoIcon") is Image img && _shell.Face(partners[0]) is Sprite face) img.sprite = face;
+            _modals.SetText("GrwSkillInfoKind", string.Format(Localize.FromTable("ui.rb.growth.inyeon_kind", "인연 · {0}단"), tier));
+            _modals.SetText("GrwSkillInfoName", BattleDirector.InyeonName(_key));
+            _modals.SetText("GrwSkillInfoDesc", BattleDirector.InyeonDesc(_key));
+            _modals.SetActive("GrwSkillInfoAwakenTitle", true);
+            _modals.SetActive("GrwSkillInfoAwaken", true);
+            _modals.SetText("GrwSkillInfoAwakenTitle", Localize.FromTable("ui.rb.growth.inyeon_how", "켜는 법"));
+            _modals.SetText("GrwSkillInfoAwaken", string.Format(Localize.FromTable("ui.rb.growth.inyeon_how_desc",
+                "짝 {0} 을(를) 보조로 데려가면 켜진다 · 단계는 두 호스트 중 낮은 성급을 따른다"), names));
+            if (_modals.Get<TextMeshProUGUI>("GrwSkillInfoAwaken") is TextMeshProUGUI ot) ot.color = new Color(1f, 0.84f, 0.42f);
+            if (_modals.Find("GrwSkillInfoBox") is RectTransform box)
+            {
+                const float h = 410f;
+                box.sizeDelta = new Vector2(box.sizeDelta.x, h);
+                box.anchoredPosition = new Vector2(box.anchoredPosition.x, -(430f + h * 0.5f));
+            }
+            _modals.SetActive("GrwSkillInfo", true);
+        }
+
+        private float _valueW = -1f;
+
+        private void WidenValue(Transform tile, bool wide)
+        {
+            if (!(_ui.Find(tile, "GrwStatValue") is RectTransform r)) return;
+            if (_valueW < 0f) _valueW = r.sizeDelta.x;
+            float want = wide ? _valueW + 146f * 2f / 3f : _valueW;   // 인연 칸과 같은 폭(버튼 자리)
+            float d = want - r.sizeDelta.x;
+            if (Mathf.Abs(d) < 0.5f) return;
+            r.sizeDelta = new Vector2(want, r.sizeDelta.y);
+            r.anchoredPosition += new Vector2(d * r.pivot.x, 0f);   // 왼쪽 끝은 그대로
         }
 
         // 금화 + 값 묶음을 버튼 가운데로 — 값이 「1,200」 처럼 길면 글자를 줄인다(겹쳐서 금화를 덮었다, 2026-10-26)

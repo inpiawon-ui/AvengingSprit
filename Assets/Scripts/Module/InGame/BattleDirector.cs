@@ -1410,6 +1410,9 @@ namespace Game.Module.InGame
                 //   화면만 봐서는 알 수가 없다. 칸에 여백이 보여야 통로가 통로로 읽힌다.
                 float vs = origin ? 1f : ObstacleViewScale;
                 var size = o.Size * _pxPerMeter * vs;
+                // 벽 띠 위에 걸친 물건은 바닥 안쪽으로 들인다(PD 2026-10-29 「오브젝트 배치는 배경 안쪽에 · 너무 끝에 있다」)
+                // 원작 방도 같다 — 물(이어 붙는 띠)만 칸 그대로 둔다
+                if (o.Kind != "WATER") center = KeepObjectInRoom(center, size, o.Kind, origin ? OriginCellMeters : ObstacleViewScale);
 
                 // 판정은 그림 그대로다. **보이는 것이 곧 막는 것**이어야 한다.
                 var hit = ObstacleFootScale.TryGetValue(o.Kind ?? "", out var fs)
@@ -3586,6 +3589,25 @@ namespace Game.Module.InGame
         private const float DoorOpeningHalf = 68f;
         /// <summary>문이 아직 안 섰을 때 맨 위 벽 높이(m). 배경의 위쪽 벽 · 울타리가 이만큼 내려온다.</summary>
         private const float TopWallMeters = 2.2f;
+
+        /// <summary>물건과 벽 띠 사이에 남기는 바닥(px) — 벽에 딱 붙으면 벽 그림과 겹쳐 「끝에 박힌」 것처럼 보인다.</summary>
+        private const float ObjectWallGap = 14f;
+
+        /// <summary>
+        /// 물건 가운데를 바닥 안쪽으로 접는다 — 몸이 걷는 경계(`ClampedInField` 의 RoomEdgeMeters · 맨 위 벽선)와 **같은 자**.
+        /// 솟는 그림(ObstacleRise)은 위로 더 올라가므로 위쪽은 그만큼 더 내린다. 방 폭보다 긴 띠(도랑 등)는 그 축을 건드리지 않는다.
+        /// </summary>
+        private Vector2 KeepObjectInRoom(Vector2 center, Vector2 size, string kind, float riseScale)
+        {
+            float edge = RoomEdgeMeters * _pxPerMeter + ObjectWallGap;
+            float rise = ObstacleRise.TryGetValue(kind ?? "", out var r) ? r * riseScale : 0f;
+            float hx = size.x * 0.5f, hy = size.y * 0.5f;
+            if (size.x < _roomSize.x - edge * 2f) center.x = Mathf.Clamp(center.x, edge + hx, _roomSize.x - edge - hx);
+            float top = TopWallY() - ObjectWallGap - hy - rise;
+            float bottom = -_roomSize.y + edge + hy;
+            if (top > bottom) center.y = Mathf.Clamp(center.y, bottom, top);
+            return center;
+        }
 
         /// <summary>맨 위 벽선(방 좌표, 음수). 문이 서 있으면 문 그림 아래 끝, 없으면 위에서 2.2 m.</summary>
         private float TopWallY()

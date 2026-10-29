@@ -89,32 +89,28 @@ namespace Game.Module.InGame
             lines.Clear();
             if (PartyOn && keys.Count >= 2)
             {
+                // 시너지는 무리(조직)만 센다 — 파워 · 무기 · 마법은 상성(전투 유불리)에만 쓴다(PD 2026-10-29 「무리만으로 잘 묶어」)
                 _tagCount.Clear();
-                int force = 0, blade = 0, magic = 0;
                 foreach (var k in keys)
                 {
-                    var a = AffinityRule.KindOf(k);
-                    if (a == Affinity.Force) force++; else if (a == Affinity.Blade) blade++; else if (a == Affinity.Magic) magic++;
                     var o = OrgOf(k);
                     if (o != null) _tagCount[o] = _tagCount.TryGetValue(o, out int n) ? n + 1 : 1;
                 }
-
-                if (force >= 2) { bool st = force >= 3; syn.Def += st ? 0.20f : 0.10f; lines.Add(Tf("ui.party.syn.force", force, st ? 20 : 10)); }
-                if (blade >= 2) { bool st = blade >= 3; syn.AtkSpd += st ? 0.25f : 0.12f; lines.Add(Tf("ui.party.syn.blade", blade, st ? 25 : 12)); }
-                if (magic >= 2) { bool st = magic >= 3; syn.Cd += st ? 0.25f : 0.12f; lines.Add(Tf("ui.party.syn.magic", magic, st ? 25 : 12)); }
 
                 foreach (var kv in _tagCount)
                 {
                     if (kv.Value < 2) continue;
                     bool st = kv.Value >= 3;
                     int lv = st ? 3 : 2;
+                    // 세기는 SynTierPct 한 표(설명 창과 같은 자) — 갱단 2명 치명 +10 · 3명 +15(PD 「이런 식 좋았다」)
+                    int pct = SynTierPct(kv.Key, st);
                     switch (kv.Key)
                     {
-                        case "갱단": syn.Crit += st ? 20f : 10f; lines.Add(Tf("ui.party.syn.gang", lv, st ? 20 : 10)); break;
-                        case "코만도 부대": syn.Hp += st ? 0.30f : 0.15f; lines.Add(Tf("ui.party.syn.commando", lv, st ? 30 : 15)); break;
-                        case "무도가": syn.Dodge += st ? 16 : 8; lines.Add(Tf("ui.party.syn.martial", lv, st ? 16 : 8)); break;
-                        case "괴물": syn.KillHeal += st ? 0.04f : 0.02f; lines.Add(Tf("ui.party.syn.monster", lv, st ? 4 : 2)); break;
-                        case "마도": syn.SubCd += st ? 0.30f : 0.15f; lines.Add(Tf("ui.party.syn.mystic", lv, st ? 30 : 15)); break;
+                        case "갱단": syn.Crit += pct; lines.Add(Tf("ui.party.syn.gang", lv, pct)); break;
+                        case "코만도 부대": syn.Hp += pct / 100f; lines.Add(Tf("ui.party.syn.commando", lv, pct)); break;
+                        case "무도가": syn.Dodge += pct; lines.Add(Tf("ui.party.syn.martial", lv, pct)); break;
+                        case "괴물": syn.KillHeal += pct / 100f; lines.Add(Tf("ui.party.syn.monster", lv, pct)); break;
+                        case "마도": syn.SubCd += pct / 100f; lines.Add(Tf("ui.party.syn.mystic", lv, pct)); break;
                     }
                 }
             }

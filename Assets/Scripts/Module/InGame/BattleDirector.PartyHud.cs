@@ -16,8 +16,10 @@ namespace Game.Module.InGame
             public readonly string Name;
             public readonly int Count;
             public readonly int Next;
-            public PartySynCell(string icon, string name, int count, int next)
-            { Icon = icon; Name = name; Count = count; Next = next; }
+            /// <summary>무리 내부 이름(설명 창을 열 때 쓴다).</summary>
+            public readonly string Tag;
+            public PartySynCell(string icon, string name, int count, int next, string tag)
+            { Icon = icon; Name = name; Count = count; Next = next; Tag = tag; }
         }
 
         public bool PartyEnabled => PartyOn;
@@ -63,32 +65,32 @@ namespace Game.Module.InGame
         private static string SynShortName(string tag) => TagId(tag) is string id ? Tx($"ui.party.tag.{id}") : tag;
 
         /// <summary>
-        /// 켜진 태그 시너지 칸(2명 이상)을 채운다 — 화면이 「무도가 2/3」 으로 그린다.
-        /// 켜지지 않은 태그(1명)는 그리지 않는다(PD 「시너지 결정한 정보」 자리 — 최대한 작게).
+        /// 태그 시너지 칸을 채운다 — 화면이 「무도가 2/3」 으로 그린다.
+        /// 메인만 있어도(1명) 그 태그를 「1/2」 로 보여 준다(PD 2026-10-29 「메인만 빙의하면 보여야 어떤 애를 얻어야 할지 목표를 정하지」).
+        /// 켜진 것(2명 이상)을 앞에, 아직인 것(1명)을 뒤에 — 칸이 모자라면 아직인 것부터 빠진다.
         /// </summary>
         public void FillSynergyCells(List<PartySynCell> into)
         {
             into.Clear();
-            if (!PartyOn || Unit.PartyKeys.Count < 2) return;
-            int force = 0, blade = 0, magic = 0;
+            SyncPartyKeys();   // 화면이 전투 틱보다 먼저 물으면 지난 몸의 무리가 남았다(2026-10-29 검수)
+            if (!PartyOn || Unit.PartyKeys.Count < 1) return;
             _cellTagCount.Clear();
             foreach (var k in Unit.PartyKeys)
             {
-                var a = AffinityRule.KindOf(k);
-                if (a == Affinity.Force) force++; else if (a == Affinity.Blade) blade++; else if (a == Affinity.Magic) magic++;
                 var o = OrgOf(k);
                 if (o != null) _cellTagCount[o] = _cellTagCount.TryGetValue(o, out int n) ? n + 1 : 1;
             }
-            AddCell(into, "파워", force);
-            AddCell(into, "무기", blade);
-            AddCell(into, "마법", magic);
-            foreach (var kv in _cellTagCount) AddCell(into, kv.Key, kv.Value);
+            for (int pass = 0; pass < 2; pass++)
+            {
+                bool on = pass == 0;
+                foreach (var kv in _cellTagCount) AddCell(into, kv.Key, kv.Value, on);
+            }
         }
 
-        private static void AddCell(List<PartySynCell> into, string tag, int n)
+        private static void AddCell(List<PartySynCell> into, string tag, int n, bool on)
         {
-            if (n < 2) return;
-            into.Add(new PartySynCell(SynIcon(tag), SynShortName(tag), n, 3));
+            if (n < 1 || (n >= 2) != on) return;
+            into.Add(new PartySynCell(SynIcon(tag), SynShortName(tag), n, n >= 2 ? 3 : 2, tag));
         }
 
         private readonly Dictionary<string, int> _cellTagCount = new();
@@ -96,25 +98,7 @@ namespace Game.Module.InGame
         /// <summary>지금 켜진 태그 시너지 효과 줄(시너지 설명 창이 띄운다).</summary>
         public IReadOnlyList<string> PartySynergyLines => _synLines;
 
-        /// <summary>시너지 칸을 눌렀다 — 설명 창을 띄우고 게임을 멈춘다(PD 「눌렀을 때 띄운다」).</summary>
-        public void PartyOpenSynergyDetail()
-        {
-            if (!PartyOn || _partyHold) return;
-            var opts = new List<PartyOption>();
-            if (_inyeonKey != null)
-                opts.Add(new PartyOption(Tf("ui.party.inyeon.title", InyeonName(_inyeonKey)), InyeonDesc(_inyeonKey), true, null));
-            else if (_host != null && InyeonOf(_host.Key) != null)
-            {
-                var names = new List<string>();
-                foreach (var p in InyeonPartners(_host.Key)) names.Add(HostName(p));
-                opts.Add(new PartyOption(Tf("ui.party.inyeon.title_off", InyeonName(_host.Key)),
-                                         Tf("ui.party.inyeon.off_desc", string.Join(" · ", names), InyeonDesc(_host.Key)), false, null));
-            }
-            for (int i = 0; i < _synLines.Count; i++) opts.Add(new PartyOption(_synLines[i], Tx("ui.party.syn.detail"), true, null));
-            if (_synLines.Count == 0) opts.Add(new PartyOption(Tx("ui.party.syn.none"), Tx("ui.party.syn.none_desc"), false, null));
-            opts.Add(new PartyOption(Tx("ui.party.close"), string.Empty, true, null));
-            ShowPartyPopup(Tx("ui.party.syn.title"), Tx("ui.party.syn.sub"), opts, -1f);
-        }
+        // 시너지 칸을 누르면 그 칸 옆 설명 말풍선 — BattleDirector.PartyPopup.PartyOpenSynergyDetail(시안 F_syndetail)
 
         // ── 빙의 가능 말풍선(PD 「빙의 가능일 때 어떤 시너지 효과가 나는지 적 호스트 머리 위에」) ──────────
         // 금빛 = 데려오면 인연 · 시너지가 켜짐 · 회색 = 시너지 없음. 빙의 가능한 적 하나에만(가장 가까운 것) 띄운다 —
@@ -146,10 +130,10 @@ namespace Game.Module.InGame
             _bubbleSig = sig;
             string line = PartyHintFor(target.Key, out bool inyeon);
             bool on = line != null;
-            _bubbleImg.sprite = GetSprite(on ? "possess_bubble_syn" : "possess_bubble_none");
-            // 금빛 말풍선 안쪽은 크림색 — 글자는 짙게(부품 검수)
-            _bubbleText.color = on ? new Color(0.29f, 0.18f, 0.05f) : new Color(0.86f, 0.86f, 0.9f);
-            _bubbleText.text = on ? Tf("ui.party.bubble.bring", line) : Tx("ui.party.syn.none");
+            // 시안 S1b — 밝은 말풍선은 무엇이 켜질 때만. 없으면 꼬리표 아래 회색 「시너지 없음」 한 줄(F_possess)
+            _bubbleImg.gameObject.SetActive(on);
+            _bubbleText.text = on ? Tf("ui.party.bubble.bring", line) : string.Empty;
+            _bubbleNone.text = on ? string.Empty : Tx("ui.party.syn.none");
         }
 
         private Unit NearestPossessable()
@@ -167,20 +151,41 @@ namespace Game.Module.InGame
             return best;
         }
 
+        private TMPro.TextMeshProUGUI _bubbleNone;
+
+        /// <summary>
+        /// 시안 S1b 그대로 — 머리 위 보라 꼬리표 「👻 빙의 가능」 + 그 오른쪽 아래 밝은 말풍선 「데려오면 ▶ / 무리 2/3 · 효과」.
+        /// 묶음 판(240 × 100)의 아래 가운데가 적 머리. 좌표는 시안 px(판 위 왼쪽 기준).
+        /// </summary>
         private void EnsureBubble()
         {
             if (_bubble != null || _shotLayer == null) return;
-            var go = new GameObject("PartyPossessBubble", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+            var go = new GameObject("PartyPossessBubble", typeof(RectTransform));
             _bubble = (RectTransform)go.transform;
             _bubble.SetParent(_shotLayer, false);
             _bubble.anchorMin = _bubble.anchorMax = new Vector2(0f, 1f);
-            _bubble.pivot = new Vector2(0.5f, 0f);
-            _bubble.sizeDelta = new Vector2(220f, 70f);
-            _bubbleImg = go.GetComponent<UnityEngine.UI.Image>();
-            _bubbleImg.type = UnityEngine.UI.Image.Type.Sliced;
-            _bubbleImg.raycastTarget = false;
-            // 두 줄(「데려오면 ▶」 / 효과) — 꼬리(아래 12)를 빼고 판 안쪽(테 16)에 들어가게
-            _bubbleText = NewText(_bubble, string.Empty, 15, Color.white, new Vector2(0f, 6f), new Vector2(192f, 46f), true);
+            _bubble.pivot = new Vector2(0.3f, 0f);
+            _bubble.sizeDelta = new Vector2(240f, 100f);
+            if (_popLike == null && _unitLayer != null && _unitLayer.GetComponentInParent<Canvas>() is Canvas cv)
+                foreach (var t in cv.rootCanvas.GetComponentsInChildren<TMPro.TMP_Text>(true))
+                    if (t.name == "RbNoBodyText") { _popLike = t; break; }
+            var box = new MBox(0, 0, 240, 100);
+            // 꼬리표 — 시안 (362,792)-(494,826) · 묶음 판 기준 (0,0)-(132,34)
+            // 꼬리표는 늘리지 않는다 — 왼쪽 유령 얼굴이 9분할 세로 칸에 걸려 눌렸다(2026-10-29 검수). 그림 크기(137 × 42) 그대로
+            var pill = MImg("Pill", _bubble, box, new MBox(0, 0, 137, 42), "possess_pill");
+            if (pill.sprite == null) { pill.sprite = GetSprite("possess_bubble_syn"); pill.type = UnityEngine.UI.Image.Type.Sliced; pill.color = new Color(0.55f, 0.3f, 0.95f); }
+            MTxt(_bubble, box, new MBox(42, 2, 132, 32), Tx("ui.party.p2.possess_tag"), 17, Color.white,
+                 TMPro.TextAlignmentOptions.Center);
+            // 「시너지 없음」 — 꼬리표 바로 아래 회색 한 줄
+            _bubbleNone = MTxt(_bubble, box, new MBox(0, 44, 137, 66), string.Empty, 16, new Color(0.86f, 0.87f, 0.92f),
+                               TMPro.TextAlignmentOptions.Center);
+            // 밝은 말풍선 — 시안 (428,832)-(596,886) · 묶음 판 기준 (66,40)-(234,94)
+            _bubbleImg = MImg("Bubble", _bubble, box, new MBox(66, 44, 236, 100), "possess_bubble_light", true);
+            if (_bubbleImg.sprite == null) { _bubbleImg.sprite = GetSprite("possess_bubble_none"); _bubbleImg.type = UnityEngine.UI.Image.Type.Sliced; }
+            var bb = new MBox(66, 44, 236, 100);
+            _bubbleText = MTxt(_bubbleImg.rectTransform, bb, new MBox(78, 48, 230, 90), string.Empty, 16, new Color(0.1f, 0.11f, 0.16f),
+                               TMPro.TextAlignmentOptions.MidlineLeft);
+            _bubbleText.lineSpacing = -8f;
             if (GameFramework.Core.Base.CoreModule.TryGet<Game.Module.Common.ILanguageService>(out var lang) && lang.IsReady)
                 lang.ApplyFonts(_bubble);
         }

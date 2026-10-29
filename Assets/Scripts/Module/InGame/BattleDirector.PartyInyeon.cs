@@ -119,24 +119,12 @@ namespace Game.Module.InGame
                 inyeon = true;
                 return Tf("ui.party.inyeon.title", InyeonName(_host.Key));
             }
-            return NewSynergyIfAdded(enemyKey);
-        }
-
-        /// <summary>이 호스트를 보조로 더하면 새로 켜지는 태그 시너지 한 줄(없으면 null).</summary>
-        private string NewSynergyIfAdded(string key)
-        {
-            _hintKeys.Clear();
-            foreach (var k in Unit.PartyKeys) _hintKeys.Add(k);
-            _hintKeys.Add(key);
-            var probe = default(PartySynergy);
-            CountSynergy(_hintKeys, ref probe, _hintLines);
-            for (int i = 0; i < _hintLines.Count; i++)
-                if (!_synLines.Contains(_hintLines[i])) return _hintLines[i];
+            var gain = SynChange(null, enemyKey);
+            for (int i = 0; i < gain.Count; i++)
+                if (gain[i].Gain)
+                    return Tf("ui.party.p2.hint", SynShortName(gain[i].Tag), gain[i].Count,
+                              Tf($"ui.party.p2.eff.{TagId(gain[i].Tag)}", SynTierPct(gain[i].Tag, gain[i].Count >= 3)));
             return null;
         }
-
-        // 말풍선 계산용 재사용 버퍼 — 적마다 · 프레임마다 새로 만들지 않는다
-        private readonly HashSet<string> _hintKeys = new();
-        private readonly List<string> _hintLines = new();
     }
 }
