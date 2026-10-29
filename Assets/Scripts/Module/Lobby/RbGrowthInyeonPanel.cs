@@ -35,7 +35,7 @@ namespace Game.Module.Lobby
         private RectTransform _iy, _org, _members;
         private Image _myFace, _partnerFace, _skillIcon, _effectFace, _orgIcon;
         private TextMeshProUGUI _title, _step, _hint, _desc, _rule, _partnerLabel;
-        private TextMeshProUGUI _orgTitle, _orgCount, _orgDesc, _orgTier2, _orgTier3, _orgRule;
+        private TextMeshProUGUI _orgTitle, _orgDesc, _orgTier2, _orgTier3, _orgRule;
 
         /// <summary>판을 세운다 — parent 는 스킬 칸이 놓인 GrwBodyContent, toContent 는 시안 px → 그 안 자리.</summary>
         public static RbGrowthInyeonPanel Create(RectTransform parent, Func<float, float, Vector2> toContent, Art art, TMP_Text like)
@@ -88,9 +88,8 @@ namespace Game.Module.Lobby
             _org = New("Org", root, Area, OrgBox);
             Img(_org, OrgBox, OrgBox, _art.Panel, true);
             _orgIcon = Img(_org, OrgBox, new Box(376, 787, 404, 815), null, false);
-            _orgTitle = Txt(_org, OrgBox, new Box(410, 787, 614, 815), 19, Color.white, TextAlignmentOptions.MidlineLeft);
-            Img(_org, OrgBox, new Box(620, 791, 694, 811), _art.Step, true);
-            _orgCount = Txt(_org, OrgBox, new Box(620, 791, 694, 811), 15, new Color(0.24f, 0.13f, 0.02f), TextAlignmentOptions.Center);
+            // 「가진 수/3」 칩은 없앴다 — 해금해야 시너지를 받는다로 읽혔다(PD 2026-10-30 「아예 없애」). 제목이 그 자리까지 쓴다
+            _orgTitle = Txt(_org, OrgBox, new Box(410, 787, 694, 815), 19, Color.white, TextAlignmentOptions.MidlineLeft);
             _orgDesc = Txt(_org, OrgBox, new Box(378, 819, 692, 843), 14, new Color(0.78f, 0.82f, 0.9f), TextAlignmentOptions.MidlineLeft);
             Img(_org, OrgBox, new Box(376, 849, 694, 907), _art.Box, true);
             _orgTier2 = Txt(_org, OrgBox, new Box(390, 852, 684, 878), 16, Color.white, TextAlignmentOptions.MidlineLeft);
@@ -145,18 +144,15 @@ namespace Game.Module.Lobby
             _orgIcon.preserveAspect = true;
 
             _orgMembers.Clear();
-            int owned = 0;
             foreach (var h in player.PlayableHosts)
             {
                 if (h == null || h.IsGhost || PlayerDataService.IsHiddenHost(h.HostKey) || BattleDirector.HostOrg(h.HostKey) != org) continue;
                 _orgMembers.Add(h.HostKey);
-                if (player.IsHostOwned(h)) owned++;
             }
             // 이 호스트를 맨 앞에, 가진 것 → 없는 것 순서
             _orgMembers.Sort((a, b) => Rank(player, key, a).CompareTo(Rank(player, key, b)));
 
             _orgTitle.text = string.Format(Localize.FromTable("ui.rb.org.title", "무리 – {0}"), Localize.Get($"ui.party.tag.{id}"));
-            _orgCount.text = $"{Mathf.Min(owned, 3)}/3";
             _orgDesc.text = Localize.Get($"ui.party.tag.{id}.desc");
             // 효과 줄은 늘 켜진 색 — 가진 수로 잿빛을 치면 「해금 안 하면 못 받는다」로 읽혔다(PD 2026-10-30).
             //   무리 수는 판 안에서 데려간 몸으로 센다(해금 여부와 상관없다)
