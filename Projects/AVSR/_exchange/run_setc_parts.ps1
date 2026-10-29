@@ -1,5 +1,5 @@
 ﻿Set-Location "C:\won\UnityProject\AvengingSprit"
-$keys = @('obj_devil_altar','obj_shop_stall','obj_ring_heal','obj_ring_devil','obj_ring_shop','obj_mark_heal','obj_mark_devil','obj_mark_shop','levelupframe','cardpanel_common','cardpanel_rare','cardpanel_epic','cardpanel_legendary','cardpanel_evolution','cardchip_rarity','cardchip_level','shrineframe','shrinehintpill','eventframe','eventrewardpill','eventcostpill','eventacceptbutton','eventdeclinebutton','shopframe','shopgoldpill','shopitemcell','shopitemcell_off','shopleavebutton')
+$keys = @('result_frame','result_rowpanel','result_warnbar','button_yellow_wide')
 $max = 5
 $running = @()
 foreach ($k in $keys) {

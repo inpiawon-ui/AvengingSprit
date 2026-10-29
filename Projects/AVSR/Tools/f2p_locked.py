@@ -74,6 +74,11 @@ def main():
     ap.add_argument('--minutes', type=float, default=120)
     ap.add_argument('--chest-hours', type=float, default=1.0, help='상자 시계 배율(1 = 라이브)')
     ap.add_argument('--seed', type=int, default=1)
+    # ── PD 안(2026-10-13): 상자를 버리고 「그 챕터에서 만난 호스트의 조각 + 골드 + 경험치」를 클리어 보상으로 ──
+    ap.add_argument('--met-reward', action='store_true', help='상자 없음 · 판 안 조각 없음 · 클리어 때 만난 몸마다 조각')
+    ap.add_argument('--met-shards', type=int, default=1, help='클리어 때 만난 몸 한 기당 조각')
+    ap.add_argument('--unlock-mul', type=float, default=1.0, help='해금 · 성급 조각 배율')
+    ap.add_argument('--stamina', action='store_true', help='스태미너 최대 30 · 판당 5 · 6분에 1')
     a = ap.parse_args()
     rnd = random.Random(a.seed)
     ch = chapters()
@@ -85,6 +90,7 @@ def main():
     main_host = 'gangster'
     events = []
     c = 0; tries_left = None; runs = 0; earned = {'run': 0, 'chest': 0, 'path': 0}
+    stamina = 30; waited = 0.0
 
     def note(s):
         events.append((t, s))
@@ -99,7 +105,7 @@ def main():
         for k in GRADE:
             m = owned.get(k, 0)
             if m >= 10: continue
-            need = round(SHARD_CURVE[m] * GRADE_MUL[GRADE[k]])
+            need = round(SHARD_CURVE[m] * GRADE_MUL[GRADE[k]] * a.unlock_mul)
             cost = round(STAR_GOLD[m] * GRADE_MUL[GRADE[k]] / 10) * 10
             if shards[k] >= need and gold >= cost:
                 shards[k] -= need; gold -= cost; owned[k] = m + 1
@@ -126,7 +132,13 @@ def main():
         if tries_left is None:
             n = TRIES[c]; tries_left = int(n) + (1 if (n % 1 and c % 2 == 0) else 0)
         price = float(row['priceMul'])
-        gold = max(0, gold - round(ENTRY[GRADE[main_host]] * price))
+        if a.stamina:
+            if stamina < 5:   # 모자라면 찰 때까지 기다린다(이 동안은 게임을 안 한다)
+                wait = (5 - stamina) * 6.0; t += wait; waited += wait; stamina = 5
+                note(f'스태미너가 모자라 {wait:.0f}분 기다림')
+            stamina -= 5
+        else:
+            gold = max(0, gold - round(ENTRY[GRADE[main_host]] * price))
         rg = int(row['roomGold']) * 11 + int(row['midGold']) + int(row['bossGold'])
         tries_left -= 1; runs += 1
         clear = tries_left <= 0
@@ -136,11 +148,18 @@ def main():
         g = int(rg * prog * (1 - SHOP_SPEND)); gold += g; earned['run'] += g
         pool = roster(c + 1)
         meet = pool[:max(1, int(round(len(pool) * prog)))]
-        for k in meet:
-            shards[k] += 3 if rnd.random() < POSSESS_LOST_SHARE else 1
+        if not a.met_reward:
+            for k in meet:
+                shards[k] += 3 if rnd.random() < POSSESS_LOST_SHARE else 1
+        elif clear:
+            for k in meet: shards[k] += a.met_shards
+            hrs, cg, sh, _ = CHEST[row['chest']]; gold += cg; earned['chest'] += cg   # 상자 골드를 바로
+        if a.stamina:
+            stamina = min(30, stamina + dt / 6.0)
         t += dt
         if clear:
             exp += CLEAR_EXP[c]
+        if clear and not a.met_reward:
             busy = [x for x in chests if x[0] > t]
             if len(busy) < 3:
                 hrs, cg, sh, (lo, hi) = CHEST[row['chest']]
@@ -155,6 +174,7 @@ def main():
                 who = rnd.sample(sorted(GRADE), rnd.randint(lo, hi))
                 for k in who: shards[k] += sh // len(who)
                 chests.remove(x); note(f'{x[1]} 상자 열림 — 골드 {cg} · 조각 {sh}개를 {len(who)}명에게')
+        if a.stamina and level_of(exp) > level_of(exp - (CLEAR_EXP[c] if clear else 0)): stamina = max(stamina, 30)   # 레벨업 = 가득
         lv = level_of(exp)
         for L, pg in PATH_GOLD.items():
             if lv >= L and L not in paid:
@@ -169,6 +189,7 @@ def main():
         print(f'{tt:6.1f}분  {s}')
     kinds = {}
     for k in owned: kinds.setdefault(KIND[k], []).append(f'{k}({owned[k]})')
+    if a.stamina: print(f'스태미너 기다린 시간 {waited:.0f}분(시계 시간에 포함)')
     print(f'끝: {c}챕터 · 판 {runs} · 유령 Lv{level_of(exp)} · 남은 골드 {gold:,} · 번 골드 판 {earned["run"]:,} · 상자 {earned["chest"]:,} · 성장경로 {earned["path"]:,}')
     print('가진 몸(숙련도): ' + ' / '.join(f'{kk}: ' + ', '.join(v) for kk, v in sorted(kinds.items())))
     near = sorted(((round(SHARD_CURVE[0] * GRADE_MUL[GRADE[k]]) - shards[k], k) for k in GRADE if k not in owned))[:5]

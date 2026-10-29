@@ -301,6 +301,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.wastudio.motionref": {
+      "version": "file:C:/Users/inpia/Documents/motion-library/unity/MotionRef",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,

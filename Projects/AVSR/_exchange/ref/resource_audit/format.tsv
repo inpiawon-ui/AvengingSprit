@@ -126,7 +126,9 @@
 그림	Assets/BaseResource/InGameMainUI/fx_wpstate_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_wptracer_1.png	128x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_aff_ring.png	144x144	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_boss_band.png	1040x76	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_cyan.png	546x20	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_orange.png	546x19	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_purple.png	545x18	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_red.png	546x19	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_ghost_pill.png	434x155	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -381,4 +383,30 @@
 그림	Assets/BundleResource/Cutscene/cut_start_2.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_4.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_5.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+아틀라스	Assets/BundleResource/Atlas/ReBornComponents.spriteatlasv2	최대 2048 · 어림 17.5MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/ReBornHud.spriteatlasv2	최대 2048 · 어림 2.1MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 53.1MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_amazon.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_amazon_elite.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_baseball.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_commando_grenade.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_commando_laser.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_commando_mg.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_commando_missile.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_death.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_dragon_blue.spriteatlasv2	최대 2048 · 어림 6.6MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_dragoon.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_gangster.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_ghost.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_guru.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_hopper.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_hopper_smg.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_medium.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_ninja.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_ninja_chain.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_robot.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_salamander.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_snowwoman.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_thug.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_vampire.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/unitl_white_wizard.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
