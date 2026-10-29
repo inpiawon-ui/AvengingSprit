@@ -219,5 +219,93 @@ def main():
     print("\n".join(log))
 
 
+# ─────────────────────────────────────────
+# 2차 — 물 · 가시판 · 울타리 · 방 밖 바닥 · 보스 방 (PD 2026-10-29 「전체적으로 어울리게」)
+BOSSES = ["robot_snakes", "crusher", "python", "sludge", "guardian", "kingpin"]
+WATER_COLS, WATER_ROWS = 5, 4
+BANK = 29   # 둑 두께(72 칸 기준) — 지금 게임 둑(obj_*_water_edge_n 위 28 px)과 맞춘다
+
+
+def cut_water(src: Path, s: str, out: Path):
+    a = np.array(Image.open(src).convert("RGB"))
+    fg = ~pink_mask(a)
+    lab, cnt = ndimage.label(ndimage.binary_closing(fg, structure=np.ones((9, 9))))
+    k = np.argmax(ndimage.sum(fg, lab, range(1, cnt + 1))) + 1
+    ys, xs = np.where(lab == k)
+    # 바깥 몇 점은 분홍이 섞인 번짐이다 — 안으로 4 점 들어와 자른다
+    pool = Image.fromarray(a).crop((xs.min() + 4, ys.min() + 4, xs.max() - 3, ys.max() - 3))
+    # 웅덩이를 5 x 4 칸으로 나눠 72 칸 크기로 한꺼번에 줄인다(칸마다 따로 줄이면 이음매가 생긴다)
+    grid = pool.resize((72 * WATER_COLS, 72 * WATER_ROWS), Image.LANCZOS)
+    cell = lambda c, r: grid.crop((c * 72, r * 72, c * 72 + 72, r * 72 + 72)).convert("RGBA")
+
+    def band(img, sides):
+        m = np.zeros((72, 72), bool)
+        if "n" in sides: m[:BANK, :] = True
+        if "s" in sides: m[72 - BANK:, :] = True
+        if "w" in sides: m[:, :BANK] = True
+        if "e" in sides: m[:, 72 - BANK:] = True
+        arr = np.array(img)
+        arr[..., 3] = np.where(m, 255, 0)
+        return Image.fromarray(arr, "RGBA")
+
+    mc, mr = WATER_COLS // 2, 1
+    parts = {
+        "water_1": cell(mc, 1), "water_2": cell(mc, 2),
+        "water_edge_n": band(cell(mc, 0), "n"), "water_edge_s": band(cell(mc, WATER_ROWS - 1), "s"),
+        "water_edge_w": band(cell(0, 1), "w"), "water_edge_e": band(cell(WATER_COLS - 1, 1), "e"),
+        "water_corner_nw": band(cell(0, 0), "nw"), "water_corner_ne": band(cell(WATER_COLS - 1, 0), "ne"),
+        "water_corner_sw": band(cell(0, WATER_ROWS - 1), "sw"),
+        "water_corner_se": band(cell(WATER_COLS - 1, WATER_ROWS - 1), "se"),
+    }
+    for n, im in parts.items():
+        im.save(out / f"obj_{s}_{n}.png")
+    return pool.size
+
+
+def to_square(part: Image.Image) -> Image.Image:
+    # 가시판은 바닥에 눕는 칸 — 72 x 72 칸 가운데에 꽉 채운다
+    cell = to_cell(part)   # 72 x 102 에 바닥 맞춤으로 줄인 것에서 물건만 다시 꺼낸다
+    bb = cell.getbbox()
+    obj = cell.crop(bb)
+    s = min(72 / obj.width, 72 / obj.height)
+    obj = obj.resize((max(1, round(obj.width * s)), max(1, round(obj.height * s))), Image.NEAREST)
+    sq = Image.new("RGBA", (72, 72), (0, 0, 0, 0))
+    sq.paste(obj, ((72 - obj.width) // 2, (72 - obj.height) // 2), obj)
+    return sq
+
+
+def main2():
+    log = []
+    for s in STAGES:
+        out = OUT / s
+        p = IN / f"bg_{s}_water.png"
+        if p.exists():
+            log.append(f"{s} 물 웅덩이 {cut_water(p, s, out)}")
+        p = IN / f"bg_{s}_hazards.png"
+        if p.exists():
+            parts, found = cut_blocks(p, 4)
+            for i, part in enumerate(parts[:2], 1):
+                to_square(part).save(out / f"obj_{s}_spike_{i}.png")
+            for i, part in enumerate(parts[2:4], 1):
+                to_cell(part).save(out / f"obj_{s}_fence_{i}.png")
+            log.append(f"{s} 가시 · 울타리 {len(parts)}/4 (덩어리 {found})")
+        p = IN / f"bg_{s}_apron.png"
+        if p.exists():
+            fit_exact(p, (720, 540), out / f"roomapron_{s}.png")
+            log.append(f"{s} 방 밖 {Image.open(p).size}")
+    for b in BOSSES:
+        out = OUT / "boss"
+        p = IN / f"bg_boss_{b}_floor.png"
+        if p.exists():
+            fit_exact(p, (720, 1152), out / f"roomfloor_{b}.png")
+            log.append(f"보스 {b} 바닥 {Image.open(p).size}")
+        p = IN / f"bg_boss_{b}_apron.png"
+        if p.exists():
+            fit_exact(p, (720, 540), out / f"roomapron_boss_{b}.png")
+            log.append(f"보스 {b} 방 밖 {Image.open(p).size}")
+    print("\n".join(log))
+
+
 if __name__ == "__main__":
+    main2()
     main()
