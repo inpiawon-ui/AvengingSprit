@@ -3653,6 +3653,7 @@ namespace Game.Module.InGame
 
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
+            if (Game.Module.Common.UI.RbGuide.PausingOpen) return;   // 설명 창 — 시간 배율만으론 못 멈춘다(타격 멈칫이 1로 되돌림, 2026-10-30)
             if (_partyHold) { TickPartyHold(); return; }   // 빙의 파티 선택창 — 잠깐 멈춘다
             if (!IsPresentationHeld && _shopHealPending) ApplyShopHeal();
             if (IsPresentationHeld) return;   // 보상 연출 중 — 무엇을 얻었는지 보여 주는 동안 선다(BattleDirector.Present)

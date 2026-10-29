@@ -44,8 +44,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRbRoomEntered));
             _tokens.Add(bus.Subscribe<ExitOpenedEvent>(_ => ShowNextRoom()));
             _tokens.Add(bus.Subscribe<BossHpChangedEvent>(OnRbBoss));
-            _tokens.Add(bus.Subscribe<BuffOfferEvent>(_ => ShowGuideLater("cards", 0.8f, "cards")));
-            _tokens.Add(bus.Subscribe<ShopOpenedEvent>(_ => ShowGuideLater("merchant", 0.6f, "merchant")));
+            // 카드 · 상인 설명은 그 창을 열기 직전에 먼저 띄운다(InGameMainUI.GuideFirst) — 예전엔 창이 뜬 뒤 0.6~0.8초에 위로 덮었다
             _tokens.Add(bus.Subscribe<NightBannerEvent>(OnRbNightBanner));
         }
 
@@ -59,19 +58,48 @@ namespace Game.Module.InGame
             if (!RunModeContext.IsMode && e.RoomIndex == 0) ShowGuideLater("ingame", 1.6f, FirstRunGuide);
         }
 
-        /// <summary>안내는 판이 열린 뒤(가림막이 걷힌 뒤) — 처음 한 번만. 다른 창이 떠 있으면 그 창 위에 뜬다.</summary>
+        /// <summary>
+        /// 안내는 판이 열린 뒤(가림막이 걷힌 뒤) — 처음 한 번만.
+        /// 다른 창(레벨업 · 상점 · 이벤트 · 제단 · 빙의 파티 · 다른 설명)이 떠 있으면 **닫힐 때까지 기다렸다가** 띄운다
+        /// (예전엔 그 창 위에 덮어 떴다 — PD 2026-10-30 「게임하는 데 방해」).
+        /// </summary>
         private void ShowGuideLater(string id, float delay, params string[] topics)
         {
             if (_rbGuide == null || RbGuide.HasSeen(id)) return;
-            ShowGuideLaterAsync(id, delay, topics).Forget();   // fire-and-forget: 정해진 시간 뒤 한 번 띄운다
+            ShowGuideLaterAsync(id, delay, topics).Forget();   // fire-and-forget: 정해진 시간 뒤 · 창이 비면 한 번 띄운다
         }
 
         private async UniTaskVoid ShowGuideLaterAsync(string id, float delay, string[] topics)
         {
             var token = this.GetCancellationTokenOnDestroy();
             if (await UniTask.Delay(System.TimeSpan.FromSeconds(delay), DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
+            while (!_finished && _rbGuide != null && AnyWindowOpen())
+                if (await UniTask.Delay(200, DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
             if (_finished || _rbGuide == null) return;
             _rbGuide.ShowOnce(id, true, topics);
+        }
+
+        /// <summary>
+        /// 그 창을 열기 전에 처음 보는 설명을 먼저 띄운다. 띄웠으면 true — 부른 쪽은 멈추고, 설명을 닫으면 then 이 이어서 연다.
+        /// 이미 봤거나 설명 창이 없으면 false — 부른 쪽이 그대로 창을 연다.
+        /// </summary>
+        private bool GuideFirst(string id, System.Action then, params string[] topics)
+        {
+            if (_rbGuide == null || _finished || RbGuide.HasSeen(id)) return false;
+            if (_rbGuide.IsOpen) return false;   // 다른 설명이 이미 떠 있으면 이번 것은 다음 기회에(겹쳐 띄우지 않는다)
+            return _rbGuide.ShowOnce(id, true, then, topics);
+        }
+
+        private static readonly string[] BlockingWindows = { "BuffChoicePanel", "ShopPanel", "EventPanel", "ShrinePanel" };
+
+        /// <summary>설명을 띄우면 겹치는 창이 떠 있나.</summary>
+        private bool AnyWindowOpen()
+        {
+            if (_rbGuide != null && _rbGuide.IsOpen) return true;
+            if (_battle != null && _battle.PartyPopupOpen) return true;
+            for (int i = 0; i < BlockingWindows.Length; i++)
+                if (_ui.Find(BlockingWindows[i]) is Transform t && t.gameObject.activeInHierarchy) return true;
+            return false;
         }
 
         // ── 몸 없음 · 위험 경고(시안 ghost-hud · fight-danger, PD 2026-10-25 「일단 추가해 보자」) ──

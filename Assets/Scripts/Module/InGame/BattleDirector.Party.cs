@@ -114,6 +114,9 @@ namespace Game.Module.InGame
         private bool _partyStartCharged;
         /// <summary>선택창이 떠 있는 동안 전투를 세운다.</summary>
         private bool _partyHold;
+
+        /// <summary>빙의 파티 창(선택 · 사망 · 설명)이 떠 있나 — 화면이 설명 창을 겹쳐 띄우지 않게 묻는다.</summary>
+        public bool PartyPopupOpen => _partyHold;
         private float _partyTimer = -1f;
         private GameObject _partyPopup;
         private Unit _partyPick;

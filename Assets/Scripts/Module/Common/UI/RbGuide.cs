@@ -28,6 +28,12 @@ namespace Game.Module.Common.UI
 
         public bool IsOpen => gameObject.activeSelf;
 
+        /// <summary>
+        /// 판을 멈춰 둔 설명이 떠 있나 — 전투가 이걸 보고 갱신을 멈춘다(2026-10-30).
+        /// ⚠ 시간 배율(0)만으로는 못 멈춘다: 타격 멈칫이 끝나며 배율을 1로 되돌려 설명 뒤에서 판이 다시 돌았다.
+        /// </summary>
+        public static bool PausingOpen { get; private set; }
+
         private void Init()
         {
             if (_ui != null) return;
@@ -50,6 +56,7 @@ namespace Game.Module.Common.UI
             gameObject.SetActive(true);
             transform.SetAsLastSibling();   // 06_ui — 열 때 맨 위
             _pause = pauseGame;
+            PausingOpen = pauseGame;
             if (_pause && _savedScale < 0f)
             {
                 _savedScale = Time.timeScale;
@@ -59,12 +66,15 @@ namespace Game.Module.Common.UI
         }
 
         /// <summary>처음 한 번만(PlayerPrefs `guide.seen.{id}`). 보였으면 true.</summary>
-        public bool ShowOnce(string id, bool pauseGame, params string[] topics)
+        public bool ShowOnce(string id, bool pauseGame, params string[] topics) => ShowOnce(id, pauseGame, null, topics);
+
+        /// <summary>처음 한 번만 — 닫으면 onClosed. 이미 봤으면 띄우지 않고 false(onClosed 도 안 부른다 — 부른 쪽이 바로 이어 간다).</summary>
+        public bool ShowOnce(string id, bool pauseGame, Action onClosed, params string[] topics)
         {
             if (HasSeen(id)) return false;
             PlayerPrefs.SetInt(SeenPrefix + id, 1);
             PlayerPrefs.Save();
-            Show(pauseGame, topics);
+            Show(pauseGame, onClosed, topics);
             return true;
         }
 
@@ -82,6 +92,7 @@ namespace Game.Module.Common.UI
         private void OnDisable()
         {
             // 판을 멈춰 뒀으면 되돌린다 — 닫기 · 씬 전환 · 비활성 어느 길로 사라져도
+            PausingOpen = false;
             if (_savedScale >= 0f)
             {
                 Time.timeScale = _savedScale;

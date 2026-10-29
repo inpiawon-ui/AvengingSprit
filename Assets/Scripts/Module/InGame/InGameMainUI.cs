@@ -1465,6 +1465,8 @@ namespace Game.Module.InGame
 
         private void OnShopOpened(ShopOpenedEvent e)
         {
+            // 처음 보는 상인 설명이 있으면 설명부터 — 닫으면 이어서 상점을 연다(겹쳐 뜨지 않게, PD 2026-10-30)
+            if (GuideFirst("merchant", () => OnShopOpened(e), "merchant")) return;
             // RE:BORN 판은 동전 그림 옆 숫자만(시안 「🪙 148」)
             _ui.SetText("ShopGoldText", _reborn ? e.Gold.ToString("N0") : Localize.Format("ui.shop.gold", e.Gold));
             // 「남은 구매 2회 · 카드 1장」은 안 띄운다 — 상점은 하나 사면 바로 닫혀서(ShopPurchasedEvent) 남은 횟수가
@@ -1558,6 +1560,8 @@ namespace Game.Module.InGame
         private void OnBuffOffer(BuffOfferEvent e)
         {
             if (_presenting) { _pendingOffer = e; return; }
+            // 처음 보는 카드 설명이 있으면 설명부터 — 닫으면 이어서 카드 창을 연다(겹쳐 뜨지 않게, PD 2026-10-30)
+            if (GuideFirst("cards", () => OnBuffOffer(e), "cards")) return;
             ResetFocus(CardNodes);
             BlockInput("BuffChoicePanel", false);
             if (_buffTable == null || e.OfferedKeys == null) return;
