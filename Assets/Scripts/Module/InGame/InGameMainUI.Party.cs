@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Module.Common.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,10 +64,95 @@ namespace Game.Module.InGame
             }
         }
 
+        // ── 인연 켜짐 — 스킬 버튼(가이드 `_exchange/guide_inyeon_fx.md` 박자표) ─────────────────
+        // 켜지는 순간(강): 버튼 뒤 금빛 번짐이 크게 번쩍 → 0.6초에 제자리. 켜져 있는 동안(약): 번짐이 은은하게 숨쉬고 버튼 아래 「인연」 꼬리표.
+        // 전투는 멈추지 않는다 · 화면 가운데 판 없음.
+        private const float InyeonBurstSeconds = 0.6f;
+        private static readonly Color InyeonGoldUi = new(1f, 0.84f, 0.42f);
+        private RectTransform _inyeonGlow;
+        private Image _inyeonGlowImg;
+        private GameObject _inyeonTag;
+        private string _inyeonShown;
+        private float _inyeonBurst;
+
+        private void TickInyeonButton()
+        {
+            string on = _battle.InyeonActiveKey;
+            if (on != _inyeonShown)
+            {
+                if (on != null) _inyeonBurst = InyeonBurstSeconds;
+                _inyeonShown = on;
+            }
+            if (on == null)
+            {
+                if (_inyeonGlow != null && _inyeonGlow.gameObject.activeSelf) _inyeonGlow.gameObject.SetActive(false);
+                if (_inyeonTag != null && _inyeonTag.activeSelf) _inyeonTag.SetActive(false);
+                return;
+            }
+            EnsureInyeonButtonFx();
+            if (_inyeonGlow == null) return;
+            if (!_inyeonGlow.gameObject.activeSelf) _inyeonGlow.gameObject.SetActive(true);
+            if (_inyeonTag != null && !_inyeonTag.activeSelf) _inyeonTag.SetActive(true);
+
+            float scale, alpha;
+            if (_inyeonBurst > 0f)
+            {
+                _inyeonBurst -= Time.unscaledDeltaTime;
+                float k = 1f - Mathf.Clamp01(_inyeonBurst / InyeonBurstSeconds);   // 0 → 1
+                scale = Mathf.Lerp(1.9f, 1.25f, Ease.OutCubic(k));
+                alpha = Mathf.Lerp(1f, 0.55f, k);
+            }
+            else
+            {
+                float breath = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 2.2f);
+                scale = 1.25f + 0.05f * breath;
+                alpha = 0.38f + 0.17f * breath;
+            }
+            _inyeonGlow.localScale = Vector3.one * scale;
+            _inyeonGlowImg.color = new Color(1f, 1f, 1f, alpha);
+        }
+
+        private void EnsureInyeonButtonFx()
+        {
+            if (_inyeonGlow != null) return;
+            var button = _ui.Find("SkillButton") as RectTransform;
+            if (button == null) return;
+            var go = new GameObject("PartyInyeonGlow", typeof(RectTransform), typeof(Image));
+            _inyeonGlow = (RectTransform)go.transform;
+            _inyeonGlow.SetParent(button, false);
+            _inyeonGlow.SetAsFirstSibling();   // 버튼 그림 뒤 — 아이콘을 가리지 않는다
+            _inyeonGlow.anchorMin = _inyeonGlow.anchorMax = new Vector2(0.5f, 0.5f);
+            _inyeonGlow.sizeDelta = button.rect.size;
+            _inyeonGlowImg = go.GetComponent<Image>();
+            _inyeonGlowImg.sprite = _battle.PartySprite("syn_icon_glow");
+            _inyeonGlowImg.raycastTarget = false;
+
+            var tagGo = new GameObject("PartyInyeonButtonTag", typeof(RectTransform), typeof(TextMeshProUGUI));
+            var tagRt = (RectTransform)tagGo.transform;
+            tagRt.SetParent(button, false);
+            tagRt.anchorMin = tagRt.anchorMax = new Vector2(0.5f, 0f);
+            tagRt.pivot = new Vector2(0.5f, 0.5f);
+            tagRt.anchoredPosition = new Vector2(0f, 6f);
+            tagRt.sizeDelta = new Vector2(70f, 22f);
+            var t = tagGo.GetComponent<TextMeshProUGUI>();
+            var like = _ui.Get<TextMeshProUGUI>("PartyMainName");
+            if (like != null) { t.font = like.font; t.fontSharedMaterial = like.fontSharedMaterial; }
+            t.text = "인연";   // 언어팩 키로 옮길 것(파티 글자 일괄)
+            t.fontSize = 15f;
+            t.fontStyle = FontStyles.Bold;
+            t.color = InyeonGoldUi;
+            t.alignment = TextAlignmentOptions.Center;
+            t.raycastTarget = false;
+            t.outlineWidth = 0.25f;
+            t.outlineColor = new Color32(40, 20, 0, 255);
+            _inyeonTag = tagGo;
+        }
+
         private void TickPartyHud()
         {
             if (_battle == null || !_battle.PartyEnabled) return;
             EnsurePartyHud();
+            TickInyeonButton();
             int v = _battle.PartyHudVersion;
             if (v == _partyHudVersion) return;
             _partyHudVersion = v;
