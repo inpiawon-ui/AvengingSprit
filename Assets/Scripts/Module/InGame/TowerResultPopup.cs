@@ -49,7 +49,7 @@ namespace Game.Module.InGame
             Pop();
             if (_faces == null)
             {
-                try { _faces = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
+                try { _faces = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface", gameObject.scene.name); }
                 catch (Exception ex) { Debug.LogWarning($"[탑 결과] 얼굴 아틀라스 로드 실패 — {ex.Message}"); }
                 if (this != null) Fill(e);
             }

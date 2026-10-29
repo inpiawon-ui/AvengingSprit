@@ -351,17 +351,17 @@ namespace Game.Module.InGame
             ShowNoHost();
             // 「CURRENT HOST」 칸의 얼굴 — 원작처럼 얼굴만 크게 보여 준다. 없으면 몸 그림으로 버틴다.
             // 판이 서자마자 첫 빙의 알림이 오므로 **판보다 먼저** 받아 둔다.
-            try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
+            try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface", gameObject.scene.name); }
             catch (Exception e) { Debug.LogWarning($"[InGameUI] 얼굴 아틀라스 로드 실패 — {e.Message}"); }
 
             await _battle.BootAsync(field, layer);
 
             // 카드 문구는 테이블에서 읽는다 — 버프 정의를 UI 에 복제하지 않기 위함
-            try { _cardAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/card"); }
+            try { _cardAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/card", gameObject.scene.name); }
             catch (Exception e) { Debug.LogWarning($"[InGameUI] 카드 아틀라스 로드 실패 — {e.Message}"); }
 
             // 창 부품(상점·악마·제단 액자·칸·버튼)과 특성 분류 아이콘이 여기 있다.
-            try { _uiAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/ingamemainui"); }
+            try { _uiAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/ingamemainui", gameObject.scene.name); }
             catch (Exception e) { Debug.LogWarning($"[InGameUI] 화면 아틀라스 로드 실패 — {e.Message}"); }
 
             // 아틀라스가 온 **뒤에** 껍데기를 입힌다. 먼저 부르면 그림이 아직 없어

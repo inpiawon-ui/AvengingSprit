@@ -56,7 +56,7 @@ namespace Game.Module.InGame
 
         private async UniTaskVoid LoadAtlasAsync()
         {
-            try { _atlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>(AtlasAddress); }
+            try { _atlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>(AtlasAddress, gameObject.scene.name); }
             catch (Exception e) { Debug.LogWarning($"[PopupFx] 연출 아틀라스 로드 실패 — {e.Message}"); }
             _frameCache.Clear();
         }

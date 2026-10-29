@@ -79,7 +79,7 @@ namespace Game.Module.Title
             if (_logo == null) return;
 
             SpriteAtlas atlas;
-            try { atlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>(AtlasAddress); }
+            try { atlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>(AtlasAddress, gameObject.scene.name); }
             catch (Exception e)
             {
                 Debug.LogWarning($"[Title] 아틀라스 로드 실패 — 로고 색 순환 없이 진행한다: {e.Message}");

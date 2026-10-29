@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Game.Module.Common;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.Resource;
 using UnityEngine;
@@ -39,7 +40,8 @@ namespace Game.Module.InGame
             Addressables.Release(probe);
             if (!found) return null;
 
-            return await CoreModule.Get<IResourceManager>().LoadAsync<T>(address);
+            // 씬 범위 — 판이 끝나면 풀린다. 전역으로 읽으면 방마다 바닥 · 벽 그림이 앱을 끌 때까지 쌓였다(2026-10-30)
+            return await CoreModule.Get<IResourceManager>().LoadAsync<T>(address, SceneNames.InGame);
         }
     }
 }

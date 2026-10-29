@@ -104,7 +104,7 @@ namespace Game.Module.Common.UI
             if (!CoreModule.TryGet<IResourceManager>(out var res)) return;
             string address = AtlasPrefix + key;
             SpriteAtlas atlas;
-            try { atlas = await res.LoadAsync<SpriteAtlas>(address); }
+            try { atlas = await res.LoadAsync<SpriteAtlas>(address, gameObject.scene.name); }
             catch (System.Exception) { return; }   // 아직 큰 그림이 없는 몸 — 초상으로 버틴다
             if (this == null || ticket != _loadTicket || atlas == null)
             {

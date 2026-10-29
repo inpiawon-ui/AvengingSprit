@@ -132,7 +132,7 @@ namespace Game.Module.Lobby
         private async void Start()
         {
             _player = CoreModule.Get<IPlayerDataService>();
-            try { _faces = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
+            try { _faces = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface", gameObject.scene.name); }
             catch (Exception e) { Debug.LogWarning($"[RbLobby] 얼굴 아틀라스: {e.Message}"); }
             if (this == null) return;
             // 챕터 표를 상성 규칙에 건다 — 판(BattleDirector)에서만 걸어서 로비에서는 「유리한 속성」을 못 셌다

@@ -301,7 +301,7 @@ namespace Game.Module.Lobby
 
         private async UniTaskVoid LoadFacesAsync()
         {
-            try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
+            try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface", gameObject.scene.name); }
             catch (Exception e) { Debug.LogWarning($"[탑] 얼굴 아틀라스 로드 실패 — {e.Message}"); }
             if (this != null && gameObject.activeSelf) Refresh();
         }

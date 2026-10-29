@@ -373,7 +373,7 @@ namespace Game.Module.InGame
 
             var res = CoreModule.Get<IResourceManager>();
             await LoadPanelAtlasAsync(res);
-            try { _atlas = await res.LoadAsync<SpriteAtlas>(AtlasAddress); }
+            try { _atlas = await res.LoadAsync<SpriteAtlas>(AtlasAddress, gameObject.scene.name); }
             catch (Exception e) { Debug.LogError($"[Battle] 아틀라스 로드 실패 — {e.Message}"); }
             CachePossessMarkSprites();
             CacheDamageDigits();
@@ -2498,7 +2498,9 @@ namespace Game.Module.InGame
 
         private async UniTask LoadOneUnitAtlasAsync(IResourceManager res, string key)
         {
-            try { _unitAtlas[key] = await res.LoadAsync<SpriteAtlas>(UnitAtlasPrefix + key); }
+            // 씬 범위 — 판을 나가면 풀린다(전역이면 빙의해 본 몸 그림이 앱을 끌 때까지 쌓였다, 2026-10-30).
+            // 유령만 전역 — 로딩 화면(앱 전체)이 같은 주소를 쥐고 있어 여기서 풀면 로딩 화면 그림이 깨진다
+            try { _unitAtlas[key] = await res.LoadAsync<SpriteAtlas>(UnitAtlasPrefix + key, key == "ghost" ? null : gameObject.scene.name); }
             catch (Exception e)
             {
                 // 한 종이 없다고 런을 멈추지 않는다 — 그 캐릭터만 그림 없이 나온다.
@@ -3051,7 +3053,7 @@ namespace Game.Module.InGame
         private async UniTask LoadPanelAtlasAsync(IResourceManager res)
         {
             if (_panelAtlas != null) return;
-            try { _panelAtlas = await res.LoadAsync<SpriteAtlas>("atlas/hostselectpanel"); }
+            try { _panelAtlas = await res.LoadAsync<SpriteAtlas>("atlas/hostselectpanel", gameObject.scene.name); }
             catch (Exception e)
             {
                 // 없어도 게임은 돈다 — 버튼이 기본 그림으로 남을 뿐이다
