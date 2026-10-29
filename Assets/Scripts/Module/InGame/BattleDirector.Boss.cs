@@ -1346,6 +1346,8 @@ namespace Game.Module.InGame
             // ⚠ 판정은 **그린 것과 같은 함수**다. 여기서 반경을 조금 키우거나
             //   "관대하게" 만들지 마라 — 그 순간 그림과 판정이 갈라진다.
             bool playerHit = me != null && _danger.Contains(me.Position, _roomSize);
+            // 보스에게서 뻗어 나오는 공격(부채꼴 · 띠 · 몸 둘레 원)은 사이 물건이 막아 준다(PD 2026-10-30, 장판과 같은 자)
+            if (playerHit && ShieldedFrom(_danger, boss, me.Position)) playerHit = false;
             if (playerHit && ShapeHurts(m.Draw))
             {
                 DamagePlayer(dmg, boss.Key);

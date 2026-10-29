@@ -17,6 +17,27 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
+        /// <summary>
+        /// 이 장판을 물건이 막아 주나 — **몬스터에서 뻗어 나오는** 공격만(PD 2026-10-30 「몬스터 공격이 물건을 무조건 통과」).
+        ///   · 부채꼴 · 띠: 시작점 → 나 사이에 적 탄을 막는 물건이 있으면 막힌다
+        ///   · 원 · 고리: 주인 몸을 중심으로 터질 때만 같은 기준(하늘에서 떨어지는 장판은 막지 않는다)
+        ///   · 세로 줄 · 주인 없는 방 함정: 막지 않는다
+        /// </summary>
+        private bool ShieldedFromWarn(Warn w, Vector2 target) => ShieldedFrom(w.Shape, w.Owner, target);
+
+        /// <summary>장판 · 보스 예고 공통 — 주인이 있고 주인에게서 뻗어 나오는 모양이면 사이 물건이 막는다.</summary>
+        private bool ShieldedFrom(DangerShape s, Unit owner, Vector2 target)
+        {
+            if (owner == null) return false;
+            bool fromOwner = s.Shape switch
+            {
+                DangerShape.Kind.Wedge or DangerShape.Kind.Band => true,
+                DangerShape.Kind.Disc or DangerShape.Kind.Ring => Vector2.Distance(s.Origin, owner.Position) <= Meters(1f),
+                _ => false,
+            };
+            return fromOwner && !EnemyLineClear(s.Origin, target);
+        }
+
         private sealed class Warn
         {
             public DangerView View;
@@ -124,7 +145,7 @@ namespace Game.Module.InGame
                 // 발밑으로 잰다 — 이동 판정·가시 판정과 같은 자다. 몸 가운데도 같이 본다
                 // (도형 가장자리에 발만 걸친 것과 몸만 걸친 것 둘 다 「안」이다).
                 var foot = new Vector2(me.Position.x, me.Position.y - FootDrop(me));
-                if (w.Shape.Contains(foot, _roomSize) || w.Shape.Contains(me.Position, _roomSize))
+                if ((w.Shape.Contains(foot, _roomSize) || w.Shape.Contains(me.Position, _roomSize)) && !ShieldedFromWarn(w, me.Position))
                     DamagePlayer(w.Damage, w.Owner != null ? w.Owner.Key : null);
             }
 

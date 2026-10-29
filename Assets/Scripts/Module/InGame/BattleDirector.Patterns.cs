@@ -506,6 +506,9 @@ namespace Game.Module.InGame
             dir = dir.sqrMagnitude < 0.0001f ? e.Facing : dir.normalized;
             var aimAt = e.Position + dir * Meters(TellLineLength);
             bool hit = InEnemyTell(me);
+            // 사이에 적 탄을 막는 물건이 있으면 막아 준다 — 숨결 · 폭발 · 돌진도 기둥 뒤로 피할 수 있다.
+            //   예전에는 예고 모양 안이면 물건 너머로도 맞아 「몬스터 공격이 무조건 통과한다」(PD 2026-10-30)
+            if (hit && !EnemyLineClear(e.Position, me.Position)) hit = false;
             EndEnemyTell();
             int dmg = Mathf.Max(1, e.Atk);
             // 대장은 「소개」가 아니라 관문이다 — 탄 수 · 피해 · 돌진 거리를 키운다 (BattleDirector.MidBoss)

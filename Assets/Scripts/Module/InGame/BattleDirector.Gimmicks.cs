@@ -50,14 +50,20 @@ namespace Game.Module.InGame
                 for (int i = 0; i < _obstacles.Count; i++)
                 {
                     var o = _obstacles[i];
-                    if (!o.BlocksEnemyShot || !o.BlocksShot) continue;
+                    if (!StopsEnemyShot(o)) continue;
                     if (o.ShotBounds.Contains(p)) return false;
                 }
             }
             return true;
         }
 
-        /// <summary>그 자리가 저 눈에서 가려지나 (키 큰 것만 가린다).</summary>
+        /// <summary>적 탄이 이 물건에 막히나 — 내 탄과 같은 기준(탄을 막는 물건이면 다, PD 2026-10-30).</summary>
+        private static bool StopsEnemyShot(Obstacle o) => o.BlocksShot;
+
+        /// <summary>던지는 적 공격(포물선)이 막히나 — 공중으로 넘어가므로 키 큰 것에만.</summary>
+        private static bool StopsEnemyLob(Obstacle o) => o.BlocksShot && o.BlocksEnemyShot;
+
+        /// <summary>그 자리가 저 눈에서 가려지나 (적 탄을 막는 물건이 가린다).</summary>
         private bool HiddenFrom(Vector2 spot, Vector2 eye) => !EnemyLineClear(eye, spot);
 
         private bool Walkable(Unit e, Vector2 spot) => !BlockedAt(spot, FootHalf(e), FootDrop(e));

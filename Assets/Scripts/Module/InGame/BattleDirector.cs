@@ -3499,22 +3499,21 @@ namespace Game.Module.InGame
         /// 낮은 엄폐물(낮은 벽·바리케이드)은 적 탄이 넘어간다. 숨어도 맞는다는 뜻이고,
         /// 그 대신 내가 쏠 자리를 찾아 움직이게 만든다. 키 큰 것(기둥)만 양쪽을 다 막는다.
         /// </summary>
-        private bool BlockedByCover(Vector2 at, bool fromPlayer)
+        private bool BlockedByCover(Vector2 at, bool fromPlayer, bool lob = false)
         {
-            // 적 탄은 **키 큰 것**(기둥·덩어리·난간·되튕기는 벽·포탑·바위)에만 막힌다.
+            // 적 탄도 내 탄처럼 **탄을 막는 물건이면 다** 막힌다(PD 2026-10-30 「몬스터 공격이 무조건 통과해 밸런스가 너무 어렵다」).
             //
-            // ⚠ 2026-09-28 배치 개편 전에는 적 탄이 모든 지형을 통과했다 — 「엄폐 뒤에 붙어
-            //   서는 것이 정답이 되면 지형이 은신처가 된다」는 이유였다. 그 걱정은
-            //   **낮은 것**(상자·낮은 벽·바리케이드)이 맡는다: 저것은 지금도 적 탄이 넘어온다.
-            //   키 큰 것까지 통과하면 「기둥 뒤로 돌아 들어가 각을 잡는」 놀이가 아예 없다 —
-            //   궁수의 전설이 재미있는 자리가 정확히 거기다. 적도 같은 규칙으로 각을 잡는다
-            //   (`BattleDirector.Gimmicks` — 사선이 막히면 옆으로 나와 쏘고 다시 숨는다).
+            // ⚠ 2026-09-28 ~ 10-30 에는 적 탄이 **키 큰 것**에만 막히고 낮은 것(상자 · 낮은 벽 · 바리케이드)은
+            //   넘어왔다 — 「엄폐 뒤에 붙어 서는 게 정답이 되면 지형이 은신처가 된다」는 이유였다.
+            //   방 물건 약 9,500개 중 적 탄을 막는 것이 3,785개뿐이라 PD 손에는 「무조건 통과」로 느껴졌다.
+            // 던지는 공격(포물선 · lob)만 예전처럼 키 큰 것에만 막힌다 — 공중으로 넘어가는 것이 상자에 걸리면 어색하다.
+            // 적이 「사선이 막히면 옆으로 나와 쏘는」 판단(`EnemyLineClear`)도 같은 자(`StopsEnemyShot`)를 쓴다.
             if (!fromPlayer)
             {
                 for (int i = 0; i < _obstacles.Count; i++)
                 {
                     var o = _obstacles[i];
-                    if (!o.BlocksEnemyShot || !o.BlocksShot) continue;
+                    if (!(lob ? StopsEnemyLob(o) : StopsEnemyShot(o))) continue;
                     if (o.ShotBounds.Contains(at)) return true;
                 }
                 return false;
@@ -7589,7 +7588,7 @@ namespace Game.Module.InGame
                     if (!p.Pierce) { p.Despawn(); continue; }
                 }
 
-                if (BlockedByCover(p.Position, p.FromPlayer))
+                if (BlockedByCover(p.Position, p.FromPlayer, p.IsLob))
                 {
                     // 도탄이 남아 있으면 기둥에서도 튕긴다. 정본 "도탄 벽" 지형지물이
                     // 이 경로를 쓴다 — 기둥이 막기만 하는 것이 아니라 되돌려 준다.
