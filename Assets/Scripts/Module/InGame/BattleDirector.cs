@@ -557,6 +557,7 @@ namespace Game.Module.InGame
         private void SpawnGhost()
         {
             _ghostHp = GhostHpMax;
+            ResetParty();             // 빙의 파티 — 보조 · 교체 횟수를 비운다
             _repossessLock = 0f;      // 런은 언제나 교체 가능한 상태로 시작한다
             _eliteRoomsCleared = 0;
             _repossessLockShown = -1;
@@ -1971,6 +1972,7 @@ namespace Game.Module.InGame
             // 소환물 · 동료도 줄에 세운다 — 아래 「맨 뒤 칸부터」로 바꾸면서 줄 밖은 바닥으로 깔리기 때문이다
             for (int i = 0; i < _summons.Count; i++) if (_summons[i]?.U != null && _summons[i].U.transform.parent == _unitLayer) AddDepth(_summons[i].U);
             if (_ally != null && _ally.transform.parent == _unitLayer) AddDepth(_ally);
+            AddPartyDepth();
             // 문은 정렬에서 빼면 순서가 매 프레임 밀려 깜빡인다. 늘 맨 뒤에 둔다 —
             // 방 위쪽 끝에 있어 무엇을 가릴 일이 없다.
             for (int i = 0; i < _exits.Count; i++)
@@ -3616,6 +3618,7 @@ namespace Game.Module.InGame
 
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
+            if (_partyHold) { TickPartyHold(); return; }   // 빙의 파티 선택창 — 잠깐 멈춘다
             if (!IsPresentationHeld && _shopHealPending) ApplyShopHeal();
             if (IsPresentationHeld) return;   // 보상 연출 중 — 무엇을 얻었는지 보여 주는 동안 선다(BattleDirector.Present)
             // 스킬 컷인 중 — 전투를 세우고 연출만 돌린다. 컷인이 끝나면 스킬이 나간다.
@@ -3643,6 +3646,7 @@ namespace Game.Module.InGame
             TickPlayer(dt);
             TickRangeRing(dt);     // 내 공격 사거리 원 — 움직인 뒤 자리를 따라간다
             TickAlly(dt);          // 상점에서 산 동료
+            TickParty(dt);         // 빙의 파티 보조 둘
             TickSummons(dt);       // 내가 불러낸 것들 — 해골 · 골렘 · 분신
             TickAfterimages(dt);
             TickEnemies(dt);
@@ -7846,7 +7850,7 @@ namespace Game.Module.InGame
 
             // 기획서 1-2 A — 몸을 잃는 값(-20%)이 놓아주는 값(-15%)보다 커야
             // "죽기 전에 버리고 나온다" 가 선택지가 된다.
-            int cost = Mathf.Max(1, GhostHpMax * _config.GhostDeathCostPercent / 100);
+            int cost = PartyOn ? PartyRule.CostDeath : Mathf.Max(1, GhostHpMax * _config.GhostDeathCostPercent / 100);
             _ghostHp = Mathf.Max(0, _ghostHp - cost);   // 0 이면 다음 틱에 패배(TickGhostState)
             ShowGhostCost(pos, cost);
 
@@ -7867,6 +7871,7 @@ namespace Game.Module.InGame
             _bus.Publish(new HostLostEvent { LostHostKey = key });
             PublishHp();
             BeginSoulOut(body, pos);
+            if (PartyOn) OpenPartyDeath(key, pos);   // 빙의 파티 — A 새 빙의 · B 보조 승격 · C 부활
         }
 
         /// <summary>
@@ -8951,6 +8956,8 @@ namespace Game.Module.InGame
             var target = _possessTarget;
             var entry = _player.GetHost(target.Key);
             var pos = target.Position;
+            // 빙의 파티 — 사망 뒤 A(새 빙의)를 골랐으면 여기서 치른다
+            if (PartyOn && _partyPossessCost > 0) { _ghostHp = Mathf.Max(1, _ghostHp - _partyPossessCost); ShowGhostCost(pos, _partyPossessCost); _partyPossessCost = 0; }
 
             // ⚠ 영혼이 출발하는 자리는 **지금 내가 서 있는 자리**다.
             //   `_ghost` 는 몸을 탄 동안 꺼져 있어 좌표가 마지막으로 유령이었던 곳
@@ -9100,6 +9107,7 @@ namespace Game.Module.InGame
                 Mastery = _player != null && key != null ? _player.GetMastery(key) : 0,
                 HostHpMax = _host.HpMax,
             });
+            ChargePartyStart();   // 빙의 파티 — 한 판의 첫 몸도 빙의다(−20). 어느 경로로 입든 한 번만
             PublishHp();
         }
 

@@ -88,6 +88,22 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 빙의 파티 (PD 기획서 v0.1 · 2026-10-29) ──────────────
+        //
+        // 메인 하나 + 보조 둘. 규칙은 `BattleDirector.Party.cs`. 이 브랜치에서는 기본 켜짐.
+        private const string PartyMenu = "Tools/Game/시험판 — 빙의 파티";
+
+        [MenuItem(PartyMenu)]
+        private static void ToggleParty()
+            => PartyRule.Enabled = !PartyRule.Enabled;
+
+        [MenuItem(PartyMenu, true)]
+        private static bool TogglePartyValidate()
+        {
+            Menu.SetChecked(PartyMenu, PartyRule.Enabled);
+            return true;
+        }
+
         // ── RE:BORN UI 리뉴얼 미리 보기 (2026-10-23) ──────────────
         private const string RebornMenu = "Tools/Game/테스트 — 새 UI(RE:BORN)로 보기";
 

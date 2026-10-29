@@ -262,6 +262,9 @@ namespace Game.Module.InGame
         /// </summary>
         public static bool PlayerHasHost;
 
+        /// <summary>빙의 파티 규칙이 걸린 판인가(`BattleDirector.Party`). 경직 대신 체력 35% 아래가 빙의 조건이다.</summary>
+        public static bool PartyActive;
+
         /// <summary>
         /// 지금 이 순간 빼앗을 수 있는가.
         /// **숙주로 찍힌 몸**이어야 하고, 몸을 입고 있다면 **경직 중**이기까지 해야 한다.
@@ -275,6 +278,8 @@ namespace Game.Module.InGame
                 if (!IsHostBody) return false;                       // 잡몹은 못 뺏는다
                 if (Profile != null &&
                     Profile.PossessKind == Game.Character.PossessKind.NotPossessable) return false;
+                // 빙의 파티 — 몸을 입고 있어도 체력 35% 아래면 탈 수 있다. 계속 싸우다 죽는다
+                if (PartyActive) return !PlayerHasHost || Hp <= HpMax * PartyRule.PossessHpRatio;
                 return !PlayerHasHost || IsStaggered;
             }
         }
@@ -1238,7 +1243,7 @@ namespace Game.Module.InGame
             // 숙주만 경직이 쌓인다. 잡몹은 아무리 때려도 빼앗을 몸이 되지 않는다.
             // 시험판 — 사신의 수확에서는 보스를 뺀 모든 적에 쌓이고, 차면 혼이 드러난다.
             bool reap = ReapRule.Enabled && Side == UnitSide.Enemy && !IsBoss;
-            if ((IsHostBody || reap) && Hp > 0 && _staggerWindow <= 0f && _staggerCool <= 0f)
+            if ((IsHostBody || reap) && !PartyActive && Hp > 0 && _staggerWindow <= 0f && _staggerCool <= 0f)
             {
                 _stagger += dealt;
                 if (reap)

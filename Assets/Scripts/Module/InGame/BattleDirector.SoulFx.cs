@@ -609,7 +609,8 @@ namespace Game.Module.InGame
         private void RefreshTakeMarks(Unit picked)
         {
             if (_takeSprite == null) _takeSprite = GetSprite("rps_take");
-            bool ghost = _host == null && !IsChanneling && !_awaitingBuff && _running;
+            // 빙의 파티 — 몸을 입고 있어도 데려올 길이 있으면 「빙의 가능」 표시를 띄운다
+            bool ghost = (_host == null || PartyCanChoose()) && !IsChanneling && !_awaitingBuff && _running;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];

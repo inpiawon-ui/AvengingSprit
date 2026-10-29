@@ -704,6 +704,9 @@ namespace Game.Module.InGame
 
         private void OnPadDown(PointerEventData e)
         {
+            // 빙의 파티 — 빙의 가능한 적을 누르면 패드가 아니라 빙의다
+            _padTapTaken = _battle != null && _battle.TryPartyTap(e.position, e.pressEventCamera);
+            if (_padTapTaken) return;
             MovePadTo(e);
             // 누른 순간에는 아직 민 방향이 없다. 0 이어야 "멈춰야 쏜다"가 유지된다.
             if (_knob != null) _knob.anchoredPosition = _knobHome;
@@ -764,8 +767,11 @@ namespace Game.Module.InGame
             _dpad.anchoredPosition = pivotPos - anchor;
         }
 
+        private bool _padTapTaken;
+
         private void OnPadDrag(PointerEventData e)
         {
+            if (_padTapTaken) return;
             var parent = _dpad.parent as RectTransform;
             if (parent == null) return;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
