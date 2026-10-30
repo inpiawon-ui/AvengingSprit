@@ -62,7 +62,6 @@ namespace Game.Module.InGame
         // 거치 기관포 — 앞 60°(±30°)를 1.2초에 한 번 왕복 · 0.07초마다 관통 탄줄(3초 ≈ 43줄)
         private const float FortressVolleyGap = 0.07f;
         private const float FortressHalfDeg = 30f;
-        private const float FortressSweepSeconds = 1.2f;
         private const float FortressRangeMeters = 9f;
         private const float FortressShotMul = 0.32f;
         private const int FortressSlowPercent = 35;
@@ -292,15 +291,14 @@ namespace Game.Module.InGame
 
         // ═══════════════════════════════════════════════════════════
         //  코만도(기관총) · 필살기 거치 기관포 (PD 2026-10-29 시안 1-A `_exchange/in/mock1029_ult_mg_a.png`)
-        //  바닥에 거치하고 **앞쪽 60° 부채꼴만** 좌우로 훑으며 굵은 관통 탄줄을 3초 — 맞은 적은 둔해진다.
+        //  바닥에 거치하고 **앞쪽 60° 부채꼴 다섯 줄**로 한꺼번에 3초 쏟아붓는다(10-30 — 훑기 없앰, 시안 5줄) — 맞은 적은 둔해진다.
         //  폭력배 「회전 난사」(제자리 사방)와 한눈에 달라야 한다 — 사방 · 원형 탄막을 쓰지 않는다.
         //  그림: 탄줄 `mgtracer` · 총구 `mgmuzzle` · 맞은 자리 `mghit` · 흙먼지 `mgdust` · 탄피 `mgshell`(없으면 지금 그림으로 돈다)
         // ═══════════════════════════════════════════════════════════
 
         private float _fortressSeconds;
         private float _fortressVolley;
-        private float _fortressAngle;     // 훑는 가운데(처음 겨눈 쪽)
-        private float _fortressSweep;     // 훑기 시계
+        private float _fortressAngle;     // 부채꼴 가운데 줄(처음 겨눈 쪽)
         private float _fortressShell;
         private Vector2 _fortressAt;
         private Impact _fortressFx;
@@ -310,7 +308,6 @@ namespace Game.Module.InGame
             _fortressSeconds = FortressSeconds;
             _fortressAt = me.Position;
             _fortressVolley = 0f;
-            _fortressSweep = 0f;
             _fortressShell = 0f;
             // 가장 가까운 적 쪽을 가운데로 — 없으면 바라보던 쪽
             var t = NearestEnemy(me.Position, Meters(FortressRangeMeters));
@@ -325,7 +322,7 @@ namespace Game.Module.InGame
             Shake(5f);
         }
 
-        /// <summary>거치한 동안 — 걷는 입력을 되돌려 제자리에 박고, 부채꼴을 좌우로 훑으며 0.07초마다 관통 탄줄 한 줄.</summary>
+        /// <summary>거치한 동안 — 걷는 입력을 되돌려 제자리에 박고, 0.07초마다 부채꼴 다섯 줄로 총알 조각을 쏜다.</summary>
         private void TickFortress(float dt)
         {
             TickFortressDashes(dt);
@@ -336,9 +333,8 @@ namespace Game.Module.InGame
             // 걷기(`TickPlayer`)가 이보다 먼저 돈다 — 옮겨진 자리를 그 프레임 안에 되돌린다
             me.Position = _fortressAt;
 
-            _fortressSweep += dt;
-            float ang = _fortressAngle + FortressHalfDeg * Mathf.Sin(_fortressSweep * Mathf.PI * 2f / FortressSweepSeconds);
-            float rad = ang * Mathf.Deg2Rad;
+            // 훑지 않는다 — 고정된 부채꼴 다섯 줄이 한꺼번에 나간다(PD 2026-10-30 「따로 쏘면 액티브랑 같다」 · 시안 5줄)
+            float rad = _fortressAngle * Mathf.Deg2Rad;
             var dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
             me.SetFacing(dir);
 
@@ -351,14 +347,22 @@ namespace Game.Module.InGame
                 float length = Meters(FortressRangeMeters);
                 // 탄줄은 **날아가는 짧은 총알 조각**이다 — 예전엔 그림 한 장을 총구~9 m 끝까지 늘려 띄워 굵은 레이저처럼 보였다
                 // (PD 2026-10-30 「탄막 요새 이펙트가 이상하다, 레이저 같다」 · 시안 mock1029_ult_mg_a 는 가는 점선 부채꼴)
-                // 한 번에 조각 셋을 간격을 두고 — 한 줄이 촘촘한 점선이 되게(조각 하나면 띄엄띄엄 몇 발로만 보였다)
-                for (int k = 0; k < FortressDashPerVolley; k++)
-                    SpawnFortressDash(from + dir * (k * FortressDashGap), dir, length - k * FortressDashGap);
+                // 다섯 줄 × 줄마다 조각 둘을 간격 두고 — 줄마다 촘촘한 점선
+                for (int line = 0; line < FortressLines; line++)
+                {
+                    var ld = FortressLineDir(dir, line);
+                    for (int k = 0; k < FortressDashPerVolley; k++)
+                        SpawnFortressDash(from + ld * (k * FortressDashGap), ld, length - k * FortressDashGap);
+                }
                 (PlayFx("mgmuzzle", from + dir * 18f, FortressMuzzleSize, loop: false)
                     ?? PlayFx("muzzle", from + dir * 18f, FortressMuzzleSize * 0.6f, loop: false))?.SetFrameSeconds(0.03f);
                 int dmg = UltDamage(me, FortressShotMul);
-                // 판정은 보이는 조각과 같은 부채꼴(±흩어짐) — 줄 하나만 맞으면 「탄이 지나갔는데 안 맞았다」가 된다
-                var hit = new List<Unit>(EnemiesInCone(from, dir, FortressDashJitterDeg * 2f, length));
+                // 판정은 보이는 다섯 줄 그대로 — 줄마다 폭 안의 적, 한 번 쏠 때 한 적은 한 번만
+                _fortressHit.Clear();
+                for (int line = 0; line < FortressLines; line++)
+                    foreach (var e in EnemiesInPath(from, FortressLineDir(dir, line), length, Meters(FortressLineWidthMeters)))
+                        if (!_fortressHit.Contains(e)) _fortressHit.Add(e);
+                var hit = _fortressHit;
                 for (int i = 0; i < hit.Count; i++)
                 {
                     var e = hit[i];
@@ -387,8 +391,15 @@ namespace Game.Module.InGame
         private const float FortressDashLength = 90f;      // 조각 길이(px)
         private const float FortressDashThick = 18f;       // 굵기 — 예전 줄기 46 의 절반 아래
         private const float FortressDashSpeed = 2600f;     // px/초 — 9 m(약 650 px)를 0.25초에
-        private const float FortressDashJitterDeg = 12f;   // 조각마다 흩어져 동시에 여러 줄이 부채꼴로 보이게(시안 5~7줄)
-        private const int FortressDashPerVolley = 3;
+        private const float FortressDashJitterDeg = 1.5f;  // 줄 안에서 살짝만 흔들린다
+        private const int FortressDashPerVolley = 2;
+        private const int FortressLines = 5;               // 시안 mock1029_ult_mg_a — 총구에서 다섯 줄
+        private const float FortressLineWidthMeters = 0.45f;
+        private readonly List<Unit> _fortressHit = new();
+
+        /// <summary>다섯 줄 중 line 번째 방향 — 가운데 줄이 dir, 양끝이 ±FortressHalfDeg.</summary>
+        private static Vector2 FortressLineDir(Vector2 dir, int line)
+            => Rotate(dir, Mathf.Lerp(-FortressHalfDeg, FortressHalfDeg, line / (float)(FortressLines - 1)));
         private const float FortressDashGap = 60f;        // 같은 번에 쏜 조각 사이(px)
 
         private struct FortressDash
