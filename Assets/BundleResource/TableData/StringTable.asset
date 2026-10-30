@@ -12161,24 +12161,18 @@ MonoBehaviour:
     _zhHant: "\u968A\u4F0D"
     _zhHans: "\u961F\u4F0D"
   - _key: ui.party.card.sublv.name
-    _ko: "\uBCF4\uC870 {0} \uC790\uB9AC \u300C{1}\u300D \uC2A4\uD0AC Lv {2} \u2192
-      {3}"
-    _ja: "\u30B5\u30D6{0}\u67A0\u300C{1}\u300D\u30B9\u30AD\u30EB Lv {2} \u2192 {3}"
-    _en: "Sub slot {0} \"{1}\" Skill Lv {2} \u2192 {3}"
-    _zhHant: "\u526F\u624B{0}\u4F4D\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
-    _zhHans: "\u526F\u624B{0}\u4F4D\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
+    _ko: "\uBCF4\uC870{0} \uC790\uB9AC \uC2A4\uD0AC Lv{2}\u2192{3}"
+    _ja: "\u30B5\u30D6{0}\u67A0 \u30B9\u30AD\u30EB Lv{2}\u2192{3}"
+    _en: "Sub{0} slot skill Lv{2}\u2192{3}"
+    _zhHant: "\u526F\u624B{0}\u4F4D\u6280\u80FD Lv{2}\u2192{3}"
+    _zhHans: "\u526F\u624B{0}\u4F4D\u6280\u80FD Lv{2}\u2192{3}"
   - _key: ui.party.card.sublv.desc
-    _ko: "\uBCF4\uC870 \uC2A4\uD0AC \xB7 \uD3C9\uD0C0 \uC704\uB825 +25% \xB7 \uC2A4\uD0AC
-      \uAC04\uACA9 \u22128%\n\uAD50\uCCB4\uD574\uB3C4 \uC774 \uC790\uB9AC\uC5D0 \uB0A8\uB294\uB2E4
-      \xB7 \uCD5C\uB300 Lv {0}"
-    _ja: "\u30B5\u30D6\u30B9\u30AD\u30EB\u30FB\u901A\u5E38\u653B\u6483\u5A01\u529B+25%\u30FB\u30B9\u30AD\u30EB\u9593\u9694\u22128%\n\u4EA4\u4EE3\u3057\u3066\u3082\u3053\u306E\u67A0\u306B\u6B8B\u308B\u30FB\u6700\u5927Lv
-      {0}"
-    _en: "Sub skill \xB7 Attack +25% \xB7 Skill interval \u22128%\nStays with this
-      slot \xB7 Max Lv {0}"
-    _zhHant: "\u526F\u624B\u6280\u80FD \xB7 \u666E\u653B\u5A01\u529B+25% \xB7 \u6280\u80FD\u9593\u9694\u22128%\n\u4EA4\u63DB\u5F8C\u4ECD\u4FDD\u7559\u65BC\u6B64\u4F4D
-      \xB7 \u6700\u9AD8 Lv {0}"
-    _zhHans: "\u526F\u624B\u6280\u80FD \xB7 \u666E\u653B\u5A01\u529B+25% \xB7 \u6280\u80FD\u95F4\u9694\u22128%\n\u4EA4\u6362\u540E\u4ECD\u4FDD\u7559\u4E8E\u6B64\u4F4D
-      \xB7 \u6700\u9AD8 Lv {0}"
+    _ko: "\uC774 \uC790\uB9AC \uBCF4\uC870 \uC704\uB825 +25% \xB7 \uC2A4\uD0AC \uAC04\uACA9
+      \u22128%"
+    _ja: "\u3053\u306E\u67A0\u306E\u30B5\u30D6 \u5A01\u529B+25%\u30FB\u30B9\u30AD\u30EB\u9593\u9694\u22128%"
+    _en: "This slot: power +25% \xB7 skill gap \u22128%"
+    _zhHant: "\u6B64\u4F4D\u526F\u624B \u5A01\u529B+25%\u30FB\u6280\u80FD\u9593\u9694\u22128%"
+    _zhHans: "\u6B64\u4F4D\u526F\u624B \u5A01\u529B+25%\u30FB\u6280\u80FD\u95F4\u9694\u22128%"
   - _key: ui.party.card.subpow.name
     _ko: "\uBCF4\uC870 \uC704\uB825 +10%"
     _ja: "\u30B5\u30D6\u5A01\u529B+10%"
@@ -12186,15 +12180,14 @@ MonoBehaviour:
     _zhHant: "\u526F\u624B\u5A01\u529B+10%"
     _zhHans: "\u526F\u624B\u5A01\u529B+10%"
   - _key: ui.party.card.subpow.desc
-    _ko: "\uBCF4\uC870 \uB458\uC758 \uD3C9\uD0C0 \xB7 \uC2A4\uD0AC\uC774 \uD568\uAED8
-      \uC138\uC9C4\uB2E4\n\uC9C0\uAE08 {0}% \u2192 {1}%"
-    _ja: "\u30B5\u30D62\u4F53\u306E\u901A\u5E38\u653B\u6483\u30FB\u30B9\u30AD\u30EB\u304C\u5F37\u5316\n\u73FE\u5728
-      {0}% \u2192 {1}%"
-    _en: "Both Subs' attacks and skills get stronger\nNow {0}% \u2192 {1}%"
-    _zhHant: "\u5169\u540D\u526F\u624B\u7684\u666E\u653B \xB7 \u6280\u80FD\u4E00\u540C\u589E\u5F37\n\u76EE\u524D
-      {0}% \u2192 {1}%"
-    _zhHans: "\u4E24\u540D\u526F\u624B\u7684\u666E\u653B \xB7 \u6280\u80FD\u4E00\u540C\u589E\u5F3A\n\u76EE\u524D
-      {0}% \u2192 {1}%"
+    _ko: "\uBCF4\uC870 \uB458 \uD3C9\uD0C0 \xB7 \uC2A4\uD0AC {0}% \u2192 {1}%"
+    _ja: "\u30B5\u30D62\u4F53\u306E\u653B\u6483\u30FB\u30B9\u30AD\u30EB {0}% \u2192
+      {1}%"
+    _en: "Both Subs: attack & skill {0}% \u2192 {1}%"
+    _zhHant: "\u5169\u540D\u526F\u624B\u666E\u653B\u30FB\u6280\u80FD {0}% \u2192
+      {1}%"
+    _zhHans: "\u4E24\u540D\u526F\u624B\u666E\u653B\u30FB\u6280\u80FD {0}% \u2192
+      {1}%"
   - _key: ui.party.card.ghost.name
     _ko: "\uC720\uB839 HP +10"
     _ja: "\u30B4\u30FC\u30B9\u30C8HP +10"

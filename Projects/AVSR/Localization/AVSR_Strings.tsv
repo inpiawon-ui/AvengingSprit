@@ -1883,10 +1883,10 @@ ui.party.swap.desc	{0} 이(가) 메인 · {1} 은(는) 보조 {2} 로 · 새 메
 ui.party.cancel	그만두기	やめる	Cancel	取消	取消
 ui.party.close	닫기	閉じる	Close	關閉	关闭
 ui.party.card.chip	파티	パーティ	Party	隊伍	队伍
-ui.party.card.sublv.name	보조 {0} 자리 「{1}」 스킬 Lv {2} → {3}	サブ{0}枠「{1}」スキル Lv {2} → {3}	Sub slot {0} "{1}" Skill Lv {2} → {3}	副手{0}位「{1}」技能 Lv {2} → {3}	副手{0}位「{1}」技能 Lv {2} → {3}
-ui.party.card.sublv.desc	보조 스킬 · 평타 위력 +25% · 스킬 간격 −8%\n교체해도 이 자리에 남는다 · 최대 Lv {0}	サブスキル・通常攻撃威力+25%・スキル間隔−8%\n交代してもこの枠に残る・最大Lv {0}	Sub skill · Attack +25% · Skill interval −8%\nStays with this slot · Max Lv {0}	副手技能 · 普攻威力+25% · 技能間隔−8%\n交換後仍保留於此位 · 最高 Lv {0}	副手技能 · 普攻威力+25% · 技能间隔−8%\n交换后仍保留于此位 · 最高 Lv {0}
+ui.party.card.sublv.name	보조{0} 자리 스킬 Lv{2}→{3}	サブ{0}枠 スキル Lv{2}→{3}	Sub{0} slot skill Lv{2}→{3}	副手{0}位技能 Lv{2}→{3}	副手{0}位技能 Lv{2}→{3}
+ui.party.card.sublv.desc	이 자리 보조 위력 +25% · 스킬 간격 −8%	この枠のサブ 威力+25%・スキル間隔−8%	This slot: power +25% · skill gap −8%	此位副手 威力+25%・技能間隔−8%	此位副手 威力+25%・技能间隔−8%
 ui.party.card.subpow.name	보조 위력 +10%	サブ威力+10%	Sub Power +10%	副手威力+10%	副手威力+10%
-ui.party.card.subpow.desc	보조 둘의 평타 · 스킬이 함께 세진다\n지금 {0}% → {1}%	サブ2体の通常攻撃・スキルが強化\n現在 {0}% → {1}%	Both Subs' attacks and skills get stronger\nNow {0}% → {1}%	兩名副手的普攻 · 技能一同增強\n目前 {0}% → {1}%	两名副手的普攻 · 技能一同增强\n目前 {0}% → {1}%
+ui.party.card.subpow.desc	보조 둘 평타 · 스킬 {0}% → {1}%	サブ2体の攻撃・スキル {0}% → {1}%	Both Subs: attack & skill {0}% → {1}%	兩名副手普攻・技能 {0}% → {1}%	两名副手普攻・技能 {0}% → {1}%
 ui.party.card.ghost.name	유령 HP +10	ゴーストHP +10	Ghost HP +10	幽靈HP +10	幽灵HP +10
 ui.party.card.ghost.desc	바로 회복 · 지금 {0} → {1}	即回復・現在 {0} → {1}	Heal now · {0} → {1}	立即回復 · 目前 {0} → {1}	立即恢复 · 目前 {0} → {1}
 ui.party.syn.force	파워 {0}인 · 받는 피해 −{1}%	パワー{0}人・被ダメージ−{1}%	Power ×{0} · Damage taken −{1}%	力量{0}人 · 受到傷害−{1}%	力量{0}人 · 受到伤害−{1}%
