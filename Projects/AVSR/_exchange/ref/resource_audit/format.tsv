@@ -20,7 +20,6 @@
 그림	Assets/BaseResource/InGameMainUI/fx_castring_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_castring_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_castring_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_castrune_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_cmwall_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_cmwall_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_cmwall_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -52,37 +51,14 @@
 그림	Assets/BaseResource/InGameMainUI/fx_hsinv_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hsinv_5.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hsinv_6.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxcore_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxcore_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxcore_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxcore_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxline_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxline_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxline_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxpow_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxpow_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxpow_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxpow_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxslash_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxslash_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxslash_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_hxslash_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxweap_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxweap_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxweap_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/fx_hxweap_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_lzaim_1.png	512x32	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_lzarc_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_lzarc_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -143,9 +119,7 @@
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_skill_empty.png	196x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_skill_frame.png	196x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud3/hud3_stage_track.png	166x36	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/hud3/hud3_top_band.png	1080x345	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud_action_frame_v2.png	244x157	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/InGameMainUI/hud_boss_plate_v2.png	689x105	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud_boss_plate_v3.png	720x110	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hud_dpad_base_v2.png	152x136	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/hudbackdrop_v2.png	720x243	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -384,8 +358,8 @@
 그림	Assets/BundleResource/Cutscene/cut_start_2.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_4.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_5.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
-아틀라스	Assets/BundleResource/Atlas/ReBornComponents.spriteatlasv2	최대 2048 · 어림 19.9MB	필터 Point 아님
-아틀라스	Assets/BundleResource/Atlas/ReBornHud.spriteatlasv2	최대 2048 · 어림 2.1MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/ReBornComponents.spriteatlasv2	최대 2048 · 어림 19.1MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/ReBornHud.spriteatlasv2	최대 2048 · 어림 1.9MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 53.1MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/unitl_amazon.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/unitl_amazon_elite.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
