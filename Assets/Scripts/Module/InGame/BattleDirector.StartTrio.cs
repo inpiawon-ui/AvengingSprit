@@ -20,11 +20,12 @@ namespace Game.Module.InGame
         /// <summary>
         /// 따라 하기 첫 판(평생 한 번) — 무리 · 인연을 꼭 겪게 정해 둔 셋(PD 2026-10-30 「인연이랑 시너지 캐릭을 처음에 세팅 · 한 번만」).
         /// 셋 다 코만도 부대(무리 3명 강)이고, 기관총 → 수류탄 → 미사일 → 수류탄 이 인연 짝이라 누구를 메인으로 골라도 남은 둘 중에 짝이 있다.
-        /// 고르지 않은 둘은 흩어졌다가 보조 안내 때 하나씩 다시 나온다.
+        /// 첫 방엔 그중 하나만 메인으로 서고, 남은 둘은 보조 1 · 2 안내 때 하나씩 나온다(한 번에 하나씩 배우게).
         /// </summary>
         private static readonly string[] TutorialSet = { "commando_mg", "commando_grenade", "commando_missile" };
         private bool _tutorialRun;
         private readonly List<string> _tutorialSubs = new();
+        private readonly List<string> _tutorialRest = new();
         private Unit _tutorialSub;
         private string _tutorialSubKey;
         private float _trioWait;
@@ -66,7 +67,14 @@ namespace Game.Module.InGame
         {
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null) return;
-            if (_tutorialRun && TutorialEntries(hosts) is List<HostEntry> set) { SpawnTrioOf(set); return; }
+            // 첫 판은 한 마리씩 배운다 — 첫 방엔 메인 하나만, 나머지 둘은 보조 1 · 2 안내 때 하나씩(PD 2026-10-30 「한 번에 셋이면 정신없다」)
+            if (_tutorialRun && TutorialEntries(hosts) is List<HostEntry> set)
+            {
+                _tutorialRest.Clear();
+                for (int i = 1; i < set.Count; i++) _tutorialRest.Add(set[i].HostKey);
+                SpawnTrioOf(set, 1);
+                return;
+            }
             // 그림이 이미 올라온 몸을 먼저 — 없으면 아무 몸이나 세우고 그 자리에서 올린다
             var ready = new List<HostEntry>();
             var rest = new List<HostEntry>();
@@ -92,9 +100,9 @@ namespace Game.Module.InGame
             return set;
         }
 
-        private void SpawnTrioOf(List<HostEntry> ready)
+        private void SpawnTrioOf(List<HostEntry> ready, int count = TrioCount)
         {
-            int n = Mathf.Min(TrioCount, ready.Count);
+            int n = Mathf.Min(count, ready.Count);
             if (n == 0) return;
 
             var at = _ghost.Position;
@@ -115,7 +123,7 @@ namespace Game.Module.InGame
             // 방에 원래 선 적과 같은 자리에 서면 겹쳐 보인다(PD 2026-10-30 빌드 캡처) — 둘레 적을 밖으로 민다
             for (int i = 0; i < _trio.Count; i++) ClearAround(_trio[i], TrioClearGap);
             // 처음 한 번은 손가락까지, 그다음부터는 안내 글만(고를 때까지 판은 늘 선다)
-            BuildCoach(null, Tx("ui.tut.coach.pick_trio"));
+            BuildCoach(null, Tx(n == 1 ? "ui.tut.coach.tap_main" : "ui.tut.coach.pick_trio"));
             if (CoachSeen("main") && _coachHand != null) _coachHand.gameObject.SetActive(false);
             PlaceCoachOnGroup(_trio);
         }
@@ -198,6 +206,8 @@ namespace Game.Module.InGame
         {
             CoachMark("main");
             _tutorialSubs.Clear();
+            if (_tutorialRun) _tutorialSubs.AddRange(_tutorialRest);   // 첫 방에 안 세운 둘
+            _tutorialRest.Clear();
             for (int i = 0; i < _trio.Count; i++)
             {
                 var o = _trio[i];
