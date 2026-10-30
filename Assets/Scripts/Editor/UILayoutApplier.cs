@@ -438,7 +438,7 @@ namespace Game.Editor
                 modern.SetValue(tmp, Enum.Parse(enumType, wrap ? "Normal" : "NoWrap"));
                 return;
             }
-            type.GetProperty("enableWordWrapping")?.SetValue(tmp, wrap);
+            type.GetProperty("textWrappingMode")?.SetValue(tmp, wrap ? TMPro.TextWrappingModes.Normal : TMPro.TextWrappingModes.NoWrap);
         }
     }
 }

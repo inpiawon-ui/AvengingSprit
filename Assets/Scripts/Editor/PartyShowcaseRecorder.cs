@@ -44,7 +44,7 @@ namespace Game.Editor
         private static void Tick()
         {
             if (!EditorApplication.isPlaying && !s_waitingRun) { EditorApplication.update -= Tick; return; }
-            var bd = Object.FindObjectOfType<BattleDirector>();
+            var bd = Object.FindAnyObjectByType<BattleDirector>();
             if (bd == null) return;
             var t = typeof(BattleDirector);
             var host = t.GetField("_host", F).GetValue(bd) as Unit;

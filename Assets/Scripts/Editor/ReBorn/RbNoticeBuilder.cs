@@ -52,7 +52,7 @@ namespace Game.Editor.ReBorn
                 Img(cell, "Components/rb_panel_base");   // 로비 칸 그림(rb_slot) 대신 남색 판 — PD 2026-10-27 「7200 다이아 테두리 다른 네모로」
                 Img(Corner(Node(cell, $"NotRewardCell{i}Icon"), 26f, 14f, 94f, 82f), "Icons/rb_icon_currency_gold_96");
                 Text(Corner(Node(cell, $"NotRewardCell{i}Count"), 4f, 88f, 116f, 124f), null, "432", 48, White, TA.Center, number: true);
-                Text(Corner(Node(cell, $"NotRewardCell{i}Label"), 6f, 128f, 114f, 188f), null, "골드", 34, White, TA.Center, heavy: true).enableWordWrapping = true;   // 「Summon Tickets」 는 두 줄
+                Text(Corner(Node(cell, $"NotRewardCell{i}Label"), 6f, 128f, 114f, 188f), null, "골드", 34, White, TA.Center, heavy: true).textWrappingMode = TMPro.TextWrappingModes.Normal;   // 「Summon Tickets」 는 두 줄
             }
             var ok = Corner(Node(c, "NotRewardOk"), 160f, 830f, 560f, 945f);
             Btn(ok, "Components/rb_btn_primary");
@@ -124,9 +124,9 @@ namespace Game.Editor.ReBorn
             // 큰 줄 = 받는 것(「젬 60 + 첫 구매 보너스 60」 · 「골드 3,000」), 아래 줄 = 값(「₩1,200」 · 「젬 30」).
             // 예전엔 큰 줄이 값이라 받는 것이 안 보였다 · 「결제는 스토어 계정으로」 · 「보유 젬」 줄은 뺐다(PD 2026-10-26)
             var price = Text(Corner(Node(c, "NotConfirmPrice"), 170f, 600f, 550f, 690f), null, "젬 60 + 첫 구매 보너스 60", 48, Yellow, TA.Center, heavy: true);
-            price.enableWordWrapping = true;
+            price.textWrappingMode = TMPro.TextWrappingModes.Normal;
             var note = Text(Corner(Node(c, "NotConfirmNote"), 170f, 696f, 550f, 740f), null, "₩1,200", 40, White, TA.Center, number: true);
-            note.enableWordWrapping = true;
+            note.textWrappingMode = TMPro.TextWrappingModes.Normal;
             var no = Corner(Node(c, "NotConfirmNo"), 168f, 762f, 345f, 866f);
             Btn(no, "Components/rb_btn_secondary");
             Text(Stretch(Node(no, "NotConfirmNoText")), "ui.rb.notice.close", "닫기", 52, White, TA.Center, heavy: true);
@@ -142,7 +142,7 @@ namespace Game.Editor.ReBorn
             Img(Corner(Node(c, "NotInfoIcon"), 310f, 378f, 410f, 478f), "Icons/rb_icon_reward_chest_96");
             Text(Corner(Node(c, "NotInfoName"), 130f, 490f, 590f, 536f), null, "금 상자", 46, White, TA.Center, heavy: true);
             var body = Text(Corner(Node(c, "NotInfoBody"), 140f, 556f, 580f, 860f), null, "골드 1,200~2,000", 36, White, TA.Top, heavy: true);
-            body.enableWordWrapping = true;
+            body.textWrappingMode = TMPro.TextWrappingModes.Normal;
             body.lineSpacing = 12f;
             var ok = Corner(Node(c, "NotInfoOk"), 160f, 880f, 560f, 968f);
             Btn(ok, "Components/rb_btn_primary");

@@ -241,11 +241,11 @@ namespace Game.Module.InGame
         // ── 다음 방 ───────────────────────────────────────────
 
         // 적을 다 잡으면 뜨던 「다음 방」 창 — PD 2026-10-27 「일단 안 뜨게」. 출구로 걸어 나가면 그대로 다음 방이다(창은 안내일 뿐)
-        private const bool NextRoomPopupOn = false;
+        private static readonly bool s_nextRoomPopupOn = false;   // 고정값(const)이면 「닿지 않는 코드」 경고가 난다
 
         private void ShowNextRoom()
         {
-            if (!NextRoomPopupOn) return;
+            if (!s_nextRoomPopupOn) return;
             if (_battle == null || _finished || !_battle.TryNextRoomPreview(out var kind, out bool midBoss)) return;
             OpenNextRoom(kind, midBoss);
         }

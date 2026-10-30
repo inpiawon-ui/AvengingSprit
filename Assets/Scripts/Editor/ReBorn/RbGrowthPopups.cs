@@ -70,7 +70,7 @@ namespace Game.Editor.ReBorn
             Img(Corner(Node(c, "GrwEssShard"), 416f, 359f, 500f, 443f), "Icons/rb_icon_shard_96");
             Img(Corner(Node(c, "GrwEssFace"), 440f, 470f, 490f, 520f), "Icons/rb_icon_mode_ghost_96");
             var shardName = Text(Corner(Node(c, "GrwEssShardName"), 372f, 526f, 540f, 574f), null, "갱스터 조각", 38, White, TA.Top, heavy: true);
-            shardName.enableWordWrapping = true;   // 일본어 「ギャングスターのかけら」는 두 줄
+            shardName.textWrappingMode = TMPro.TextWrappingModes.Normal;   // 일본어 「ギャングスターのかけら」는 두 줄
             Text(Corner(Node(c, "GrwEssRate"), 203f, 622f, 520f, 660f), null, "정수 30개로 조각 1개", 46, White, TA.Left, heavy: true);
             var minus = Corner(Node(c, "GrwEssMinus"), 232f, 689f, 317f, 773f);
             Btn(minus, "Components/rb_btn_icon_round");
@@ -166,12 +166,12 @@ namespace Game.Editor.ReBorn
             Text(Corner(Node(c, "GrwSkillInfoName"), 205f, 536f, 640f, 586f), null, "청부 처형", 58, White, TA.Left, heavy: true);
             var desc = Text(Corner(Node(c, "GrwSkillInfoDesc"), 76f, 612f, 644f, 716f), null,
                             "가장 체력이 높은 적(보스 포함)을 1.5초 조준한 뒤 초대형 한 발. 보스는 최대 체력의 % 피해.", 42, White, TA.TopLeft, heavy: true);
-            desc.enableWordWrapping = true;   // 설명은 두세 줄
+            desc.textWrappingMode = TMPro.TextWrappingModes.Normal;   // 설명은 두세 줄
             // 각성 옵션(액티브만 — 6성에 열리고 10성에 2배, askill.{몸}.opt) · 없으면 창을 줄인다(RbGrowthPage.ShowSkill)
             Text(Corner(Node(c, "GrwSkillInfoAwakenTitle"), 76f, 726f, 644f, 760f), null, "각성 옵션 열림", 44, White, TA.Left, heavy: true);
             // 두 줄까지 — 인연 「켜는 법」 한 줄이 오른쪽으로 삐져나갔다(PD 2026-10-30). 상자 아래 테 안(836)까지
             var awaken = Text(Corner(Node(c, "GrwSkillInfoAwaken"), 76f, 764f, 644f, 836f), null, "표식 붙은 적이 받는 피해 +15%", 44, Green, TA.TopLeft, heavy: true);
-            awaken.enableWordWrapping = true;
+            awaken.textWrappingMode = TMPro.TextWrappingModes.Normal;
             awaken.fontSizeMin = 18f;
         }
     }

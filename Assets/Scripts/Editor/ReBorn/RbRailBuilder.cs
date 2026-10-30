@@ -428,7 +428,7 @@ namespace Game.Editor.ReBorn
                 Btn(cell, "Components/rb_panel_base");   // 로비 칸 그림(rb_slot) 대신 남색 판 — PD 2026-10-27
                 Img(Inside(Node(cell, $"ProfCell{i}Face"), 52f, 52f, 80f, 80f), "Icons/rb_icon_mode_ghost_96");
                 var tt = Text(Inside(Node(cell, $"ProfCell{i}Text"), 52f, 52f, 96f, 90f), null, "", 26, White, TA.Center, heavy: true);
-                tt.enableWordWrapping = true;
+                tt.textWrappingMode = TMPro.TextWrappingModes.Normal;
                 tt.fontSizeMin = 16f;
                 Img(Inside(Node(cell, $"ProfCell{i}Check"), 86f, 18f, 30f, 30f), "Icons/rb_icon_sys_check_48");
                 Img(Inside(Node(cell, $"ProfCell{i}Lock"), 20f, 20f, 30f, 30f), "Icons/rb_icon_sys_lock_48");   // 구석 — 칭호 글자를 가리지 않게

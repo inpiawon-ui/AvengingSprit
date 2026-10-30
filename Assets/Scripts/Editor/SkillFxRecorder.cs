@@ -182,8 +182,12 @@ namespace Game.Editor
             var movie = ScriptableObject.CreateInstance<MovieRecorderSettings>();
             movie.name = "SkillFx";
             movie.Enabled = true;
-            movie.OutputFormat = MovieRecorderSettings.VideoRecorderOutputFormat.MP4;
-            movie.VideoBitRateMode = VideoBitrateMode.High;
+            // 녹화 패키지의 새 설정(EncoderSettings) — 예전 OutputFormat · VideoBitRateMode 는 곧 없어진다(경고 정리 10-30)
+            movie.EncoderSettings = new UnityEditor.Recorder.Encoder.CoreEncoderSettings
+            {
+                Codec = UnityEditor.Recorder.Encoder.CoreEncoderSettings.OutputCodec.MP4,
+                EncodingQuality = UnityEditor.Recorder.Encoder.CoreEncoderSettings.VideoEncodingQuality.High,
+            };
             // 게임 화면 크기 그대로(시작할 때 잰 값) — 해상도를 바꿔 가며 보는 일이 있어 고정 값을 쓰면 찌그러진다.
             // 게임 화면을 1280x720 Portrait(시안 기준 720x1280)로 두고 찍는다
             movie.ImageInputSettings = new GameViewInputSettings { OutputWidth = s_width, OutputHeight = s_height };

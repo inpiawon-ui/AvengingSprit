@@ -188,7 +188,7 @@ namespace Game.Module.Common
             // ⚠ **귀가 없으면 아무 소리도 안 들린다.** 이 게임 씬(부트·타이틀·로비·인게임)에는
             //   AudioListener 가 하나도 없다 — UI 만 그리는 씬이라 카메라에 붙어 있지 않다.
             //   씬마다 붙이면 전환 순간 둘이 되거나 없어진다. 씬을 넘어 사는 이 뿌리에 하나만 둔다.
-            if (UnityEngine.Object.FindFirstObjectByType<AudioListener>() == null)
+            if (UnityEngine.Object.FindAnyObjectByType<AudioListener>() == null)
                 _root.AddComponent<AudioListener>();
             _musicA = NewSource("MusicA");
             _musicB = NewSource("MusicB");

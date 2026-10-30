@@ -58,7 +58,7 @@ namespace Game.Editor.ReBorn
             Img(Corner(Node(c, "RbGuideMascot"), 86f, 846f, 156f, 916f), "Art/rb_art_mascot_ghost_point");
             var body = Text(Corner(Node(c, "RbGuideBody"), 168f, 840f, 640f, 950f), null,
                             "랜덤 출전에서 특별한 몸을 만날 수 있어요.\n이번 판 한정 체험이며 조각은 주지 않아요.", 40, White, TA.TopLeft, heavy: true);
-            body.enableWordWrapping = true;
+            body.textWrappingMode = TMPro.TextWrappingModes.Normal;
             Text(Corner(Node(c, "RbGuideDots"), 200f, 952f, 520f, 982f), null, "● ○ ○", 30, Dim, TA.Center);
             var next = Corner(Node(c, "RbGuideNext"), 80f, 990f, 640f, 1052f);
             Btn(next, "Components/rb_btn_primary");
@@ -118,7 +118,7 @@ namespace Game.Editor.ReBorn
             face.gameObject.AddComponent<RectMask2D>();
             Img(Inside(Node(face, "RbBossWarnFace"), 80f, 53f, 150f, 150f), "Icons/rb_icon_room_boss_96");
             var weak = Text(Corner(Node(c, "RbBossWarnWeak"), 205f, 326f, 696f, 384f), null, "약점: 나온 머리가 들어가기 전에 때려라", 38, White, TA.Left, heavy: true);
-            weak.enableWordWrapping = true;
+            weak.textWrappingMode = TMPro.TextWrappingModes.Normal;
             Text(Corner(Node(c, "RbBossWarnNote"), 205f, 390f, 696f, 424f), "ui.rb.boss.no_possess", "보스는 빙의할 수 없어요", 32, Dim, TA.Left, heavy: true);
             page.gameObject.AddComponent<CanvasGroup>().blocksRaycasts = false;   // 띠 뒤로 조작이 그대로 간다
         }
@@ -133,7 +133,7 @@ namespace Game.Editor.ReBorn
             Img(Corner(Node(c, "RbNextRoomIcon"), 180f, 545f, 240f, 605f), "Icons/rb_icon_room_merchant_96");
             Text(Corner(Node(c, "RbNextRoomName"), 180f, 612f, 540f, 650f), null, "떠돌이 상인", 44, White, TA.Left, heavy: true);
             var desc = Text(Corner(Node(c, "RbNextRoomDesc"), 180f, 656f, 548f, 712f), null, "다음 방에서 상품을 확인할 수 있어요.", 36, Dim, TA.TopLeft, heavy: true);
-            desc.enableWordWrapping = true;
+            desc.textWrappingMode = TMPro.TextWrappingModes.Normal;
             var go = Corner(Node(c, "RbNextRoomGo"), 180f, 728f, 540f, 796f);
             Btn(go, "Components/rb_btn_primary");
             Text(Stretch(Node(go, "RbNextRoomGoText")), "ui.rb.next.go", "다음 방으로", 52, Ink, TA.Center, heavy: true);
@@ -208,7 +208,7 @@ namespace Game.Editor.ReBorn
                 Img(Local(Node(cell, $"RbChestOpenCell{i}Face"), cx0, cy0, cx1, cy1, 280f, 915f, 355f, 990f), "Art/rb_art_mascot_ghost_happy");
                 Text(Local(Node(cell, $"RbChestOpenCell{i}Count"), cx0, cy0, cx1, cy1, 87f, 1045f, 357f, 1105f), null, "500", 48, White, TA.Center, number: true);
                 var label = Text(Local(Node(cell, $"RbChestOpenCell{i}Label"), cx0, cy0, cx1, cy1, 87f, 1105f, 357f, 1175f), null, "골드 +500", 38, White, TA.Center, heavy: true);
-                label.enableWordWrapping = true;
+                label.textWrappingMode = TMPro.TextWrappingModes.Normal;
             }
             var go = Place(Node(page, "RbChestOpenGo"), Edge.Bottom, 30f, 2040f, 1050f, 2160f);
             Btn(go, "Components/rb_btn_secondary");

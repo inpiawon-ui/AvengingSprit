@@ -141,7 +141,7 @@ namespace Game.Editor.ReBorn
             Img(c, "Components/rb_panel_base");
             Text(Corner2(Node(c, "ShpContractName"), 16f, 14f, 300f, 40f), null, "영혼 계약", 40, White, TA.Left, heavy: true);
             var d = Text(Corner2(Node(c, "ShpContractDesc"), 16f, 60f, 300f, 100f), null, "즉시 젬 300 + 30일 매일 90", 30, Yellow, TA.TopLeft);
-            d.enableWordWrapping = true;
+            d.textWrappingMode = TMPro.TextWrappingModes.Normal;
             PriceButton(c, "ShpContractBuy", 20f, 16f, 292f, 92f, fromBottom: true, size: 46f);
         }
 

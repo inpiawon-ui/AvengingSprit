@@ -161,7 +161,7 @@ namespace Game.Editor.ReBorn
             Img(face, null).preserveAspect = true;
             if (iy.Find("PartyInyeonTag") is Transform oldTag) Object.DestroyImmediate(oldTag.gameObject);
             Txt(Px(Node(iy, "PartyInyeonLabel"), iy, 5, 47, 51, 79), "인연", 12, Gold, TA.Center, heavy, bold: true, min: 8f);
-            iy.Find("PartyInyeonLabel").GetComponent<TextMeshProUGUI>().enableWordWrapping = true;
+            iy.Find("PartyInyeonLabel").GetComponent<TextMeshProUGUI>().textWrappingMode = TMPro.TextWrappingModes.Normal;
             Order(iy, "PartyInyeonGlow", "PartyInyeonRing", "PartyInyeonFace", "PartyInyeonLabel");
             iy.gameObject.SetActive(false);
 
@@ -287,7 +287,7 @@ namespace Game.Editor.ReBorn
             t.enableAutoSizing = true;
             t.fontSizeMax = size;
             t.fontSizeMin = Mathf.Min(size, min);
-            t.enableWordWrapping = false;
+            t.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
             // ⚠ 줄임표(Ellipsis)로 두면 글자 높이가 칸을 넘을 때 글자가 통째로 사라진다(2026-10-29 시너지 이름 · 인연 꼬리표).
             //   모든 문구가 칸에 들어가는 것은 재서 확인했다(GetPreferredValues) — 넘침 그대로 둔다
             t.overflowMode = TextOverflowModes.Overflow;
@@ -302,7 +302,7 @@ namespace Game.Editor.ReBorn
             t.enableAutoSizing = true;
             t.fontSizeMax = max;
             t.fontSizeMin = Mathf.Min(max, 10f);
-            t.enableWordWrapping = false;
+            t.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
         }
 

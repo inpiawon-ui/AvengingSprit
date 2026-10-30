@@ -186,7 +186,7 @@ namespace Game.Editor.ReBorn
             NightCell(body, "ChlNightGold", 55, 527, 1180, 1400, CellGold, "Icons/rb_icon_currency_gold_96", false, "432", "ui.rb.result.gold", "골드");
             NightCell(body, "ChlNightShard", 552, 1020, 1180, 1400, CellTeal, "Icons/rb_icon_shard_badge_socket_96", true, "3", "ui.rb.chl.host_shards", "호스트 조각");
             var rule = Text(PlaceIn(Node(body, "ChlNightRule"), Top, 55, 1418, 1020, 1460), null, "몸 셋 중 하나에 빙의", 34, Dim, TA.Left);
-            rule.enableWordWrapping = true;
+            rule.textWrappingMode = TMPro.TextWrappingModes.Normal;
             Text(PlaceIn(Node(body, "ChlNightReward"), Top, 55, 1476, 1020, 1526), null, "처치 50마다 조각 1 · 보스 처치 +3", 36, White, TA.Left, heavy: true);
             // 시작 — 판과 같은 여백(29 ~ 1047)의 노란 큰 버튼 「시작 ▶ | 🎫1」 · 판 바로 아래
             StartButton(body, "ChlNightStart", "시작 ▶", 29, 1582, 1047, 1722);

@@ -146,7 +146,7 @@ namespace Game.Module.Lobby
                 inyBtn.onClick.AddListener(ShowInyeon);
             }
             if (_ui.Find(_tiles[InyeonTile], "GrwStatValue")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI inyVal)
-                inyVal.enableWordWrapping = true;   // 효과 한 줄이 길면 두 줄로(5언어)
+                inyVal.textWrappingMode = TMPro.TextWrappingModes.Normal;   // 효과 한 줄이 길면 두 줄로(5언어)
             // 인연 칸은 버튼이 없다 — 이름 · 값 줄을 버튼 자리(오른쪽 끝)까지 늘린다(영어 「Bond · Unyielding Roar」 가 길다)
             float widen = 146f * 2f / 3f;   // 1080 기준 372 → 518
             foreach (var n in new[] { "GrwStatName", "GrwStatValue" })

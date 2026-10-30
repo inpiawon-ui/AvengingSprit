@@ -238,7 +238,7 @@ namespace Game.Editor.ReBorn
             t.text = korean;
             t.color = color;
             t.alignment = align;
-            t.enableWordWrapping = false;
+            t.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
             t.enableAutoSizing = true;
             t.fontSizeMax = size1080 * S;

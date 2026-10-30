@@ -411,7 +411,7 @@ namespace Game.Editor.ReBorn
             // 시안 규칙 「글자 32 미만 0」(PD 2026-10-24 「시안을 따라줘」) — 하한은 그대로
             // 폭은 틀 안쪽 끝까지(34~233) — 「サラマンダー」가 최소 크기에서 몇 px 넘쳐 글자 중간에서 접혔다(2026-10-26 캡처)
             var cardName = Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 34, 1554, 233, 1626), null, "? 랜덤", 36, White, TA.Center, heavy: true);
-            cardName.enableWordWrapping = true;
+            cardName.textWrappingMode = TMPro.TextWrappingModes.Normal;
             cardName.lineSpacing = -28f;
             Img(Local(Node(card, "CardPriceIcon"), cx0, cy0, cx1, cy1, 60, 1628, 104, 1668), "Icons/rb_icon_currency_gold_48");
             Text(Local(Node(card, "CardPrice"), cx0, cy0, cx1, cy1, 40, 1622, 227, 1674), null, "무료", 40, Green, TA.Center, heavy: true);

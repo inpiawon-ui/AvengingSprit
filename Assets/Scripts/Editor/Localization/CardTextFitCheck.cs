@@ -87,7 +87,7 @@ namespace Game.EditorTools
             for (float fs = t.fontSizeMax; fs >= t.fontSizeMin - 0.01f; fs -= 0.5f)
             {
                 t.fontSize = fs;
-                var p = t.enableWordWrapping ? t.GetPreferredValues(text, size.x, 0f) : t.GetPreferredValues(text, 0f, 0f);
+                var p = t.textWrappingMode != TMPro.TextWrappingModes.NoWrap ? t.GetPreferredValues(text, size.x, 0f) : t.GetPreferredValues(text, 0f, 0f);
                 if (p.x <= size.x + 0.5f && p.y <= size.y + 0.5f) return;
             }
             over++;

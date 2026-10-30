@@ -45,7 +45,7 @@ namespace Game.Editor.ReBorn
             for (int i = 0; i < 5; i++)
                 Img(Local(Node(stars, $"LckStar{i}"), 540, 760, 800, 808, 543 + i * 52, 762, 589 + i * 52, 806), "Icons/rb_icon_star_off_48");
             var note = Text(PlaceIn(Node(body, "LckNote"), T, 90, 905, 990, 1020), "ui.rb.lock.note", "조각을 모아 해금하면\n스킬 · 능력치 강화가 열립니다", 46, White, TA.Center, heavy: true);
-            note.enableWordWrapping = true;
+            note.textWrappingMode = TMPro.TextWrappingModes.Normal;
 
             var stats = PlaceIn(Node(body, "LckStats"), T, 31, 1054, 1048, 1531);
             Img(stats, "Components/rb_panel_base").preserveAspect = false;
@@ -95,7 +95,7 @@ namespace Game.Editor.ReBorn
             for (int i = 0; i < 5; i++)
                 Img(Local(Node(stars, $"RvlStar{i}"), 280, 1450, 800, 1556, 284 + i * 102, 1454, 382 + i * 102, 1552), "Icons/rb_icon_star_on_96");
             var desc = Text(Place(Node(page, "RvlDesc"), Edge.Center, 90, 1560, 990, 1690), null, "뒷골목을 주름잡던 두목.\n권총 한 자루로 길을 연다.", 40, White, TA.Top, heavy: true);
-            desc.enableWordWrapping = true;
+            desc.textWrappingMode = TMPro.TextWrappingModes.Normal;
             var ok = Place(Node(page, "RvlOk"), Edge.Bottom, 30, 1996, 1050, 2166);
             Btn(ok, "Components/rb_btn_primary");
             Text(Stretch(Node(ok, "RvlOkText")), "ui.common.ok", "확인", 60, Ink, TA.Center, heavy: true);

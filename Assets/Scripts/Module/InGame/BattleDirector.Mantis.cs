@@ -42,7 +42,7 @@ namespace Game.Module.InGame
             }
             var away = e.Position - me.Position;
             away = away.sqrMagnitude < 0.0001f ? -e.Facing : away.normalized;
-            float side = (e.GetInstanceID() & 1) == 0 ? 1f : -1f;
+            float side = (e.GetHashCode() & 1) == 0 ? 1f : -1f;
             var dir = new Vector2(-away.y, away.x) * side;
             e.SetState(EnemyState.Approach);
             e.SetFacing(-away);

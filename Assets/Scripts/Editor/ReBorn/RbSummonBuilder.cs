@@ -94,7 +94,7 @@ namespace Game.Editor.ReBorn
             Button2(low, "SumPull1", null, "오늘 무료 1회", 33, 1600, 376, 1760, false, LowTop);
             Button2(low, "SumPull10", null, "10회 소환  젬 3,000", 400, 1600, 1049, 1760, true, LowTop);
             Text(PlaceIn(Node(low, "SumNote"), LowTop, 33, 1790, 1049, 1900), "ui.rb.summon.note",
-                 "10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정", 32, Dim, TA.TopLeft).enableWordWrapping = true;
+                 "10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정", 32, Dim, TA.TopLeft).textWrappingMode = TMPro.TextWrappingModes.Normal;
         }
 
         /// <summary>버튼(그림 + 가운데 글자) — 글자 이름은 `{name}Text`.</summary>
@@ -168,7 +168,7 @@ namespace Game.Editor.ReBorn
                 var panel = PlaceIn(Node(body, t + "Panel"), Top, 33, y, 1049, y + h);
                 Img(panel, "Components/rb_panel_base");
                 var tmp = Text(Local(Node(panel, t), 33, y, 1049, y + h, 66, y + 26, 1016, y + h - 20), null, "—", 36, White, TA.TopLeft);
-                tmp.enableWordWrapping = true;
+                tmp.textWrappingMode = TMPro.TextWrappingModes.Normal;
                 tmp.enableAutoSizing = false;
                 tmp.fontSize = 36 * S;
                 y += h + 30f;

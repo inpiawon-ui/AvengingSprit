@@ -214,7 +214,7 @@ namespace Game.Module.InGame
                 // 「엄호 화망」 만 있으면 무엇인지 모른다(PD 2026-10-29 「엄호 화망은 뭐야?」) — 윗줄에 「인연」 꼬리표, 이름은 한 줄로 줄여 넣는다
                 if (_partyInyeonLabel != null)
                 {
-                    _partyInyeonLabel.enableWordWrapping = false;
+                    _partyInyeonLabel.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
                     _partyInyeonLabel.text = $"<size=85%>{Game.Module.Common.Localize.Get("ui.party.hud.inyeon_tag")}</size>\n<color={(iyOn ? "#FFFFFF" : "#B3BDD6")}>{BattleDirector.InyeonName(iy)}</color>";
                     _partyInyeonLabel.color = iyOn ? Color.white : new Color(0.7f, 0.74f, 0.84f);
                 }

@@ -18,7 +18,7 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
-        private const bool OcclusionEnabled = false;
+        private static readonly bool s_occlusionEnabled = false;   // 고정값(const)이면 「닿지 않는 코드」 경고가 난다
         private const float OccludeAlpha = 0.42f;
         private const float OccludeFadeSpeed = 7f;   // 1/초 — 0.15초 안팎
 
@@ -31,7 +31,7 @@ namespace Game.Module.InGame
         {
             // ⚠ 꺼 둔다(PD 2026-10-07 「반투명은 불편해 보인다」) — 키 큰 물건은 낮은 물건으로 바꾸는 쪽으로 간다.
             //   새 낮은 물건 그림이 다 들어오면 이 파일과 BattleDirector 의 호출 한 줄을 지운다.
-            if (!OcclusionEnabled) return;
+            if (!s_occlusionEnabled) return;
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];

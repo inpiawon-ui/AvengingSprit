@@ -711,7 +711,7 @@ namespace Game.Module.InGame
             t.enableAutoSizing = true;
             t.fontSizeMin = 10f;
             t.fontSizeMax = size;
-            t.enableWordWrapping = true;
+            t.textWrappingMode = TMPro.TextWrappingModes.Normal;
             t.overflowMode = TextOverflowModes.Overflow;
             t.raycastTarget = false;
             return t;

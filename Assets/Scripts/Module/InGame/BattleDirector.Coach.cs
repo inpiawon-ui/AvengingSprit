@@ -280,7 +280,7 @@ namespace Game.Module.InGame
             tmp.enableAutoSizing = true;
             tmp.fontSizeMax = 38f;
             tmp.fontSizeMin = 18f;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TMPro.TextWrappingModes.Normal;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.white;
             tmp.outlineWidth = 0.25f;

@@ -156,7 +156,7 @@ namespace Game.Module.InGame
 
             var away = e.Position - me.Position;
             away = away.sqrMagnitude < 0.0001f ? -e.Facing : away.normalized;
-            float side = (e.GetInstanceID() & 1) == 0 ? 1f : -1f;
+            float side = (e.GetHashCode() & 1) == 0 ? 1f : -1f;
             Vector2 dir;
             float mps;
             if (distance < Meters(BoarDive.MinMeters + 0.6f))

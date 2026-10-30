@@ -1034,7 +1034,7 @@ namespace Game.Editor.ReBorn
                     int hp1 = (int)(bdt.GetField("_ghostHp", GF)?.GetValue(bd) ?? -1);
                     var ghost = bdt.GetField("_ghost", GF)?.GetValue(bd) as Component;
                     var sb = new System.Text.StringBuilder($"[유령 시험] 유령 체력 {hp0} → 5초 뒤 {hp1} · 빙의 대상:");
-                    foreach (var u in Object.FindObjectsByType<Game.Module.InGame.Unit>(FindObjectsSortMode.None))
+                    foreach (var u in Object.FindObjectsByType<Game.Module.InGame.Unit>())
                         if (u != null && u.IsHostBody && u.IsAlive && u.Side == Game.Module.InGame.UnitSide.Enemy && ghost != null)
                             sb.Append($" {u.Key} {Vector2.Distance(u.transform.localPosition, ghost.transform.localPosition):0}px");
                     Debug.Log(sb.ToString());

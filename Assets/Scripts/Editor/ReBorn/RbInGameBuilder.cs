@@ -152,7 +152,7 @@ namespace Game.Editor.ReBorn
             t.enableAutoSizing = true;
             t.fontSizeMax = size1080 * S;
             t.fontSizeMin = Mathf.Min(size1080, 28f) * S;
-            t.enableWordWrapping = false;
+            t.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
             t.enabled = true;
             t.characterSpacing = 0f;
@@ -755,7 +755,7 @@ namespace Game.Editor.ReBorn
             art.SetSiblingIndex(box.GetSiblingIndex() + 1);
             var body = PutPx(F(root, "EventBodyText"), panel, 360f, 594f, 624f, 84f);
             Style(body, 36, White, TA.TopLeft);
-            if (body.TryGetComponent<TextMeshProUGUI>(out var bt)) bt.enableWordWrapping = true;
+            if (body.TryGetComponent<TextMeshProUGUI>(out var bt)) bt.textWrappingMode = TMPro.TextWrappingModes.Normal;
             // 옛 알약 두 줄(받는 것 · 대가)은 두 줄 판이 대신한다 — 화면 스크립트도 RE:BORN 이면 켜지 않는다
             Mute(root, "EventRewardPill", "EventRewardText", "EventCostPill", "EventCostText");
             DealRow(panel, "EventGive", DealGiveTop, true);

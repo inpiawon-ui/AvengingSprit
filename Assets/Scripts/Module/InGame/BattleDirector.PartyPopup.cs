@@ -103,7 +103,7 @@ namespace Game.Module.InGame
             t.fontSizeMin = Mathf.Min(size, 9f);
             t.color = c;
             t.alignment = align;
-            t.enableWordWrapping = wrap;
+            t.textWrappingMode = wrap ? TMPro.TextWrappingModes.Normal : TMPro.TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
             t.raycastTarget = false;
             return t;

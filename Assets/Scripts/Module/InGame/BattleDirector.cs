@@ -10362,7 +10362,7 @@ namespace Game.Module.InGame
             tmp.alignment = TextAlignmentOptions.Top;
             tmp.color = new Color(0.90f, 0.86f, 0.70f);
             tmp.raycastTarget = false;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TMPro.TextWrappingModes.Normal;
             tmp.lineSpacing = -12f;
             tmp.font = TMP_Settings.defaultFontAsset;   // 피해 숫자와 같은 폰트를 쓴다
             return go;

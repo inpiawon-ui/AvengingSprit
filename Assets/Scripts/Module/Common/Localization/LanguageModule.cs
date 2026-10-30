@@ -69,7 +69,7 @@ namespace Game.Module.Common
         private List<TMP_FontAsset> _pixelOriginal;
 
         // 획 두께 보정 재질 — (폰트, 두께)마다 하나를 여러 글자 칸이 같이 쓴다
-        private readonly Dictionary<(int font, int dilate, int outline, uint color), Material> _weights = new();
+        private readonly Dictionary<(TMP_FontAsset font, int dilate, int outline, uint color), Material> _weights = new();
 
         public Language Current => _current;
         public bool IsReady => _table != null;
@@ -207,8 +207,7 @@ namespace Game.Module.Common
                 var target = Target;
                 if (target?.Gothic != null)
                 {
-                    var texts = UnityEngine.Object.FindObjectsByType<TMP_Text>(
-                        FindObjectsInactive.Include, FindObjectsSortMode.None);
+                    var texts = UnityEngine.Object.FindObjectsByType<TMP_Text>(FindObjectsInactive.Include);
                     for (int i = 0; i < texts.Length; i++) SwapFont(texts[i], target);
                 }
             }
@@ -295,7 +294,7 @@ namespace Game.Module.Common
             }
             var c = heavy.OutlineColor;
             uint color = outline == 0 ? 0u : (uint)(c.r << 24 | c.g << 16 | c.b << 8 | c.a);
-            var key = (text.font.GetInstanceID(), step, outline, color);
+            var key = (text.font, step, outline, color);
             if (!_weights.TryGetValue(key, out var m) || m == null)
             {
                 m = new Material(text.font.material) { name = $"{text.font.name} W{step} O{outline}" };

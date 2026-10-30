@@ -45,7 +45,7 @@ namespace Game.Module.InGame
         /// <summary>떠 있는 창 하나를 넘겼으면 true.</summary>
         private bool ApUi()
         {
-            var guide = Object.FindObjectOfType<Game.Module.Common.UI.RbGuide>();
+            var guide = Object.FindAnyObjectByType<Game.Module.Common.UI.RbGuide>();
             if (guide != null && guide.IsOpen) { guide.Close(); return true; }
             if (_trio.Count > 0) { PickTrio(_trio[Random.Range(0, _trio.Count)]); return true; }
             if (_coachTarget != null) { var t = _coachTarget; if (!CoachTap(t)) ApTake(t); return true; }

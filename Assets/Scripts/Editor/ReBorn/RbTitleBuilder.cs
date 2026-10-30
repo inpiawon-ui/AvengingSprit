@@ -67,7 +67,7 @@ namespace Game.Editor.ReBorn
             var bar = Place(Node(rt, "RbLoadingBar"), Edge.Bottom, 99, 1826, 981, 1850);
             Bar(bar, "RbLoadingBarFill", "Components/rb_bar_fill_cyan");
             var tip = Text(Place(Node(rt, "RbLoadingTip"), Edge.Bottom, 99, 1874, 981, 1990), null, "몸이 바뀌어도 레벨업 카드는 유지돼요", 42, White, TA.TopLeft, heavy: true);
-            tip.enableWordWrapping = true;   // 팁은 언어에 따라 두 줄이 된다
+            tip.textWrappingMode = TMPro.TextWrappingModes.Normal;   // 팁은 언어에 따라 두 줄이 된다
             Save(root, LoadingPath);
             Register(LoadingPath, "UI/Common/RbLoadingView", "label_title");
             Debug.Log($"[RE:BORN 화면] 로딩 → {LoadingPath}");

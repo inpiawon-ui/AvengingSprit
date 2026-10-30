@@ -168,7 +168,7 @@ namespace Game.Editor
             t.enableAutoSizing = true;
             t.fontSizeMax = max;
             t.fontSizeMin = Mathf.Max(6f, max * 0.45f);
-            t.enableWordWrapping = false;
+            t.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
             t.verticalAlignment = VerticalAlignmentOptions.Middle;
         }
