@@ -14,6 +14,10 @@ namespace Game.Module.InGame
     ///   액티브 「혼 깃들이기」  8초(Lv5 +4초) — 파티 전원 피해 +25% · 치명 +15%p. 인연 「공명 강령」이면 지속 1.5배 · 짝(구루 · 백마법사)은 피해 두 배로
     ///   필살기 「강신 의식」   35초 — 파티 전원 공속 +40% · 치명 피해 +50%, 영매 자신은 광폭화(피해 +50% · 공속 +60% 더). 시전 순간 둘레 적 2초 둔화
     ///   패시브 「영매의 인도」 메인일 때 보조 스킬 간격 −25% · 보조일 때 메인 피해 +10% (패시브 중 유일하게 보조일 때도 켜진다)
+    ///
+    /// 연출 — 혼 깃들이기 시안 `mock_infuse_free1` · 강신 의식 시안 `mock_ritual_guide`(10-30 추천안).
+    /// 부품 표 `Projects/AVSR/_exchange/fx_medium1030/elements.md`. 혼 깃들이기는 보라 일색(셋 모두 같은 고리),
+    /// 강신 의식은 영매만 붉은-보라 불꽃 · 붉은 금빛 진이라 광폭화가 보조 버프와 구분된다.
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -36,14 +40,40 @@ namespace Game.Module.InGame
         private const float GuideSubCdCut = 0.25f;            // 메인일 때 보조 스킬 간격
         private const float GuideMainDamageBonus = 0.10f;     // 보조일 때 메인 피해
 
+        // 연출 크기 — 부품의 게임 판 px 그대로
+        private const float InfuseBurstSize = 300f;
+        private const float InfuseRingSize = 130f;
+        private const float InfuseUpSize = 52f;
+        private const float InfuseUpLift = 82f;
+        private const float RitualPillarSize = 510f;
+        private const float RitualRuneSize = 460f;
+        private const float RitualAuraSize = 184f;
+        private const float RitualAuraLift = 34f;
+        private const float RitualLinkThick = 23f;
+        private const float RitualEmberEvery = 0.3f;
+        private const float RitualRuneDimAfter = 0.9f;
+        private const float RitualRuneRestAlpha = 0.4f;
+        private const float InfuseCastPillarSize = 220f;
+
         private static readonly Color MediumBuffColor = new(0.72f, 0.45f, 1f, 1f);
+        private static readonly Color RitualEmberColor = new(1f, 0.45f, 0.3f, 1f);
 
         private float _infuseLeft;
         private bool _infusePartnerDouble;
         private float _infuseMoteClock;
         private float _ritualLeft;
+        private float _ritualEmberClock;
         private Unit _ritualCaster;
         private Impact _ritualRune;
+        private Impact _ritualAura;
+        private bool _ritualRuneDimmed;
+
+        // 걸려 있는 동안 몸마다 발밑 고리 · 머리 위 상승 표시가 따라다닌다
+        private readonly List<Unit> _infuseOwners = new();
+        private readonly List<Impact> _infuseRings = new();
+        private readonly List<Impact> _infuseUps = new();
+        private readonly List<Unit> _ritualSubOwners = new();
+        private readonly List<Impact> _ritualSubRings = new();
 
         // ── 액티브 ──────────────────────────────────────────
 
@@ -55,44 +85,44 @@ namespace Game.Module.InGame
             _infuseLeft = Mathf.Max(_infuseLeft, seconds);
             _infuseMoteClock = 0f;
 
-            if (_host != null) MarkBuffed(_host, 1.6f);
+            PlayFloorFx("mdinfburst", me.Position, InfuseBurstSize, loop: false)?.SetFrameSeconds(0.08f);
+
+            StopInfuseMarks();
+            if (_host != null) AddInfuseMark(_host);
             for (int i = 0; i < _subs.Count; i++)
-                if (_subs[i].U != null && _subs[i].U.IsAlive) MarkBuffed(_subs[i].U, 1.2f);
-            PlayFx("soulripple", me.Position, Meters(1.6f), loop: false);
-
-            // 걸려 있는 동안 버프 받은 몸마다 발밑 보랏빛 문양이 따라다닌다 — 혼불 몇 알로는 걸렸는지 안 보였다(10-30 녹화)
-            StopInfuseRunes();
-            if (_host != null) AddInfuseRune(_host, 1.2f);
-            for (int i = 0; i < _subs.Count; i++)
-                if (_subs[i].U != null && _subs[i].U.IsAlive) AddInfuseRune(_subs[i].U, 0.9f);
+                if (_subs[i].U != null && _subs[i].U.IsAlive) AddInfuseMark(_subs[i].U);
         }
 
-        private readonly List<Unit> _infuseRuneOwners = new();
-        private readonly List<Impact> _infuseRunes = new();
-
-        private void AddInfuseRune(Unit u, float meters)
+        private void AddInfuseMark(Unit u)
         {
-            var fx = PlayFloorFx("mdrune", u.Position, Meters(meters), loop: true);
-            if (fx == null) return;
-            fx.SetTint(MediumBuffColor);
-            _infuseRuneOwners.Add(u);
-            _infuseRunes.Add(fx);
+            SprayBuffMotes(u);
+            // 시전 순간 몸마다 짧은 보라 빛줄기가 솟는다(시안 — 셋에게 동시에 「깃들었다」)
+            PlayFx("mdritpillar", u.Position + new Vector2(0f, InfuseCastPillarSize * 0.5f - 16f), InfuseCastPillarSize, loop: false)
+                ?.SetFrameSeconds(0.06f);
+            var ring = PlayFloorFx("mdinfring", u.Position, InfuseRingSize, loop: true);
+            ring?.SetFrameSeconds(0.12f);
+            var up = PlayFx("mdinfup", u.Position + new Vector2(0f, InfuseUpLift), InfuseUpSize, loop: true);
+            up?.SetFrameSeconds(0.15f);
+            _infuseOwners.Add(u);
+            _infuseRings.Add(ring);
+            _infuseUps.Add(up);
         }
 
-        private void StopInfuseRunes()
+        private void StopInfuseMarks()
         {
-            for (int i = 0; i < _infuseRunes.Count; i++) _infuseRunes[i]?.Stop();
-            _infuseRunes.Clear();
-            _infuseRuneOwners.Clear();
+            for (int i = 0; i < _infuseOwners.Count; i++)
+            {
+                _infuseRings[i]?.Stop();
+                _infuseUps[i]?.Stop();
+            }
+            _infuseOwners.Clear();
+            _infuseRings.Clear();
+            _infuseUps.Clear();
         }
 
-        /// <summary>버프가 걸린 몸 발밑에 영매 문양 · 위로 혼불.</summary>
-        private void MarkBuffed(Unit u, float meters)
-        {
-            PlayFloorFx("mdrune", u.Position, Meters(meters), loop: false);
-            _pfx?.Spray(ParticleFxKind.GhostMote, u.Position, Vector2.up, 35f, 8, 60f, 140f,
-                        new Vector2(10f, 10f), 0.8f, MediumBuffColor, spread: 30f);
-        }
+        private void SprayBuffMotes(Unit u)
+            => _pfx?.Spray(ParticleFxKind.GhostMote, u.Position, Vector2.up, 35f, 8, 60f, 140f,
+                           new Vector2(10f, 10f), 0.8f, MediumBuffColor, spread: 30f);
 
         // ── 필살기 ──────────────────────────────────────────
 
@@ -100,26 +130,69 @@ namespace Game.Module.InGame
         {
             _ritualLeft = RitualSeconds;
             _ritualCaster = me;
-            StopRitualRune();
-            _ritualRune = PlayFloorFx("mdrune", me.Position, Meters(1.8f), loop: true);
+            _ritualEmberClock = 0f;
+            StopRitualMarks();
+            _ritualRuneDimmed = false;
 
-            PlayFloorFx("mdrune", me.Position, SsrBody * 3.4f, loop: false);
-            PlayFx("soulripple", me.Position, Meters(RitualSlowMeters) * 2f, loop: false);
+            // 하늘 빛기둥 — 아래 끝이 발밑에 닿게 올려 단다
+            PlayFx("mdritpillar", me.Position + new Vector2(0f, RitualPillarSize * 0.5f - 24f), RitualPillarSize, loop: false)
+                ?.SetFrameSeconds(0.08f);
+
+            // 의식 진 — 0.4초에 펼쳐지고 마지막 장으로 35초 동안 바닥에 머문다
+            var runeFrames = FxFrames("mdritrune");
+            if (runeFrames != null)
+            {
+                _ritualRune = TakeFloorFx(RitualRuneSize);
+                _ritualRune?.PlayOver(me.Position, runeFrames, RitualRuneSize, 0.4f);
+            }
+
+            // 광폭화는 영매 몸에만
+            _ritualAura = PlayFx("mdritaura", me.Position + new Vector2(0f, RitualAuraLift), RitualAuraSize, loop: true);
+            _ritualAura?.SetFrameSeconds(0.1f);
+            Debug.Log($"[영매] 오라 {(_ritualAura != null ? "켜짐" : "없음")} · 프레임 {(FxFrames("mdritaura")?.Length ?? 0)}");
+
+            var linkFrames = FxFrames("mdritlink");
             for (int i = 0; i < _subs.Count; i++)
-                if (_subs[i].U != null && _subs[i].U.IsAlive) MarkBuffed(_subs[i].U, 1.2f);
-            _pfx?.Spray(ParticleFxKind.GhostMote, me.Position, Vector2.up, 180f, 24, 120f, 320f,
-                        new Vector2(12f, 12f), 0.9f, MediumBuffColor, spread: 40f);
+            {
+                var s = _subs[i].U;
+                if (s == null || !s.IsAlive) continue;
+                if (linkFrames != null)
+                {
+                    var link = FreeImpact(RitualLinkThick);
+                    link?.PlayBeam(me.Position + new Vector2(0f, 30f), s.Position + new Vector2(0f, 30f), linkFrames, RitualLinkThick);
+                    link?.SetLoop(true);
+                    link?.SetFrameSeconds(0.05f);
+                    link?.SetLife(0.5f, 0.15f);
+                }
+                var ring = PlayFloorFx("mdinfring", s.Position, InfuseRingSize, loop: true);
+                ring?.SetFrameSeconds(0.12f);
+                _ritualSubOwners.Add(s);
+                _ritualSubRings.Add(ring);
+                SprayBuffMotes(s);
+            }
+            _pfx?.Spray(ParticleFxKind.Ember, me.Position, Vector2.up, 40f, 24, 120f, 320f,
+                        new Vector2(12f, 12f), 0.9f, RitualEmberColor, spread: 40f);
 
+            PlayFx("soulripple", me.Position, Meters(RitualSlowMeters) * 2f, loop: false);
             var near = UltTargets(me.Position, Meters(RitualSlowMeters));
-            for (int i = 0; i < near.Count; i++) near[i].ApplySlow(RitualSlowPercent, RitualSlowSeconds);
+            for (int i = 0; i < near.Count; i++)
+            {
+                near[i].ApplySlow(RitualSlowPercent, RitualSlowSeconds);
+                _pfx?.Burst(ParticleFxKind.Star4, ParticleElement.Ice, near[i].Position, 9, 70f, 18f, RitualSlowSeconds, 90f);
+            }
             Shake(8f);
             HitStop(0.08f);
         }
 
-        private void StopRitualRune()
+        private void StopRitualMarks()
         {
             if (_ritualRune != null) _ritualRune.Stop();
+            if (_ritualAura != null) _ritualAura.Stop();
             _ritualRune = null;
+            _ritualAura = null;
+            for (int i = 0; i < _ritualSubRings.Count; i++) _ritualSubRings[i]?.Stop();
+            _ritualSubOwners.Clear();
+            _ritualSubRings.Clear();
         }
 
         // ── 매 프레임 ────────────────────────────────────────
@@ -130,19 +203,26 @@ namespace Game.Module.InGame
             {
                 _infuseLeft -= dt;
                 _infuseMoteClock -= dt;
-                for (int i = _infuseRunes.Count - 1; i >= 0; i--)
+                for (int i = _infuseOwners.Count - 1; i >= 0; i--)
                 {
-                    var o = _infuseRuneOwners[i];
-                    if (o == null || !o.IsAlive) { _infuseRunes[i]?.Stop(); _infuseRunes.RemoveAt(i); _infuseRuneOwners.RemoveAt(i); continue; }
-                    _infuseRunes[i]?.MoveTo(o.Position);
+                    var o = _infuseOwners[i];
+                    if (o == null || !o.IsAlive)
+                    {
+                        _infuseRings[i]?.Stop();
+                        _infuseUps[i]?.Stop();
+                        _infuseOwners.RemoveAt(i);
+                        _infuseRings.RemoveAt(i);
+                        _infuseUps.RemoveAt(i);
+                        continue;
+                    }
+                    _infuseRings[i]?.MoveTo(o.Position);
+                    _infuseUps[i]?.MoveTo(o.Position + new Vector2(0f, InfuseUpLift));
                 }
-                if (_infuseLeft <= 0f) StopInfuseRunes();
+                if (_infuseLeft <= 0f) StopInfuseMarks();
                 if (_infuseMoteClock <= 0f && _infuseLeft > 0f)
                 {
                     _infuseMoteClock = InfuseMoteEvery;
-                    if (_host != null) MotesOver(_host);
-                    for (int i = 0; i < _subs.Count; i++)
-                        if (_subs[i].U != null && _subs[i].U.IsAlive) MotesOver(_subs[i].U);
+                    for (int i = 0; i < _infuseOwners.Count; i++) MotesOver(_infuseOwners[i]);
                 }
             }
 
@@ -151,13 +231,48 @@ namespace Game.Module.InGame
                 _ritualLeft -= dt;
                 // 광폭화한 영매가 메인에서 내려오면(사망 · 교체) 의식도 끝난다
                 bool casterGone = _ritualCaster == null || !_ritualCaster.IsAlive || _ritualCaster != _host;
-                if (_ritualLeft <= 0f || casterGone) { _ritualLeft = 0f; _ritualCaster = null; StopRitualRune(); }
-                else if (_ritualRune != null) _ritualRune.MoveTo(_ritualCaster.Position);
+                if (_ritualLeft <= 0f || casterGone)
+                {
+                    _ritualLeft = 0f;
+                    _ritualCaster = null;
+                    StopRitualMarks();
+                }
+                else
+                {
+                    var at = _ritualCaster.Position;
+                    _ritualRune?.MoveTo(at);
+                    // 펼쳐진 뒤엔 반투명으로 머문다 — 35초 내내 진하면 바닥 · 몸을 덮는다(10-30 녹화)
+                    if (!_ritualRuneDimmed && RitualSeconds - _ritualLeft > RitualRuneDimAfter)
+                    {
+                        _ritualRuneDimmed = true;
+                        _ritualRune?.SetTint(new Color(1f, 1f, 1f, RitualRuneRestAlpha));
+                    }
+                    _ritualAura?.MoveTo(at + new Vector2(0f, RitualAuraLift));
+                    for (int i = _ritualSubOwners.Count - 1; i >= 0; i--)
+                    {
+                        var o = _ritualSubOwners[i];
+                        if (o == null || !o.IsAlive)
+                        {
+                            _ritualSubRings[i]?.Stop();
+                            _ritualSubOwners.RemoveAt(i);
+                            _ritualSubRings.RemoveAt(i);
+                            continue;
+                        }
+                        _ritualSubRings[i]?.MoveTo(o.Position);
+                    }
+                    _ritualEmberClock -= dt;
+                    if (_ritualEmberClock <= 0f)
+                    {
+                        _ritualEmberClock = RitualEmberEvery;
+                        _pfx?.Spray(ParticleFxKind.Ember, at + new Vector2(0f, 20f), Vector2.up, 25f, 3, 40f, 90f,
+                                    new Vector2(9f, 9f), 0.8f, RitualEmberColor, spread: 26f);
+                    }
+                }
             }
         }
 
         private void MotesOver(Unit u)
-            => _pfx?.Spray(ParticleFxKind.GhostMote, u.Position + new Vector2(0f, 70f), Vector2.up, 25f, 4, 30f, 70f,
+            => _pfx?.Spray(ParticleFxKind.GhostMote, u.Position + new Vector2(0f, 70f), Vector2.up, 25f, 2, 30f, 70f,
                            new Vector2(8f, 8f), 0.7f, MediumBuffColor, spread: 20f);
 
         // ── 계산 자리에서 부르는 배수 ────────────────────────

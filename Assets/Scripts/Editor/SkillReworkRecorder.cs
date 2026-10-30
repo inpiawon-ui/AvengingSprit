@@ -30,6 +30,8 @@ namespace Game.Editor
 
         public static void CancelBatch() => SessionState.EraseString(QueueKey);
 
+        private static string[] s_subKeys;
+
         [InitializeOnLoadMethod]
         private static void HookBatch()
         {
@@ -55,6 +57,8 @@ namespace Game.Editor
                 float.TryParse(f[4], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var act);
                 string swap = f.Length > 5 && f[5].Length > 0 ? f[5] : null;
                 bool solo = f.Length > 6 && f[6] == "solo";
+                // 8번째 칸 = 보조로 세울 호스트(쉼표) — 파티 버프 연출은 보조까지 보여야 한다(2026-10-30 영매)
+                s_subKeys = f.Length > 7 && f[7].Length > 0 ? f[7].Split(',') : null;
                 Debug.Log("[RW] batch " + f[1] + " (남은 줄 " + (string.IsNullOrEmpty(rest) ? 0 : rest.Split(';').Length) + ")");
                 Run(f[0], f[1], sec, 3f, ult, act, swap, solo: solo);
             }
@@ -116,6 +120,7 @@ namespace Game.Editor
                         var extra = new System.Collections.Generic.List<string>();
                         if (swapTo != null) extra.Add(p.GetHost(swapTo)?.SpriteKey);
                         if (enemyHosts != null) foreach (var k in enemyHosts) extra.Add(p.GetHost(k)?.SpriteKey);
+                        if (s_subKeys != null) foreach (var k in s_subKeys) extra.Add(p.GetHost(k)?.SpriteKey);
                         Game.Module.InGame.BattleDirector.EditorExtraUnitKey = string.Join(",", extra);
                         p.SetStamina(p.StaminaMax);   // 판마다 행동력이 빠진다 — 연달아 돌리면 바닥난다(시험 세이브는 끝나면 되돌린다)
                         lobby.StartRunDirect(1, hostKey);
@@ -173,6 +178,17 @@ namespace Game.Editor
                             bt.GetMethod("EnterHost", F).Invoke(bd, new object[] { entry, swapTo, swapTo, host.Position, 100 });
                             host = (Game.Module.InGame.Unit)bt.GetField("_host", F).GetValue(bd);
                             if (oldHost != host && oldHost != null) oldHost.gameObject.SetActive(false);
+                        }
+                        if (s_subKeys != null)
+                        {
+                            var subs = (IList)bt.GetField("_subs", F).GetValue(bd);
+                            var make = bt.GetMethod("MakeSub", F);
+                            for (int i = 0; i < s_subKeys.Length; i++)
+                            {
+                                var at = host.Position + new Vector2((i == 0 ? -1.4f : 1.4f) * m, -0.4f * m);
+                                subs.Add(make.Invoke(bd, new object[] { s_subKeys[i], at }));
+                            }
+                            bt.GetMethod("RefreshSubAtk", F)?.Invoke(bd, null);
                         }
                         bt.GetField("_skillCooldown", F).SetValue(bd, 999f);
                         Debug.Log($"[RW] {hostKey} enemies {alive} melee {melee?.Key} gun {gun?.Key}");
