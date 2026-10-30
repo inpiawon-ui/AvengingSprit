@@ -241,6 +241,7 @@ namespace Game.Module.InGame
             _coachRt.anchorMin = Vector2.zero; _coachRt.anchorMax = Vector2.one;
             _coachRt.offsetMin = _coachRt.offsetMax = Vector2.zero;
             _coachRt.SetAsLastSibling();
+            InGameMainUI.LiftToPopupBand(_coachRt, 1);   // 창 위의 칸까지 짚는다 — 창 밴드보다 한 칸 위
 
             for (int i = 0; i < 4; i++)
             {

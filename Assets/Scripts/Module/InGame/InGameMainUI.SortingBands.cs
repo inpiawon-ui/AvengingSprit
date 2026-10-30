@@ -18,7 +18,9 @@ namespace Game.Module.InGame
     /// ── 밴드 ────────────────────────────────────────────────
     ///   0   방 · 바닥 · 유닛 · 탄 · 터짐   (루트 캔버스)
     ///  10   **파티클**                      (<see cref="ParticleOrder"/>)
-    ///  20   HUD · 조작 · 패널 · 팝업        (<see cref="HudBandOrder"/>)
+    ///  20   늘 떠 있는 HUD · 조작          (<see cref="HudBandOrder"/>)
+    ///  25   잠깐 뜨는 창 · 팝업             (<see cref="PopupBandOrder"/>)
+    ///  26   따라 하기 안내(창 위 칸을 짚는다)
     ///  30   결과 창(판 끝)                  (<see cref="ResultBandOrder"/>)
     ///  50   화면 덮개                       (<see cref="CoverBandOrder"/>)
     ///  900+ 로딩 · SystemPopup              (각자 Overlay 캔버스 — 언제나 맨 위)
@@ -40,6 +42,11 @@ namespace Game.Module.InGame
         public const int ParticleOrder = 10;
 
         private const int HudBandOrder = 20;
+        // 잠깐 떴다 사라지는 창은 늘 떠 있는 HUD 위(PD 2026-10-31 「기존 UI 는 아래, 새로 떴다 사라지는 팝업은 최상단」) —
+        //   HUD 와 같은 20 이면 어느 쪽이 위인지 보장이 없어 모드 띠 · 인연/무리 칸이 레벨업 제목을 덮었다
+        public const int PopupBandOrder = 25;
+        private static readonly string[] PopupPanels =
+            { "BuffChoicePanel", "EventPanel", "ShopPanel", "ShrinePanel", "RbPausePanel", "RbBossWarn", "RbNextRoom", "RbGuide" };
         private const int CoverBandOrder = 50;
         // 판 끝 결과 창 — 같은 HUD 밴드에 두면 레벨업 연출 · 버튼 빛처럼 「밴드 + 몇」으로 올라가는 것이
         // 결과 창 위로 튀어나왔다(PD 2026-10-28 「유령이 죽었을 때 결과창 위에 유령 버튼 · 레벨업 UI」). 창 안의 빛은 창 기준이라 같이 올라간다
@@ -53,9 +60,14 @@ namespace Game.Module.InGame
             int from = field != null ? field.GetSiblingIndex() + 1 : 0;
             for (int i = from; i < transform.childCount; i++)
                 LiftToBand(transform.GetChild(i), HudBandOrder);
+            for (int i = 0; i < PopupPanels.Length; i++)
+                LiftToBand(transform.Find(PopupPanels[i]), PopupBandOrder);
             for (int i = 0; i < ResultPanels.Length; i++)
                 LiftToBand(transform.Find(ResultPanels[i]), ResultBandOrder);
         }
+
+        /// <summary>전투가 루트 캔버스에 직접 세우는 창(파티 선택 · 사망) · 안내를 창 밴드에 올린다 — 안 올리면 순서 0 이라 HUD 밑에 깔린다.</summary>
+        public static void LiftToPopupBand(Transform t, int above = 0) => LiftToBand(t, PopupBandOrder + above);
 
         /// <summary>런타임에 만든 층(덮개 등)을 밴드에 올린다.</summary>
         private static void LiftToBand(Transform t, int order)

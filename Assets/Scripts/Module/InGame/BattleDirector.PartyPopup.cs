@@ -58,6 +58,7 @@ namespace Game.Module.InGame
             rt.SetParent(root, false);
             rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
             rt.offsetMin = rt.offsetMax = Vector2.zero;
+            InGameMainUI.LiftToPopupBand(rt);   // 창은 HUD 위 — 루트 순서 0 이면 위 막대 · 모드 띠가 창을 덮었다
             go.GetComponent<Image>().color = new Color(0f, 0f, 0f, dim);
             if (tapClose) go.AddComponent<Button>().onClick.AddListener(ClosePartyPopup);
 
