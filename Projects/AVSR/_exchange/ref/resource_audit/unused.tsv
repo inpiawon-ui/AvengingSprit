@@ -1,6 +1,34 @@
 판정	경로	바이트	근거
 보류	Assets/BaseResource/ChapterHost/start_btn_off.png	222684	참조 없음 · 이름(template)만 걸린다 — 아틀라스 밖이라 런타임에 못 꺼낸다
 보류	Assets/BaseResource/ChapterScreens/chest_platinum.png	55750	참조 없음 · 이름(literal)만 걸린다 — 아틀라스 밖이라 런타임에 못 꺼낸다
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - GlowBlue.mat	1933	어드레서블 font 「Fonts/NotoSansJP SDF - GlowBlue」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - GlowGold.mat	1933	어드레서블 font 「Fonts/NotoSansJP SDF - GlowGold」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - GlowPurple.mat	1935	어드레서블 font 「Fonts/NotoSansJP SDF - GlowPurple」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - Label.mat	1922	어드레서블 font 「Fonts/NotoSansJP SDF - Label」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - Outline.mat	1918	어드레서블 font 「Fonts/NotoSansJP SDF - Outline」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - Shadow.mat	1916	어드레서블 font 「Fonts/NotoSansJP SDF - Shadow」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - Soft.mat	1921	어드레서블 font 「Fonts/NotoSansJP SDF - Soft」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP SDF - Title.mat	1922	어드레서블 font 「Fonts/NotoSansJP SDF - Title」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansJP-Bold SDF.asset	10626108	어드레서블 font 「Fonts/NotoSansJP-Bold SDF」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowBlue.mat	1933	어드레서블 font 「Fonts/NotoSansKR SDF - GlowBlue」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowGold.mat	1933	어드레서블 font 「Fonts/NotoSansKR SDF - GlowGold」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowPurple.mat	1935	어드레서블 font 「Fonts/NotoSansKR SDF - GlowPurple」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - Label.mat	1922	어드레서블 font 「Fonts/NotoSansKR SDF - Label」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - Outline.mat	1918	어드레서블 font 「Fonts/NotoSansKR SDF - Outline」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - Shadow.mat	1916	어드레서블 font 「Fonts/NotoSansKR SDF - Shadow」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - Soft.mat	1921	어드레서블 font 「Fonts/NotoSansKR SDF - Soft」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR SDF - Title.mat	1922	어드레서블 font 「Fonts/NotoSansKR SDF - Title」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR-Black.ttf	6221152	어드레서블 font 「Fonts/NotoSansKR-Black」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/NotoSansKR-ExtraBold.ttf	6222152	어드레서블 font 「Fonts/NotoSansKR-ExtraBold」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/PetLabel_KR_Outline.mat	1878	어드레서블 font 「Fonts/PetLabel_KR_Outline」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - GlowBlue.mat	1937	어드레서블 font 「Fonts/Galmuri11-Bold SDF - GlowBlue」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - GlowGold.mat	1937	어드레서블 font 「Fonts/Galmuri11-Bold SDF - GlowGold」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - GlowPurple.mat	1939	어드레서블 font 「Fonts/Galmuri11-Bold SDF - GlowPurple」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Label.mat	1926	어드레서블 font 「Fonts/Galmuri11-Bold SDF - Label」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Outline.mat	1922	어드레서블 font 「Fonts/Galmuri11-Bold SDF - Outline」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Shadow.mat	1920	어드레서블 font 「Fonts/Galmuri11-Bold SDF - Shadow」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Soft.mat	1925	어드레서블 font 「Fonts/Galmuri11-Bold SDF - Soft」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Title.mat	1926	어드레서블 font 「Fonts/Galmuri11-Bold SDF - Title」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
 보류	Assets/BaseResource/Growth/bar_box_fill.png	4613	참조 없음 · 이름(literal)만 걸린다 — 아틀라스 밖이라 런타임에 못 꺼낸다
 보류	Assets/BaseResource/Growth/bar_box_frame.png	3879	참조 없음 · 이름(literal)만 걸린다 — 아틀라스 밖이라 런타임에 못 꺼낸다
 보류	Assets/BaseResource/Growth/bar_g_fill.png	5670	참조 없음 · 이름(literal)만 걸린다 — 아틀라스 밖이라 런타임에 못 꺼낸다
@@ -48,6 +76,8 @@
 보류	Assets/BundleResource/Atlas/ReBornWordArt.spriteatlasv2	428	어드레서블 atlas 「atlas/rebornwordart」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
 보류	Assets/BundleResource/Atlas/summonfx.spriteatlasv2	428	어드레서블 atlas 「atlas/summonfx」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
 보류	Assets/BundleResource/Cutscene/cut_start_11.png	146011	어드레서블 cutscene 「cutscene/cut_start_11」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BundleResource/Fonts/FontSet_zh-Hans.asset	1240	어드레서블 font 「Fonts/FontSet_zh-Hans」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
+보류	Assets/BundleResource/Fonts/FontSet_zh-Hant.asset	1240	어드레서블 font 「Fonts/FontSet_zh-Hant」 — 코드에 주소 글자가 안 보인다(표 · 조립 주소일 수 있다)
 사용	Assets/BaseResource/AppIcon/app_icon.png	941642	빌드 경로에서 도달
 사용	Assets/BaseResource/Card/card_c001.png	28853	아틀라스 card.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/Card/cardchip_level.png	7472	아틀라스 card.spriteatlasv2 · 이름 직접
@@ -65,64 +95,64 @@
 사용	Assets/BaseResource/ChapterScreens/result_rowpanel.png	70730	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterScreens/result_warnbar.png	26139	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterScreens/reward_goldpile.png	39978	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Outline.mat	1918	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Soft.mat	1921	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Title.mat	1922	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	20990264	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	12510562	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR-Bold.ttf	6223212	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR.ttf	10415532	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	23055243	주소 Fonts/NotoSansJP SDF
+사용	Assets/BaseResource/Fonts/NotoSansJP-Bold.ttf	5761728	주소 Fonts/NotoSansJP-Bold
+사용	Assets/BaseResource/Fonts/NotoSansJP-Regular.otf	4533028	주소 Fonts/NotoSansJP-Regular
+사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	20992722	주소 Fonts/NotoSansKR SDF
+사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	10412355	주소 Fonts/NotoSansKR-Bold SDF
+사용	Assets/BaseResource/Fonts/NotoSansKR-Bold.ttf	6223212	주소 Fonts/NotoSansKR-Bold
+사용	Assets/BaseResource/Fonts/NotoSansKR.ttf	10415532	주소 Fonts/NotoSansKR
 사용	Assets/BaseResource/Fonts/OriginalPixel SDF.asset	30843	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF.asset	3168753	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold.ttf	2613660	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold SDF.asset	4641375	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold.ttf	10585504	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - GlowBlue.mat	1943	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - GlowGold.mat	1943	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - GlowPurple.mat	1945	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Label.mat	1932	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Outline.mat	1928	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Shadow.mat	1926	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Soft.mat	1931	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Title.mat	1932	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF.asset	304894	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold.ttf	10585608	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-Bold SDF.asset	4409492	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-Bold.ttf	7143756	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - GlowBlue.mat	1942	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - GlowGold.mat	1942	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - GlowPurple.mat	1944	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Label.mat	1931	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Outline.mat	1927	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Shadow.mat	1925	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Soft.mat	1930	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Title.mat	1931	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF.asset	135845	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold.ttf	7142644	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold SDF.asset	17352890	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold.otf	1576660	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowBlue.mat	1942	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowGold.mat	1942	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowPurple.mat	1944	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Label.mat	1931	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Outline.mat	1927	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Shadow.mat	1925	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Soft.mat	1930	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Title.mat	1931	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF.asset	12374946	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold.otf	1583704	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold SDF.asset	13652999	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold.otf	3774288	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - GlowBlue.mat	1944	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - GlowGold.mat	1944	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - GlowPurple.mat	1946	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Label.mat	1933	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Outline.mat	1929	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Shadow.mat	1927	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Soft.mat	1932	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Title.mat	1933	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF.asset	5096653	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold.otf	3781740	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF.asset	3156468	주소 Fonts/Galmuri11-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold.ttf	2613660	주소 Fonts/Galmuri11-Bold
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold SDF.asset	15060794	주소 Fonts/NotoSansSC-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold.ttf	10585504	주소 Fonts/NotoSansSC-Bold
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - GlowBlue.mat	1943	주소 Fonts/NotoSansSC-SemiBold SDF - GlowBlue
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - GlowGold.mat	1943	주소 Fonts/NotoSansSC-SemiBold SDF - GlowGold
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - GlowPurple.mat	1945	주소 Fonts/NotoSansSC-SemiBold SDF - GlowPurple
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Label.mat	1932	주소 Fonts/NotoSansSC-SemiBold SDF - Label
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Outline.mat	1928	주소 Fonts/NotoSansSC-SemiBold SDF - Outline
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Shadow.mat	1926	주소 Fonts/NotoSansSC-SemiBold SDF - Shadow
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Soft.mat	1931	주소 Fonts/NotoSansSC-SemiBold SDF - Soft
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF - Title.mat	1932	주소 Fonts/NotoSansSC-SemiBold SDF - Title
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold SDF.asset	2459185	주소 Fonts/NotoSansSC-SemiBold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-SemiBold.ttf	10585608	주소 Fonts/NotoSansSC-SemiBold
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-Bold SDF.asset	14828753	주소 Fonts/NotoSansTC-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-Bold.ttf	7143756	주소 Fonts/NotoSansTC-Bold
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - GlowBlue.mat	1942	주소 Fonts/NotoSansTC-SemiBold SDF - GlowBlue
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - GlowGold.mat	1942	주소 Fonts/NotoSansTC-SemiBold SDF - GlowGold
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - GlowPurple.mat	1944	주소 Fonts/NotoSansTC-SemiBold SDF - GlowPurple
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Label.mat	1931	주소 Fonts/NotoSansTC-SemiBold SDF - Label
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Outline.mat	1927	주소 Fonts/NotoSansTC-SemiBold SDF - Outline
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Shadow.mat	1925	주소 Fonts/NotoSansTC-SemiBold SDF - Shadow
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Soft.mat	1930	주소 Fonts/NotoSansTC-SemiBold SDF - Soft
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Title.mat	1931	주소 Fonts/NotoSansTC-SemiBold SDF - Title
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF.asset	2290135	주소 Fonts/NotoSansTC-SemiBold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold.ttf	7142644	주소 Fonts/NotoSansTC-SemiBold
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold SDF.asset	15202198	주소 Fonts/Pretendard-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold.otf	1576660	주소 Fonts/Pretendard-Bold
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowBlue.mat	1942	주소 Fonts/Pretendard-SemiBold SDF - GlowBlue
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowGold.mat	1942	주소 Fonts/Pretendard-SemiBold SDF - GlowGold
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowPurple.mat	1944	주소 Fonts/Pretendard-SemiBold SDF - GlowPurple
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Label.mat	1931	주소 Fonts/Pretendard-SemiBold SDF - Label
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Outline.mat	1927	주소 Fonts/Pretendard-SemiBold SDF - Outline
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Shadow.mat	1925	주소 Fonts/Pretendard-SemiBold SDF - Shadow
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Soft.mat	1930	주소 Fonts/Pretendard-SemiBold SDF - Soft
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Title.mat	1931	주소 Fonts/Pretendard-SemiBold SDF - Title
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF.asset	10458175	주소 Fonts/Pretendard-SemiBold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold.otf	1583704	주소 Fonts/Pretendard-SemiBold
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold SDF.asset	17750406	주소 Fonts/PretendardJP-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold.otf	3774288	주소 Fonts/PretendardJP-Bold
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - GlowBlue.mat	1944	주소 Fonts/PretendardJP-SemiBold SDF - GlowBlue
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - GlowGold.mat	1944	주소 Fonts/PretendardJP-SemiBold SDF - GlowGold
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - GlowPurple.mat	1946	주소 Fonts/PretendardJP-SemiBold SDF - GlowPurple
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Label.mat	1933	주소 Fonts/PretendardJP-SemiBold SDF - Label
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Outline.mat	1929	주소 Fonts/PretendardJP-SemiBold SDF - Outline
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Shadow.mat	1927	주소 Fonts/PretendardJP-SemiBold SDF - Shadow
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Soft.mat	1932	주소 Fonts/PretendardJP-SemiBold SDF - Soft
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF - Title.mat	1933	주소 Fonts/PretendardJP-SemiBold SDF - Title
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold SDF.asset	5357892	주소 Fonts/PretendardJP-SemiBold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-SemiBold.otf	3781740	주소 Fonts/PretendardJP-SemiBold
 사용	Assets/BaseResource/Fonts/orig_font_atlas.png	922	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Growth/passive_icon.png	14141	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/arrowicon.png	1189	아틀라스 hostselectpanel.spriteatlasv2 · 이름 직접
@@ -460,6 +490,7 @@
 사용	Assets/BaseResource/InGameMainUI/syn_tier_off.png	20559	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/syn_tier_on.png	19905	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/tower_plate.png	27536	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/InGameMainUI/tut_hand.png	13571	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/ui_dodge_arrow.png	322	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/ultimatebutton.png	57113	아틀라스 ingamemainui.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/InGameMainUI/ultimatecooldown.png	94	GUID 참조(프리팹 · 표 · 재질)
@@ -622,52 +653,54 @@
 사용	Assets/BaseResource/ReBornFxGame/rbfx_danger_edge.png	228109	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_banner_summon.png	144044	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_outgame_blur.png	439052	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch01.png	409610	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch02.png	424111	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch03.png	432181	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch04.png	381400	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch05.png	407022	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch06.png	435628	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch07.png	434562	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch08.png	412365	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch09.png	402160	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch10.png	448183	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch01.png	409610	주소 StageBg/rb_art_bg_stage_ch01
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch02.png	424111	주소 StageBg/rb_art_bg_stage_ch02
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch03.png	432181	주소 StageBg/rb_art_bg_stage_ch03
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch04.png	381400	주소 StageBg/rb_art_bg_stage_ch04
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch05.png	407022	주소 StageBg/rb_art_bg_stage_ch05
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch06.png	435628	주소 StageBg/rb_art_bg_stage_ch06
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch07.png	434562	주소 StageBg/rb_art_bg_stage_ch07
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch08.png	412365	주소 StageBg/rb_art_bg_stage_ch08
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch09.png	402160	주소 StageBg/rb_art_bg_stage_ch09
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_stage_ch10.png	448183	주소 StageBg/rb_art_bg_stage_ch10
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_bg_tower_column.png	493582	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_daily_free_header.png	24828	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_abandoned_supply.png	30958	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_abyss_deal.png	33511	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_black_market.png	35195	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_blood_pact.png	32783	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_boss_prep.png	34529	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_broken_altar.png	37946	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_crossfire.png	36297	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_cursed_cache.png	37801	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_deadly_challenge.png	36148	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_fallen_host.png	39763	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_famous_body.png	39684	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_field_medic.png	36840	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_last_airdrop.png	28403	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_locked_safe.png	38303	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_lost_soul.png	35280	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_narrow_path.png	36477	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_sealed_chest.png	39432	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_soul_shrine.png	33181	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_soul_wager.png	34525	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_abandoned_supply.png	30958	주소 KitArt/rb_art_ev_abandoned_supply
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_abyss_deal.png	33511	주소 KitArt/rb_art_ev_abyss_deal
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_black_market.png	35195	주소 KitArt/rb_art_ev_black_market
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_blood_pact.png	32783	주소 KitArt/rb_art_ev_blood_pact
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_boss_prep.png	34529	주소 KitArt/rb_art_ev_boss_prep
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_broken_altar.png	37946	주소 KitArt/rb_art_ev_broken_altar
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_crossfire.png	36297	주소 KitArt/rb_art_ev_crossfire
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_cursed_cache.png	37801	주소 KitArt/rb_art_ev_cursed_cache
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_deadly_challenge.png	36148	주소 KitArt/rb_art_ev_deadly_challenge
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_fallen_host.png	39763	주소 KitArt/rb_art_ev_fallen_host
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_famous_body.png	39684	주소 KitArt/rb_art_ev_famous_body
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_field_medic.png	36840	주소 KitArt/rb_art_ev_field_medic
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_last_airdrop.png	28403	주소 KitArt/rb_art_ev_last_airdrop
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_locked_safe.png	38303	주소 KitArt/rb_art_ev_locked_safe
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_lost_soul.png	35280	주소 KitArt/rb_art_ev_lost_soul
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_narrow_path.png	36477	주소 KitArt/rb_art_ev_narrow_path
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_sealed_chest.png	39432	주소 KitArt/rb_art_ev_sealed_chest
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_soul_shrine.png	33181	주소 KitArt/rb_art_ev_soul_shrine
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_ev_soul_wager.png	34525	주소 KitArt/rb_art_ev_soul_wager
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_boss.png	18512	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_cards.png	15699	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_ghost_hp.png	10574	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_ghost_hp.png	479664	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_growth.png	12690	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_lock.png	10704	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_main_down.png	513632	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_merchant.png	13204	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_night.png	23022	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_party.png	478941	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_pass.png	14130	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_possess.png	11799	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_release.png	9833	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_possess.png	401407	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_rooms.png	14278	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_sortie.png	16371	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_stand_fire.png	10978	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_summon.png	20076	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_synergy.png	532010	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_tower.png	15928	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_guide_ultimate.png	573139	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_hidden_silhouette.png	65835	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_host_pedestal.png	141650	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_key_challenge_night.png	102393	GUID 참조(프리팹 · 표 · 재질)
@@ -686,9 +719,9 @@
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_night_day_thu.png	945886	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_night_day_tue.png	974416	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_night_day_wed.png	999031	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_result_clear_bg.png	3183992	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_result_clear_bg_quiet.png	326058	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/ReBornKit/Art/rb_art_result_fail_bg.png	3163210	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_result_clear_bg.png	3183992	주소 KitArt/rb_art_result_clear_bg
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_result_clear_bg_quiet.png	326058	주소 KitArt/rb_art_result_clear_bg_quiet
+사용	Assets/BaseResource/ReBornKit/Art/rb_art_result_fail_bg.png	3163210	주소 KitArt/rb_art_result_fail_bg
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_shop_chapter_clear.png	947325	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_shop_contract_lord.png	992442	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ReBornKit/Art/rb_art_shop_contract_soul.png	992903	GUID 참조(프리팹 · 표 · 재질)
@@ -1138,6 +1171,9 @@
 사용	Assets/BundleResource/Cutscene/cut_start_2.png	203322	주소 cutscene/cut_start_2
 사용	Assets/BundleResource/Cutscene/cut_start_4.png	32576	주소 cutscene/cut_start_4
 사용	Assets/BundleResource/Cutscene/cut_start_5.png	18785	주소 cutscene/cut_start_5
+사용	Assets/BundleResource/Fonts/FontSet_en.asset	1235	주소 Fonts/FontSet_en
+사용	Assets/BundleResource/Fonts/FontSet_ja.asset	1235	주소 Fonts/FontSet_ja
+사용	Assets/BundleResource/Fonts/FontSet_ko.asset	1235	주소 Fonts/FontSet_ko
 사용	Assets/BundleResource/Materials/UIGrayscale.mat	1047	주소 material/uigrayscale
 사용	Assets/BundleResource/ParticleFx/Danger/fx_danger_core.png	62083	주소 Fx/danger_core
 사용	Assets/BundleResource/ParticleFx/Danger/fx_danger_edge.png	14067	주소 Fx/danger_edge
@@ -1168,9 +1204,9 @@
 사용	Assets/BundleResource/ParticleFx/pfx_star4.mat	2651	주소 ParticleFx/star4
 사용	Assets/BundleResource/ParticleFx/pfx_streak.mat	2651	주소 ParticleFx/streak
 사용	Assets/BundleResource/Prefabs/UI/Common/RbLoadingView.prefab	19474	주소 UI/Common/RbLoadingView
-사용	Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab	976100	주소 UI/InGame/InGameMainUI
-사용	Assets/BundleResource/Prefabs/UI/InGame/RbInGameMainUI.prefab	2127793	주소 UI/InGame/RbInGameMainUI
-사용	Assets/BundleResource/Prefabs/UI/Lobby/RbLobbyUI.prefab	4438073	주소 UI/Lobby/RbLobbyUI
+사용	Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab	976251	주소 UI/InGame/InGameMainUI
+사용	Assets/BundleResource/Prefabs/UI/InGame/RbInGameMainUI.prefab	2126355	주소 UI/InGame/RbInGameMainUI
+사용	Assets/BundleResource/Prefabs/UI/Lobby/RbLobbyUI.prefab	4436782	주소 UI/Lobby/RbLobbyUI
 사용	Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab	29359	주소 UI/Opening/OpeningMainUI
 사용	Assets/BundleResource/Prefabs/UI/Title/RbTitleUI.prefab	20314	주소 UI/Title/RbTitleUI
 사용	Assets/BundleResource/RoomFloor/obj_python_wall.png	158338	주소 roomfloor/obj_python_wall
@@ -1281,22 +1317,42 @@
 사용	Assets/BundleResource/Sounds/SFX/sfx_36.wav	30862	주소 Sounds/sfx_36
 사용	Assets/BundleResource/Sounds/SFX/sfx_37.wav	42218	주소 Sounds/sfx_37
 사용	Assets/BundleResource/Sounds/SFX/sfx_38.wav	48700	주소 Sounds/sfx_38
-사용	Assets/BundleResource/TableData/ActiveSkillTable.asset	10240	주소 TableData/ActiveSkillTable
+사용	Assets/BundleResource/TableData/ActiveSkillTable.asset	10260	주소 TableData/ActiveSkillTable
 사용	Assets/BundleResource/TableData/BossTable.asset	15377	주소 TableData/BossTable
 사용	Assets/BundleResource/TableData/BuffTable.asset	20269	주소 TableData/BuffTable
 사용	Assets/BundleResource/TableData/ChestTable.asset	1327	주소 TableData/ChestTable
 사용	Assets/BundleResource/TableData/EventTable.asset	17726	주소 TableData/EventTable
 사용	Assets/BundleResource/TableData/GachaTable.asset	949	주소 TableData/GachaTable
-사용	Assets/BundleResource/TableData/GameConfig.asset	24155	주소 TableData/GameConfig
+사용	Assets/BundleResource/TableData/GameConfig.asset	24157	주소 TableData/GameConfig
 사용	Assets/BundleResource/TableData/HostTable.asset	29866	주소 TableData/HostTable
 사용	Assets/BundleResource/TableData/ModeTable.asset	5525	주소 TableData/ModeTable
-사용	Assets/BundleResource/TableData/PassiveSkillTable.asset	9829	주소 TableData/PassiveSkillTable
-사용	Assets/BundleResource/TableData/RoomTable.asset	4388635	주소 TableData/RoomTable
+사용	Assets/BundleResource/TableData/PassiveSkillTable.asset	9830	주소 TableData/PassiveSkillTable
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_bosses.asset	27006	주소 TableData/RoomTable_bosses
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch1.asset	215915	주소 TableData/RoomTable_ch1
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch10.asset	192490	주소 TableData/RoomTable_ch10
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch11.asset	234248	주소 TableData/RoomTable_ch11
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch12.asset	212774	주소 TableData/RoomTable_ch12
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch13.asset	239310	주소 TableData/RoomTable_ch13
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch14.asset	209314	주소 TableData/RoomTable_ch14
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch15.asset	211422	주소 TableData/RoomTable_ch15
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch16.asset	235791	주소 TableData/RoomTable_ch16
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch17.asset	237063	주소 TableData/RoomTable_ch17
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch18.asset	222507	주소 TableData/RoomTable_ch18
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch19.asset	226469	주소 TableData/RoomTable_ch19
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch2.asset	209059	주소 TableData/RoomTable_ch2
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch20.asset	220250	주소 TableData/RoomTable_ch20
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch3.asset	228544	주소 TableData/RoomTable_ch3
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch4.asset	218110	주소 TableData/RoomTable_ch4
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch5.asset	221159	주소 TableData/RoomTable_ch5
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch6.asset	191700	주소 TableData/RoomTable_ch6
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch7.asset	250492	주소 TableData/RoomTable_ch7
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch8.asset	223104	주소 TableData/RoomTable_ch8
+사용	Assets/BundleResource/TableData/Rooms/RoomTable_ch9.asset	198220	주소 TableData/RoomTable_ch9
 사용	Assets/BundleResource/TableData/SeasonTable.asset	4647	주소 TableData/SeasonTable
 사용	Assets/BundleResource/TableData/ShopTable.asset	16195	주소 TableData/ShopTable
 사용	Assets/BundleResource/TableData/SoundTable.asset	15235	주소 TableData/SoundTable
 사용	Assets/BundleResource/TableData/StoreTable.asset	9678	주소 TableData/StoreTable
-사용	Assets/BundleResource/TableData/StringTable.asset	630548	주소 TableData/StringTable
+사용	Assets/BundleResource/TableData/StringTable.asset	642299	주소 TableData/StringTable
 사용	Assets/BundleResource/TableData/TrashTable.asset	19039	주소 TableData/TrashTable
 사용(동적)	Assets/BaseResource/Card/card_c002.png	34382	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c003.png	31474	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -1961,10 +2017,6 @@
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslam_6.png	89034	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslam_7.png	58780	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslam_8.png	18843	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslash_1.png	3185	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslash_2.png	5888	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslash_3.png	2831	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdslash_4.png	673	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdwraith_1.png	25751	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdwraith_2.png	26284	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mdwraith_3.png	26197	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -5815,34 +5867,6 @@
 안 씀	Assets/BaseResource/ChapterScreens/rewardcard_b.png	36722	아무 데서도 참조 · 이름 사용이 없다 (에디터 빌더에만 이름이 나온다)
 안 씀	Assets/BaseResource/ChapterScreens/rewardcard_gold.png	31110	아무 데서도 참조 · 이름 사용이 없다 (에디터 빌더에만 이름이 나온다)
 안 씀	Assets/BaseResource/ChapterScreens/rewardcard_s.png	40691	아무 데서도 참조 · 이름 사용이 없다 (에디터 빌더에만 이름이 나온다)
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - GlowBlue.mat	1933	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - GlowGold.mat	1933	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - GlowPurple.mat	1935	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - Label.mat	1922	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - Outline.mat	1918	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - Shadow.mat	1916	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - Soft.mat	1921	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF - Title.mat	1922	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	23055243	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP-Bold SDF.asset	10626108	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP-Bold.ttf	5761728	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansJP-Regular.otf	4533028	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowBlue.mat	1933	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowGold.mat	1933	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowPurple.mat	1935	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR SDF - Label.mat	1922	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR SDF - Shadow.mat	1916	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR-Black.ttf	6221152	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/NotoSansKR-ExtraBold.ttf	6222152	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/PetLabel_KR_Outline.mat	1878	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - GlowBlue.mat	1937	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - GlowGold.mat	1937	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - GlowPurple.mat	1939	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Label.mat	1926	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Outline.mat	1922	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Shadow.mat	1920	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Soft.mat	1925	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF - Title.mat	1926	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/Growth/Portraits/portrait_amazon.png	141368	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/Growth/Portraits/portrait_amazon_elite.png	138546	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/Growth/Portraits/portrait_baseball.png	148845	아무 데서도 참조 · 이름 사용이 없다
@@ -6004,6 +6028,10 @@
 안 씀	Assets/BaseResource/InGameMainUI/fx_hxweap_2.png	4197	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_hxweap_3.png	5982	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_hxweap_4.png	5394	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_mdslash_1.png	3185	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_mdslash_2.png	5888	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_mdslash_3.png	2831	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
+안 씀	Assets/BaseResource/InGameMainUI/fx_mdslash_4.png	673	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_mdstack_1.png	1942	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_mdstack_2.png	2023	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
 안 씀	Assets/BaseResource/InGameMainUI/fx_mdstack_3.png	2095	아틀라스 ingamemainui.spriteatlasv2 에 묶여만 있고 게임 코드가 이름을 부르지 않는다
@@ -6481,6 +6509,7 @@
 안 씀	Assets/BundleResource/Sounds/Samples/oki2_020.wav	19500	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BundleResource/Sounds/Samples/oki2_021.wav	26668	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BundleResource/Sounds/Samples/oki2_022.wav	30764	아무 데서도 참조 · 이름 사용이 없다
+안 씀	Assets/BundleResource/TableData/RoomTable.asset	4388635	아무 데서도 참조 · 이름 사용이 없다 (에디터 빌더에만 이름이 나온다)
 안 씀	Assets/Screenshots/screenshot-20261008-173618.png	1392178	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/Screenshots/screenshot-20261008-173635.png	1325732	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/Screenshots/screenshot-20261008-175059.png	832789	아무 데서도 참조 · 이름 사용이 없다
