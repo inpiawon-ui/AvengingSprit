@@ -642,7 +642,7 @@ namespace Game.Module.InGame
                 e.CancelWindup();
                 PlayFx("guard", e.Position, 72f, loop: false);
             }
-            if (InyeonOn(me)) IyBindSkullsNear(me, list);   // 인연 「결계 강령」 — 묶인 적 곁에 해골 2기
+            if (InyeonOn(me)) IyBindSoulMark(list, seconds);   // 인연 「혼 결박」 — 묶인 적이 받는 피해 +35%(10-30 소환 없앰)
             Shake(3f);
         }
 

@@ -36,7 +36,7 @@ namespace Game.Module.InGame
             ["salamander"] = new() { Name = "불독", Partners = new[] { "dragoon" }, Desc = "중독된 적이 쓰러지면 불꽃으로 터진다" },
             ["dragoon"] = new() { Name = "업화", Partners = new[] { "salamander", "dragon_blue" }, Desc = "불바다가 1.5배 커지고 밟은 적이 둔해진다" },
             ["dragon_blue"] = new() { Name = "번개 사슬", Partners = new[] { "ninja_chain" }, Desc = "묶인 적은 낙뢰를 두 번 맞는다" },
-            ["guru"] = new() { Name = "결계 강령", Partners = new[] { "medium" }, Desc = "묶인 적 곁에 해골 2기" },
+            ["guru"] = new() { Name = "혼 결박", Partners = new[] { "medium" }, Desc = "묶인 적이 받는 피해 +35%" },
             ["white_wizard"] = new() { Name = "빛과 얼음", Partners = new[] { "snowwoman" }, Desc = "끌어모은 적이 언 뒤 폭발(피해 +30%)" },
             ["medium"] = new() { Name = "공명 강령", Partners = new[] { "guru", "white_wizard" }, Desc = "혼 깃들이기 지속 1.5배 · 짝은 피해 버프 두 배" },
             ["ninja"] = new() { Name = "그림자 분신", Partners = new[] { "amazon" }, Desc = "베기 끝에 분신 하나가 4초 남아 싸운다" },

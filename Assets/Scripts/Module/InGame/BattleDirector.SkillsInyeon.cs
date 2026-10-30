@@ -70,8 +70,8 @@ namespace Game.Module.InGame
         private const float IyThunderAgainGap = 0.18f;
 
         // 구루 「결계 강령」 — 묶인 적 곁에 해골 2기
-        private const int IyBindSkulls = 2;
-        private const float IyBindSkullSideMeters = 0.6f;
+        private const int IyBindMarkPercent = 35;       // 구루 「혼 결박」 — 묶인 적이 받는 피해
+        private const float IyBindMarkExtraSeconds = 2f;   // 묶임이 풀린 뒤에도 잠깐 남는다
 
         // 화이트 위저드 「빛과 얼음」 — 끌어모은 적이 언 뒤 폭발(피해 +30%)
         private const float IyLightIceFreezeLead = 0.2f;
@@ -357,28 +357,23 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  구루 「결계 강령」
+        //  구루 「혼 결박」(짝 영매) — 예전 「결계 강령」(묶인 적 곁에 해골 2기)은 영매가 버프 마법사가 되며 소환을 뺐다(PD 2026-10-30)
         // ═══════════════════════════════════════════════════════════
 
-        private void IyBindSkullsNear(Unit me, List<Unit> bound)
+        private static readonly Color IyBindMarkColor = new(0.72f, 0.45f, 1f, 1f);
+
+        /// <summary>묶인 적마다 혼 낙인 — 묶인 동안 + 2초, 받는 피해 +35%. 영매 보랏빛 파문 · 혼불로 표시.</summary>
+        private void IyBindSoulMark(List<Unit> bound, float rootSeconds)
         {
-            for (int i = 0; i < IyBindSkulls; i++)
+            if (bound == null) return;
+            for (int i = 0; i < bound.Count; i++)
             {
-                Vector2 at;
-                if (bound != null && i < bound.Count && bound[i] != null && bound[i].IsAlive)
-                {
-                    var side = bound[i].Position - me.Position;
-                    side = side.sqrMagnitude > 1f ? side.normalized : Vector2.right;
-                    at = bound[i].Position - side * Meters(IyBindSkullSideMeters);   // 묶인 적의 내 쪽 곁
-                }
-                else
-                {
-                    float a = (i * 180f + 90f) * Mathf.Deg2Rad;
-                    at = me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Meters(1f);
-                }
-                at = ClampedInField(me, at);
-                SummonSkull(at);
-                PlayFx("soulripple", at, Meters(1f), loop: false);
+                var e = bound[i];
+                if (e == null || !e.IsAlive) continue;
+                e.ApplyAmp(IyBindMarkPercent, rootSeconds + IyBindMarkExtraSeconds);
+                PlayFx("soulripple", e.Position, Meters(1f), loop: false);
+                _pfx?.Spray(ParticleFxKind.GhostMote, e.Position, Vector2.up, 40f, 6, 50f, 120f,
+                            new Vector2(9f, 9f), 0.7f, IyBindMarkColor, spread: 20f);
             }
         }
 

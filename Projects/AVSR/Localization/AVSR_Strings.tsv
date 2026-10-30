@@ -1848,7 +1848,7 @@ inyeon.commando_missile.name	집속탄	クラスター弾	Cluster Shot	集束彈
 inyeon.salamander.name	불독	炎毒	Fire Venom	炎毒	炎毒
 inyeon.dragoon.name	업화	業火	Hellfire	業火	业火
 inyeon.dragon_blue.name	번개 사슬	雷の鎖	Lightning Chain	雷鏈	雷链
-inyeon.guru.name	결계 강령	結界降霊	Ward Summoning	結界降靈	结界降灵
+inyeon.guru.name	혼 결박	魂縛り	Soul Bind	魂縛	魂缚
 inyeon.white_wizard.name	빛과 얼음	光と氷	Light and Ice	光與冰	光与冰
 inyeon.medium.name	공명 강령	共鳴降霊	Resonance	共鳴降靈	共鸣降灵
 inyeon.ninja.name	그림자 분신	影分身	Shadow Clone	影分身	影分身
@@ -1930,7 +1930,7 @@ inyeon.commando_missile.desc	미사일 한 발마다 작은 폭발	ミサイル1
 inyeon.salamander.desc	중독된 적이 쓰러지면 불꽃으로 터진다	毒状態の敵が倒れると炎で爆発する	Poisoned foes burst into flames when they fall	中毒的敵人倒下時會爆出火焰	中毒的敌人倒下时会爆出火焰
 inyeon.dragoon.desc	불바다가 1.5배 커지고 밟은 적이 둔해진다	火の海が1.5倍に広がり、踏んだ敵が鈍る	Sea of fire grows ×1.5 and slows foes in it	火海擴大1.5倍，踩到的敵人會減速	火海扩大1.5倍，踩到的敌人会减速
 inyeon.dragon_blue.desc	묶인 적은 낙뢰를 두 번 맞는다	拘束された敵に落雷が2回	Bound foes are struck by lightning twice	被束縛的敵人會遭落雷兩次	被束缚的敌人会遭落雷两次
-inyeon.guru.desc	묶인 적 곁에 해골 2기	拘束した敵のそばにスケルトン2体	2 skeletons rise beside bound foes	被束縛的敵人旁出現2具骷髏	被束缚的敌人旁出现2具骷髅
+inyeon.guru.desc	묶인 적이 받는 피해 +35%	縛った敵の被ダメージ+35%	Bound enemies take +35% damage	被束縛的敵人受到傷害+35%	被束缚的敌人受到伤害+35%
 inyeon.white_wizard.desc	끌어모은 적이 언 뒤 폭발(피해 +30%)	引き寄せた敵が凍った後に爆発（ダメージ+30%）	Pulled foes freeze, then explode (+30% damage)	被吸引的敵人凍結後爆炸（傷害+30%）	被吸引的敌人冻结后爆炸（伤害+30%）
 inyeon.medium.desc	혼 깃들이기 지속 1.5배 · 짝은 피해 버프 두 배	魂宿しの持続1.5倍・相方は火力バフ2倍	Soul Infusion lasts 1.5x · partner gets double damage buff	魂靈附身持續1.5倍・搭檔傷害增益加倍	魂灵附身持续1.5倍・搭档伤害增益加倍
 inyeon.ninja.desc	베기 끝에 분신 하나가 4초 남아 싸운다	斬撃の後、分身1体が4秒残って戦う	A clone stays and fights for 4s after the slash	斬擊後留下一個分身戰鬥4秒	斩击后留下一个分身战斗4秒

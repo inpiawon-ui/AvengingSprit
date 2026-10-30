@@ -11920,11 +11920,11 @@ MonoBehaviour:
     _zhHant: "\u96F7\u93C8"
     _zhHans: "\u96F7\u94FE"
   - _key: inyeon.guru.name
-    _ko: "\uACB0\uACC4 \uAC15\uB839"
-    _ja: "\u7D50\u754C\u964D\u970A"
-    _en: Ward Summoning
-    _zhHant: "\u7D50\u754C\u964D\u9748"
-    _zhHans: "\u7ED3\u754C\u964D\u7075"
+    _ko: "\uD63C \uACB0\uBC15"
+    _ja: "\u9B42\u7E1B\u308A"
+    _en: Soul Bind
+    _zhHant: "\u9B42\u7E1B"
+    _zhHans: "\u9B42\u7F1A"
   - _key: inyeon.white_wizard.name
     _ko: "\uBE5B\uACFC \uC5BC\uC74C"
     _ja: "\u5149\u3068\u6C37"
@@ -12467,11 +12467,11 @@ MonoBehaviour:
     _zhHant: "\u88AB\u675F\u7E1B\u7684\u6575\u4EBA\u6703\u906D\u843D\u96F7\u5169\u6B21"
     _zhHans: "\u88AB\u675F\u7F1A\u7684\u654C\u4EBA\u4F1A\u906D\u843D\u96F7\u4E24\u6B21"
   - _key: inyeon.guru.desc
-    _ko: "\uBB36\uC778 \uC801 \uACC1\uC5D0 \uD574\uACE8 2\uAE30"
-    _ja: "\u62D8\u675F\u3057\u305F\u6575\u306E\u305D\u3070\u306B\u30B9\u30B1\u30EB\u30C8\u30F32\u4F53"
-    _en: 2 skeletons rise beside bound foes
-    _zhHant: "\u88AB\u675F\u7E1B\u7684\u6575\u4EBA\u65C1\u51FA\u73FE2\u5177\u9AB7\u9ACF"
-    _zhHans: "\u88AB\u675F\u7F1A\u7684\u654C\u4EBA\u65C1\u51FA\u73B02\u5177\u9AB7\u9AC5"
+    _ko: "\uBB36\uC778 \uC801\uC774 \uBC1B\uB294 \uD53C\uD574 +35%"
+    _ja: "\u7E1B\u3063\u305F\u6575\u306E\u88AB\u30C0\u30E1\u30FC\u30B8+35%"
+    _en: Bound enemies take +35% damage
+    _zhHant: "\u88AB\u675F\u7E1B\u7684\u6575\u4EBA\u53D7\u5230\u50B7\u5BB3+35%"
+    _zhHans: "\u88AB\u675F\u7F1A\u7684\u654C\u4EBA\u53D7\u5230\u4F24\u5BB3+35%"
   - _key: inyeon.white_wizard.desc
     _ko: "\uB04C\uC5B4\uBAA8\uC740 \uC801\uC774 \uC5B8 \uB4A4 \uD3ED\uBC1C(\uD53C\uD574
       +30%)"
