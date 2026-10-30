@@ -11,18 +11,22 @@ namespace Game.Module.Lobby
     /// <summary>
     /// RE:BORN 챕터 선택 — 시안 Screens/chapter-select.png. 로비 챕터 카드를 누르면 열린다.
     /// 줄 = 섬네일 · CH n · 이름 · 설명 · 최고 기록(또는 여는 조건) · 도전 가능 / 잠김. 열린 줄을 누르면 그 챕터로 로비에 돌아간다.
-    /// 줄은 틀(ChsRow) 하나를 챕터 수만큼 복제한다 — 챕터 수를 코드에 적지 않는다.
+    /// 줄은 재사용 목록(RecyclingList) — 틀(ChsRow)을 보이는 만큼만 복제해 스크롤하며 다시 채운다(목표 챕터 100+, PD 2026-10-30).
+    /// 챕터 수를 코드에 적지 않는다.
     /// </summary>
-    public sealed class RbChapterPage : MonoBehaviour
+    public sealed class RbChapterPage : MonoBehaviour, IRecyclingListSource
     {
         private const float RowPitch = 264f * 2f / 3f, ListPad = 40f, NameGap = 14f;
         private const int RoomsPerChapter = 30;
 
         private UIBinder _ui;
         private RbLobbyUI _shell;
-        private readonly List<Transform> _rows = new();
-        // 줄마다 썸네일 한 칸 — 목록을 열 때 읽고 닫을 때 놓는다(2026-10-30 메모리: 10장을 로비 내내 쥐고 있었다)
+        private RecyclingList _list;
+        // 칸마다 썸네일 한 칸 — 목록을 열 때 읽고 닫을 때 놓는다(2026-10-30 메모리: 10장을 로비 내내 쥐고 있었다)
         private readonly List<LazySpriteSlot> _thumbs = new();
+        private IPlayerDataService _player;
+        private string[] _stageBgs;
+        private int _selected;
 
         private void Awake()
         {
@@ -37,32 +41,22 @@ namespace Game.Module.Lobby
         {
             Awake();
             gameObject.SetActive(true);
+            _player = player;
+            _stageBgs = stageBgs;
+            _selected = selected;
             int count = Mathf.Max(1, player.ChapterCount);
-            EnsureRows(count);
-            while (_thumbs.Count < _rows.Count) _thumbs.Add(new LazySpriteSlot());
-            for (int i = 0; i < _rows.Count; i++) Fill(_rows[i], _thumbs[i], i + 1, player, stageBgs, selected);
-            if (_ui.Find("ChsBody") is RectTransform view && view.TryGetComponent<ScrollRect>(out var sr))
-            {
-                if (sr.content != null) sr.content.sizeDelta = new Vector2(sr.content.sizeDelta.x, count * RowPitch + ListPad);
-                // 고른 챕터가 보이게 — 위에서 몇 번째 줄인지로 비율을 잡는다
-                float range = Mathf.Max(1f, sr.content.rect.height - view.rect.height);
-                sr.verticalNormalizedPosition = 1f - Mathf.Clamp01(((selected - 1) * RowPitch - RowPitch) / range);
-            }
+            if (_list == null && _ui.Find("ChsBody") is RectTransform view && view.TryGetComponent<ScrollRect>(out var sr)
+                && _ui.Find("ChsRow") is RectTransform tpl)
+                _list = new RecyclingList(sr, tpl, RowPitch, ListPad);
+            if (_list == null) return;
+            _list.SetCount(count, this);
+            _list.ScrollTo(selected - 1);   // 고른 챕터가 보이게
         }
 
-        private void EnsureRows(int count)
+        public void FillItem(int index, RectTransform item, int slot)
         {
-            if (_rows.Count == 0 && _ui.Find("ChsRow") is Transform tpl) _rows.Add(tpl);
-            if (_rows.Count == 0) return;
-            var first = (RectTransform)_rows[0];
-            while (_rows.Count < count)
-            {
-                var copy = (RectTransform)Instantiate(first, first.parent);
-                copy.name = $"ChsRow{_rows.Count}";
-                copy.anchoredPosition = first.anchoredPosition + new Vector2(0f, -RowPitch * _rows.Count);
-                _rows.Add(copy);
-            }
-            for (int i = 0; i < _rows.Count; i++) _rows[i].gameObject.SetActive(i < count);
+            while (_thumbs.Count <= slot) _thumbs.Add(new LazySpriteSlot());
+            Fill(item, _thumbs[slot], index + 1, _player, _stageBgs, _selected);
         }
 
         private void OnDisable()

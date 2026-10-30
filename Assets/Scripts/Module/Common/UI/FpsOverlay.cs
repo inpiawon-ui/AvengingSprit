@@ -9,7 +9,8 @@ namespace Game.Module.Common.UI
     /// 화면 맨 아래 가운데에 FPS · 최저 FPS · 메모리를 늘 띄운다 — 폰에서 빌드마다 최적화 효과를 숫자로 비교하려는 시험용 표시(PD 2026-10-30).
     ///
     /// 0.5초마다 한 번만 글자를 바꾼다(매 프레임 바꾸면 그것 자체가 부하다). `SetText` 의 숫자 자리 채우기는 문자열을 새로 만들지 않는다.
-    /// 메모리는 「System Used Memory」 — 개발 빌드가 아니어도 값이 나오는 카운터다.
+    /// 메모리는 「Total Used Memory」(유니티가 이 앱에 잡아 둔 양) — 개발 빌드가 아니어도 값이 나온다.
+    /// 예전 「System Used Memory」 는 기기에서 7246MB 처럼 나와 기기 전체를 센 값으로 보였다(PD 2026-10-30 캡처).
     /// 프리팹이 아니라 코드로 만든다: 씬 · 로딩과 상관없이 처음부터 끝까지 떠 있어야 해서 SystemPopup 과 같은 예외로 둔다.
     /// 출시 전에 <see cref="s_enabled"/> 를 끈다.
     /// </summary>
@@ -74,7 +75,7 @@ namespace Game.Module.Common.UI
             _text.text = "FPS --";
         }
 
-        private void OnEnable() => _memory = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "System Used Memory");
+        private void OnEnable() => _memory = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Total Used Memory");
 
         private void OnDisable() => _memory.Dispose();
 

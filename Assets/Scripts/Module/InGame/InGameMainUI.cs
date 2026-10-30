@@ -690,6 +690,9 @@ namespace Game.Module.InGame
             // 3택1 패널은 딤으로 입력을 막아야 하므로 다시 켠다
             var dim = _ui.Get<Image>("BuffChoicePanel");
             if (dim != null) dim.raycastTarget = true;
+            // 스크롤 칸(결과창 획득 보상 줄 등)도 다시 켠다 — 꺼 두면 밀어도 이 판이 받아 스크롤이 안 됐다(PD 2026-10-30)
+            foreach (var scroll in GetComponentsInChildren<ScrollRect>(true))
+                if (scroll.TryGetComponent<Graphic>(out var g)) g.raycastTarget = true;
         }
 
         private static void AddTrigger(EventTrigger t, EventTriggerType type,
