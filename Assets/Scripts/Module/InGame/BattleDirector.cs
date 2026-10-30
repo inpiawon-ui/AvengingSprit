@@ -3659,6 +3659,9 @@ namespace Game.Module.InGame
             //   아래 이른 반환 뒤에 두었다가, 3택1 창이 떠 있는 동안 태블릿으로 바꾸니
             //   창 높이가 그대로라 필드와 조작바 사이가 검게 비었다.
             TickFieldFit();
+#if UNITY_EDITOR
+            TickAutoPilot();   // 에디터 전용 자동 조종(영상 찍기) — 꺼져 있으면 바로 돌아간다
+#endif
 
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다

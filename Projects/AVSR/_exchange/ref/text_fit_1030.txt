@@ -1,0 +1,5 @@
+RbLobbyUI SumCardNewText(꺼짐) [ko] 칸 50x24 필요 63x19 @16 가로넘침 : 새 호스트!
+RbLobbyUI SumCardNewText(꺼짐) [ja] 칸 50x24 필요 105x19 @16 가로넘침 : 新しいホスト！
+RbLobbyUI SumCardNewText(꺼짐) [en] 칸 50x24 필요 77x19 @16 가로넘침 : New Host!
+RbLobbyUI SumCardNewText(꺼짐) [번체] 칸 50x24 필요 64x23 @16 가로넘침 : 新宿主！
+RbLobbyUI SumCardNewText(꺼짐) [간체] 칸 50x24 필요 64x23 @16 가로넘침 : 新宿主！
