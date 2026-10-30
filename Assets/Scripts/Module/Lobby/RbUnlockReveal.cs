@@ -19,6 +19,8 @@ namespace Game.Module.Lobby
     /// </summary>
     public sealed class RbUnlockReveal : MonoBehaviour
     {
+        private const int AboveSummonReveal = 60;   // SummonReveal 캔버스 50 · 결과 카드 52 위
+
         private RbLobbyUI _shell;
         private RbOutFx _fx;
         private TMP_Text _like;
@@ -50,6 +52,14 @@ namespace Game.Module.Lobby
             _key = hostKey;
             transform.SetAsLastSibling();
             gameObject.SetActive(true);
+            // 소환 연출(따로 캔버스 · 정렬 50) 위에도 뜬다 — 결과가 나오면 바로 띄우기 때문(PD 2026-10-30)
+            if (!TryGetComponent<Canvas>(out var canvas))
+            {
+                canvas = gameObject.AddComponent<Canvas>();
+                gameObject.AddComponent<GraphicRaycaster>();
+            }
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = AboveSummonReveal;
             Build(e);
             _cts?.Cancel();
             _cts = new CancellationTokenSource();

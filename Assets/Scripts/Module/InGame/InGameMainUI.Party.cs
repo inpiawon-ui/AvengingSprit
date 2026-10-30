@@ -17,6 +17,7 @@ namespace Game.Module.InGame
     public sealed partial class InGameMainUI
     {
         private const int PartySynCells = 4;
+        private const int PartySynMax = 3;
         private bool _partyHudReady;
         private int _partyHudVersion = int.MinValue;
         private TextMeshProUGUI _partyMainName;
@@ -236,7 +237,8 @@ namespace Game.Module.InGame
                 if (_partySynGlow[i] != null) _partySynGlow[i].SetActive(lit);
                 if (_partySynIcon[i] != null) _partySynIcon[i].sprite = _battle.PartySprite(c.Icon);
                 if (_partySynName[i] != null) _partySynName[i].text = c.Name;
-                if (_partySynLabel[i] != null) _partySynLabel[i].text = lit ? $"{c.Count}/{c.Next}" : $"{c.Count}→{c.Next}";
+                // 늘 「모은 수/3」(파티 최대 — 메인 + 보조 둘). 「1→2」 는 무엇을 뜻하는지 안 읽혔다(PD 2026-10-30)
+                if (_partySynLabel[i] != null) _partySynLabel[i].text = $"{c.Count}/{PartySynMax}";
             }
             if (_partySynColumn != null) _partySynColumn.gameObject.SetActive(iy != null || _partyCells.Count > 0);
         }

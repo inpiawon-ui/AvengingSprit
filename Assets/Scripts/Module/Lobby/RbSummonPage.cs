@@ -126,6 +126,7 @@ namespace Game.Module.Lobby
         private async UniTaskVoid PullAsync(IGachaService g, int count, GachaPay pay)
         {
             _busy = true;
+            _pullStartedAt = Time.unscaledTime;
             bool again = false;
             try
             {
@@ -149,8 +150,18 @@ namespace Game.Module.Lobby
             if (again && this != null) Pull(count);
         }
 
-        /// <summary>뽑는 중이거나 결과판이 떠 있나 — 해금 연출이 소환 결과 뒤로 미룬다(PD 2026-10-30 「가챠 결과 전에 얻은 걸 알게 된다」).</summary>
-        public bool ShowingPull => _busy || (_ui != null && _ui.Find("SumResult") is Transform r && r.gameObject.activeInHierarchy);
+        /// <summary>
+        /// 뽑는 중이고 결과가 아직 안 보이나 — 해금 연출이 결과 뒤로 미룬다(PD 2026-10-30 「가챠 결과 전에 얻은 걸 알게 된다」).
+        /// 결과가 다 보이고 0.1초 뒤엔 「다시 뽑기」를 기다리지 않고 바로 띄운다 — 여러 번 뽑은 뒤 해금이 몰려 뜨면 불편하다(PD 2026-10-30).
+        /// </summary>
+        public bool ShowingPull => _busy && !(TryGetComponent<SummonReveal>(out var r) && r.ResultsShownAt >= _pullStartedAt
+                                               && Time.unscaledTime - r.ResultsShownAt >= UnlockAfterResult);
+
+        /// <summary>뽑기 연출이 아직 화면을 덮고 있나(해금 연출을 닫을 때 탭을 다시 그리지 않게).</summary>
+        public bool Busy => _busy;
+
+        private const float UnlockAfterResult = 0.1f;
+        private float _pullStartedAt;
 
         private string AgainLabel(IGachaService g, int count)
             => string.Format(Localize.FromTable("ui.rb.summon.again", "{0}회 더"), count) + "  "

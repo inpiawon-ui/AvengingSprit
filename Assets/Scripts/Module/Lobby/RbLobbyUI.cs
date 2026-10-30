@@ -158,11 +158,20 @@ namespace Game.Module.Lobby
 
         // 조각이 해금 수에 닿아 저절로 풀린 호스트 — 판 끝 · 상자 · 소환 · 상점 어디서 풀렸든 로비에서 바로 해금 연출(시안 3-가)
         private RbUnlockReveal _unlockReveal;
+        private string _growthAfterSummon;   // 소환 결과 위 해금을 닫았다 — 소환이 끝나면 성장으로(키) 또는 다시 칠하기(빈 값)
 
         private void Update()
         {
             if (_player == null || (_unlockReveal != null && _unlockReveal.IsOpen)) return;
             if (_revealPage != null && _revealPage.IsOpen) return;
+            if (_growthAfterSummon != null && (_summonPage == null || !_summonPage.Busy))
+            {
+                string growth = _growthAfterSummon;
+                _growthAfterSummon = null;
+                if (growth.Length > 0) { SelectTab("Host"); OpenGrowth(growth); }
+                else RefreshAll();
+                return;
+            }
             if (UnlockRevealWaits()) return;
             if (_player.TryTakeNewUnlock(out var key)) { ShowUnlock(key); return; }
             TryGhostStatCoach();
@@ -214,6 +223,9 @@ namespace Game.Module.Lobby
         /// <summary>해금 연출을 닫았다 — 「성장으로」 면 그 호스트 성장 화면, 아니면 지금 화면을 새로 칠한다(전투 탭 카드 포함).</summary>
         public void AfterUnlockReveal(string growthKey)
         {
+            // 소환 결과 위에서 띄운 해금이면 탭을 건드리지 않는다 — 결과 화면이 그대로 남아야 한다.
+            //   「성장으로」 는 소환 연출이 끝난 뒤에 간다(소환 화면이 따로 캔버스로 위를 덮고 있다)
+            if (_summonPage != null && _summonPage.Busy) { _growthAfterSummon = growthKey ?? string.Empty; return; }
             if (!string.IsNullOrEmpty(growthKey)) { SelectTab("Host"); OpenGrowth(growthKey); return; }
             SelectTab(_tab ?? "Battle");
             RefreshAll();

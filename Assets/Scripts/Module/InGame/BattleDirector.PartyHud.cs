@@ -9,17 +9,16 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
-        /// <summary>왼쪽 시너지 칸 하나 — 문장 그림 이름 · 이름 · 모은 수 · 다음 단계 수.</summary>
+        /// <summary>왼쪽 시너지 칸 하나 — 문장 그림 이름 · 이름 · 모은 수.</summary>
         public readonly struct PartySynCell
         {
             public readonly string Icon;
             public readonly string Name;
             public readonly int Count;
-            public readonly int Next;
             /// <summary>무리 내부 이름(설명 창을 열 때 쓴다).</summary>
             public readonly string Tag;
-            public PartySynCell(string icon, string name, int count, int next, string tag)
-            { Icon = icon; Name = name; Count = count; Next = next; Tag = tag; }
+            public PartySynCell(string icon, string name, int count, string tag)
+            { Icon = icon; Name = name; Count = count; Tag = tag; }
         }
 
         public bool PartyEnabled => PartyOn;
@@ -81,7 +80,7 @@ namespace Game.Module.InGame
             foreach (var k in Unit.PartyKeys)
                 if (OrgOf(k) == org) n++;
             n = Mathf.Max(n, 1);
-            into.Add(new PartySynCell(SynIcon(org), SynShortName(org), n, n >= 2 ? 3 : 2, org));
+            into.Add(new PartySynCell(SynIcon(org), SynShortName(org), n, org));
         }
 
         /// <summary>지금 켜진 태그 시너지 효과 줄(시너지 설명 창이 띄운다).</summary>

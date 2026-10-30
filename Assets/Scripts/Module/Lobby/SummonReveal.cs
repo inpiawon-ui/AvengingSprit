@@ -126,6 +126,12 @@ namespace Game.Module.Lobby
         /// 돌려주는 값: 10회 화면에서 「10회 더」 를 눌렀는가(1회는 늘 false).
         /// 큰 몸 그림이 없는 몸은 건너뛴다.
         /// </summary>
+        /// <summary>
+        /// 이번 뽑기 결과가 화면에 다 나온 시각(unscaledTime) — 해금 연출이 이 뒤에 뜬다(PD 2026-10-30
+        /// 「결과가 나오면 0.1초 뒤 바로」). 아직이면 이번 연출 시작보다 이른 값이다.
+        /// </summary>
+        public float ResultsShownAt { get; private set; } = -1f;
+
         public async UniTask<bool> PlayAsync(IReadOnlyList<Entry> entries, string againLabel, CancellationToken ct)
         {
             if (entries == null || entries.Count == 0 || !CoreModule.TryGet<IResourceManager>(out var res)) return false;
@@ -325,6 +331,8 @@ namespace Game.Module.Lobby
             bool ten = _slots[0].Ten;
             var one = _slots[0];
             float end = ten ? TenEndTime() : one.RevealT + 1.3f;
+            float shownT = ten ? end : one.RevealT;   // 결과가 다 보이는 때 — 10회는 다 멈춤, 1회는 카드 공개
+            bool shown = false;
             float start = Time.unscaledTime;
             bool cuedIn = false, cuedReveal = false;
             int stopped = 0;
@@ -344,6 +352,7 @@ namespace Game.Module.Lobby
                     else if (t < one.RevealT) { start = Time.unscaledTime - one.RevealT; t = one.RevealT; }   // 공개로 건너뛰기
                 }
                 if (_ok || _again) break;
+                if (!shown && t >= shownT) { shown = true; ResultsShownAt = Time.unscaledTime; }
                 if (!ten && !cuedIn && t >= one.FlyEnd) { cuedIn = true; GameSound.Cue("hit.reflect"); }
                 if (!ten && !cuedReveal && t >= one.RevealT) { cuedReveal = true; GameSound.Cue(one.E.Good ? "run.card" : "run.gold"); }
                 if (ten)
