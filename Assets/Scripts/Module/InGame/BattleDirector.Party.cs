@@ -251,7 +251,7 @@ namespace Game.Module.InGame
         /// </summary>
         public bool TryPartyTap(Vector2 screen, Camera cam)
         {
-            if (!PartyOn || !_running || _partyHold || _awaitingBuff || IsChanneling || PartyLinking) return false;
+            if (!PartyOn || !_running || _partyHold || _awaitingBuff || IsChanneling || PartyLinking || FailSequenceRunning) return false;
             bool ghost = _host == null;
             if (!ghost && !PartyCanChoose()) return false;
 

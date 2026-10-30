@@ -3668,6 +3668,7 @@ namespace Game.Module.InGame
             if (Game.Module.Common.UI.RbGuide.PausingOpen) return;   // 설명 창 — 시간 배율만으론 못 멈춘다(타격 멈칫이 1로 되돌림, 2026-10-30)
             // 일시정지 · 밤 고르기도 같은 까닭으로 갱신 자체를 세운다 — 사망 선택 시계 · 타격 멈칫 복구가 창 뒤에서 돌지 않게(안정성 점검 10-30)
             if (PausePanelOpen || NightPickOpen) return;
+            if (FailSequenceRunning) { TickFailSequence(); return; }   // 진 판 — 쓰러지는 연출만 돈다
             if (TickCoach()) return;   // 따라 하는 튜토리얼 — 짚은 적을 누를 때까지 선다(BattleDirector.Coach)
             if (_partyHold) { TickPartyHold(); return; }   // 빙의 파티 선택창 — 잠깐 멈춘다
             if (!IsPresentationHeld && _shopHealPending) ApplyShopHeal();
@@ -9203,7 +9204,7 @@ namespace Game.Module.InGame
 
         public void TryActiveSkill()
         {
-            if (!_running || IsCastFrozen || _skillCooldown < PlayerSkillCooldown) return;
+            if (!_running || IsCastFrozen || FailSequenceRunning || _skillCooldown < PlayerSkillCooldown) return;
             // 유령은 싸우지 않는다. 자동 사격은 막혀 있었는데 액티브 스킬은 뚫려 있어서,
             // 몸이 없는 상태로 화면 전체를 쓸어버릴 수 있었다.
             // 게이지는 그대로 둔다 — 몸을 얻으면 그때 쓴다.
@@ -10426,6 +10427,8 @@ namespace Game.Module.InGame
         private void Finish(bool cleared)
         {
             if (!_running) return;
+            // 진 판은 쓰러지는 연출 뒤에 결과창 — 연출이 끝나면 여기를 다시 부른다(BattleDirector.FailSequence)
+            if (!cleared && TryBeginFailSequence() && !_failDone) return;
             _running = false;
 
             // 모드는 챕터 진행도 · 상자 · 챕터 지급이 없다 — 그 모드의 결과로

@@ -136,7 +136,7 @@ namespace Game.Module.InGame
 
         public void TryUltimate()
         {
-            if (!_running || IsCastFrozen || IsChanneling) return;
+            if (!_running || IsCastFrozen || IsChanneling || FailSequenceRunning) return;
             var me = _host;
             if (me == null) return;
             if (!_ultReady)
