@@ -309,11 +309,8 @@ namespace Game.Module.InGame
             _fortressAt = me.Position;
             _fortressVolley = 0f;
             _fortressShell = 0f;
-            // 가장 가까운 적 쪽을 가운데로 — 없으면 바라보던 쪽
-            var t = NearestEnemy(me.Position, Meters(FortressRangeMeters));
-            var f = t != null ? t.Position - me.Position : me.Facing;
-            if (f.sqrMagnitude < 0.0001f) f = Vector2.up;
-            _fortressAngle = Mathf.Atan2(f.y, f.x) * Mathf.Rad2Deg;
+            // 부채꼴 안에 적이 가장 많이 들어오는 쪽을 가운데로 — 가장 가까운 적 하나를 보면 발밑 박쥐 쪽(빈 곳)으로 다 쏟았다(10-30 녹화)
+            _fortressAngle = BusiestFanAngle(me);
             _fortressFx?.Stop();
             _fortressFx = null;
             // 거치(강) — 발밑 흙먼지가 확 퍼지고 화면이 한 번 크게 흔들린다
@@ -388,14 +385,31 @@ namespace Game.Module.InGame
         }
 
         // ── 날아가는 총알 조각 ──
-        private const float FortressDashLength = 90f;      // 조각 길이(px)
-        private const float FortressDashThick = 18f;       // 굵기 — 예전 줄기 46 의 절반 아래
+        private const float FortressDashLength = 96f;      // 조각 길이(px) — 새 그림 비율 약 4:1(10-30 납품)
+        private const float FortressDashThick = 24f;       // 굵기
         private const float FortressDashSpeed = 2600f;     // px/초 — 9 m(약 650 px)를 0.25초에
         private const float FortressDashJitterDeg = 1.5f;  // 줄 안에서 살짝만 흔들린다
         private const int FortressDashPerVolley = 2;
         private const int FortressLines = 5;               // 시안 mock1029_ult_mg_a — 총구에서 다섯 줄
         private const float FortressLineWidthMeters = 0.45f;
         private readonly List<Unit> _fortressHit = new();
+
+        /// <summary>15° 간격 스물네 방향 중 부채꼴(±FortressHalfDeg · 사거리) 안 적이 가장 많은 방향(도). 없으면 바라보던 쪽.</summary>
+        private float BusiestFanAngle(Unit me)
+        {
+            var f = me.Facing.sqrMagnitude > 0.0001f ? me.Facing : Vector2.up;
+            float best = Mathf.Atan2(f.y, f.x) * Mathf.Rad2Deg;
+            int bestCount = 0;
+            float range = Meters(FortressRangeMeters);
+            for (int a = 0; a < 24; a++)
+            {
+                float deg = a * 15f;
+                var dir = new Vector2(Mathf.Cos(deg * Mathf.Deg2Rad), Mathf.Sin(deg * Mathf.Deg2Rad));
+                int count = EnemiesInCone(me.Position, dir, FortressHalfDeg * 2f, range).Count;
+                if (count > bestCount) { bestCount = count; best = deg; }
+            }
+            return best;
+        }
 
         /// <summary>다섯 줄 중 line 번째 방향 — 가운데 줄이 dir, 양끝이 ±FortressHalfDeg.</summary>
         private static Vector2 FortressLineDir(Vector2 dir, int line)

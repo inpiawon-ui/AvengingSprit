@@ -98,12 +98,12 @@
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	23055243	주소 Fonts/NotoSansJP SDF
 사용	Assets/BaseResource/Fonts/NotoSansJP-Bold.ttf	5761728	주소 Fonts/NotoSansJP-Bold
 사용	Assets/BaseResource/Fonts/NotoSansJP-Regular.otf	4533028	주소 Fonts/NotoSansJP-Regular
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	18892486	주소 Fonts/NotoSansKR SDF
+사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	20992722	주소 Fonts/NotoSansKR SDF
 사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	10412355	주소 Fonts/NotoSansKR-Bold SDF
 사용	Assets/BaseResource/Fonts/NotoSansKR-Bold.ttf	6223212	주소 Fonts/NotoSansKR-Bold
 사용	Assets/BaseResource/Fonts/NotoSansKR.ttf	10415532	주소 Fonts/NotoSansKR
 사용	Assets/BaseResource/Fonts/OriginalPixel SDF.asset	30843	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF.asset	1033372	주소 Fonts/Galmuri11-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold SDF.asset	3148468	주소 Fonts/Galmuri11-Bold SDF
 사용	Assets/BaseResource/Fonts/ReBorn/Galmuri11-Bold.ttf	2613660	주소 Fonts/Galmuri11-Bold
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold SDF.asset	15060794	주소 Fonts/NotoSansSC-Bold SDF
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansSC-Bold.ttf	10585504	주소 Fonts/NotoSansSC-Bold
@@ -129,7 +129,7 @@
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF - Title.mat	1931	주소 Fonts/NotoSansTC-SemiBold SDF - Title
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold SDF.asset	2290135	주소 Fonts/NotoSansTC-SemiBold SDF
 사용	Assets/BaseResource/Fonts/ReBorn/NotoSansTC-SemiBold.ttf	7142644	주소 Fonts/NotoSansTC-SemiBold
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold SDF.asset	8800261	주소 Fonts/Pretendard-Bold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold SDF.asset	15190229	주소 Fonts/Pretendard-Bold SDF
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-Bold.otf	1576660	주소 Fonts/Pretendard-Bold
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowBlue.mat	1942	주소 Fonts/Pretendard-SemiBold SDF - GlowBlue
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - GlowGold.mat	1942	주소 Fonts/Pretendard-SemiBold SDF - GlowGold
@@ -139,7 +139,7 @@
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Shadow.mat	1925	주소 Fonts/Pretendard-SemiBold SDF - Shadow
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Soft.mat	1930	주소 Fonts/Pretendard-SemiBold SDF - Soft
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF - Title.mat	1931	주소 Fonts/Pretendard-SemiBold SDF - Title
-사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF.asset	8309321	주소 Fonts/Pretendard-SemiBold SDF
+사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold SDF.asset	10448674	주소 Fonts/Pretendard-SemiBold SDF
 사용	Assets/BaseResource/Fonts/ReBorn/Pretendard-SemiBold.otf	1583704	주소 Fonts/Pretendard-SemiBold
 사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold SDF.asset	17750406	주소 Fonts/PretendardJP-Bold SDF
 사용	Assets/BaseResource/Fonts/ReBorn/PretendardJP-Bold.otf	3774288	주소 Fonts/PretendardJP-Bold
@@ -207,7 +207,7 @@
 사용	Assets/BaseResource/HostSelectPanel/ulticon_amazon_elite.png	40160	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_baseball.png	41386	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_commando_grenade.png	37920	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/HostSelectPanel/ulticon_commando_laser.png	31560	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/HostSelectPanel/ulticon_commando_laser.png	33457	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_commando_mg.png	35641	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_commando_missile.png	35680	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_death.png	41579	GUID 참조(프리팹 · 표 · 재질)
@@ -217,7 +217,7 @@
 사용	Assets/BaseResource/HostSelectPanel/ulticon_guru.png	38983	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_hopper.png	37036	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_hopper_smg.png	32428	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/HostSelectPanel/ulticon_medium.png	41091	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/HostSelectPanel/ulticon_medium.png	38685	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_ninja.png	38793	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_ninja_chain.png	34498	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ulticon_robot.png	39088	GUID 참조(프리팹 · 표 · 재질)
@@ -231,8 +231,8 @@
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_amazon_elite.png	36617	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_baseball.png	37528	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_commando_grenade.png	35451	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/HostSelectPanel/ultimateicon_commando_laser.png	36132	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/HostSelectPanel/ultimateicon_commando_mg.png	35120	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/HostSelectPanel/ultimateicon_commando_laser.png	33362	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/HostSelectPanel/ultimateicon_commando_mg.png	36165	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_commando_missile.png	36308	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_death.png	37385	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_dragon_blue.png	33840	GUID 참조(프리팹 · 표 · 재질)
@@ -241,7 +241,7 @@
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_guru.png	36941	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_hopper.png	29918	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_hopper_smg.png	34139	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/HostSelectPanel/ultimateicon_medium.png	40240	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/HostSelectPanel/ultimateicon_medium.png	37980	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_ninja.png	37849	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_ninja_chain.png	38640	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/HostSelectPanel/ultimateicon_robot.png	35040	GUID 참조(프리팹 · 표 · 재질)
@@ -1352,7 +1352,7 @@
 사용	Assets/BundleResource/TableData/ShopTable.asset	16195	주소 TableData/ShopTable
 사용	Assets/BundleResource/TableData/SoundTable.asset	15235	주소 TableData/SoundTable
 사용	Assets/BundleResource/TableData/StoreTable.asset	9678	주소 TableData/StoreTable
-사용	Assets/BundleResource/TableData/StringTable.asset	643234	주소 TableData/StringTable
+사용	Assets/BundleResource/TableData/StringTable.asset	645588	주소 TableData/StringTable
 사용	Assets/BundleResource/TableData/TrashTable.asset	19039	주소 TableData/TrashTable
 사용(동적)	Assets/BaseResource/Card/card_c002.png	34382	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c003.png	31474	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -2025,7 +2025,9 @@
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgrune_3.png	40369	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgrune_4.png	45115	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgshell_1.png	2181	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgtracer_1.png	15501	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgtracer_1.png	13549	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgtracer_2.png	13263	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/InGameMainUI/fx_mgtracer_3.png	12542	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_missile_trail_1.png	389	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_missile_trail_2.png	384	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/InGameMainUI/fx_mtblast_1.png	46335	아틀라스 ingamemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
