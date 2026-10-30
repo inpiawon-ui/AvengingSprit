@@ -292,6 +292,7 @@ namespace Game.Module.InGame
         private void OpenPartyPortraitSwap(int slot)
         {
             if (!PartyOn || _host == null || slot >= _subs.Count || _partyHold || IsChanneling) return;
+            if (TowerLeaveLocked) return;   // 탑 「첫 몸으로 끝까지」 — 메인 자리를 바꾸지 않는다
             string sub = HostName(_subs[slot].U.Key), main = HostName(_host.Key);
             var opts = new List<PartyOption>
             {

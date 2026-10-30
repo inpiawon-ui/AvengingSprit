@@ -103,10 +103,10 @@ namespace Game.Editor.ReBorn
         private static void BuildModeHud(RectTransform hud)
         {
             var bar = Node(hud, "RbModeBar");
-            Put(bar, hud, HudTop, 30, 430, 1050, 572);
+            Put(bar, hud, HudTop, 30, 342, 1050, 484);   // 위 막대(RbTopBar) 바로 밑 — 4 간격(PD 2026-10-30 「탑뷰에 최대한 붙여」)
             Skin(bar, "Components/rb_panel_base");
-            Text(Local(Node(bar, "RbModeBarLeft"), 30, 430, 1050, 572, 60, 468, 600, 536), null, "빙의는 한 번", 44, White, TA.Left, heavy: true);
-            Text(Local(Node(bar, "RbModeBarRight"), 30, 430, 1050, 572, 600, 468, 1015, 536), null, "남은 적 12 · 빙의 남음 1", 40, White, TA.Right, heavy: true);
+            Text(Local(Node(bar, "RbModeBarLeft"), 30, 342, 1050, 484, 60, 380, 600, 448), null, "", 44, White, TA.Left, heavy: true);
+            Text(Local(Node(bar, "RbModeBarRight"), 30, 342, 1050, 484, 600, 380, 1015, 448), null, "", 40, White, TA.Right, heavy: true);
             var band = Node(hud, "RbModeBanner");
             Put(band, hud, HudTop, 60, 640, 1020, 800);
             Skin(band, "Components/rb_toast");

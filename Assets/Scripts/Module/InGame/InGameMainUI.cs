@@ -408,6 +408,7 @@ namespace Game.Module.InGame
             TickGoldFx(Time.deltaTime);
             TickLowHpBlink();
             TickPartyHud();
+            TickModeBarCover();
         }
 
         // ── 딸피 점멸 ────────────────────────────────────────────

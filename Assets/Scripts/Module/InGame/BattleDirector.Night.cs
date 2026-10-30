@@ -80,43 +80,29 @@ namespace Game.Module.InGame
                 ? _nightDay.BossKey : NightBossKeys[Random.Range(0, NightBossKeys.Length)];
         }
 
-        /// <summary>아레나에 들어섰다 — 시작 몸 셋을 아래쪽 좌 · 가운데 · 우에.</summary>
+        /// <summary>
+        /// 아레나에 들어섰다 — 본편 유령 출전과 같은 「셋 중 하나」(BattleDirector.StartTrio): 유령 앞에 오늘의 호스트 셋,
+        /// 판이 서고 하나를 누르면 빙의 · 나머지는 흩어진다. 예전 고르기 창(RbNightPick)은 옛 UI 라 쓰지 않는다(PD 2026-10-30).
+        /// </summary>
         private void SpawnNightStart()
         {
             var bodies = PickModeBodies(_nightPool, Mathf.Min(3, _nightPool.Count));
             // 서로 다른 셋이어야 고르는 의미가 있다 — 모자라면 있는 만큼만
             var seen = new HashSet<string>();
-            int col = 0;
+            var unique = new List<HostEntry>(3);
             for (int i = 0; i < bodies.Count; i++)
+                if (seen.Add(bodies[i].HostKey)) unique.Add(bodies[i]);
+            SpawnTrioOf(unique);
+            // 자리는 아레나 아래쪽 좌 · 가운데 · 우 — 유령 기준으로 세우면 위 HUD · 띠 밑에 가렸다
+            for (int i = 0; i < _trio.Count; i++)
             {
-                if (!seen.Add(bodies[i].HostKey)) continue;
-                float fx = Mathf.Lerp(0.2f, 0.8f, col++ / 2f);
-                var at = new Vector2(_roomSize.x * fx, -_roomSize.y * NightBodyRowY);
-                var u = SpawnRoomUnit(bodies[i], true, false, at, $"NightStart_{bodies[i].HostKey}");
-                _nightStartBodies.Add(u);
+                float fx = _trio.Count <= 1 ? 0.5f : Mathf.Lerp(0.2f, 0.8f, i / (float)(_trio.Count - 1));
+                _trio[i].Position = new Vector2(_roomSize.x * fx, -_roomSize.y * NightBodyRowY);
             }
-            NightBanner("ui.night.start_hint", null, "ui.night.start_hint_sub", null);
-        }
-
-        /// <summary>RE:BORN 밤 시작 고르기 창(시안 night-pick) — 아직 고르지 않은 시작 몸 셋의 키(없으면 빈 목록).</summary>
-        public List<string> NightStartKeys()
-        {
-            var keys = new List<string>(3);
-            if (_nightChosen) return keys;
-            for (int i = 0; i < _nightStartBodies.Count; i++)
-                if (_nightStartBodies[i] != null) keys.Add(_nightStartBodies[i].Key);
-            return keys;
-        }
-
-        /// <summary>창에서 고른 시작 몸에 바로 빙의한다 — 걸어가 링을 맞추는 대신(나머지 둘은 빙의 순간 사라진다).</summary>
-        public void PickNightStart(int index)
-        {
-            if (_nightChosen || index < 0 || index >= _nightStartBodies.Count) return;
-            var u = _nightStartBodies[index];
-            if (u == null || !_enemies.Contains(u)) return;
-            _possessTarget = u;
-            _repossessLock = 0f;
-            TryPossess();
+            if (_trio.Count > 0) PlaceCoachOnGroup(_trio);
+            _nightStartBodies.AddRange(_trio);
+            // 고르는 동안 판이 서서 1초 알림이 안 나간다 — 위 띠가 시안 기본 글자로 남지 않게 지금 한 번 채운다
+            PublishNightState();
         }
 
         /// <summary>시작 몸 하나를 탔다 → 나머지 둘은 연기와 함께 사라진다(처치로 안 센다).</summary>

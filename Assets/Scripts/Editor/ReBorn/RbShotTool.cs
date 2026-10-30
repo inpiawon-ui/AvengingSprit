@@ -309,10 +309,6 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:nextroom", "extra_nextroom_16x9"),
             (768, 1024, Language.Korean, "ingame:nextroom", "extra_nextroom_4x3"),
             (720, 1280, Language.Japanese, "ingame:nextroom", "extra_nextroom_ja"),
-            (720, 1280, Language.Korean, "ingame:nightpick", "extra_nightpick_16x9"),
-            (720, 1280, Language.Korean, "ingame:nightpick_sel", "extra_nightpick_sel_16x9"),
-            (1080, 2400, Language.Korean, "ingame:nightpick_sel", "extra_nightpick_sel_20x9"),
-            (720, 1280, Language.English, "ingame:nightpick_sel", "extra_nightpick_sel_en"),
             (720, 1280, Language.Korean, "ingame:guide", "extra_ingameguide_16x9"),
             (768, 1024, Language.Korean, "ingame:guide", "extra_ingameguide_4x3"),
             (720, 1280, Language.Japanese, "ingame:guide", "extra_ingameguide_ja"),
@@ -1158,19 +1154,6 @@ namespace Game.Editor.ReBorn
                 case "ingame:nextroom":
                     typeof(Game.Module.InGame.InGameMainUI).GetMethod("OpenNextRoom", F)?.Invoke(ui, new object[] { Game.Module.Events.RoomKind.Elite, false });
                     break;
-                case "ingame:nightpick":
-                case "ingame:nightpick_sel":
-                {
-                    // 몸 세 개 — 가진 몸 앞에서부터(시안은 무작위 셋)
-                    var keys = new System.Collections.Generic.List<string>();
-                    if (CoreModule.TryGet<IPlayerDataService>(out var p))
-                        foreach (var e in p.PlayableHosts)
-                            if (keys.Count < 3 && e != null && !e.IsGhost && !PlayerDataService.IsHiddenHost(e.HostKey)) keys.Add(e.HostKey);
-                    var t = typeof(Game.Module.InGame.InGameMainUI);
-                    t.GetMethod("OpenNightPick", F)?.Invoke(ui, new object[] { keys.ToArray() });
-                    if (state.EndsWith("sel")) Click("RbNightPickCard1");
-                    break;
-                }
                 case "ingame:guide":
                     ui.GetComponentInChildren<Game.Module.Common.UI.RbGuide>(true)?.Show(true, "possess", "stand_fire", "ghost_hp", "lock", "release", "rooms");
                     break;

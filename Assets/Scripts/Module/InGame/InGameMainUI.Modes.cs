@@ -55,6 +55,19 @@ namespace Game.Module.InGame
             foreach (var n in new[] { "ModeTowerPlate", "ModeNightPlate", "ModeWaveChip", "ModeNextText", "ModeCounterChip" }) _ui.SetActive(n, false);
             _ui.SetActive("ChapterLabel", true);
             _ui.SetActive("RbModeBar", true);
+            // 띠가 위 막대 바로 밑에 붙어 「몸 없음」 안내 줄 자리를 덮는다 — 안내 줄을 띠 밑으로 내린다(둘 다 위 막대 묶음 · 위 앵커)
+            //   왼쪽 인연 · 무리 칸도 띠를 덮어 글자 앞이 가렸다 — 칸 묶음의 위 끝을 띠 밑으로
+            if (_ui.Find("RbModeBar") is RectTransform bar)
+            {
+                float below = bar.anchoredPosition.y - bar.sizeDelta.y * bar.pivot.y - 6f;
+                if (_ui.Find("RbNoBodyHint") is RectTransform hint)
+                    hint.anchoredPosition = new Vector2(hint.anchoredPosition.x, below - hint.sizeDelta.y * (1f - hint.pivot.y));
+                if (_ui.Find("PartySynColumn") is RectTransform col && col.parent == bar.parent)
+                {
+                    float colTop = col.anchoredPosition.y + col.sizeDelta.y * (1f - col.pivot.y);
+                    if (colTop > below) col.anchoredPosition += new Vector2(0f, below - colTop);
+                }
+            }
         }
 
         // ── 탑 ───────────────────────────────────────────────
@@ -184,6 +197,23 @@ namespace Game.Module.InGame
             ShowModeBanner(b.Title, b.Name, b.Sub);
         }
 
+        // 모드 판의 위 띠 · 알림 띠는 위 막대 묶음(밴드)에 있어 카드 · 상점 · 선택 창보다 위에 그려진다 —
+        //   창이 떠 있는 동안 걷는다(레벨업 「LEVEL UP」 제목을 띠가 덮었다, 2026-10-31 밤 점검)
+        private bool _modeBarHidden;
+
+        private void TickModeBarCover()
+        {
+            if (!_reborn || !RunModeContext.IsMode) return;
+            bool hide = AnyWindowOpen();
+            if (hide == _modeBarHidden) return;
+            _modeBarHidden = hide;
+            _ui.SetActive("RbModeBar", !hide);
+            if (!hide) return;
+            _ui.SetActive("RbModeBanner", false);
+            // 밤 「무기 호스트 유리」 칩 — 설명 창의 확인 단추를 덮었다. 다시 켜는 것은 밤 1초 알림(OnNightState)이 한다
+            _ui.SetActive("ModeCounterChip", false);
+        }
+
         private void ShowModeBanner(string title, string name, string sub)
         {
             if (_battle == null || !_battle.IsRunning)
@@ -193,6 +223,7 @@ namespace Game.Module.InGame
             }
             if (_reborn)
             {
+                if (_modeBarHidden) return;   // 카드 · 상점 · 선택 창이 떠 있다 — 창 위에 겹쳐 그려졌다
                 // RE:BORN 띠는 한 줄 — 「보스 등장 · 쓰러뜨리면 밤을 버틴다」
                 _ui.SetText("RbModeBannerText", string.IsNullOrEmpty(sub) ? name ?? string.Empty : $"{name} · {sub}");
                 _ui.SetActive("RbModeBanner", true);

@@ -228,7 +228,7 @@ namespace Game.Module.InGame
                 {
                     Frame = "partyhud_main_frame", FaceKey = _host.Key, Title = Tx("ui.party.p2.main_swap"),
                     Cost = PartyRule.CostMainSwap, Deltas = SynChange(_host.Key, target.Key),
-                    Enabled = _ghostHp > PartyRule.CostMainSwap, Act = () => PartySwapMain(target),
+                    Enabled = _ghostHp > PartyRule.CostMainSwap && !TowerLeaveLocked, Act = () => PartySwapMain(target),   // 탑 「첫 몸으로 끝까지」
                 },
             };
             for (int i = 0; i < PartyRule.SubSlots; i++)
@@ -421,6 +421,7 @@ namespace Game.Module.InGame
         private void OpenPartyDeath(string lostKey, Vector2 pos)
         {
             if (_ghostHp <= 0) return;
+            if (TowerOneShot) return;   // 탑 「빙의는 한 번」 — 새 빙의 · 승격 · 되살림 없이 유령으로 남는다(예전 규칙 그대로)
             // 처음 메인이 쓰러지면 그림 설명부터 — 닫으면 이 창을 연다(설명이 판을 세워 시계도 안 간다)
             if (Ui != null && Ui.GuideBefore("g.main_down", () => OpenPartyDeath(lostKey, pos), "main_down")) return;
             var near = NearestHostEnemy(pos);

@@ -32,7 +32,6 @@ namespace Game.Editor.ReBorn
             ("RbBossWarnWeak", Keys(new[] { "robot_snakes", "crusher", "python", "sludge", "guardian", "kingpin" }, "boss.{0}.weak")),
             ("RbNextRoomName", Keys(Rooms, "ui.rb.room.{0}")),
             ("RbNextRoomDesc", Keys(Rooms, "ui.rb.room.{0}_desc")),
-            ("RbNightPickGoText", new[] { "ui.rb.nightpick.go", "ui.rb.nightpick.pick" }),
             ("RbChestOpenTitle", new[] { "ui.rb.chest.open" }),
             ("RbChestOpenGoText", new[] { "ui.rb.chest.tap", "ui.common.ok" }),
         };

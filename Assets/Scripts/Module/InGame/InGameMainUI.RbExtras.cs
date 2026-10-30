@@ -24,8 +24,6 @@ namespace Game.Module.InGame
         private int _rbStage;
         private int _rbChapter = 1;
         private int _rbBossWarnId;
-        private int _rbNightPick = -1;
-        private string[] _rbNightKeys;
 
         private void SubscribeRbExtras(IEventBus bus)
         {
@@ -35,17 +33,10 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<CombatHpChangedEvent>(OnRbHp));
             _ui.OnClick("RbNextRoomGo", () => { _ui.SetActive("RbNextRoom", false); _battle?.TakeOnlyExit(); });
             _ui.OnClick("RbNextRoomClose", () => _ui.SetActive("RbNextRoom", false));
-            for (int i = 0; i < 3; i++)
-            {
-                int k = i;
-                _ui.OnClick($"RbNightPickCard{i}", () => { _rbNightPick = k; GameSound.Cue("ui.tap"); FillNightPick(); });
-            }
-            _ui.OnClick("RbNightPickGo", ConfirmNightPick);
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRbRoomEntered));
             _tokens.Add(bus.Subscribe<ExitOpenedEvent>(_ => ShowNextRoom()));
             _tokens.Add(bus.Subscribe<BossHpChangedEvent>(OnRbBoss));
             // 카드 · 상인 설명은 그 창을 열기 직전에 먼저 띄운다(InGameMainUI.GuideFirst) — 예전엔 창이 뜬 뒤 0.6~0.8초에 위로 덮었다
-            _tokens.Add(bus.Subscribe<NightBannerEvent>(OnRbNightBanner));
         }
 
         private void OnRbRoomEntered(RoomEnteredEvent e)
@@ -147,8 +138,8 @@ namespace Game.Module.InGame
                 _ui.SetActive("UltNoBodyText", !e.HasHost);
                 // 몸이 있으면 스킬 묶음(액티브 · 필살기)만, 몸을 잃으면 스킬을 걷고 빙의 버튼만 크게 숨쉬며(PD 2026-10-27)
                 _ui.SetActive("RbSkillGroup", e.HasHost);
-                // 빙의 파티는 적을 직접 누른다 — 빙의 버튼은 모드 판(탑 · 밤, 파티 꺼짐)에서만(PD 2026-10-30 「이제 빙의 버튼 필요 없네」)
-                bool possessButton = !e.HasHost && (!PartyRule.Enabled || RunModeContext.IsMode);
+                // 빙의 파티는 적을 직접 누른다 — 빙의 버튼은 파티가 꺼졌을 때만(PD 2026-10-30 「이제 빙의 버튼 필요 없네」 · 탑 · 밤도 파티 구조)
+                bool possessButton = !e.HasHost && !PartyRule.Enabled;
                 _ui.SetActive("RbPossessGroup", possessButton);
                 if (possessButton) PossessBreathAsync(++_rbPossessBreathId).Forget();   // fire-and-forget: 몸을 입으면 스스로 멈춘다
                 else _rbPossessBreathId++;
@@ -288,74 +279,6 @@ namespace Game.Module.InGame
             for (int i = 0; i < _rbRoomIcons.Length; i++)
                 if (_rbRoomIcons[i] != null && _rbRoomIcons[i].name == name) return _rbRoomIcons[i];
             return null;
-        }
-
-        // ── 밤 몸 고르기 ──────────────────────────────────────
-
-        private void OnRbNightBanner(NightBannerEvent e)
-        {
-            if (e.BannerKey != "ui.night.start_hint" || _battle == null) return;
-            var keys = _battle.NightStartKeys();
-            if (keys.Count == 0) return;
-            OpenNightPick(keys.ToArray());
-        }
-
-        // 캡처 도구(RbShotTool)도 이 길로 연다
-        private void OpenNightPick(string[] keys)
-        {
-            _rbNightKeys = keys;
-            _rbNightPick = -1;
-            _ui.SetActive("RbNightPick", true);
-            if (_ui.Find("RbNightPick") is Transform t) t.SetAsLastSibling();
-            Time.timeScale = 0f;   // 고르는 동안 무리가 다가오지 않게(고르면 되돌린다)
-            if (_battle != null) _battle.NightPickOpen = true;
-            FillNightPick();
-        }
-
-        private void FillNightPick()
-        {
-            if (_rbNightKeys == null) return;
-            for (int i = 0; i < 3; i++)
-            {
-                bool on = i < _rbNightKeys.Length;
-                _ui.SetActive($"RbNightPickCard{i}", on);
-                if (!on) continue;
-                string key = _rbNightKeys[i];
-                var e = _battle != null ? CoreModule_GetHost(key) : null;
-                SetRbText($"RbNightPickCard{i}Name", e != null ? e.DisplayName : key);
-                var kind = AffinityRule.KindOf(key);
-                _ui.SetActive($"RbNightPickCard{i}Chip", kind != Affinity.None);
-                SetRbText($"RbNightPickCard{i}ChipText", AffinityName(kind));
-                _ui.SetActive($"RbNightPickCard{i}Sel", i == _rbNightPick);
-                if (_ui.Get<Image>($"RbNightPickCard{i}Art") is Image art)
-                {
-                    if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
-                    show.Show(key, Color.white);
-                }
-            }
-            bool picked = _rbNightPick >= 0;
-            if (_ui.Get<Button>("RbNightPickGo") is Button b) b.interactable = picked;
-            string name = picked ? (CoreModule_GetHost(_rbNightKeys[_rbNightPick])?.DisplayName ?? _rbNightKeys[_rbNightPick]) : null;
-            SetRbText("RbNightPickGoText", picked ? string.Format(Localize.FromTable("ui.rb.nightpick.go", "{0}에 빙의"), name)
-                                              : Localize.FromTable("ui.rb.nightpick.pick", "호스트를 선택하세요"));
-        }
-
-        private void ConfirmNightPick()
-        {
-            if (_rbNightPick < 0) return;
-            _ui.SetActive("RbNightPick", false);
-            Time.timeScale = 1f;
-            if (_battle != null) _battle.NightPickOpen = false;
-            _battle?.PickNightStart(_rbNightPick);
-            _rbNightKeys = null;
-        }
-
-        private static Game.Character.HostEntry CoreModule_GetHost(string key)
-            => GameFramework.Core.Base.CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) ? p.GetHost(key) : null;
-
-        private void SetRbText(string node, string value)
-        {
-            if (_ui.Get<TextMeshProUGUI>(node) is TextMeshProUGUI t) t.text = value;
         }
     }
 }

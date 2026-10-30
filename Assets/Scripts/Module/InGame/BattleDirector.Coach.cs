@@ -37,9 +37,6 @@ namespace Game.Module.InGame
         /// <summary>일시정지 창이 떠 있다 — 판 갱신을 세운다(RbPausePanel 이 켜고 끈다).</summary>
         public bool PausePanelOpen { get; set; }
 
-        /// <summary>밤 시작 호스트 고르기 창이 떠 있다.</summary>
-        public bool NightPickOpen { get; set; }
-
         /// <summary>셋 고르기 · 따라 하기 — 뒤로 키로 일시정지를 열지 않는다(검은 막 밑에 깔려 못 닫는다).</summary>
         public bool TutorialHolding => _coachRoot != null || _trio.Count > 0;
 

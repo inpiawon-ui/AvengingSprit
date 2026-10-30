@@ -71,7 +71,8 @@ namespace Game.Module.InGame
     public sealed partial class BattleDirector
     {
         /// <summary>이 판에 빙의 파티 규칙이 걸리는가 — 탑 · 밤 같은 모드 판은 예전 규칙 그대로.</summary>
-        private bool PartyOn => PartyRule.Enabled && !IsModeRun;
+        // 탑 · 밤도 본편 파티 구조 · 화면 그대로(PD 2026-10-30) — 탑 층 규칙(빙의 한 번 · 첫 몸으로 끝까지)은 파티 쪽에서 지킨다
+        private bool PartyOn => PartyRule.Enabled;
 
         private sealed class PartySub
         {
