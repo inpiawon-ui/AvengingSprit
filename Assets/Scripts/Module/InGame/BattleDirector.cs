@@ -8070,6 +8070,7 @@ namespace Game.Module.InGame
                 WasBoss = u.IsBoss,
             });
             _enemies.Remove(u);
+            _runKills++;   // 결과 창 「처치」 — 여기서 빠지는 적은 CleanupDead 가 못 봐 0 으로 나왔다(2026-10-30 1챕터 영상)
             if (u == _possessTarget) _possessTarget = null;
             Retire(u);
 
@@ -10477,10 +10478,14 @@ namespace Game.Module.InGame
             if (_player != null && _player.IsReady)
                 _player.GrantChapterClearAsync(ch, gold).Forget();   // fire-and-forget: 저장 완료를 기다릴 화면이 없다
 
+            // 결과 창 「유령 경험치」 — 지급(GrantChapterClearAsync)과 같은 계산. 예전엔 값을 안 넣어 늘 0 이었다(2026-10-30)
+            int clearExp = 0;
+            if (_player != null && _player.IsReady) _player.ClearBonusOf(gold, ch, out _, out _, out clearExp);
             _bus.Publish(new StageFinishedEvent
             {
                 IsCleared = true,
                 RewardGold = gold + clearGold,
+                RewardGhostExp = clearExp,
                 FinishedChapter = ch,
                 ShardHostKeys = shardKeys,
                 ShardCounts = shardCounts,
