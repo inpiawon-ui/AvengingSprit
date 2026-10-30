@@ -77,7 +77,7 @@ MonoBehaviour:
     _cardId: C003
     _rarity: 1
     _category: SURVIVAL
-    _levelValues: 0300000003000000040000000400000005000000
+    _levelValues: 0300000004000000050000000600000007000000
     _body: 0
     _requiresAny: []
     _implemented: 1

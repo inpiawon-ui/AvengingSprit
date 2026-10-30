@@ -130,7 +130,7 @@ MonoBehaviour:
   _slowSeconds: 1.6
   _activeSkillCooldownSeconds: 14
   _activeSkillDamage: 140
-  _ultCooldownSeconds: 180
+  _ultCooldownSeconds: 90
   _ultCooldownMinSeconds: 60
   _rewardGoldPerRoom: 120
   _rewardGhostExpPerRoom: 8

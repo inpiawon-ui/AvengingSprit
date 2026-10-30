@@ -63,7 +63,7 @@ namespace Game.EditorTools
                 "얻는 경험치가 늘어난다.", live: false),
 
             new("c003", "수호 방패", BuffKind.OrbitShield, CardRarity.Rare,
-                "SURVIVAL", new[] { 3, 3, 4, 4, 5 },
+                "SURVIVAL", new[] { 3, 4, 5, 6, 7 },   // 레벨마다 하나씩 는다 — 3 · 3 · 4 · 4 · 5 는 2레벨에 그대로라 「올려도 3개」였다(PD 2026-10-30)
                 "방패가 주위를 돌며 공격을 막는다."),
 
             new("c004", "처형", BuffKind.Assassinate, CardRarity.Legendary,
