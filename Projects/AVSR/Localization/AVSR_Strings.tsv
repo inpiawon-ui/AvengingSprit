@@ -1884,12 +1884,7 @@ ui.party.cancel	그만두기	やめる	Cancel	取消	取消
 ui.party.close	닫기	閉じる	Close	關閉	关闭
 ui.party.card.chip	파티	パーティ	Party	隊伍	队伍
 ui.party.card.sublv.name	보조 {0} 자리 「{1}」 스킬 Lv {2} → {3}	サブ{0}枠「{1}」スキル Lv {2} → {3}	Sub slot {0} "{1}" Skill Lv {2} → {3}	副手{0}位「{1}」技能 Lv {2} → {3}	副手{0}位「{1}」技能 Lv {2} → {3}
-ui.party.card.sublv.desc	보조 스킬 · 평타 위력 +25% · 스킬 간격 −8%
-교체해도 이 자리에 남는다 · 최대 Lv {0}	サブスキル・通常攻撃威力+25%・スキル間隔−8%
-交代してもこの枠に残る・最大Lv {0}	Sub skill · Attack +25% · Skill interval −8%
-Stays with this slot · Max Lv {0}	副手技能 · 普攻威力+25% · 技能間隔−8%
-交換後仍保留於此位 · 最高 Lv {0}	副手技能 · 普攻威力+25% · 技能间隔−8%
-交换后仍保留于此位 · 最高 Lv {0}
+ui.party.card.sublv.desc	보조 스킬 · 평타 위력 +25% · 스킬 간격 −8%\n교체해도 이 자리에 남는다 · 최대 Lv {0}	サブスキル・通常攻撃威力+25%・スキル間隔−8%\n交代してもこの枠に残る・最大Lv {0}	Sub skill · Attack +25% · Skill interval −8%\nStays with this slot · Max Lv {0}	副手技能 · 普攻威力+25% · 技能間隔−8%\n交換後仍保留於此位 · 最高 Lv {0}	副手技能 · 普攻威力+25% · 技能间隔−8%\n交换后仍保留于此位 · 最高 Lv {0}
 ui.party.card.subpow.name	보조 위력 +10%	サブ威力+10%	Sub Power +10%	副手威力+10%	副手威力+10%
 ui.party.card.subpow.desc	보조 둘의 평타 · 스킬이 함께 세진다\n지금 {0}% → {1}%	サブ2体の通常攻撃・スキルが強化\n現在 {0}% → {1}%	Both Subs' attacks and skills get stronger\nNow {0}% → {1}%	兩名副手的普攻 · 技能一同增強\n目前 {0}% → {1}%	两名副手的普攻 · 技能一同增强\n目前 {0}% → {1}%
 ui.party.card.ghost.name	유령 HP +10	ゴーストHP +10	Ghost HP +10	幽靈HP +10	幽灵HP +10
@@ -1998,3 +1993,4 @@ ui.tut.coach.tap_main	이 적을 눌러 빙의해요!	この敵をタップし�
 ui.tut.coach.tap_sub	이 적을 눌러 보조로 데려와요!	この敵をタップしてサポートにしよう！	Tap this enemy to recruit a support!	點擊這個敵人收為輔助！	点击这个敌人收为辅助！
 ui.tut.coach.tap_row	「보조」 칸을 눌러요	「サポート」をタップしよう	Tap the Support slot	點擊「輔助」欄	点击「辅助」栏
 ui.tut.coach.pick_trio	호스트 하나를 골라 눌러요!	ホストをひとり選んでタップしよう！	Pick a host and tap it!	選一名宿主點擊！	选一名宿主点击！
+ui.tut.coach.syn_hud	왼쪽 위 칸이 지금 켜진 무리 · 인연이에요\n같은 무리 · 인연 짝을 함께 데려가면 켜져요 (누르면 계속)	左上のマスが今発動中の派閥・縁です\n同じ派閥・縁のペアを一緒に連れると発動します(タップで続ける)	Top-left shows your active Faction & Bond\nBring one faction or a bonded pair to turn them on (tap to go on)	左上方是目前開啟的派系・羈絆\n帶上同派系或羈絆搭檔就會開啟(點擊繼續)	左上方是当前开启的派系・羁绊\n带上同派系或羁绊搭档就会开启(点击继续)

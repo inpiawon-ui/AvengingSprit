@@ -104,6 +104,16 @@ namespace Game.Module.InGame
                 var u = SpawnCalmHost(def, at + new Vector2((i - (n - 1) * 0.5f) * 190f, i == 1 ? 300f : 250f), "StartTrio");
                 _trio.Add(u);
             }
+            // 첫 방에는 고를 셋만 호스트로 둔다 — 빙의하자마자 옆 호스트를 또 보조로 데려가는 건 어색하다(PD 2026-10-30).
+            //   방에 원래 선 호스트 몸은 빼고 잡몹은 남긴다. 그래야 따라 하기의 보조(남은 둘 · 인연 짝)도 자리를 뺏기지 않는다
+            for (int i = _enemies.Count - 1; i >= 0; i--)
+            {
+                var e = _enemies[i];
+                if (e == null || _trio.Contains(e) || !e.IsAlive || !e.IsHostBody) continue;
+                if (TakeFromEnemies(e)) Destroy(e.gameObject);
+            }
+            // 방에 원래 선 적과 같은 자리에 서면 겹쳐 보인다(PD 2026-10-30 빌드 캡처) — 둘레 적을 밖으로 민다
+            for (int i = 0; i < _trio.Count; i++) ClearAround(_trio[i], TrioClearGap);
             // 처음 한 번은 손가락까지, 그다음부터는 안내 글만(고를 때까지 판은 늘 선다)
             BuildCoach(null, Tx("ui.tut.coach.pick_trio"));
             if (CoachSeen("main") && _coachHand != null) _coachHand.gameObject.SetActive(false);
@@ -111,6 +121,23 @@ namespace Game.Module.InGame
         }
 
         /// <summary>덤비지 않고 바로 빙의할 수 있는 호스트 하나(셋 고르기 · 따라 하기 보조).</summary>
+        private const float TrioClearGap = 110f;
+
+        /// <summary>이 몸 둘레 gap 안의 다른 적을 gap 밖으로 민다(셋 고르기 몸끼리는 그대로).</summary>
+        private void ClearAround(Unit center, float gap)
+        {
+            if (center == null) return;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || e == center || !e.IsAlive || _trio.Contains(e)) continue;
+                var d = e.Position - center.Position;
+                if (d.sqrMagnitude >= gap * gap) continue;
+                var dir = d.sqrMagnitude > 1f ? d.normalized : Vector2.up;
+                e.Position = ClampedInField(e, center.Position + dir * gap);
+            }
+        }
+
         private Unit SpawnCalmHost(HostEntry def, Vector2 pos, string tag, bool calm = true)
         {
             var u = NewUnit($"{tag}_{def.HostKey}");
@@ -178,6 +205,14 @@ namespace Game.Module.InGame
                 if (_tutorialRun) _tutorialSubs.Add(o.Key);   // 보조 안내 때 다시 나온다
                 if (TakeFromEnemies(o)) BeginRelease(o);
             }
+            // 고른 메인의 인연 짝이 먼저 나온다 — 보조 자리가 하나만 남아도 인연은 꼭 켜지게(PD 2026-10-30 「인연 캐릭이 안 나온다」)
+            if (picked != null && s_inyeon.TryGetValue(picked.Key, out var iy) && iy.Partners != null)
+                for (int i = 1; i < _tutorialSubs.Count; i++)
+                    if (System.Array.IndexOf(iy.Partners, _tutorialSubs[i]) >= 0)
+                    {
+                        (_tutorialSubs[0], _tutorialSubs[i]) = (_tutorialSubs[i], _tutorialSubs[0]);
+                        break;
+                    }
             _trio.Clear();
             EndCoach(false);
             _coachQuietUntil = Time.unscaledTime + 2f;

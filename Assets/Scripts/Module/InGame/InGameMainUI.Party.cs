@@ -25,6 +25,9 @@ namespace Game.Module.InGame
         private readonly GameObject[] _partySubEmpty = new GameObject[2];
         private readonly TextMeshProUGUI[] _partySubCost = new TextMeshProUGUI[2];
         private RectTransform _partySynColumn;
+
+        /// <summary>왼쪽 위 무리 · 인연 칸 줄 — 따라 하기가 짚는다.</summary>
+        public RectTransform PartySynColumn => _partySynColumn;
         private GameObject _partyInyeonCell;
         private Image _partyInyeonFace;
         private TextMeshProUGUI _partyInyeonLabel;

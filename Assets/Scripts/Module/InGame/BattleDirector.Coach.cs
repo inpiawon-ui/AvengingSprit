@@ -43,6 +43,50 @@ namespace Game.Module.InGame
         /// <summary>셋 고르기 · 따라 하기 — 뒤로 키로 일시정지를 열지 않는다(검은 막 밑에 깔려 못 닫는다).</summary>
         public bool TutorialHolding => _coachRoot != null || _trio.Count > 0;
 
+        // ── 왼쪽 위 무리 · 인연 칸 짚기 — 아무 곳이나 누르면 닫힌다(적이 아니라 화면 칸을 가리킨다) ──
+        private RectTransform _coachHudTarget;
+        private float _coachHudSince;
+
+        private void CoachSynHud()
+        {
+            var column = Ui != null ? Ui.PartySynColumn : null;
+            if (column == null || !column.gameObject.activeInHierarchy || !_running) return;
+            BuildCoach(null, Tx("ui.tut.coach.syn_hud"));
+            if (_coachRoot == null) return;
+            _coachHudTarget = column;
+            _coachHudSince = Time.unscaledTime;
+            // 막 네 조각 + 구멍 자리 어디를 눌러도 닫힌다(0.4초 뒤부터 — 설명을 닫은 손가락이 바로 닫지 않게)
+            for (int i = 0; i < _coachDark.Length; i++) _coachDark[i].gameObject.AddComponent<Button>().onClick.AddListener(EndCoachHud);
+            var hole = CoachRect("HoleTap");
+            hole.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+            hole.gameObject.AddComponent<Button>().onClick.AddListener(EndCoachHud);
+            hole.SetSiblingIndex(0);
+        }
+
+        private void EndCoachHud()
+        {
+            if (Time.unscaledTime - _coachHudSince < 0.4f) return;
+            _coachHudTarget = null;
+            EndCoach(false);
+            _coachQuietUntil = Time.unscaledTime + 1f;
+        }
+
+        /// <summary>왼쪽 위 칸 짚기 중이면 매 프레임 자리를 맞추고 true.</summary>
+        private bool TickCoachHud()
+        {
+            if (_coachHudTarget == null) return false;
+            if (_coachRoot == null) { _coachHudTarget = null; return false; }
+            Vector2 min = new(float.MaxValue, float.MaxValue), max = new(float.MinValue, float.MinValue);
+            for (int i = 0; i < _coachHudTarget.childCount; i++)
+                if (_coachHudTarget.GetChild(i) is RectTransform c && c.gameObject.activeInHierarchy) GrowBounds(c, ref min, ref max);
+            if (min.x > max.x) GrowBounds(_coachHudTarget, ref min, ref max);
+            min -= Vector2.one * 10f;
+            max += Vector2.one * 10f;
+            PlaceCoachBox(min, max, false, new Vector2(max.x - 20f, (min.y + max.y) * 0.5f));
+            if (_coachRt.Find("HoleTap") is RectTransform hole) SetBox(hole, min.x, min.y, max.x, max.y);
+            return true;
+        }
+
         /// <summary>같은 오브젝트의 화면 — 선택창을 한 번도 안 열었으면 아직 안 잡혀 있다(_popUi 는 PopupBoard 가 잡는다).</summary>
         private InGameMainUI Ui
         {
@@ -64,6 +108,7 @@ namespace Game.Module.InGame
         /// <summary>Update 에서 매 프레임 — 따라 하기 중이면 true(판을 세운다).</summary>
         private bool TickCoach()
         {
+            if (TickCoachHud()) return true;   // 왼쪽 위 무리 · 인연 칸 짚기 — 누를 때까지
             if (TickTrio()) return true;   // 유령 출전 — 셋 중 하나를 고를 때까지(BattleDirector.StartTrio)
             if (_trioPending) return false;   // 셋이 서기 전(첫 판 그림 설명 대기) — 다른 안내를 끼우지 않는다
             if (_coachTarget != null)
@@ -365,7 +410,8 @@ namespace Game.Module.InGame
             _coachSubsSeen = n;
             if (!grew || Ui == null) return;
             if (n == 1) Ui.GuideLater("g.party", "party");
-            else if (n == 2) Ui.GuideLater("g.synergy", "synergy");
+            // 설명을 닫으면 왼쪽 위 무리 · 인연 칸을 짚는다 — 그림만으론 「저 칸이 뭐지」를 모른다(PD 2026-10-30)
+            else if (n == 2) Ui.GuideLaterThen("g.synergy", CoachSynHud, "synergy");
         }
     }
 }
