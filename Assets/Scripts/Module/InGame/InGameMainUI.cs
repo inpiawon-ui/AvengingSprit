@@ -90,6 +90,7 @@ namespace Game.Module.InGame
         private BuffTable _buffTable;
         private string _bossName;
         private bool _bossShown;
+        private int _bossPct = -1;
         private int _bossPhase = 1;
         private bool _finished;
 
@@ -836,7 +837,19 @@ namespace Game.Module.InGame
             }
 
             float ratio = Ratio(e.BossHp, e.BossHpMax);
-            _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
+            // 「143/1650」 은 노란 게이지 위에 겹쳐 안 읽혔다(PD 2026-10-30) — 남은 퍼센트만, 검은 외곽선을 둘러 쓴다.
+            // 퍼센트가 바뀔 때만 다시 쓴다(매 피격 문자열을 만들지 않게)
+            int pct = e.BossHp <= 0 ? 0 : Mathf.Max(1, Mathf.CeilToInt(ratio * 100f));
+            if (appeared && _ui.Get<TMPro.TextMeshProUGUI>("BossHpText") is TMPro.TextMeshProUGUI hpText)
+            {
+                hpText.outlineWidth = 0.28f;
+                hpText.outlineColor = new Color32(0, 0, 0, 255);
+            }
+            if (appeared || pct != _bossPct)
+            {
+                _bossPct = pct;
+                _ui.SetText("BossHpText", $"{pct}%");
+            }
             _ui.SetFill("BossHpBarFill", ratio, _bossBarWidth);
             OnBossRatio(ratio, appeared);
 

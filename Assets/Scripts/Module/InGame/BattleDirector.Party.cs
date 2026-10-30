@@ -508,6 +508,13 @@ namespace Game.Module.InGame
 
         private void ShowSubSkillName(Unit u)
         {
+            // 글자 대신 스킬 아이콘(PD 2026-10-30 「미니 골렘 · 빛의 인력 글자 대신 스킬 아이콘을 깔끔하게」) —
+            // 적 스킬과 같은 표시: 몸이 짧게 번쩍이고 머리 위에 그 스킬 아이콘. 아이콘이 없는 보조 전용 연사만 글자로 둔다
+            if (SubSafeSkills.Contains(u.Key) && CachedSkillIcon(u.Key) is Sprite icon)
+            {
+                u.ShowSkillCast(icon);
+                return;
+            }
             var e = _player != null ? _player.GetHost(u.Key) : null;
             string skill = SubSafeSkills.Contains(u.Key)
                 ? (e != null && !string.IsNullOrEmpty(e.ActiveSkillKey) ? Localize.Get($"askill.{e.ActiveSkillKey}.name") : u.Key)

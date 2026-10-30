@@ -84,9 +84,11 @@ namespace Game.Module.Lobby
             float scale = root.rect.width > 0f ? root.rect.width / 720f : 1f;
             _board.localScale = Vector3.one * scale;
 
-            // 몸 뒤 빛 — 빛살(시안 60~680 × 120~900) · 고리
-            _rays = Img("Rays", BoardBox, new MBoxV(110, 200, 610, 700), _fx != null ? _fx.UnlockRays : null);
-            _ring = Img("Ring", BoardBox, new MBoxV(150, 260, 570, 680), _fx != null ? _fx.UnlockRing : null);
+            // 몸 뒤 빛 — 빛살 · 고리는 **몸 가운데**에 둔다(PD 2026-10-30 「고리 가운데가 캐릭터 위쪽」).
+            // 몸 칸 390~820 은 발이 아래 변(820)에 붙고 몸 높이가 칸의 95% → 몸 가운데 y ≈ 820 − 430 × 0.95 / 2 ≈ 616
+            const float bodyY = 616f;
+            _rays = Img("Rays", BoardBox, new MBoxV(110, bodyY - 250f, 610, bodyY + 250f), _fx != null ? _fx.UnlockRays : null);
+            _ring = Img("Ring", BoardBox, new MBoxV(150, bodyY - 210f, 570, bodyY + 210f), _fx != null ? _fx.UnlockRing : null);
             if (_fx != null && _fx.Additive != null) { _rays.material = _fx.Additive; _ring.material = _fx.Additive; }
 
             // 몸 — 시안 (130,380)-(600,820), 발이 이름 판 위

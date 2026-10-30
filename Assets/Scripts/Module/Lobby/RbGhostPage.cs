@@ -151,6 +151,10 @@ namespace Game.Module.Lobby
             _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장
             RefreshStats();
             _shell.RefreshHeader();
+            // 호스트 강화와 같은 금빛 용암 · 불티 · 값 톡(PD 2026-10-30 「용암 이펙트가 사라졌다 — 여기도 적용」)
+            int idx = Array.IndexOf(StatOrder, stat);
+            if (_shell.Fx != null && idx >= 0 && idx < _tiles.Count && _tiles[idx] is RectTransform tile)
+                _shell.Fx.UpgradeTick(tile, _ui.Find(tile, "GhoStatValue") as RectTransform);
         }
 
         private void Claim(int shown)
