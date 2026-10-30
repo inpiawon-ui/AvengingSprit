@@ -12161,15 +12161,15 @@ MonoBehaviour:
     _zhHant: "\u968A\u4F0D"
     _zhHans: "\u961F\u4F0D"
   - _key: ui.party.card.sublv.name
-    _ko: "\uBCF4\uC870 {0} \u300C{1}\u300D \uC2A4\uD0AC Lv {2} \u2192 {3}"
-    _ja: "\u30B5\u30D6{0}\u300C{1}\u300D\u30B9\u30AD\u30EB Lv {2} \u2192 {3}"
-    _en: "Sub {0} \"{1}\" Skill Lv {2} \u2192 {3}"
-    _zhHant: "\u526F\u624B{0}\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
-    _zhHans: "\u526F\u624B{0}\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
+    _ko: "\uBCF4\uC870 {0} \uC790\uB9AC \u300C{1}\u300D \uC2A4\uD0AC Lv {2} \u2192
+      {3}"
+    _ja: "\u30B5\u30D6{0}\u67A0\u300C{1}\u300D\u30B9\u30AD\u30EB Lv {2} \u2192 {3}"
+    _en: "Sub slot {0} \"{1}\" Skill Lv {2} \u2192 {3}"
+    _zhHant: "\u526F\u624B{0}\u4F4D\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
+    _zhHans: "\u526F\u624B{0}\u4F4D\u300C{1}\u300D\u6280\u80FD Lv {2} \u2192 {3}"
   - _key: ui.party.card.sublv.desc
     _ko: "\uBCF4\uC870 \uC2A4\uD0AC \xB7 \uD3C9\uD0C0 \uC704\uB825 +25% \xB7 \uC2A4\uD0AC
-      \uAC04\uACA9 \u22128%\n\uAD50\uCCB4\uD574\uB3C4 \uC774 \uD638\uC2A4\uD2B8\uC5D0
-      \uB0A8\uB294\uB2E4"
+      \uAC04\uACA9 \u22128%"
     _ja: "\u30B5\u30D6\u30B9\u30AD\u30EB\u30FB\u901A\u5E38\u653B\u6483\u5A01\u529B+25%\u30FB\u30B9\u30AD\u30EB\u9593\u9694\u22128%\n\u4EA4\u4EE3\u3057\u3066\u3082\u3053\u306E\u30DB\u30B9\u30C8\u306B\u6B8B\u308B"
     _en: "Sub skill \xB7 Attack +25% \xB7 Skill interval \u22128%\nStays with this
       host after a swap"
@@ -13075,3 +13075,30 @@ MonoBehaviour:
     _en: Pick a host and tap it!
     _zhHant: "\u9078\u4E00\u540D\u5BBF\u4E3B\u9EDE\u64CA\uFF01"
     _zhHans: "\u9009\u4E00\u540D\u5BBF\u4E3B\u70B9\u51FB\uFF01"
+  - _key: "\uAD50\uCCB4\uD574\uB3C4 \uC774 \uC790\uB9AC\uC5D0 \uB0A8\uB294\uB2E4
+      \xB7 \uCD5C\uB300 Lv {0}"
+    _ko: "\u30B5\u30D6\u30B9\u30AD\u30EB\u30FB\u901A\u5E38\u653B\u6483\u5A01\u529B+25%\u30FB\u30B9\u30AD\u30EB\u9593\u9694\u22128%"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: "\u4EA4\u4EE3\u3057\u3066\u3082\u3053\u306E\u67A0\u306B\u6B8B\u308B\u30FB\u6700\u5927Lv
+      {0}"
+    _ko: "Sub skill \xB7 Attack +25% \xB7 Skill interval \u22128%"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: "Stays with this slot \xB7 Max Lv {0}"
+    _ko: "\u526F\u624B\u6280\u80FD \xB7 \u666E\u653B\u5A01\u529B+25% \xB7 \u6280\u80FD\u9593\u9694\u22128%"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: "\u4EA4\u63DB\u5F8C\u4ECD\u4FDD\u7559\u65BC\u6B64\u4F4D \xB7 \u6700\u9AD8
+      Lv {0}"
+    _ko: "\u526F\u624B\u6280\u80FD \xB7 \u666E\u653B\u5A01\u529B+25% \xB7 \u6280\u80FD\u95F4\u9694\u22128%"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 

@@ -203,6 +203,7 @@ namespace Game.Module.InGame
             var sub = MakeSub(key, at);
             int slot = Mathf.Clamp(l.Slot, 0, _subs.Count);
             _subs.Insert(slot, sub);
+            RefreshSubAtk();   // 새로 선 몸이 이 자리 Lv 을 받는다(MakeSub 때는 아직 자리에 없어 0)
             Debug.Log($"[빙의 파티] 보조 {slot + 1} = {key} · 공격 {sub.U.Atk}");
         }
 

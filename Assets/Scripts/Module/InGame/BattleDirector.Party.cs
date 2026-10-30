@@ -208,7 +208,7 @@ namespace Game.Module.InGame
             ClearPartyFx();
             _partyPossessCost = 0;
             _partyStartCharged = false;
-            _subLv.Clear();
+            System.Array.Clear(_slotLv, 0, _slotLv.Length);
             _subPowCard = 0f;
             _syn = default;
             _synLines.Clear();

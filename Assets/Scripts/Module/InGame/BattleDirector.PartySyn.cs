@@ -179,23 +179,35 @@ namespace Game.Module.InGame
         // ─────────────────────────────────────────
         // 파티 카드 — 레벨업 3장에 랜덤으로 섞인다
         // ─────────────────────────────────────────
-        private readonly Dictionary<string, int> _subLv = new();
+        // 보조 스킬 Lv 은 **자리**(보조 1 · 2)에 붙는다 — 누가 그 자리에 서든 그 자리 Lv 을 받는다(PD 2026-10-30 「특정 캐릭 스킬 업 말고 보조 자리에 올리는 느낌」).
+        // 예전엔 호스트 키에 붙어 「교체해도 이 호스트에 남는다」였다. 최대 Lv 5(올린 횟수 4) — 다 오른 자리 카드는 더 안 나온다.
+        private const int SubSlotLvMax = 4;
+        private readonly int[] _slotLv = new int[PartyRule.SubSlots];
         private float _subPowCard;
 
-        /// <summary>보조 한 명의 공격력 배수 = 30% × (1 + 카드) × 스킬 Lv(+25%/Lv).</summary>
-        private float SubPowerOf(string key)
-            => PartyRule.SubPower * (1f + _subPowCard) * (1f + 0.25f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
+        /// <summary>이 호스트가 선 보조 자리의 Lv(올린 횟수). 자리에 없으면 0.</summary>
+        private int SlotLvOf(string key)
+        {
+            for (int i = 0; i < _subs.Count && i < _slotLv.Length; i++)
+                if (_subs[i].U != null && _subs[i].U.Key == key) return _slotLv[i];
+            return 0;
+        }
 
-        /// <summary>보조 스킬 간격 — 6초 × 마도 시너지 × 스킬 Lv(−8%/Lv).</summary>
+        /// <summary>보조 한 명의 공격력 배수 = 30% × (1 + 카드) × 자리 Lv(+25%/Lv).</summary>
+        private float SubPowerOf(string key)
+            => PartyRule.SubPower * (1f + _subPowCard) * (1f + 0.25f * SlotLvOf(key));
+
+        /// <summary>보조 스킬 간격 — 6초 × 마도 시너지 × 자리 Lv(−8%/Lv).</summary>
         private float SubSkillCdOf(string key)
-            => PartyRule.SubSkillSeconds * (1f - _syn.SubCd) * MediumSubCdMul * Mathf.Max(0.5f, 1f - 0.08f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
+            => PartyRule.SubSkillSeconds * (1f - _syn.SubCd) * MediumSubCdMul * Mathf.Max(0.5f, 1f - 0.08f * SlotLvOf(key));
 
         /// <summary>카드 3장 중 일부를 파티 카드로 바꾼다(보조가 있을 때만, 한 번에 최대 2장).</summary>
         private void MixPartyCards(string[] keys)
         {
             if (!PartyOn || _host == null || _subs.Count == 0 || keys == null) return;
             _partyCandidates.Clear();
-            for (int i = 0; i < _subs.Count; i++) _partyCandidates.Add($"party.sublv.{i}");
+            for (int i = 0; i < _subs.Count && i < _slotLv.Length; i++)
+                if (_slotLv[i] < SubSlotLvMax) _partyCandidates.Add($"party.sublv.{i}");   // 다 오른 자리는 빼고 — 그 칸엔 다른 카드
             _partyCandidates.Add("party.subpow");
             if (_ghostHp < 80) _partyCandidates.Add("party.ghost");
             int placed = 0;
@@ -225,9 +237,9 @@ namespace Game.Module.InGame
                 int slot = int.Parse(key.Substring("party.sublv.".Length));
                 if (slot >= _subs.Count || _subs[slot].U == null) return false;
                 string k = _subs[slot].U.Key;
-                int lv = _subLv.TryGetValue(k, out int v) ? v : 0;
+                int lv = slot < _slotLv.Length ? _slotLv[slot] : 0;
                 name = Tf("ui.party.card.sublv.name", slot + 1, HostName(k), lv + 1, lv + 2);
-                desc = Tx("ui.party.card.sublv.desc");
+                desc = Tf("ui.party.card.sublv.desc", SubSlotLvMax + 1);
                 icon = UnitGet(k, "s") ?? UnitGet(k);
                 return true;
             }
@@ -255,11 +267,7 @@ namespace Game.Module.InGame
             if (key.StartsWith("party.sublv."))
             {
                 int slot = int.Parse(key.Substring("party.sublv.".Length));
-                if (slot < _subs.Count && _subs[slot].U != null)
-                {
-                    string k = _subs[slot].U.Key;
-                    _subLv[k] = (_subLv.TryGetValue(k, out int v) ? v : 0) + 1;
-                }
+                if (slot < _slotLv.Length) _slotLv[slot] = Mathf.Min(SubSlotLvMax, _slotLv[slot] + 1);
             }
             else if (key == "party.subpow") _subPowCard += 0.1f;
             else if (key == "party.ghost") { _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + 10); PublishHp(); }
@@ -305,6 +313,7 @@ namespace Game.Module.InGame
             PartySpend(PartyRule.CostMainSwap, mainAt);
             Destroy(s.U.gameObject);
             _subs[slot] = MakeSub(mainKey, subAt);
+            RefreshSubAtk();   // 새로 선 몸이 이 자리 Lv 을 받는다
             var old = _host;
             _host = null;
             Destroy(old.gameObject);   // 쓰러진 것이 아니라 자리를 바꾼 것 — 사망 처리 · 조각은 없다
