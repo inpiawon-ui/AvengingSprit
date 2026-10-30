@@ -1,0 +1,16 @@
+﻿$env:OPENAI_API_KEY = $null
+Set-Location "C:\won\UnityProject\AvengingSprit"
+$prompt = @'
+이미지 생성 도구로 직접 그린다. API 키를 쓰는 CLI 폴백은 쓰지 마라. 스크립트로 도형을 그려 때우지 마라. 한 장만 그린다.
+게임 「Avenging Spirit RE:BORN」(도트 픽셀 아트, 세로 720 x 1280) — **완성 화면 시안** 한 장.
+**먼저 Projects/AVSR/_exchange/codex_brief_fx.md 를 읽는다**(빛은 도트 모양 + 셰이더 광원 · 파티클, 강약, 연출 원칙. 걸려 있는 동안의 표시는 은은하게 계속 도는 장식 — 숨쉬기 · 흐름 · 반짝임 루프, 시전 순간만 힘준다).
+화풍 · 화면 구성 기준: Projects/AVSR/_exchange/in/mock1029_ult_mg_a.png (방금 통과한 필살기 시안 — 이 정도의 퀄 · 도트 질감).
+화면 글자는 전부 **한국어**. 게임 정보(글자 · 숫자 · 아이콘)를 연출이 가리지 않는다. 그림 옆 여백에 한국어 메모 3줄 이내로 「무엇이 · 어떻게 움직이는지」를 적어도 된다.
+[바탕] Projects/AVSR/_exchange/mock1030_skill/now_medium_infuse.png — 지금 인게임 화면(위 HUD · 아래 조작 단추 그대로 둔다).
+[인물] 메인 = 영매(원작 그림 Assets/BaseResource/Unit/medium/unit_medium_e.png · _atk1 · _atk2 그대로, 새로 디자인 금지) 화면 가운데 아래. 보조 둘 = 구루(Assets/BaseResource/Unit/guru/) · 화이트 위저드(Assets/BaseResource/Unit/white_wizard/) 원작 그림을 메인보다 조금 작게, 메인 좌우 뒤에(보조는 반투명 보랏빛 · 발밑 혼령 고리가 이미 있다). HUD 보조 칸 두 개에 그 둘의 얼굴.
+영매 버프 색은 **보라**.
+[장면] 액티브 「혼 깃들이기」 — 8초간 파티 전원(메인 + 보조 둘) 피해 +25% · 치명 +15%. **메인과 보조 둘 모두**에게 「지금 강해졌다」가 한눈에 보여야 한다(지금 게임은 발밑 작은 문양 · 혼불 몇 알뿐이라 걸렸는지 모른다 — Projects/AVSR/_exchange/mock1030_skill/now_medium_infuse.png).
+[연출 가이드] Projects/AVSR/_exchange/mock1030_skill/guide_mock1030_skill.md 의 3절 박자표대로 — 영매에게서 보라 혼 고리가 퍼져 메인 · 보조에 닿고 혼불이 날아가 깃듦(강), 이후 셋 모두 발밑 보라 고리 숨쉬기 + 혼불 2~3알 맴돎(은은한 루프).
+[저장] Projects/AVSR/_exchange/mock1030_skill/mock_infuse_guide.png
+'@
+codex exec --sandbox workspace-write --skip-git-repo-check $prompt
