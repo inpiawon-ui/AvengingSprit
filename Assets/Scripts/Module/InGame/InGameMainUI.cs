@@ -127,7 +127,8 @@ namespace Game.Module.InGame
             float t = CoverFadeSeconds;
             while (t > 0f)
             {
-                t -= Time.deltaTime;
+                // 실제 시간으로 걷는다 — 밤 시작 고르기 창이 판 시간을 0 으로 세우면 덮개가 영영 안 걷혀 검은 화면이 됐다(PD 2026-10-30)
+                t -= Time.unscaledDeltaTime;
                 var c = _cover.color;
                 _cover.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(t / CoverFadeSeconds));
                 await UniTask.Yield();
