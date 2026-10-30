@@ -64,11 +64,9 @@ namespace Game.Module.InGame
         private const float FortressHalfDeg = 30f;
         private const float FortressSweepSeconds = 1.2f;
         private const float FortressRangeMeters = 9f;
-        private const float FortressWidthMeters = 0.45f;
         private const float FortressShotMul = 0.32f;
         private const int FortressSlowPercent = 35;
         private const float FortressSlowSeconds = 0.8f;
-        private const float FortressTracerDraw = 46f;
         private const float FortressMuzzleSize = 120f;
         private const float FortressHitSize = 84f;
         private const float FortressDustSize = 220f;
@@ -330,6 +328,7 @@ namespace Game.Module.InGame
         /// <summary>거치한 동안 — 걷는 입력을 되돌려 제자리에 박고, 부채꼴을 좌우로 훑으며 0.07초마다 관통 탄줄 한 줄.</summary>
         private void TickFortress(float dt)
         {
+            TickFortressDashes(dt);
             if (_fortressSeconds <= 0f) return;
             var me = _host;
             if (me == null || !me.IsAlive || me.Key != "commando_mg") { EndFortress(); return; }
@@ -350,21 +349,16 @@ namespace Game.Module.InGame
                 me.PlayAttack();
                 var from = me.MuzzlePosition;
                 float length = Meters(FortressRangeMeters);
-                var to = from + dir * length;
-                var frames = FxFrames("mgtracer");
-                if (frames != null)
-                {
-                    var beam = FreeImpact(FortressTracerDraw);
-                    beam?.PlayBeam(from, to, frames, FortressTracerDraw);
-                    beam?.SetLoop(true);   // 한 장짜리라 돌리지 않으면 바로 끝났다 — 수명(SetLife)이 끝을 정한다(레이저 빔과 같은 방식)
-                    // 시안처럼 탄줄 네댓 줄이 부채꼴로 겹쳐 보이게 — 한 줄씩만 보이면 레이저 하나처럼 읽혔다(녹화 검수 2026-10-29)
-                    beam?.SetLife(FortressVolleyGap * 5f, 0.18f);
-                }
-                else UltBeam("laser_wide", from, to, FortressTracerDraw * 0.4f, 0.04f);
+                // 탄줄은 **날아가는 짧은 총알 조각**이다 — 예전엔 그림 한 장을 총구~9 m 끝까지 늘려 띄워 굵은 레이저처럼 보였다
+                // (PD 2026-10-30 「탄막 요새 이펙트가 이상하다, 레이저 같다」 · 시안 mock1029_ult_mg_a 는 가는 점선 부채꼴)
+                // 한 번에 조각 셋을 간격을 두고 — 한 줄이 촘촘한 점선이 되게(조각 하나면 띄엄띄엄 몇 발로만 보였다)
+                for (int k = 0; k < FortressDashPerVolley; k++)
+                    SpawnFortressDash(from + dir * (k * FortressDashGap), dir, length - k * FortressDashGap);
                 (PlayFx("mgmuzzle", from + dir * 18f, FortressMuzzleSize, loop: false)
                     ?? PlayFx("muzzle", from + dir * 18f, FortressMuzzleSize * 0.6f, loop: false))?.SetFrameSeconds(0.03f);
                 int dmg = UltDamage(me, FortressShotMul);
-                var hit = new List<Unit>(EnemiesInPath(from, dir, length, Meters(FortressWidthMeters)));
+                // 판정은 보이는 조각과 같은 부채꼴(±흩어짐) — 줄 하나만 맞으면 「탄이 지나갔는데 안 맞았다」가 된다
+                var hit = new List<Unit>(EnemiesInCone(from, dir, FortressDashJitterDeg * 2f, length));
                 for (int i = 0; i < hit.Count; i++)
                 {
                     var e = hit[i];
@@ -387,6 +381,54 @@ namespace Game.Module.InGame
                     ?? PlayFx("thshell", me.Position + side - new Vector2(0f, 16f), FortressShellSize, loop: false))?.SetFrameSeconds(0.06f);
             }
             if (_fortressSeconds <= 0f) EndFortress();
+        }
+
+        // ── 날아가는 총알 조각 ──
+        private const float FortressDashLength = 90f;      // 조각 길이(px)
+        private const float FortressDashThick = 18f;       // 굵기 — 예전 줄기 46 의 절반 아래
+        private const float FortressDashSpeed = 2600f;     // px/초 — 9 m(약 650 px)를 0.25초에
+        private const float FortressDashJitterDeg = 12f;   // 조각마다 흩어져 동시에 여러 줄이 부채꼴로 보이게(시안 5~7줄)
+        private const int FortressDashPerVolley = 3;
+        private const float FortressDashGap = 60f;        // 같은 번에 쏜 조각 사이(px)
+
+        private struct FortressDash
+        {
+            public Impact Fx;
+            public Vector2 At;
+            public Vector2 Dir;
+            public float Left;
+        }
+
+        private readonly List<FortressDash> _fortressDashes = new();
+
+        private void SpawnFortressDash(Vector2 from, Vector2 dir, float length)
+        {
+            var frames = FxFrames("mgtracer");
+            if (frames == null) return;
+            var d = Rotate(dir, Random.Range(-FortressDashJitterDeg, FortressDashJitterDeg));
+            var fx = FreeImpact(FortressDashThick);
+            if (fx == null) return;
+            var at = from + d * (FortressDashLength * 0.5f);
+            fx.PlayBeam(at - d * (FortressDashLength * 0.5f), at + d * (FortressDashLength * 0.5f), frames, FortressDashThick);
+            fx.SetLoop(true);
+            float life = Mathf.Max(0.05f, (length - FortressDashLength) / FortressDashSpeed);
+            fx.SetLife(life, 0.04f);
+            // 수명보다 조금 먼저 손을 뗀다 — 풀로 돌아간 조각을 다른 효과가 받아 쓴 뒤에 옮기지 않게
+            _fortressDashes.Add(new FortressDash { Fx = fx, At = at, Dir = d, Left = life - 0.02f });
+        }
+
+        /// <summary>매 프레임 — 조각을 앞으로 민다(거치가 끝나도 날던 조각은 끝까지 난다).</summary>
+        private void TickFortressDashes(float dt)
+        {
+            for (int i = _fortressDashes.Count - 1; i >= 0; i--)
+            {
+                var s = _fortressDashes[i];
+                s.Left -= dt;
+                if (s.Left <= 0f || s.Fx == null) { _fortressDashes.RemoveAt(i); continue; }
+                s.At += s.Dir * (FortressDashSpeed * dt);
+                s.Fx.MoveTo(s.At);
+                _fortressDashes[i] = s;
+            }
         }
 
         private void EndFortress()
