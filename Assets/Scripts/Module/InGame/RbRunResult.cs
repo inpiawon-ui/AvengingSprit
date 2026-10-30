@@ -106,6 +106,30 @@ namespace Game.Module.InGame
         }
 
         /// <summary>클리어 · 실패 배치를 갈아 끼운다(탑 · 밤 결과는 클리어 배치).</summary>
+        /// <summary>
+        /// 단추는 「확인」 하나 — 이기든 지든 어차피 로비로 간다(PD 2026-10-30 「다시 하기 · 다음 던전 지우고 확인만」).
+        /// 「로비로」 · 「다음」 두 자리를 합친 칸에 로비 단추를 노란 단추로 넓힌다. 배치가 바뀔 때마다(ApplyLayout) 다시 잰다.
+        /// </summary>
+        private void OkOnly()
+        {
+            if (!(_ui.Find("RbResultLobby") is RectTransform lobby) || !(_ui.Find("RbResultNext") is RectTransform next)) return;
+            var lo = (Vector2)lobby.localPosition + lobby.rect.min;
+            var hi = (Vector2)next.localPosition + next.rect.max;
+            var min = Vector2.Min(lo, (Vector2)next.localPosition + next.rect.min);
+            var max = Vector2.Max(hi, (Vector2)lobby.localPosition + lobby.rect.max);
+            lobby.sizeDelta += (max - min) - lobby.rect.size;
+            var want = min + Vector2.Scale(lobby.pivot, max - min);
+            lobby.anchoredPosition += want - (Vector2)lobby.localPosition;
+
+            if (lobby.TryGetComponent<Image>(out var lobbyImg) && next.TryGetComponent<Image>(out var nextImg)) lobbyImg.sprite = nextImg.sprite;
+            if (_ui.Get<TMP_Text>("RbResultLobbyText") is TMP_Text label)
+            {
+                label.text = Localize.Get("ui.common.ok");
+                if (_ui.Get<TMP_Text>("RbResultNextText") is TMP_Text ink) label.color = ink.color;
+            }
+            next.gameObject.SetActive(false);
+        }
+
         private void ApplyLayout(bool fail)
         {
             for (int i = 0; i < _slots.Length; i++)
@@ -128,6 +152,7 @@ namespace Game.Module.InGame
             _ui.SetActive("RbResultTip", false);
             _ui.SetActive("RbResultNextCost", false);
             _ui.SetActive("RbResultNewBadge", false);
+            OkOnly();
         }
 
         /// <summary>가운데 판 한 줄(「CH 2 열림!」 · 「남은 입장 2/3」) — NEW 꼬리(도트 글)는 글 바로 뒤에 붙이고 둘을 판 가운데로.</summary>

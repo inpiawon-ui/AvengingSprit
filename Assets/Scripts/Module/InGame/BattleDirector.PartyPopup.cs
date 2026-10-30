@@ -415,6 +415,9 @@ namespace Game.Module.InGame
         }
 
         /// <summary>LoseHost 끝에서 부른다. 유령 HP 가 남았을 때만 고른다.</summary>
+        /// <summary>사망 선택창 시간이 다 됐을 때 대신 고를 줄(없으면 유령으로 계속).</summary>
+        private UnityEngine.Events.UnityAction _deathAutoAct;
+
         private void OpenPartyDeath(string lostKey, Vector2 pos)
         {
             if (_ghostHp <= 0) return;
@@ -453,6 +456,10 @@ namespace Game.Module.InGame
                 if (rows[i].Enabled && (best == null || rows[i].Cost < best.Cost)) best = rows[i];
             }
             if (!any) return;   // 고를 길이 없다 — 유령으로 남고 다음 틱 규칙대로
+            // 시간이 다 되면 고를 길 — 켜진 「보조를 메인으로」 중 첫 줄(보조 1)
+            _deathAutoAct = null;
+            for (int i = 1; i <= _subs.Count && i < rows.Count; i++)
+                if (rows[i].Enabled) { _deathAutoAct = rows[i].Act; break; }
             if (best != null) best.Best = true;   // 시안: 가장 싼 길(보조를 메인으로)에 「추천」
             BuildDeath(rows, PartyRule.DeathChoiceSeconds);
         }

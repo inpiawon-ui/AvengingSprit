@@ -6789,11 +6789,11 @@ MonoBehaviour:
     _zhHant: "PASSIVE \xB7 \u88AB\u52D5"
     _zhHans: "PASSIVE \xB7 \u88AB\u52A8"
   - _key: ui.growth6.ult_cond
-    _ko: "\uC0AC\uC6A9 \uD6C4 \uCFE8\uD0C0\uC784 5\uBD84"
-    _ja: "\u4F7F\u7528\u5F8C\u30AF\u30FC\u30EB\u30BF\u30A4\u30E05\u5206"
-    _en: 5 min cooldown after use
-    _zhHant: "\u4F7F\u7528\u5F8C\u51B7\u537B5\u5206\u9418"
-    _zhHans: "\u4F7F\u7528\u540E\u51B7\u53745\u5206\u949F"
+    _ko: "\uC0AC\uC6A9 \uD6C4 \uCFE8\uD0C0\uC784 3\uBD84"
+    _ja: "\u4F7F\u7528\u5F8C\u30AF\u30FC\u30EB\u30BF\u30A4\u30E03\u5206"
+    _en: 3 min cooldown after use
+    _zhHant: "\u4F7F\u7528\u5F8C\u51B7\u537B3\u5206\u9418"
+    _zhHans: "\u4F7F\u7528\u540E\u51B7\u53743\u5206\u949F"
   - _key: ui.growth6.act_cond
     _ko: "\uCFE8\uD0C0\uC784\uB9C8\uB2E4 \uC0AC\uC6A9"
     _ja: "\u30AF\u30FC\u30EB\u30BF\u30A4\u30E0\u3054\u3068\u306B\u4F7F\u7528"

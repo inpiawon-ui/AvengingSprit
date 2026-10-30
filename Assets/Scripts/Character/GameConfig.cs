@@ -437,7 +437,7 @@ namespace Game.Character
         [SerializeField] private float _activeSkillCooldownSeconds = 14f;
         [SerializeField] private int _activeSkillDamage = 140;
         [Tooltip("필살기를 쓰고 같은 호스트로 다시 쓰기까지(초). 빙의하면 이와 상관없이 다시 찬다(PD 2026-10-28 「한 번만 쓰니 재미가 떨어진다 · 일단 5분」).")]
-        [SerializeField] private float _ultCooldownSeconds = 300f;
+        [SerializeField] private float _ultCooldownSeconds = 180f;
         [Tooltip("「필살기 쿨 감소」 카드(c013)를 여러 번 골라도 필살기 쿨이 이 밑으로는 안 내려간다(초).")]
         [SerializeField] private float _ultCooldownMinSeconds = 60f;
 

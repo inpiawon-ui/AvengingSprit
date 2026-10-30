@@ -64,8 +64,8 @@ namespace Game.Module.InGame
         public const float SubGapMain = 56f;
         /// <summary>보조 스킬 자동 발동 간격(초).</summary>
         public const float SubSkillSeconds = 6f;
-        /// <summary>메인 사망 뒤 고르는 시간(초).</summary>
-        public const float DeathChoiceSeconds = 8f;
+        /// <summary>메인 사망 뒤 고르는 시간(초). 8 → 15(PD 2026-10-30 「선택 시간도 좀 늘려 줘」).</summary>
+        public const float DeathChoiceSeconds = 15f;
     }
 
     public sealed partial class BattleDirector
@@ -551,10 +551,12 @@ namespace Game.Module.InGame
             if (_partyTimerText != null) _partyTimerText.text = Tf("ui.party.p2.seconds", Mathf.Max(0f, _partyTimer));
             if (_partyTimerFill != null) _partyTimerFill.fillAmount = Mathf.Clamp01(_partyTimer / Mathf.Max(0.01f, _partyTimerTotal));
             if (_partyTimer > 0f) return;
+            // 시간이 다 돼도 판을 끝내지 않는다(PD 2026-10-30) — 보조가 있으면 보조 1 을 메인으로(고를 때와 같은 값),
+            // 없거나 유령 체력이 모자라면 유령으로 계속 간다(다음 빙의 · 유령 체력 규칙대로)
+            var auto = _deathAutoAct;
+            _deathAutoAct = null;
             ClosePartyPopup();
-            _ghostHp = 0;
-            PublishHp();
-            Finish(false);
+            auto?.Invoke();
         }
 
         // ─────────────────────────────────────────

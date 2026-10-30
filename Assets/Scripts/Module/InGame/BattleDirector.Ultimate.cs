@@ -88,7 +88,7 @@ namespace Game.Module.InGame
         {
             get
             {
-                float full = _config != null && _config.UltCooldownSeconds > 0f ? _config.UltCooldownSeconds : 300f;
+                float full = _config != null && _config.UltCooldownSeconds > 0f ? _config.UltCooldownSeconds : 180f;
                 float min = _config != null ? _config.UltCooldownMinSeconds : 60f;
                 return Mathf.Max(Mathf.Min(min, full), full * _ultCoolMul);
             }

@@ -68,6 +68,8 @@ namespace Game.Module.InGame
             if (_trioPending) return false;   // 셋이 서기 전(첫 판 그림 설명 대기) — 다른 안내를 끼우지 않는다
             if (_coachTarget != null)
             {
+                // 선택창(메인 사망 등)이 뜨면 짚기를 거둔다 — 남아 있으면 시계가 서고 막이 창을 덮어 판이 멈춘다(본 것으로 치지 않음)
+                if (_partyHold) { EndCoach(false); return false; }
                 if (!_coachTarget.IsAlive || !_coachTarget.IsPossessable || !_enemies.Contains(_coachTarget)) { EndCoach(false); return false; }
                 PlaceCoachOn((RectTransform)_coachTarget.transform, true);
                 return true;

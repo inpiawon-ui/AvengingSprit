@@ -1121,7 +1121,7 @@ ui.growth6.summary_unlock	조각을 모아 해금하면 스킬 · 능력치 강�
 ui.growth6.ult_tag	SPECIAL · 필살기	SPECIAL · 必殺技	SPECIAL	SPECIAL · 必殺技	SPECIAL · 必杀技
 ui.growth6.act_tag	ACTIVE · 액티브	ACTIVE · アクティブ	ACTIVE	ACTIVE · 主動	ACTIVE · 主动
 ui.growth6.pas_tag	PASSIVE · 패시브	PASSIVE · パッシブ	PASSIVE	PASSIVE · 被動	PASSIVE · 被动
-ui.growth6.ult_cond	사용 후 쿨타임 5분	使用後クールタイム5分	5 min cooldown after use	使用後冷卻5分鐘	使用后冷却5分钟
+ui.growth6.ult_cond	사용 후 쿨타임 3분	使用後クールタイム3分	3 min cooldown after use	使用後冷卻3分鐘	使用后冷却3分钟
 ui.growth6.act_cond	쿨타임마다 사용	クールタイムごとに使用	Use whenever off cooldown	冷卻結束即可使用	冷却结束即可使用
 ui.growth6.power_line	현재 {0}% → {1}성 <color=#1E8E3E>{2}%</color>	現在 {0}% → ランク{1} <color=#1E8E3E>{2}%</color>	Now {0}% → {1}★ <color=#1E8E3E>{2}%</color>	目前 {0}% → {1}星 <color=#1E8E3E>{2}%</color>	当前 {0}% → {1}星 <color=#1E8E3E>{2}%</color>
 ui.growth6.power_max	위력 {0}% (최대)	威力 {0}%（最大）	Power {0}% (max)	威力 {0}%（最高）	威力 {0}%（最高）
