@@ -325,6 +325,7 @@ namespace Game.Module.InGame
         private void PartySetSub(Unit target, int slot, int cost)
         {
             if (_host == null || !TakeFromEnemies(target)) return;
+            if (target == _tutorialSub) _tutorialSubKey = null;   // 따라 하기 보조를 데려갔다 — 다시 세우지 않는다
             PartySpend(cost, target.Position);
 
             // 보조 교체 — 옛 보조는 놓아주고, 그 자리에서 혼 조각이 새 호스트로 옮겨 간다(BattleDirector.PartyFx)

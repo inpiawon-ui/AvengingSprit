@@ -81,7 +81,8 @@ namespace Game.Module.InGame
                 if (_subs.Count >= PartyRule.SubSlots || _ghostHp <= PartyRule.CostSub) return false;
                 step = _subs.Count == 0 ? "sub1" : "sub2";
                 if (CoachSeen(step)) return false;
-                target = NearestPossessable();
+                // 따라 하기 첫 판은 정해 둔 호스트를 세워 짚는다(무리 · 인연을 꼭 겪게) — 없으면 가까운 빙의 가능한 적
+                target = SpawnTutorialSub() ?? (_tutorialSub != null && _tutorialSub.IsAlive ? null : NearestPossessable());
             }
             if (target == null || target == _channelBody || !OnScreen(target)) return false;   // 빙의가 들어가는 몸은 짚지 않는다
             StartCoach(step, target);

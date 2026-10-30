@@ -17,6 +17,16 @@ namespace Game.Module.InGame
         private const float TrioHpRatio = 0.4f;
 
         private bool _trioPending;
+        /// <summary>
+        /// 따라 하기 첫 판(평생 한 번) — 무리 · 인연을 꼭 겪게 정해 둔 셋(PD 2026-10-30 「인연이랑 시너지 캐릭을 처음에 세팅 · 한 번만」).
+        /// 셋 다 코만도 부대(무리 3명 강)이고, 기관총 → 수류탄 → 미사일 → 수류탄 이 인연 짝이라 누구를 메인으로 골라도 남은 둘 중에 짝이 있다.
+        /// 고르지 않은 둘은 흩어졌다가 보조 안내 때 하나씩 다시 나온다.
+        /// </summary>
+        private static readonly string[] TutorialSet = { "commando_mg", "commando_grenade", "commando_missile" };
+        private bool _tutorialRun;
+        private readonly List<string> _tutorialSubs = new();
+        private Unit _tutorialSub;
+        private string _tutorialSubKey;
         private float _trioWait;
         private readonly List<Unit> _trio = new();
 
@@ -25,6 +35,7 @@ namespace Game.Module.InGame
         {
             if (!PartyOn) return;
             _trioPending = true;
+            _tutorialRun = !CoachSeen("main");
         }
 
         /// <summary>따라 하기 틱에서 — 셋을 세우거나, 세워 둔 셋을 고를 때까지 판을 세운다. 세웠으면 true.</summary>
@@ -53,6 +64,7 @@ namespace Game.Module.InGame
         {
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null) return;
+            if (_tutorialRun && TutorialEntries(hosts) is List<HostEntry> set) { SpawnTrioOf(set); return; }
             // 그림이 이미 올라온 몸을 먼저 — 없으면 아무 몸이나 세우고 그 자리에서 올린다
             var ready = new List<HostEntry>();
             var rest = new List<HostEntry>();
@@ -64,6 +76,22 @@ namespace Game.Module.InGame
             Shuffle(ready);
             Shuffle(rest);
             ready.AddRange(rest);
+            SpawnTrioOf(ready);
+        }
+
+        private List<HostEntry> TutorialEntries(IReadOnlyList<HostEntry> hosts)
+        {
+            var set = new List<HostEntry>();
+            foreach (var key in TutorialSet)
+                for (int i = 0; i < hosts.Count; i++)
+                    if (hosts[i].HostKey == key) { set.Add(hosts[i]); break; }
+            if (set.Count < TutorialSet.Length) return null;
+            Shuffle(set);
+            return set;
+        }
+
+        private void SpawnTrioOf(List<HostEntry> ready)
+        {
             int n = Mathf.Min(TrioCount, ready.Count);
             if (n == 0) return;
 
@@ -71,31 +99,60 @@ namespace Game.Module.InGame
             for (int i = 0; i < n; i++)
             {
                 var def = ready[i];
-                var u = NewUnit($"StartTrio_{def.HostKey}");
-                NoteMetHost(def);
-                u.Setup(UnitSide.Enemy, def.HostKey, def.DisplayName, UnitGet(def.SpriteKey),
-                        EnemyHpOf(def), EnemyAtkOf(def), EnemySpeedOf(def), EnemyRangeOf(def), EnemyIntervalOf(def),
-                        UnitBox(84f, 78f), isBoss: false, profile: def);
-                // 유령 앞 부채꼴 — 가운데가 조금 더 멀다
-                float x = (i - (n - 1) * 0.5f) * 190f;
-                u.Position = at + new Vector2(x, i == 1 ? 300f : 250f);
-                ClampToField(u);
-                u.MarkAsHostBody();
-                u.MarkAsNextBody();
-                u.PossessPriority = def.PossessPriority;
-                u.PossessRange = 0f;
-                u.IsAggro = false;   // 먼저 덤비지 않는다
-                u.SetHpPercent(Mathf.RoundToInt(TrioHpRatio * 100f));
-                u.SetState(EnemyState.Idle);
-                ApplyFacingSprites(u, def.SpriteKey);
-                _enemies.Add(u);
-                if (UnitGet(def.SpriteKey) == null) LoadEventHostAsync(u, def.SpriteKey).Forget();   // fire-and-forget: 그림이 오면 그때 보인다
+                var u = SpawnCalmHost(def, at + new Vector2((i - (n - 1) * 0.5f) * 190f, i == 1 ? 300f : 250f), "StartTrio");
                 _trio.Add(u);
             }
             // 처음 한 번은 손가락까지, 그다음부터는 안내 글만(고를 때까지 판은 늘 선다)
             BuildCoach(null, Tx("ui.tut.coach.pick_trio"));
             if (CoachSeen("main") && _coachHand != null) _coachHand.gameObject.SetActive(false);
             PlaceCoachOnGroup(_trio);
+        }
+
+        /// <summary>덤비지 않고 바로 빙의할 수 있는 호스트 하나(셋 고르기 · 따라 하기 보조).</summary>
+        private Unit SpawnCalmHost(HostEntry def, Vector2 pos, string tag, bool calm = true)
+        {
+            var u = NewUnit($"{tag}_{def.HostKey}");
+            NoteMetHost(def);
+            u.Setup(UnitSide.Enemy, def.HostKey, def.DisplayName, UnitGet(def.SpriteKey),
+                    EnemyHpOf(def), EnemyAtkOf(def), EnemySpeedOf(def), EnemyRangeOf(def), EnemyIntervalOf(def),
+                    UnitBox(84f, 78f), isBoss: false, profile: def);
+            u.Position = pos;
+            ClampToField(u);
+            u.MarkAsHostBody();
+            u.MarkAsNextBody();
+            u.PossessPriority = def.PossessPriority;
+            u.PossessRange = 0f;
+            if (calm)
+            {
+                u.IsAggro = false;   // 먼저 덤비지 않는다
+                u.SetHpPercent(Mathf.RoundToInt(TrioHpRatio * 100f));
+            }
+            u.SetState(EnemyState.Idle);
+            ApplyFacingSprites(u, def.SpriteKey);
+            _enemies.Add(u);
+            if (UnitGet(def.SpriteKey) == null) LoadEventHostAsync(u, def.SpriteKey).Forget();   // fire-and-forget: 그림이 오면 그때 보인다
+            return u;
+        }
+
+        /// <summary>
+        /// 따라 하기 첫 판 — 보조 차례에 정해 둔 호스트를 메인 앞에 세운다(무리 · 인연을 꼭 겪게).
+        /// 체력이 가득한 채 싸우러 나온다 — 때려서 60% 아래로 떨어져 빙의할 수 있게 된 뒤에만 그 몸을 돌려준다
+        /// (PD 2026-10-30 「보조는 공격하다가 HP 가 깎였을 때 뜨는 거 맞지?」). 아직이면 null.
+        /// </summary>
+        private Unit SpawnTutorialSub()
+        {
+            // 세워 둔 몸이 아직 있으면 그 몸(화면 밖이라 짚기를 미룬 틱에 또 세우지 않게)
+            if (_tutorialSub != null && _tutorialSub.IsAlive && _enemies.Contains(_tutorialSub))
+                return _tutorialSub.IsPossessable ? _tutorialSub : null;
+            // 때리다 쓰러뜨렸다 — 같은 호스트를 다시 세운다(데려와야 무리 · 인연이 켜진다)
+            if (_tutorialSubKey != null && (_tutorialSub == null || !_tutorialSub.IsAlive)) _tutorialSubs.Insert(0, _tutorialSubKey);
+            _tutorialSubKey = null;
+            if (!_tutorialRun || _tutorialSubs.Count == 0 || _host == null || _player == null) return null;
+            var def = _player.GetHost(_tutorialSubs[0]);
+            _tutorialSubs.RemoveAt(0);
+            _tutorialSubKey = def != null ? def.HostKey : null;
+            _tutorialSub = def != null ? SpawnCalmHost(def, _host.Position + new Vector2(0f, 320f), "TutorialSub", false) : null;
+            return null;   // 막 나왔다 — 깎인 뒤에 짚는다
         }
 
         private static void Shuffle<T>(List<T> list)
@@ -111,10 +168,12 @@ namespace Game.Module.InGame
         private void PickTrio(Unit picked)
         {
             CoachMark("main");
+            _tutorialSubs.Clear();
             for (int i = 0; i < _trio.Count; i++)
             {
                 var o = _trio[i];
                 if (o == null || o == picked) continue;
+                if (_tutorialRun) _tutorialSubs.Add(o.Key);   // 보조 안내 때 다시 나온다
                 if (TakeFromEnemies(o)) BeginRelease(o);
             }
             _trio.Clear();
