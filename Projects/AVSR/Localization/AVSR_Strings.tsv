@@ -1993,4 +1993,8 @@ ui.tut.coach.tap_main	이 적을 눌러 빙의해요!	この敵をタップし�
 ui.tut.coach.tap_sub	이 적을 눌러 보조로 데려와요!	この敵をタップしてサポートにしよう！	Tap this enemy to recruit a support!	點擊這個敵人收為輔助！	点击这个敌人收为辅助！
 ui.tut.coach.tap_row	「보조」 칸을 눌러요	「サポート」をタップしよう	Tap the Support slot	點擊「輔助」欄	点击「辅助」栏
 ui.tut.coach.pick_trio	호스트 하나를 골라 눌러요!	ホストをひとり選んでタップしよう！	Pick a host and tap it!	選一名宿主點擊！	选一名宿主点击！
+ui.tut.coach.ghost_stats	유령 능력치는 여기서 올려요!\n골드로 올린 능력치는 모든 호스트에 적용돼요 (누르면 계속)	ゴーストの能力値はここで強化！\nゴールドで上げた能力値は全ホストに適用されます(タップで続ける)	Raise Ghost stats here!\nStats bought with gold apply to every host (tap to go on)	在這裡提升幽靈能力值！\n用金幣提升的能力值適用於所有宿主(點擊繼續)	在这里提升幽灵属性！\n用金币提升的属性适用于所有宿主(点击继续)
+ui.tut.lobby.go_ghost_growth	챕터 클리어로 골드를 얻었어요!\n유령을 성장시키러 가 볼까요?	チャプタークリアでゴールドを獲得しました！\nゴーストを育成しに行ってみましょう？	You earned gold by clearing the chapter!\nShall we go power up your Ghost?	通關章節獲得了金幣！\n要去培養幽靈嗎？	通关章节获得了金币！\n要去培养幽灵吗？
+ui.tut.lobby.go_ghost_growth.go	가 보기	行ってみる	Let's go	前往	前往
+ui.tut.lobby.go_ghost_growth.later	나중에	あとで	Later	稍後	稍后
 ui.tut.coach.syn_hud	왼쪽 위 칸이 지금 켜진 무리 · 인연이에요\n같은 무리 · 인연 짝을 함께 데려가면 켜져요 (누르면 계속)	左上のマスが今発動中の派閥・縁です\n同じ派閥・縁のペアを一緒に連れると発動します(タップで続ける)	Top-left shows your active Faction & Bond\nBring one faction or a bonded pair to turn them on (tap to go on)	左上方是目前開啟的派系・羈絆\n帶上同派系或羈絆搭檔就會開啟(點擊繼續)	左上方是当前开启的派系・羁绊\n带上同派系或羁绊搭档就会开启(点击继续)

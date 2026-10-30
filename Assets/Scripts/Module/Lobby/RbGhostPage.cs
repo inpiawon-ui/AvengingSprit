@@ -172,6 +172,104 @@ namespace Game.Module.Lobby
             Refresh();
         }
 
+        // ─────────────────────────────────────────
+        // 능력치 칸 짚기 — 1챕터를 처음 깨고 왔을 때 한 번(RbLobbyUI.TryGhostStatCoach)
+        // ─────────────────────────────────────────
+
+        private const string StatCoachKey = "tut.lobby.ghost_stats";
+        private const float CoachDim = 0.78f, CoachPad = 14f;
+        private GameObject _coach;
+        private float _coachSince;
+
+        public static bool StatCoachSeen => PlayerPrefs.GetInt(StatCoachKey, 0) == 1;
+
+        /// <summary>권유를 한 번 띄웠다 — 「나중에」를 눌러도 다시 묻지 않는다.</summary>
+        public static void MarkStatCoachSeen()
+        {
+            PlayerPrefs.SetInt(StatCoachKey, 1);
+            PlayerPrefs.Save();
+        }
+
+        public void ShowStatCoach()
+        {
+            if (_coach != null || _tiles.Count == 0) return;
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+            Canvas.ForceUpdateCanvases();
+
+            var root = (RectTransform)canvas.rootCanvas.transform;
+            _coach = new GameObject("GhoStatCoach", typeof(RectTransform));
+            var rt = (RectTransform)_coach.transform;
+            rt.SetParent(root, false);
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+            rt.offsetMin = rt.offsetMax = Vector2.zero;
+            rt.SetAsLastSibling();
+            _coachSince = Time.unscaledTime;
+
+            // 능력치 칸 전체를 감싸는 구멍(캔버스 좌표)
+            Vector2 min = new(float.MaxValue, float.MaxValue), max = new(float.MinValue, float.MinValue);
+            var corners = new Vector3[4];
+            for (int i = 0; i < _tiles.Count; i++)
+            {
+                ((RectTransform)_tiles[i]).GetWorldCorners(corners);
+                for (int c = 0; c < 4; c++)
+                {
+                    Vector2 p = root.InverseTransformPoint(corners[c]);
+                    min = Vector2.Min(min, p); max = Vector2.Max(max, p);
+                }
+            }
+            min -= Vector2.one * CoachPad; max += Vector2.one * CoachPad;
+            var r = root.rect;
+            // 구멍 둘레 네 조각 + 구멍 — 어디를 눌러도 닫힌다(구멍 안 강화 단추는 안내를 닫은 뒤에 누른다)
+            CoachPiece(rt, r.xMin, max.y, r.xMax, r.yMax, true);
+            CoachPiece(rt, r.xMin, r.yMin, r.xMax, min.y, true);
+            CoachPiece(rt, r.xMin, min.y, min.x, max.y, true);
+            CoachPiece(rt, max.x, min.y, r.xMax, max.y, true);
+            CoachPiece(rt, min.x, min.y, max.x, max.y, false);
+
+            var label = new GameObject("Label", typeof(RectTransform)).GetComponent<RectTransform>();
+            label.SetParent(rt, false);
+            label.anchorMin = label.anchorMax = new Vector2(0.5f, 0.5f);
+            label.sizeDelta = new Vector2(640f, 110f);
+            bool above = max.y + 140f < r.yMax;
+            label.anchoredPosition = new Vector2((r.xMin + r.xMax) * 0.5f, above ? max.y + 75f : min.y - 75f);
+            var tmp = label.gameObject.AddComponent<TextMeshProUGUI>();
+            if (_ui.Get<TMP_Text>("GhoLevel") is TMP_Text like) { tmp.font = like.font; tmp.fontSharedMaterial = like.fontSharedMaterial; }
+            tmp.text = Localize.Get("ui.tut.coach.ghost_stats");
+            tmp.fontSize = 34f;
+            tmp.enableAutoSizing = true;
+            tmp.fontSizeMax = 34f;
+            tmp.fontSizeMin = 18f;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+            tmp.raycastTarget = false;
+        }
+
+        private void CoachPiece(RectTransform parent, float x0, float y0, float x1, float y1, bool dark)
+        {
+            var piece = new GameObject(dark ? "Dark" : "Hole", typeof(RectTransform)).GetComponent<RectTransform>();
+            piece.SetParent(parent, false);
+            piece.anchorMin = piece.anchorMax = new Vector2(0.5f, 0.5f);
+            piece.anchoredPosition = new Vector2((x0 + x1) * 0.5f, (y0 + y1) * 0.5f);
+            piece.sizeDelta = new Vector2(Mathf.Max(0f, x1 - x0), Mathf.Max(0f, y1 - y0));
+            piece.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, dark ? CoachDim : 0f);
+            piece.gameObject.AddComponent<Button>().onClick.AddListener(CloseStatCoach);
+        }
+
+        private void CloseStatCoach()
+        {
+            if (Time.unscaledTime - _coachSince < 0.4f) return;   // 연 손가락이 바로 닫지 않게
+            if (_coach != null) Destroy(_coach);
+            _coach = null;
+        }
+
+        private void OnDisable()
+        {
+            if (_coach != null) Destroy(_coach);
+            _coach = null;
+        }
+
         private void TextIn(Transform root, string node, string value)
         {
             if (_ui.Find(root, node)?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI t) t.text = value;

@@ -73,7 +73,8 @@ namespace Game.Module.Lobby
         private string _tab = "Battle";
 
         private int _chapter = 1;
-        private RunStartMode _mode = RunStartMode.Random;
+        // 처음 고른 칸은 유령 — 멋모르고 출전을 눌러도 유령으로 시작하게(PD 2026-10-30)
+        private RunStartMode _mode = RunStartMode.Ghost;
         private string _host;
 
         private void Awake()
@@ -163,8 +164,26 @@ namespace Game.Module.Lobby
             if (_player == null || (_unlockReveal != null && _unlockReveal.IsOpen)) return;
             if (_revealPage != null && _revealPage.IsOpen) return;
             if (UnlockRevealWaits()) return;
-            if (!_player.TryTakeNewUnlock(out var key)) return;
-            ShowUnlock(key);
+            if (_player.TryTakeNewUnlock(out var key)) { ShowUnlock(key); return; }
+            TryGhostStatCoach();
+        }
+
+        // 1챕터를 처음 깨고 오면 「골드를 얻었으니 성장하러 가 보자」를 묻고, 가 보면 유령 능력치 칸을 짚는다 —
+        //   어디서 올리는지 모른다 · 다짜고짜 끌고 가지는 않는다(PD 2026-10-30).
+        //   해금 연출 · 보상 알림 · 설명이 다 끝난 뒤, 로비에 올 때마다 한 번만 살핀다
+        private bool _ghostCoachTried;
+
+        private void TryGhostStatCoach()
+        {
+            if (_ghostCoachTried) return;
+            _ghostCoachTried = true;
+            if (_ghostPage == null || RbGhostPage.StatCoachSeen || _player.ClearedChapter < 1) return;
+            RbGhostPage.MarkStatCoachSeen();
+            SystemPopup.Show(Localize.Get("ui.tut.lobby.go_ghost_growth"), () =>
+            {
+                OpenRail("Ghost");
+                _ghostPage.ShowStatCoach();
+            }, Localize.Get("ui.tut.lobby.go_ghost_growth.go"), Localize.Get("ui.tut.lobby.go_ghost_growth.later"));
         }
 
         // 조각을 준 그 일(소환 · 상자 · 보상 알림 · 성급 결과 · 설명)이 다 끝난 뒤에 해금을 보여 준다.

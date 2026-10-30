@@ -1109,7 +1109,10 @@ namespace Game.User
             if (exp > 0) AddUserExp(exp);
 
             // 격파 기록은 **올라가기만** 한다 — 1챕터를 다시 깨도 3챕터 기록이 안 내려간다.
+            bool firstClear = chapter > _data.clearedChapter;
             _data.clearedChapter = Mathf.Clamp(Mathf.Max(_data.clearedChapter, chapter), 0, ChapterCount);
+            // 처음 깬 챕터면 로비가 새로 열린 챕터를 고른 채 열린다 — 결과창 「로비」로 와도 1챕터에 머물렀다(PD 2026-10-30)
+            if (firstClear) _selectedChapter = 0;
             SetProgress(chapter, _data.reachedStage);   // 해금 재평가 + ProgressChangedEvent
             await SaveAsync();
         }
