@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -58,6 +59,31 @@ namespace Game.Module.InGame
             for (int i = 0; i < _subs.Count; i++)
                 if (_subs[i].U != null && _subs[i].U.IsAlive) MarkBuffed(_subs[i].U, 1.2f);
             PlayFx("soulripple", me.Position, Meters(1.6f), loop: false);
+
+            // 걸려 있는 동안 버프 받은 몸마다 발밑 보랏빛 문양이 따라다닌다 — 혼불 몇 알로는 걸렸는지 안 보였다(10-30 녹화)
+            StopInfuseRunes();
+            if (_host != null) AddInfuseRune(_host, 1.2f);
+            for (int i = 0; i < _subs.Count; i++)
+                if (_subs[i].U != null && _subs[i].U.IsAlive) AddInfuseRune(_subs[i].U, 0.9f);
+        }
+
+        private readonly List<Unit> _infuseRuneOwners = new();
+        private readonly List<Impact> _infuseRunes = new();
+
+        private void AddInfuseRune(Unit u, float meters)
+        {
+            var fx = PlayFloorFx("mdrune", u.Position, Meters(meters), loop: true);
+            if (fx == null) return;
+            fx.SetTint(MediumBuffColor);
+            _infuseRuneOwners.Add(u);
+            _infuseRunes.Add(fx);
+        }
+
+        private void StopInfuseRunes()
+        {
+            for (int i = 0; i < _infuseRunes.Count; i++) _infuseRunes[i]?.Stop();
+            _infuseRunes.Clear();
+            _infuseRuneOwners.Clear();
         }
 
         /// <summary>버프가 걸린 몸 발밑에 영매 문양 · 위로 혼불.</summary>
@@ -104,6 +130,13 @@ namespace Game.Module.InGame
             {
                 _infuseLeft -= dt;
                 _infuseMoteClock -= dt;
+                for (int i = _infuseRunes.Count - 1; i >= 0; i--)
+                {
+                    var o = _infuseRuneOwners[i];
+                    if (o == null || !o.IsAlive) { _infuseRunes[i]?.Stop(); _infuseRunes.RemoveAt(i); _infuseRuneOwners.RemoveAt(i); continue; }
+                    _infuseRunes[i]?.MoveTo(o.Position);
+                }
+                if (_infuseLeft <= 0f) StopInfuseRunes();
                 if (_infuseMoteClock <= 0f && _infuseLeft > 0f)
                 {
                     _infuseMoteClock = InfuseMoteEvery;
@@ -124,7 +157,7 @@ namespace Game.Module.InGame
         }
 
         private void MotesOver(Unit u)
-            => _pfx?.Spray(ParticleFxKind.GhostMote, u.Position + new Vector2(0f, 70f), Vector2.up, 25f, 2, 30f, 70f,
+            => _pfx?.Spray(ParticleFxKind.GhostMote, u.Position + new Vector2(0f, 70f), Vector2.up, 25f, 4, 30f, 70f,
                            new Vector2(8f, 8f), 0.7f, MediumBuffColor, spread: 20f);
 
         // ── 계산 자리에서 부르는 배수 ────────────────────────
