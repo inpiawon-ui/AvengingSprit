@@ -256,6 +256,12 @@ namespace Game.Module.InGame
         }
 
         /// <summary>돌고 있는 표시를 몸을 따라 옮긴다.</summary>
+        /// <summary>그림을 돌린다(도). Play 가 0 으로 되돌리므로 Play 뒤에 부른다.</summary>
+        public void SetAngle(float degrees)
+        {
+            if (IsActive) _rect.localEulerAngles = new Vector3(0f, 0f, degrees);
+        }
+
         public void MoveTo(Vector2 at)
         {
             if (IsActive) _rect.anchoredPosition = at;

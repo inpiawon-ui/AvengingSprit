@@ -110,6 +110,11 @@ namespace Game.Module.InGame
         }
 
         private const int MissileFocusShots = 8;
+        // 시안 mock1030_skill/mock_missile_free1(PD 2026-10-30 1번) — 주황 불꼬리 미사일 · 빨간 조준 · 큰 폭발
+        private const float FocusMissileSize = 112f;
+        private const float FocusBlastSize = 155f;
+        private const float FocusSpeedMul = 0.6f;     // 궤적이 보이게 느리게
+        private const float FocusRiseSeconds = 0.3f;  // 바깥으로 곧게 솟는 시간 — 그 뒤 표적으로 꺾인다
 
         private void MissileFocus(Unit me)
         {
@@ -126,7 +131,9 @@ namespace Game.Module.InGame
                 {
                     if (target == null || !target.IsAlive) return;
                     SrMissile(me, from, from + (from - me.Position).normalized * Meters(3f), target,
-                              UltDamage(me, 2.6f), Meters(1.6f), lockMark: first);
+                              UltDamage(me, 2.6f), Meters(1.6f), lockMark: first,
+                              kind: "mslfocus", size: FocusMissileSize, lockFx: "msllock", boom: "mslblast", boomSize: FocusBlastSize,
+                              speedMul: FocusSpeedMul, homingDelay: FocusRiseSeconds, onlyTarget: true);
                     PlayFx("missile_trail", from, 32f, loop: false);
                 });
             }

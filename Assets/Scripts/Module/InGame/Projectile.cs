@@ -40,6 +40,9 @@ namespace Game.Module.InGame
         public bool IsBasic { get; set; }
         public int Damage => _damage;
         public Unit Target => _target;
+
+        /// <summary>표적에만 터진다 — 가는 길의 다른 적은 지나친다(집중 포격). 표적이 죽으면 보통 탄처럼. Fire 가 끈다.</summary>
+        public bool OnlyTarget { get; set; }
         public Vector2 Position => _rect.anchoredPosition;
 
         /// <summary>날아가는 방향(단위). 피격 이펙트가 「어느 쪽에서 맞았나」를 읽는다.</summary>
@@ -292,6 +295,12 @@ namespace Game.Module.InGame
             gameObject.SetActive(false);
         }
 
+        /// <summary>그림 비율을 지킨다 — 가로로 긴 탄(집중 포격 미사일 112×38)이 정사각 칸에 눌리지 않게. Fire 뒤에 부른다.</summary>
+        public void KeepAspect()
+        {
+            if (_image != null) _image.preserveAspect = true;
+        }
+
         public void Fire(Vector2 from, Vector2 to, float speed, int damage,
                          bool fromPlayer, Unit target, float size, Color color, float life,
                          bool pierce = false, int slowPercent = 0, int lifestealPercent = 0,
@@ -317,6 +326,8 @@ namespace Game.Module.InGame
             _homing = 0f;          // 유도도 마찬가지다 — 쏠 때마다 다시 정한다
             float born = size * SpawnStartScale;
             _rect.sizeDelta = new Vector2(born, born);
+            if (_image != null) _image.preserveAspect = false;   // 풀에서 온 탄이 앞 탄의 비율 유지를 물려받지 않게(KeepAspect)
+            OnlyTarget = false;
             var d = to - from;
             _dir = d.sqrMagnitude < 0.0001f ? Vector2.up : d.normalized;
             if (Mathf.Abs(angleOffsetDeg) > 0.01f)

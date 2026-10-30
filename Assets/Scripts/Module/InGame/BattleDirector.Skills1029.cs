@@ -54,6 +54,11 @@ namespace Game.Module.InGame
         private const int SuppressSpecSlowPercent = 50;      // 각성 옵션
         private const float SuppressSlowSeconds = 1f;
         private const int SuppressSlowEvery = 5;             // 다섯 발(0.4초)마다 부채꼴 안을 다시 늦춘다
+        private const int SuppressDashPerShot = 4;           // 한 발마다 총알 조각 넷 — 시안처럼 기둥이 되게(둘은 성겼다, 10-30 녹화)
+        private const float SuppressLineWidthMeters = 0.5f;
+        private const float SuppressFlareSize = 140f;        // 총구 위 화염(49×99 그림) 긴 변 — 시안 크기에 맞춰 키움
+        private const float SuppressFlareLift = 40f;
+        private const float SuppressSwirlSize = 129f;        // 둔화 소용돌이(129×57)
         private const float SuppressTableBase = 1f;          // 표 축(예전 방벽 쉴드 100%)
 
         // 코만도(기관총) · 필살기 탄막 요새 — 3초 제자리 고정 · 받는 피해 −70% · 사방 연사
@@ -262,7 +267,6 @@ namespace Game.Module.InGame
             int steps = Mathf.RoundToInt(SuppressSeconds / SuppressGap);
             int dmg = SkillDamage(me, SuppressShotMul * GrowRatio(SuppressTableBase));
             int slow = SpecOpen ? SuppressSpecSlowPercent : SuppressSlowPercent;
-            float half = SuppressConeDeg * 0.5f;
             bool iy = InyeonOn(me);   // 인연 「엄호 화망」 — 맞는 적 발밑에 수류탄
             int iyGrenade = iy ? SkillDamage(me, IyCoverGrenadeMul) : 0;
             for (int s = 0; s < steps; s++)
@@ -277,12 +281,27 @@ namespace Game.Module.InGame
                     aim = aim.sqrMagnitude > 0.0001f ? aim.normalized : Vector2.right;
                     me.SetFacing(aim);
                     me.PlayAttack();
-                    var shot = Rotate(aim, Random.Range(-half, half));
-                    FireFan(me, me.Position + shot * Meters(SuppressRangeMeters), 1, 0f, dmg, fromPlayer: true);
-                    PlayFx("muzzle", me.MuzzlePosition, 56f, loop: false);
+                    // 시안 mock1030_skill/mock_suppress_free2(PD 2026-10-30 2번) — 총구 앞으로 **곧게** 몰아치는 탄 줄기.
+                    //   예전엔 일반 탄 한 발을 부채꼴 안 아무 데로 흩뿌려 화면에서 안 보였다. 필살기(다섯 줄 부채꼴)와 달리 한 줄
+                    var muzzle = me.MuzzlePosition;
+                    float range = Meters(SuppressRangeMeters);
+                    for (int k = 0; k < SuppressDashPerShot; k++)
+                        SpawnFortressDash(muzzle + aim * (k * FortressDashGap), aim, range - k * FortressDashGap);
+                    PlayAimedFx("supflare", muzzle + aim * SuppressFlareLift, aim, SuppressFlareSize);
+                    // 한 번에 한 적 — 줄 위에서 가장 가까운 적(예전 탄 한 발과 같은 세기)
+                    var hitE = NearestInPath(muzzle, aim, range, Meters(SuppressLineWidthMeters));
+                    if (hitE != null)
+                    {
+                        HitEnemyWith(hitE, dmg, me.Profile);
+                        (PlayFx("mghit", hitE.Position, 72f, loop: false) ?? PlayFx("hit", hitE.Position, 56f, loop: false))?.SetFrameSeconds(0.04f);
+                    }
                     if (!slowTick) return;
                     var cone = EnemiesInCone(me.Position, aim, SuppressConeDeg, Meters(SuppressRangeMeters));
-                    for (int i = 0; i < cone.Count; i++) cone[i].ApplySlow(slow, SuppressSlowSeconds);
+                    for (int i = 0; i < cone.Count; i++)
+                    {
+                        cone[i].ApplySlow(slow, SuppressSlowSeconds);
+                        MarkSuppressed(cone[i]);   // 맞은 적 발밑 회색 소용돌이 — 「느려졌다」가 보이게
+                    }
                     if (iy && cone.Count > 0)
                         ThrowSkillGrenade(me, cone[Random.Range(0, cone.Count)].Position, iyGrenade, Meters(IyCoverGrenadeMeters));
                 });
@@ -323,6 +342,7 @@ namespace Game.Module.InGame
         private void TickFortress(float dt)
         {
             TickFortressDashes(dt);
+            TickSuppressSwirls(dt);   // 제압 사격 둔화 소용돌이(BattleDirector.SuppressFx)
             if (_fortressSeconds <= 0f) return;
             var me = _host;
             if (me == null || !me.IsAlive || me.Key != "commando_mg") { EndFortress(); return; }

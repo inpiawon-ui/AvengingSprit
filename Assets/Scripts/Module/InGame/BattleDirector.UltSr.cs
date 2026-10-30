@@ -247,22 +247,35 @@ namespace Game.Module.InGame
 
         private readonly List<SrMissileTrack> _srMissiles = new();
 
-        private void SrMissile(Unit me, Vector2 from, Vector2 at, Unit target, int damage, float radius, bool lockMark)
+        /// <param name="kind">탄 그림(shot_{kind}_n) — 집중 포격은 전용 「mslfocus」(PD 2026-10-30 시안 1번)</param>
+        /// <param name="lockFx">표적 조준 표시 그림 · <paramref name="boom"/> 맞은 자리 폭발 그림(없으면 화염구)</param>
+        private void SrMissile(Unit me, Vector2 from, Vector2 at, Unit target, int damage, float radius, bool lockMark,
+                               string kind = "missile", float size = 0f, string lockFx = "cmlock", string boom = null, float boomSize = 0f,
+                               float speedMul = 1f, float homingDelay = 0f, bool onlyTarget = false)
         {
             var shot = RentShot();
             if (shot == null) return;
-            shot.SetSprite(ShotFrames("missile"), "missile", LoopsFrames("missile"));
-            shot.Fire(from, at, _config.ShotSpeedPlayer, damage, true, target,
-                      _config.ShotSize, ShotPlayerColor, _config.ShotLifeSeconds);
+            var frames = ShotFrames(kind);
+            if (frames == null || frames.Length == 0) { kind = "missile"; frames = ShotFrames(kind); }
+            shot.SetSprite(frames, kind, LoopsFrames(kind));
+            shot.Fire(from, at, _config.ShotSpeedPlayer * speedMul, damage, true, target,
+                      size > 0f ? size : _config.ShotSize, ShotPlayerColor, _config.ShotLifeSeconds / Mathf.Max(0.3f, speedMul));
+            if (kind != "missile") shot.KeepAspect();
+            shot.OnlyTarget = onlyTarget && target != null;
             shot.SetBlastRadius(radius);
-            if (target != null) shot.SetHoming(MissileFanHoming);
+            if (target != null)
+            {
+                // 처음 잠깐은 곧게 솟아야 「휘어 날아가 꽂힌다」가 보인다 — 표적이 코앞이면 쏘자마자 꺾여 궤적이 없었다(10-30 녹화)
+                if (homingDelay <= 0f) shot.SetHoming(MissileFanHoming);
+                else UltAfter(homingDelay, () => { if (shot.IsActive) shot.SetHoming(MissileFanHoming); });
+            }
             Impact mark = null;
             if (lockMark && target != null)
             {
-                mark = TakeLoopFx("cmlock", target.Position, SsrBody * 0.9f);
+                mark = TakeLoopFx(lockFx, target.Position, SsrBody * 0.9f) ?? TakeLoopFx("cmlock", target.Position, SsrBody * 0.9f);
                 mark?.SetFrameSeconds(0.1f);
             }
-            _srMissiles.Add(new SrMissileTrack { Shot = shot, Target = target, Lock = mark, Last = from, Prev = from });
+            _srMissiles.Add(new SrMissileTrack { Shot = shot, Target = target, Lock = mark, Last = from, Prev = from, Boom = boom, BoomSize = boomSize });
         }
 
         private void TickSrMissiles(float dt)

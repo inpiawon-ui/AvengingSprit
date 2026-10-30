@@ -7622,7 +7622,8 @@ namespace Game.Module.InGame
                     if (!p.Pierce) { p.Despawn(); continue; }
                 }
 
-                if (BlockedByCover(p.Position, p.FromPlayer, p.IsLob))
+                // 집중 포격 미사일은 머리 위로 휘어 넘어간다 — 엄폐물에 걸리지 않는다
+                if (!p.OnlyTarget && BlockedByCover(p.Position, p.FromPlayer, p.IsLob))
                 {
                     // 도탄이 남아 있으면 기둥에서도 튕긴다. 정본 "도탄 벽" 지형지물이
                     // 이 경로를 쓴다 — 기둥이 막기만 하는 것이 아니라 되돌려 준다.
@@ -7639,10 +7640,22 @@ namespace Game.Module.InGame
 
                 if (p.FromPlayer)
                 {
-                    var hit = HitEnemy(p.Position, p);
-                    // 한 프레임에 맞힘 반경보다 많이 움직였으면 지나온 중간 자리도 본다(내 탄 속도 2배 — PD 2026-10-28)
-                    if (hit == null && (p.Position - before).sqrMagnitude > _config.ShotHitRadius * _config.ShotHitRadius)
-                        hit = HitEnemy((before + p.Position) * 0.5f, p);
+                    Unit hit;
+                    if (p.OnlyTarget && p.Target != null && p.Target.IsAlive)
+                    {
+                        // 집중 포격 — 표적에 닿을 때만(가는 길의 다른 적은 지나친다, PD 2026-10-30 시안 1번)
+                        float tr = p.Target.BodyRadius + _config.ShotHitRadius;
+                        var mid = (before + p.Position) * 0.5f;
+                        hit = (p.Position - p.Target.Position).sqrMagnitude <= tr * tr
+                              || (mid - p.Target.Position).sqrMagnitude <= tr * tr ? p.Target : null;
+                    }
+                    else
+                    {
+                        hit = HitEnemy(p.Position, p);
+                        // 한 프레임에 맞힘 반경보다 많이 움직였으면 지나온 중간 자리도 본다(내 탄 속도 2배 — PD 2026-10-28)
+                        if (hit == null && (p.Position - before).sqrMagnitude > _config.ShotHitRadius * _config.ShotHitRadius)
+                            hit = HitEnemy((before + p.Position) * 0.5f, p);
+                    }
                     if (hit == null) continue;
                     // 터지는 탄은 **닿은 자리에서 터진다.** 반경 안이 다 맞는다.
                     if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }
