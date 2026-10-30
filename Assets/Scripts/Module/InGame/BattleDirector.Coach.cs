@@ -53,6 +53,7 @@ namespace Game.Module.InGame
             if (column == null || !column.gameObject.activeInHierarchy || !_running) return;
             BuildCoach(null, Tx("ui.tut.coach.syn_hud"));
             if (_coachRoot == null) return;
+            CoachMark("synhud");
             _coachHudTarget = column;
             _coachHudSince = Time.unscaledTime;
             // 막 네 조각 + 구멍 자리 어디를 눌러도 닫힌다(0.4초 뒤부터 — 설명을 닫은 손가락이 바로 닫지 않게)
@@ -410,8 +411,8 @@ namespace Game.Module.InGame
             _coachSubsSeen = n;
             if (!grew || Ui == null) return;
             if (n == 1) Ui.GuideLater("g.party", "party");
-            // 설명을 닫으면 왼쪽 위 무리 · 인연 칸을 짚는다 — 그림만으론 「저 칸이 뭐지」를 모른다(PD 2026-10-30)
-            else if (n == 2) Ui.GuideLaterThen("g.synergy", CoachSynHud, "synergy");
+            // 왼쪽 위 무리 · 인연 칸을 짚으며 둘을 한 번에 설명한다 — 그림 설명 뒤에 또 짚으니 두 번이라 번거롭다(PD 2026-10-30)
+            else if (n == 2 && !CoachSeen("synhud")) Ui.WhenClearThen(CoachSynHud);
         }
     }
 }

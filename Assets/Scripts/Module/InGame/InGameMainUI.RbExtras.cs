@@ -100,11 +100,16 @@ namespace Game.Module.InGame
         /// <summary>창이 비면 처음 한 번 그림 설명 — 전투(따라 하기 · 파티)가 부른다.</summary>
         public void GuideLater(string id, params string[] topics) => ShowGuideLater(id, 0.4f, topics);
 
-        /// <summary>GuideLater 와 같고, 설명을 닫으면 then 을 부른다.</summary>
-        public void GuideLaterThen(string id, System.Action then, params string[] topics)
+        /// <summary>그림 설명 없이 — 겹치는 창이 다 닫히면 then 을 부른다(전투의 칸 짚기 안내).</summary>
+        public void WhenClearThen(System.Action then) => WhenClearAsync(then).Forget();   // fire-and-forget: 창이 비면 한 번 부른다
+
+        private async UniTaskVoid WhenClearAsync(System.Action then)
         {
-            if (_rbGuide == null || RbGuide.HasSeen(id)) return;
-            ShowGuideLaterAsync(id, 0.4f, topics, then).Forget();   // fire-and-forget: 정해진 시간 뒤 · 창이 비면 한 번 띄운다
+            var token = this.GetCancellationTokenOnDestroy();
+            if (await UniTask.Delay(400, DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
+            while (!_finished && AnyWindowOpen())
+                if (await UniTask.Delay(200, DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
+            if (!_finished) then?.Invoke();
         }
 
         /// <summary>그 창을 열기 전에 처음 보는 그림 설명을 먼저 — 띄웠으면 true(닫으면 then).</summary>
