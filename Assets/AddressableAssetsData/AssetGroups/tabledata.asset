@@ -21,14 +21,68 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1aaea208d00f40044b575af173a90ea0
+    m_Address: TableData/RoomTable_ch5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 25f722566f25b4f4890b302e70248a21
+    m_Address: TableData/RoomTable_ch16
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c9e3b611fa689b4ea4b34d346a2d3e1
+    m_Address: TableData/RoomTable_ch4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 30827235e278c9942a23b381ef6ee0c4
     m_Address: TableData/BuffTable
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bcf7239ba6f9824ca8082dbd74cba31
+    m_Address: TableData/RoomTable_ch19
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 445afdfc168070841b85206d4641de27
+    m_Address: TableData/RoomTable_ch2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48354634822d9b541aba407c0d6f476a
+    m_Address: TableData/RoomTable_ch8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 49828203da53a9b489520d704cdd06b7
     m_Address: TableData/HostTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ff159a821998b14f8da319495635141
+    m_Address: TableData/RoomTable_ch7
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 58762ff7a3fb86c4baa4f47c04b3dd26
+    m_Address: TableData/RoomTable_ch13
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65894f3d186b0424681a8b448cdee496
+    m_Address: TableData/RoomTable_ch10
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
@@ -41,6 +95,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6ccd5484d9f3d38449c5fd6e516d34b7
     m_Address: TableData/ChestTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 706998e0d5c25f74ca580dd13b272b24
+    m_Address: TableData/RoomTable_bosses
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
@@ -63,14 +123,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88712787e46e8f948ac2e5aded875e4c
+    m_Address: TableData/RoomTable_ch1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8ab0c492a328e314f92d49e92a660041
     m_Address: TableData/GameConfig
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9197fd04ac9eea54193c853668c91f40
-    m_Address: TableData/RoomTable
+  - m_GUID: 99bc34479b0f25045b924f8ed3ca74bf
+    m_Address: TableData/RoomTable_ch6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9cb05f06210ce144688113cea2d5beec
+    m_Address: TableData/RoomTable_ch9
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7f0a2268d1138c4ca86b87fbb63268a
+    m_Address: TableData/RoomTable_ch17
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a820ab73393864f45af3da0d40784625
+    m_Address: TableData/RoomTable_ch20
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b24ddef1d318beb419e3ee8792f8112e
+    m_Address: TableData/RoomTable_ch18
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b71052425e5125a4399a774732e810e7
+    m_Address: TableData/RoomTable_ch12
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
@@ -87,8 +183,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4277b11028b18b419a79fc3aa01a76c
+    m_Address: TableData/RoomTable_ch15
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c64e017ececb1474bb0208dfecbbd377
     m_Address: TableData/BossTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d37bae5657012834cb638b946e27bcd3
+    m_Address: TableData/RoomTable_ch3
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
@@ -112,6 +220,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ee3bbf389d59fdc4a9a4937f6dafbb5b
     m_Address: TableData/ShopTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f101536f64719c64fa5e0aa5f9f1b5de
+    m_Address: TableData/RoomTable_ch14
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f209a9a9bd8c0c2488184d12dc24ed59
+    m_Address: TableData/RoomTable_ch11
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata

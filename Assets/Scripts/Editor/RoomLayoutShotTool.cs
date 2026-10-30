@@ -230,6 +230,7 @@ namespace Game.EditorTools
         private static void Preload(BattleDirector director)
         {
             var t = typeof(BattleDirector);
+            t.GetMethod("EditorMergeAllRooms", F)?.Invoke(director, null);   // 판은 이번 챕터 표만 읽는다 — 열 챕터를 건너뛰므로 통째로
             var rooms = t.GetField("_rooms", F).GetValue(director);
             var player = (Game.User.IPlayerDataService)t.GetField("_player", F).GetValue(director);
             if (rooms == null || player == null) return;

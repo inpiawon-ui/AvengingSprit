@@ -24,6 +24,40 @@ namespace Game.Module.InGame
         public string ContractVersion => _contractVersion;
         public IReadOnlyList<RoomEntry> Rooms => _rooms;
 
+        // ─────────────────────────────────────────
+        // 챕터별 표(PD 2026-10-30 「최적화는 당연히 지금」)
+        //   통째 표(방 600 · 4.2MB)를 판마다 읽으면 첫 진입에 GC 36MB · 0.22초 멈칫이었다 — 챕터 100개면 10배.
+        //   빌드에는 챕터마다 한 장(`RoomTable_ch{n}`)과 보스 방 모음(`RoomTable_bosses`)만 들어가고,
+        //   판은 이번 챕터 것만 읽는다. 통째 표는 편집용 원본으로 남는다(임포터 · 맵 툴이 쓴다, 주소 없음).
+        //   나누기: `Tools/Game/방 표 챕터별 나누기` — 원본이 바뀌면 저절로, 빌드 직전에도 한 번.
+        // ─────────────────────────────────────────
+
+        public static string ChapterAddress(int chapter) => $"TableData/RoomTable_ch{chapter}";
+        public const string BossesAddress = "TableData/RoomTable_bosses";
+
+        /// <summary>`ROOM_CH12_003` → 12. 못 읽으면 0.</summary>
+        public static int ChapterOfRoomId(string roomId)
+        {
+            if (string.IsNullOrEmpty(roomId)) return 0;
+            int at = roomId.IndexOf("CH", StringComparison.Ordinal);
+            if (at < 0) return 0;
+            int n = 0, i = at + 2;
+            for (; i < roomId.Length && char.IsDigit(roomId[i]); i++) n = n * 10 + (roomId[i] - '0');
+            return i > at + 2 ? n : 0;
+        }
+
+        /// <summary>방들을 담는다(나누기 도구 · 판 안에서 여러 장을 합칠 때). 같은 방은 한 번만.</summary>
+        public void AddRooms(IReadOnlyList<RoomEntry> rooms, string contractVersion = null)
+        {
+            if (rooms == null || rooms.Count == 0) return;
+            if (string.IsNullOrEmpty(_contractVersion)) _contractVersion = contractVersion;
+            var list = new List<RoomEntry>(_rooms.Length + rooms.Count);
+            list.AddRange(_rooms);
+            for (int i = 0; i < rooms.Count; i++)
+                if (rooms[i] != null && Get(rooms[i].RoomId) == null) list.Add(rooms[i]);
+            _rooms = list.ToArray();
+        }
+
         public RoomEntry Get(string roomId)
         {
             for (int i = 0; i < _rooms.Length; i++)

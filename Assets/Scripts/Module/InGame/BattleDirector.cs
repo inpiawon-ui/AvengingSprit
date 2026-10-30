@@ -390,8 +390,8 @@ namespace Game.Module.InGame
             // ⚠ 여섯 표를 **한꺼번에** 띄운다. 순서대로 await 하면 로드 시간이 그대로 더해진다 —
             //   서로 기다릴 이유가 없는 것들이다(`GameConfig` 만 앞에서 먼저 확인한다).
             await UniTask.WhenAll(
-                LoadTableAsync<RoomTable>(res, "TableData/RoomTable",
-                    t => _rooms = t, "RoomTable 없음 — 절차적 생성으로 간다", warnOnly: true),
+                // 방 표는 이번 챕터 것만(BattleDirector.RoomLoad) — 모드 판은 아래에서 모드 표를 읽은 뒤에
+                IsModeRun ? UniTask.CompletedTask : LoadChapterRoomsAsync(res, StartChapter),
                 LoadTableAsync<BossTable>(res, "TableData/BossTable",
                     t => _bossTable = t, "BossTable 로드 실패"),
                 LoadTableAsync<BuffTable>(res, "TableData/BuffTable",
@@ -405,6 +405,7 @@ namespace Game.Module.InGame
             // 추가 모드(탑 · 밤) — 표를 읽고 층 · 요일을 정한다. 아래 캐릭터 목록이 그 몸들을 같이 올린다
             await LoadModeTableAsync(res);
             PrepareModeRun();
+            await LoadModeRoomsAsync(res);
             // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
             await LoadUnitAtlasesAsync(res, RunUnitKeys());
             // 위험 예고 그림도 미리 — 첫 예고가 뜰 때 받기 시작하면 그 예고만 끝이 하얗게 번쩍였다(PD 2026-10-08)
@@ -638,8 +639,11 @@ namespace Game.Module.InGame
         {
             if (room == null) return false;
             if (room.IsChapterEnd) return true;
-            var next = _rooms?.Get(room.Exits[0].NextRoomId);
-            return next != null && next.Chapter != room.Chapter;
+            // 방 표는 챕터별로 읽는다 — 다음 챕터 방은 표에 없으니 이름(ROOM_CH{n}_…)으로 챕터를 본다
+            string nextId = room.Exits[0].NextRoomId;
+            var next = _rooms?.Get(nextId);
+            int nextChapter = next != null ? next.Chapter : RoomTable.ChapterOfRoomId(nextId);
+            return nextChapter != 0 && nextChapter != room.Chapter;
         }
 
         /// <summary>
@@ -3176,6 +3180,10 @@ namespace Game.Module.InGame
             // 정본 방이 있으면 그것이 이긴다. 없으면 예전 절차적 생성으로 돌아간다 —
             // 34방을 한 번에 갈아 끼우지 않고 한 방씩 옮겨 붙이기 위해서다.
             _canonRoom = _rooms != null ? _rooms.Get(_canonRoomId) : null;
+#if UNITY_EDITOR
+            // 방 촬영 도구는 한 판 안에서 다른 챕터 방으로 건너뛴다 — 에디터에서만 원본 통째 표를 합친다
+            if (_canonRoom == null && !string.IsNullOrEmpty(_canonRoomId)) { EditorMergeAllRooms(); _canonRoom = _rooms != null ? _rooms.Get(_canonRoomId) : null; }
+#endif
             _roomKind = _canonRoom != null ? KindOfCanon(_canonRoom) : KindOf(index);
             // 테스트 — 방 1~6 을 통째로 보스방으로 돌린다.
             var testBoss = TestBossFor(index);

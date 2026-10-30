@@ -1,0 +1,1328 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29c4d3a029e93ce4d999bb97e0429729, type: 3}
+  m_Name: RoomTable_bosses
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.InGame.RoomTable
+  _contractVersion: rooms90-1.0
+  _rooms:
+  - _roomId: ROOM_CH1_030
+    _chapter: 1
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH2_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B05
+    _bossName: Robot Snakes
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 1650
+    _bossAtk: 36
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_robot_snakes
+    _eventPool: 
+    _gold: 60
+    _exp: 200
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH2_030
+    _chapter: 2
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH3_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B01
+    _bossName: Crusher
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 2731
+    _bossAtk: 38
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_crusher
+    _eventPool: 
+    _gold: 78
+    _exp: 270
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH3_030
+    _chapter: 3
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH4_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B04
+    _bossName: Python
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 3301
+    _bossAtk: 42
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_python
+    _eventPool: 
+    _gold: 102
+    _exp: 340
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH4_030
+    _chapter: 4
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH5_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B06
+    _bossName: Sludge
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 3942
+    _bossAtk: 46
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_sludge
+    _eventPool: 
+    _gold: 132
+    _exp: 410
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH5_030
+    _chapter: 5
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH6_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B02
+    _bossName: Guardian
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 4739
+    _bossAtk: 51
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_guardian
+    _eventPool: 
+    _gold: 168
+    _exp: 480
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH6_030
+    _chapter: 6
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH7_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B03
+    _bossName: Kingpin
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 6141
+    _bossAtk: 59
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_kingpin
+    _eventPool: 
+    _gold: 210
+    _exp: 550
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH7_030
+    _chapter: 7
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH8_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B04
+    _bossName: Python
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 7217
+    _bossAtk: 65
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_python
+    _eventPool: 
+    _gold: 258
+    _exp: 620
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH8_030
+    _chapter: 8
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH9_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B06
+    _bossName: Sludge
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 8599
+    _bossAtk: 72
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_sludge
+    _eventPool: 
+    _gold: 312
+    _exp: 690
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH9_030
+    _chapter: 9
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH10_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B02
+    _bossName: Guardian
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 11200
+    _bossAtk: 85
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_guardian
+    _eventPool: 
+    _gold: 372
+    _exp: 760
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH10_030
+    _chapter: 10
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH11_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B03
+    _bossName: Kingpin
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 13152
+    _bossAtk: 93
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_kingpin
+    _eventPool: 
+    _gold: 438
+    _exp: 830
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH11_030
+    _chapter: 11
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH12_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B05
+    _bossName: Robot Snakes
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 14455
+    _bossAtk: 95
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_robot_snakes
+    _eventPool: 
+    _gold: 477
+    _exp: 900
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH12_030
+    _chapter: 12
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH13_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B01
+    _bossName: Crusher
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 18939
+    _bossAtk: 106
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_crusher
+    _eventPool: 
+    _gold: 519
+    _exp: 970
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH13_030
+    _chapter: 13
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH14_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B04
+    _bossName: Python
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 21390
+    _bossAtk: 110
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_python
+    _eventPool: 
+    _gold: 565
+    _exp: 1040
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH14_030
+    _chapter: 14
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH15_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B06
+    _bossName: Sludge
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 23891
+    _bossAtk: 113
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_sludge
+    _eventPool: 
+    _gold: 615
+    _exp: 1110
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH15_030
+    _chapter: 15
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH16_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B02
+    _bossName: Guardian
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 26871
+    _bossAtk: 117
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_guardian
+    _eventPool: 
+    _gold: 670
+    _exp: 1180
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH16_030
+    _chapter: 16
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH17_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B03
+    _bossName: Kingpin
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 28331
+    _bossAtk: 117
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_kingpin
+    _eventPool: 
+    _gold: 729
+    _exp: 1250
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH17_030
+    _chapter: 17
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH18_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B05
+    _bossName: Robot Snakes
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 29905
+    _bossAtk: 118
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_robot_snakes
+    _eventPool: 
+    _gold: 794
+    _exp: 1320
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH18_030
+    _chapter: 18
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH19_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B01
+    _bossName: Crusher
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 31228
+    _bossAtk: 118
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_crusher
+    _eventPool: 
+    _gold: 865
+    _exp: 1390
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH19_030
+    _chapter: 19
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 15.4}
+      _nextRoomId: ROOM_CH20_001
+    _unlockRule: ROOM_CLEAR
+    _bossId: B04
+    _bossName: Python
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 32461
+    _bossAtk: 118
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_python
+    _eventPool: 
+    _gold: 941
+    _exp: 1460
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
+  - _roomId: ROOM_CH20_030
+    _chapter: 20
+    _type: BOSS
+    _route: MAIN
+    _intent: 
+    _isChapterStart: 0
+    _handEdited: 0
+    _width: 10
+    _height: 16
+    _cameraMode: VERTICAL_FOLLOW
+    _template: 
+    _entry: {x: 5, y: 0.8}
+    _exits: []
+    _unlockRule: ROOM_CLEAR
+    _bossId: B06
+    _bossName: Sludge
+    _bossAt: {x: 5, y: 11.52}
+    _bossHp: 33693
+    _bossAtk: 118
+    _bossMoveSpeed: 2.2
+    _bossPhaseGates:
+    - 1
+    - 0.6
+    - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: P1
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 2
+      _hpStart: 0.6
+      _pattern: P2
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: P3
+      _telegraphSeconds: 1.2
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: 
+    _bossMoves: []
+    _midBossKey: 
+    _devilAltar: 0
+    _tracks: []
+    _floor: roomfloor_sludge
+    _eventPool: 
+    _gold: 1025
+    _exp: 1530
+    _healPct: 0
+    _playerSpawn: {x: 5, y: 1.7}
+    _spawns: []
+    _objects: []
