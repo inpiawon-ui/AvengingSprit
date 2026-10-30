@@ -3666,6 +3666,8 @@ namespace Game.Module.InGame
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
             if (Game.Module.Common.UI.RbGuide.PausingOpen) return;   // 설명 창 — 시간 배율만으론 못 멈춘다(타격 멈칫이 1로 되돌림, 2026-10-30)
+            // 일시정지 · 밤 고르기도 같은 까닭으로 갱신 자체를 세운다 — 사망 선택 시계 · 타격 멈칫 복구가 창 뒤에서 돌지 않게(안정성 점검 10-30)
+            if (PausePanelOpen || NightPickOpen) return;
             if (TickCoach()) return;   // 따라 하는 튜토리얼 — 짚은 적을 누를 때까지 선다(BattleDirector.Coach)
             if (_partyHold) { TickPartyHold(); return; }   // 빙의 파티 선택창 — 잠깐 멈춘다
             if (!IsPresentationHeld && _shopHealPending) ApplyShopHeal();
@@ -3743,6 +3745,7 @@ namespace Game.Module.InGame
             TickCastPresentation(dt);
             TickStatusFx(dt);
             TickHostPassives(dt);
+            TickMediumBuffs(dt);   // 영매 혼 깃들이기 · 강신 의식
             TickSkillCharge(dt);   // 액티브 쿨 — 시간으로 찬다
             TickUltCooldown(dt);   // 필살기 쿨 — 쓰고 5분
             TickNewSkills(dt);
@@ -4236,7 +4239,7 @@ namespace Game.Module.InGame
             IsFiring = inRange;
             if (!inRange) { _host.CoolAttack(dt); return; }
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
-            if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul * PartyIntervalMul)) return;   // 빙의 파티 — 무기 시너지
+            if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul * PartyIntervalMul * MediumIntervalMul(_host))) return;   // 빙의 파티 — 무기 시너지
             PerformAttack(_host, target, true);
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
@@ -5233,7 +5236,8 @@ namespace Game.Module.InGame
                 if (shot == null) return;
                 shot.SetSprite(ShotSpriteOf(from), ShotKindOf(from),
                                LoopsFrames(ShotKindOf(from)));
-                if (!fromPlayer) { shot.SourceKey = from.Key; shot.Element = ElementOf(from); }
+                shot.SourceKey = from.Key;
+                if (!fromPlayer) shot.Element = ElementOf(from);
                 shot.Fire(from.Position, at, speed, damage,
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
@@ -6868,6 +6872,7 @@ namespace Game.Module.InGame
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * ScorchMul(victim)));
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * FocusMul(victim)));
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * CardDamageMul(victim)));
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * MediumDamageMul(p?.HostKey)));   // 영매 버프 — 때린 몸 기준
             // C004 갑옷 분쇄 — 원거리(`ApplyShotHit`)와 같은 규칙. 근접·액티브 스킬도
             // 플레이어 공격이므로 여기서 빠지면 근접 호스트만 이 카드를 못 쓴다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
@@ -6962,7 +6967,8 @@ namespace Game.Module.InGame
             shot.IsBasic = _basicAttackDepth > 0;
             var kind = ShotKindOf(attacker);
             shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
-            if (!fromPlayer) { shot.SourceKey = attacker.Key; shot.Element = ElementOf(attacker); }
+            shot.SourceKey = attacker.Key;   // 내 탄도 쏜 몸을 적는다 — 영매 버프가 몸마다 다르게 곱한다
+            if (!fromPlayer) shot.Element = ElementOf(attacker);
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -7740,6 +7746,7 @@ namespace Game.Module.InGame
             if (shot.FromPlayer) dmg = WithAffinity(victim, dmg, out weak, out dull);
             NoteBossDamage(victim, dmg);
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
+            if (shot.FromPlayer) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * MediumDamageMul(shot.SourceKey)));   // 영매 버프 — 쏜 몸 기준
             if (shot.FromPlayer) dmg = GuardedDamage(victim, dmg);   // 아르마딜로 정면 · 방패 발전기 보호막 (BattleDirector.Trash4)
             // C004 갑옷 분쇄 — 이번 타격은 **이미 벗겨진 만큼** 더 아프다.
             // 겹은 때린 다음에 쌓는다. 먼저 쌓으면 첫 타부터 보너스가 붙어
@@ -8543,7 +8550,8 @@ namespace Game.Module.InGame
             HostStats.CritPercent(_config, _host?.Profile)
             * UpgradeMul(_host?.Profile?.HostKey, HostStat.Crit)
             + (_player != null ? _player.StatBonusFlat(_host?.Profile?.HostKey, HostStat.Crit) : 0f)   // 유령 강화 치명타(%p, 2026-10-29)
-            + PartyCritAdd;   // 빙의 파티 — 갱단 시너지(%p)
+            + PartyCritAdd   // 빙의 파티 — 갱단 시너지(%p)
+            + MediumCritAdd;   // 영매 혼 깃들이기
 
         /// <summary>
         /// 유령 강화 배율(모든 몸, 2026-10-29 호스트 탭 강화는 없앴다). 저장이 없으면 1.

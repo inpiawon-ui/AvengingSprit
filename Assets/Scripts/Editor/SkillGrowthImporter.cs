@@ -39,7 +39,7 @@ namespace Game.Editor
             { "psv_leech",            (5f, 8f) },   // 피의 갈증 — 흡혈량
             { "psv_momentum",         (30f, 50f) },   // 급소 — 치명타 피해
             { "psv_commando_missile", (10f, 15f) },   // 표적 고정 — 겹마다 피해
-            { "psv_medium",           (30f, 45f) },   // 강령술 — 해골 확률
+            { "psv_medium",           (25f, 35f) },   // 영매의 인도 — 메인일 때 보조 스킬 간격 감소(10-30 버프 마법사)
             { "psv_white_wizard",     (15f, 25f) },   // 빛의 가호 — 쉴드량
             { "psv_spare_circuit",    (20f, 30f) },   // 예비 회로 — 받는 피해 감소
         };

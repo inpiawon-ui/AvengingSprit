@@ -84,9 +84,21 @@ namespace Game.Module.InGame
         /// <summary>지금 파티(메인 · 보조)로 시너지를 다시 센다. 매 프레임 `SyncPartyKeys` 뒤에 부른다.</summary>
         private void RecountSynergy()
         {
-            CountSynergy(Unit.PartyKeys, ref _syn, _synLines);
+            // 파티가 그대로면 다시 세지 않는다 — 줄 글자(Tf)를 매 프레임 새로 만들었다(규칙 10절 · 안정성 점검 10-30)
+            int stamp = PartyOn ? 1 : 0;
+            foreach (var k in Unit.PartyKeys) stamp = unchecked(stamp + k.GetHashCode() * 31 + 7);
+            stamp = unchecked(stamp * 397 + Unit.PartyKeys.Count);
+            if (stamp != _synStamp || !_synCounted)
+            {
+                _synStamp = stamp;
+                _synCounted = true;
+                CountSynergy(Unit.PartyKeys, ref _syn, _synLines);
+            }
             ApplySynergyHp();
         }
+
+        private int _synStamp;
+        private bool _synCounted;
 
         /// <summary>
         /// 태그 시너지를 센다 — 값과 줄만 만들고 몸에는 아무것도 걸지 않는다.
@@ -176,7 +188,7 @@ namespace Game.Module.InGame
 
         /// <summary>보조 스킬 간격 — 6초 × 마도 시너지 × 스킬 Lv(−8%/Lv).</summary>
         private float SubSkillCdOf(string key)
-            => PartyRule.SubSkillSeconds * (1f - _syn.SubCd) * Mathf.Max(0.5f, 1f - 0.08f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
+            => PartyRule.SubSkillSeconds * (1f - _syn.SubCd) * MediumSubCdMul * Mathf.Max(0.5f, 1f - 0.08f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
 
         /// <summary>카드 3장 중 일부를 파티 카드로 바꾼다(보조가 있을 때만, 한 번에 최대 2장).</summary>
         private void MixPartyCards(string[] keys)

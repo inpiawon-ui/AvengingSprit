@@ -296,6 +296,7 @@ namespace Game.Module.InGame
             _ui.SetActive("RbNightPick", true);
             if (_ui.Find("RbNightPick") is Transform t) t.SetAsLastSibling();
             Time.timeScale = 0f;   // 고르는 동안 무리가 다가오지 않게(고르면 되돌린다)
+            if (_battle != null) _battle.NightPickOpen = true;
             FillNightPick();
         }
 
@@ -332,6 +333,7 @@ namespace Game.Module.InGame
             if (_rbNightPick < 0) return;
             _ui.SetActive("RbNightPick", false);
             Time.timeScale = 1f;
+            if (_battle != null) _battle.NightPickOpen = false;
             _battle?.PickNightStart(_rbNightPick);
             _rbNightKeys = null;
         }

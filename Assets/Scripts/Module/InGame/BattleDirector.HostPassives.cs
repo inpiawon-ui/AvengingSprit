@@ -54,8 +54,6 @@ namespace Game.Module.InGame
         private const float DragonBloodAtkBonus = 0.30f;      // 드라군 용의 피 — 불바다 위 공격력
         private const float BloodThirstBonus = 0.05f;         // 흡혈귀 피의 갈증 — 주는 피해의 5% 흡혈
         private const float BloodThirstFlushSeconds = 0.5f;   // 모아서 한 번에 — 맞힐 때마다 「+1」이 수십 개 뜨지 않게
-        private const int MediumSkullPercent = 30;            // 영매 강령술
-        private const int MediumSummonCapBonus = 2;           // 소환물 최대 수 +2
         private const float LightWardShieldBonus = 0.15f;     // 화이트 위저드 빛의 가호 — 최대 체력 15% 쉴드
         private const int LightWardMinHits = 3;
         private const float DragonBoltRangeMeters = 3.5f;     // 청룡 — 튕겨 갈 거리
@@ -135,7 +133,8 @@ namespace Game.Module.InGame
         /// </summary>
         private float CritDamageBonus
             => (PassiveHostKey == "hopper" ? PassiveFrac(HopperCritDamageBonus) : 0f)
-             + (_player != null ? _player.StatBonusFlat(PassiveHostKey, Game.Character.HostStat.CritDamage) / 100f : 0f);
+             + (_player != null ? _player.StatBonusFlat(PassiveHostKey, Game.Character.HostStat.CritDamage) / 100f : 0f)
+             + MediumCritDamageAdd;   // 영매 강신 의식
 
         /// <summary>구루 — 걸어 다닐 때 장애물을 통과한다.</summary>
         private bool HostIgnoresObstacles => PassiveHostKey == "guru";
@@ -159,9 +158,6 @@ namespace Game.Module.InGame
         private float RunGunMul
             => PassiveHostKey == "hopper_smg" && MoveInput.sqrMagnitude > 0.0001f
                ? Mathf.Min(1f, PassiveFrac(RunGunPower)) : 1f;
-
-        /// <summary>영매 강령술 — 소환물을 이만큼 더 세운다(`SpawnSummon` 의 상한).</summary>
-        private int SummonCapBonus => PassiveHostKey == "medium" ? MediumSummonCapBonus : 0;
 
         /// <summary>코만도(기관총) 중장갑 — 늘 받는 피해를 줄인다(`WardReduce` 가 곱한다).</summary>
         private float HeavyArmorCut => PassiveHostKey == "commando_mg" ? PassiveFrac(HeavyArmorDamageCut) : 0f;
@@ -370,11 +366,6 @@ namespace Game.Module.InGame
                 // 사신 — 잡을 때마다 그 자리에서 해골이 일어선다(명세 — 확률 없음).
                 case "death":
                     SummonSkull(victim.Position);
-                    break;
-
-                // 영매 강령술 — 30% 로 해골(소환물 최대 수 +2 는 `SummonCapBonus`).
-                case "medium":
-                    if (Roll(PassivePct(MediumSkullPercent))) SummonSkull(victim.Position);
                     break;
             }
         }

@@ -212,6 +212,7 @@ namespace Game.Module.InGame
             _subPowCard = 0f;
             _syn = default;
             _synLines.Clear();
+            _synCounted = false;   // 다음 프레임에 다시 센다
             ClosePartyPopup();
             Unit.PartyActive = PartyOn;
         }
@@ -459,7 +460,7 @@ namespace Game.Module.InGame
                 if (target != null)
                 {
                     u.SetFacing(target.Position - u.Position);
-                    if (inRange && u.TickAttack(dt, PartySubIntervalMul))   // 무기 시너지 — 보조는 절반
+                    if (inRange && u.TickAttack(dt, PartySubIntervalMul * MediumIntervalMul(u)))   // 무기 시너지 — 보조는 절반
                     {
                         _summonStriking = true;
                         try { PerformAttack(u, target, true); }

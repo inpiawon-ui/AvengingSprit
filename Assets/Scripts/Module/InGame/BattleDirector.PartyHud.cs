@@ -97,6 +97,7 @@ namespace Game.Module.InGame
         private TMPro.TextMeshProUGUI _bubbleText;
         private Unit _bubbleFor;
         private string _bubbleSig;
+        private int _bubbleSigCount = -1;
         private const float BubbleLift = 96f;
 
         private void TickPossessBubble()
@@ -113,10 +114,12 @@ namespace Game.Module.InGame
             if (!_bubble.gameObject.activeSelf) _bubble.gameObject.SetActive(true);
             _bubble.anchoredPosition = target.Position + Vector2.up * BubbleLift;
 
-            string sig = target.Key + "|" + Unit.PartyKeys.Count + "|" + _inyeonKey;
-            if (target == _bubbleFor && sig == _bubbleSig) return;
+            // 비교용 문자열을 매 프레임 만들지 않는다(규칙 10절 · 안정성 점검 10-30)
+            int count = Unit.PartyKeys.Count;
+            if (target == _bubbleFor && count == _bubbleSigCount && _inyeonKey == _bubbleSig) return;
             _bubbleFor = target;
-            _bubbleSig = sig;
+            _bubbleSig = _inyeonKey;
+            _bubbleSigCount = count;
             string line = PartyHintFor(target.Key, out bool inyeon);
             bool on = line != null;
             // 시안 S1b — 밝은 말풍선은 무엇이 켜질 때만. 없으면 꼬리표 아래 회색 「시너지 없음」 한 줄(F_possess)

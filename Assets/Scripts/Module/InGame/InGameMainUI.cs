@@ -138,6 +138,8 @@ namespace Game.Module.InGame
 
         private void Awake()
         {
+            // 판은 늘 제 속도로 시작한다 — 앞 판의 창 하나가 0 을 남기고 나가도 여기서 끊는다(안정성 점검 10-30 L8)
+            Time.timeScale = 1f;
             _ui = new UIBinder(transform);
             Game.Module.Common.UI.SystemPopup.Preload();   // 공통 알림 그림을 미리 받는다 — 첫 알림이 색 상자로 뜨지 않게
             // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
@@ -1980,6 +1982,10 @@ namespace Game.Module.InGame
         /// <summary>인게임 뒤로가기 = 일시정지(포기 확인). 06_ui.md 3순위에 해당한다.</summary>
         public bool OnBackPressed()
         {
+            // 셋 고르기 · 따라 하기 중에는 무시한다 — 일시정지가 검은 막 밑에 열려 판이 영원히 선다(안정성 점검 10-30 H1)
+            if (_battle != null && _battle.TutorialHolding) return true;
+            // 열려 있으면 닫는다 — 예전엔 다시 열기만 했다
+            if (_reborn && GetComponentInChildren<RbPausePanel>(true) is RbPausePanel rb && rb.IsOpen) { rb.Close(); return true; }
             OnPause();
             return true;
         }

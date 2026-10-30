@@ -164,7 +164,7 @@ namespace Game.Module.InGame
                 case "thug":             ThugSpinFire(me);      break;   // 회전 난사
                 case "commando_grenade": CommandoStickyBomb(me); break;  // C4
                 case "baseball":         SluggerFullSwing(me);  break;   // 풀스윙 회오리
-                case "medium":           GiantWraith(me);       break;   // 거대 원혼(PD 2026-10-21) — 골렘은 액티브(미니 골렘)로 갔다
+                case "medium":           MediumRitual(me);      break;   // 강신 의식 — 광폭화 + 파티 35초(PD 2026-10-30)
                 case "gangster":         UltGangster(me);       break;   // 청부 처형
                 case "hopper":           UltHopper(me);         break;   // 킬 포인트
                 case "ninja_chain":      SrNinjaChain(me);      break;   // 사슬 돌격 연격(SR — BattleDirector.UltSr)

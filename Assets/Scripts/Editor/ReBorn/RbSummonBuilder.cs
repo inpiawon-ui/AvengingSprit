@@ -127,7 +127,7 @@ namespace Game.Editor.ReBorn
             Img(Local(Node(card, "SumCardRarity"), x0, y0, x1, y1, 6, 6, 62, 46), "Components/rb_rarity_r");
             var nw = Local(Node(card, "SumCardNew"), x0, y0, x1, y1, 110, 4, 186, 40);
             Img(nw, "Components/rb_badge_new");
-            Text(Stretch(Node(nw, "SumCardNewText")), "ui.rb.summon.new", "새 몸!", 24, Ink, TA.Center, heavy: true);
+            Text(Stretch(Node(nw, "SumCardNewText")), "ui.rb.summon.new", "NEW!", 24, Ink, TA.Center, heavy: true);
             Img(Local(Node(card, "SumCardFace"), x0, y0, x1, y1, 45, 60, 145, 160), "Icons/rb_icon_mode_ghost_96");
             Text(Local(Node(card, "SumCardName"), x0, y0, x1, y1, 6, 176, 184, 214), null, "갱스터", 30, White, TA.Center, heavy: true);
             Img(Local(Node(card, "SumCardShardIcon"), x0, y0, x1, y1, 22, 226, 52, 256), "Icons/rb_icon_shard_48");

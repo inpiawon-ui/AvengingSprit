@@ -16,8 +16,8 @@ namespace Game.Module.Common.UI
     /// </summary>
     public sealed class FpsOverlay : MonoBehaviour
     {
-        /// <summary>시험 기간에만 켠다. 출시 빌드 전에 false 로.</summary>
-        private static readonly bool s_enabled = true;
+        /// <summary>에디터 · 개발 빌드에서만 켠다 — 납품(출시) 빌드에는 안 뜬다(안정성 점검 10-30).</summary>
+        private static readonly bool s_enabled = Debug.isDebugBuild;
 
         private const float Window = 0.5f;
         private const int SortingOrder = 1000;   // SystemPopup(999) 보다 위 — 팝업이 떠도 숫자는 보인다

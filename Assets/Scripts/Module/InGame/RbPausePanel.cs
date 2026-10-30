@@ -49,8 +49,10 @@ namespace Game.Module.InGame
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
             _ui.SetActive("RbAbandon", false);
-            if (!_open) { _scaleBefore = Time.timeScale > 0f ? Time.timeScale : 1f; _open = true; }
+            // 0 이어도 그대로 기억한다 — 밤 고르기(0) 위에서 열었다 닫으면 고르기 창이 떠 있는 채 판이 돌았다
+            if (!_open) { _scaleBefore = Time.timeScale; _open = true; }
             Time.timeScale = 0f;
+            if (_main.Battle != null) _main.Battle.PausePanelOpen = true;
             Fill();
         }
 
@@ -143,7 +145,9 @@ namespace Game.Module.InGame
             img.enabled = s != null;
         }
 
-        private void Close()
+        public bool IsOpen => _open;
+
+        public void Close()
         {
             GameSound.Cue("ui.tap");
             Resume();
@@ -155,6 +159,7 @@ namespace Game.Module.InGame
             if (!_open) return;
             _open = false;
             Time.timeScale = _scaleBefore;
+            if (_main != null && _main.Battle != null) _main.Battle.PausePanelOpen = false;
         }
 
         private void GiveUp()

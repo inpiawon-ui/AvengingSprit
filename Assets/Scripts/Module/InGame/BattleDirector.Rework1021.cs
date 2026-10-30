@@ -10,7 +10,7 @@ namespace Game.Module.InGame
     ///   폭력배 액티브   — 1초 난사(가속 상태) → 원래 탄으로 「파파팍」 세 번 쏘고 끝
     ///   코만도(미사일)  — 액티브 = 여러 적에게 한 발씩 7발, 필살기 = 가장 센 적에게 8발 집중(예전엔 둘이 거꾸로였다)
     ///   청룡 필살기     — 번개 구슬 → 둘레 모든 적에게 낙뢰 세 번 + 가장 센 적에게 큰 낙뢰
-    ///   영매 액티브     — 해골 둘 → 따라다니며 싸우는 미니 골렘
+    ///   영매 액티브     — (10-30 버프 마법사로 바뀌어 BattleDirector.MediumBuff 로 옮김)
     ///   닌자 액티브     — 분신 → 몸놀림(회피 · 이동 속도 · 잔상)
     ///   로봇 필살기     — 포탑 군단 → 로봇 특공대(빛기둥으로 내려와 일제 사격 → 사라짐)
     /// </summary>
@@ -184,37 +184,6 @@ namespace Game.Module.InGame
             });
         }
 
-        // ═══════════════════════════════════════════════════════════
-        //  영매 — 미니 골렘: 따라다니며 같이 싸운다 (PD 「해골보다 미니 골렘을 데리고 다니면서」)
-        // ═══════════════════════════════════════════════════════════
-
-        private const float MiniGolemScale = 1.0f;     // 필살기 골렘은 2.2
-        private const float MiniGolemHpPercent = 0.6f;
-        private const float MiniGolemAtkPercent = 0.45f;
-        private const float MiniGolemLifeSeconds = 10f;
-        private const float MiniGolemSpecSeconds = 4f;   // Lv5 옵션 「지속 +4초」
-
-        private void MediumMiniGolem(Unit me)
-        {
-            // 한 마리만 — 다시 쓰면 앞 골렘이 흙먼지로 돌아가고 새로 선다
-            for (int i = _summons.Count - 1; i >= 0; i--)
-                if (_summons[i].U != null && _summons[i].U.name.StartsWith("Summon_" + GolemKey) && _summons[i].LifeMax >= MiniGolemLifeSeconds)
-                {
-                    PlayFx("smoke", _summons[i].U.Position, 96f, loop: false);
-                    RemoveSummon(i);
-                }
-            var at = ClampedInField(me, me.Position + AimDirection(me) * Meters(1.2f));
-            SpawnSummon(GolemKey, "미니 골렘", MiniGolemHpPercent, MiniGolemAtkPercent, MiniGolemLifeSeconds + (SpecOpen ? MiniGolemSpecSeconds : 0f),
-                        attacks: true, mobile: true, taunt: false, at: at, scale: MiniGolemScale, profile: GolemProfile);
-            PlayFx("soulripple", at, Meters(1.4f), loop: false);
-            if (!InyeonOn(me)) return;
-            // 인연 「쌍골렘」 — 반대쪽에 한 기 더(다시 쓰면 위 줄이 둘 다 거둔다)
-            var at2 = ClampedInField(me, me.Position - AimDirection(me) * Meters(1.2f));
-            SpawnSummon(GolemKey, "미니 골렘", MiniGolemHpPercent, MiniGolemAtkPercent, MiniGolemLifeSeconds + (SpecOpen ? MiniGolemSpecSeconds : 0f),
-                        attacks: true, mobile: true, taunt: false, at: at2, scale: MiniGolemScale, profile: GolemProfile);
-            PlayFx("soulripple", at2, Meters(1.4f), loop: false);
-        }
-
         // 닌자 액티브 「몸놀림」(회피 · 이속)은 PD 2026-10-29 에 「그림자 베기」로 바뀌었다(BattleDirector.Skills1029).
         // 회피 20% 는 이제 닌자 패시브다(BattleDirector.HostPassives).
 
@@ -368,52 +337,6 @@ namespace Game.Module.InGame
                     Shake(2.5f);
                 });
             }
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        //  영매 — 거대 원혼: 큰 원혼이 떠올라 둘레 적을 할퀴다가, 끝에 크게 터진다 (PD 「거대 원혼 소환 → 공격 → 일정 시간 뒤 폭발」)
-        // ═══════════════════════════════════════════════════════════
-
-        private const float GiantWraithSeconds = 5f;
-        private const float GiantWraithLashEvery = 0.5f;
-        private const float GiantWraithLashMul = 1.1f;
-        private const float GiantWraithRangeMeters = 4.5f;
-        private const float GiantWraithBlastMeters = 3.2f;
-        private const float GiantWraithBlastMul = 5f;
-
-        private void GiantWraith(Unit me)
-        {
-            var at = ClampedInField(me, me.Position + AimDirection(me) * Meters(1.6f));
-            PlayFloorFx("mdrune", at, SsrBody * 3.4f, loop: false);
-            var body = FxFrames("mdwraith") != null ? TakeLoopFx("mdwraith", at + new Vector2(0f, SsrBody * 0.9f), SsrBody * 3.2f) : null;
-            if (body != null) { body.SetFrameSeconds(0.08f); _ultFx.Add(body); }
-            int lashes = Mathf.RoundToInt(GiantWraithSeconds / GiantWraithLashEvery);
-            for (int k = 1; k <= lashes; k++)
-            {
-                UltAfter(k * GiantWraithLashEvery, () =>
-                {
-                    // 원혼은 적이 많은 쪽으로 천천히 흘러간다
-                    var list = UltTargets(at, Meters(GiantWraithRangeMeters));
-                    if (list.Count == 0) return;
-                    var t = list[0];
-                    at = ClampedInField(me, Vector2.Lerp(at, t.Position, 0.25f));
-                    body?.MoveTo(at + new Vector2(0f, SsrBody * 0.9f));
-                    for (int i = 0; i < list.Count && i < 3; i++)
-                    {
-                        UltHit(me, list[i], GiantWraithLashMul);
-                        PlayFx("mdslash", list[i].Position, SsrBody * 1.3f, loop: false)?.SetFrameSeconds(0.05f);
-                    }
-                });
-            }
-            UltAfter(GiantWraithSeconds + 0.1f, () =>
-            {
-                body?.Stop();
-                _ultFx.Remove(body);
-                UltAoe(me, at, GiantWraithBlastMeters, GiantWraithBlastMul, "mdpop", 2.6f, knockMeters: 1.2f);
-                PlayFx("soulripple", at, Meters(GiantWraithBlastMeters) * 2f, loop: false);
-                Shake(12f);
-                HitStop(0.1f);
-            });
         }
 
         // ═══════════════════════════════════════════════════════════

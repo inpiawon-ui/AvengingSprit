@@ -188,10 +188,10 @@ MonoBehaviour:
     _growthUnit: 1
     _growthMul: 1
   - _activeSkillKey: psg_h15
-    _nameEn: Mini Golem
-    _nameKr: "\uBBF8\uB2C8 \uACE8\uB818"
-    _description: "\uBBF8\uB2C8 \uACE8\uB818\uC744 \uC18C\uD658\uD574 10\uCD08\uAC04
-      \uD568\uAED8 \uC2F8\uC6B4\uB2E4."
+    _nameEn: Soul Infusion
+    _nameKr: "\uD63C \uAE43\uB4E4\uC774\uAE30"
+    _description: "8\uCD08 \uB3D9\uC548 \uD30C\uD2F0 \uC804\uC6D0\uC758 \uD53C\uD574
+      +25%, \uCE58\uBA85\uD0C0 \uD655\uB960 +15%."
     _scaling:
       _baseValue: 0.2
       _baseValueMax: 0.35

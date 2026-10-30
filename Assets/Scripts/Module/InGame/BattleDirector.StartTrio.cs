@@ -47,6 +47,8 @@ namespace Game.Module.InGame
             bool guideFirst = !IsModeRun && !Game.Module.Common.UI.RbGuide.HasSeen("ingame") && _trioWait < 4f;
             // 방이 열리고 잠깐 뒤 — 그림 설명을 여기서 직접 띄운다(설명이 판을 세우고, 닫히면 다음 틱에 셋이 선다)
             if (_trioPending && guideFirst && _trioWait > 0.8f && Ui != null) Ui.ShowFirstRunGuideNow();
+            // 셋이 서기 전에 먼저 다른 적에 빙의했다 — 기다림을 푼다(안 풀면 그 판 보조 안내가 다 막힌다, 안정성 점검 10-30 L1)
+            if (_trioPending && _host != null) _trioPending = false;
             if (_trioPending && !guideFirst && _running && !_awaitingBuff && _ghost != null && _host == null)
             {
                 _trioPending = false;

@@ -279,11 +279,11 @@ MonoBehaviour:
     _growthMax: 0
   - _passiveSkillKey: psv_medium
     _nameEn: MEDIUM
-    _nameKr: "\uAC15\uB839\uC220"
-    _description: "\uC18C\uD658\uBB3C \uCD5C\uB300 \uC218 +2. \uC801 \uCC98\uCE58
-      \uC2DC 30% \uD655\uB960\uB85C \uC544\uAD70 \uD574\uACE8\uC744 \uC18C\uD658\uD55C\uB2E4."
+    _nameKr: "\uC601\uB9E4\uC758 \uC778\uB3C4"
+    _description: "\uBA54\uC778\uC77C \uB54C \uBCF4\uC870 \uC2A4\uD0AC \uAC04\uACA9
+      \u221225%. \uBCF4\uC870\uC77C \uB54C \uBA54\uC778\uC758 \uD53C\uD574 +10%."
     _kind: 1
-    _chancePercent: 30
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0

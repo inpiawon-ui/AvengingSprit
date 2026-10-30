@@ -87,6 +87,8 @@ namespace Game.Module.Common.UI
         private void Refresh(bool force)
         {
             if (_source == null) return;
+            // 처음 채울 때 화면 배치가 덜 잡혀 높이가 0 이면 칸이 둘만 생긴다 — 볼 때마다 모자라면 더 만든다(안정성 점검 10-30)
+            EnsureItems();
             var content = _scroll.content;
             // 내용이 스크롤된 거리 — 세로는 위로 올라간 만큼(+), 가로는 왼쪽으로 밀린 만큼(−)
             float scrolled = _horizontal ? -content.anchoredPosition.x : content.anchoredPosition.y;

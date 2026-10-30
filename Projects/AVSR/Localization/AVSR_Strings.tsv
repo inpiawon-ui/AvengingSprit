@@ -51,8 +51,8 @@ askill.psg_h13.name	조준 사격	狙い撃ち	Aimed Shot	瞄準射擊	瞄准射
 askill.psg_h13.desc	가장 먼 적에게 확정 치명타 3발을 쏜다.	最も遠い敵に確定クリティカルを3発撃つ。	Fire 3 guaranteed critical shots at the farthest foe.	向最遠的敵人射出3發必定暴擊。	向最远的敌人射出3发必定暴击。
 askill.psg_h14.name	백스텝 사격	バックステップ射撃	Backstep Fire	後撤射擊	后撤射击
 askill.psg_h14.desc	가까운 적에게서 뒤로 크게 물러나며 앞쪽으로 부채꼴 연사한다. 맞은 적은 밀려난다.	近くの敵から大きく後ろへ跳び、前方へ扇状に連射する。当たった敵は押し返される。	Leap back from the nearest foe while spraying a fan of shots forward. Hit foes are knocked back.	從最近的敵人身邊大步後跳，同時向前方扇形連射。被擊中的敵人會被擊退。	从最近的敌人身边大步后跳，同时向前方扇形连射。被击中的敌人会被击退。
-askill.psg_h15.name	미니 골렘	ミニゴーレム	Mini Golem	迷你魔像	迷你魔像
-askill.psg_h15.desc	미니 골렘을 소환해 10초간 함께 싸운다.	ミニゴーレムを呼び、10秒間連れて一緒に戦う。	Summon a mini golem that follows and fights with you for 10s.	召喚迷你魔像，10秒內跟隨你一起戰鬥。	召唤迷你魔像，10秒内跟随你一起战斗。
+askill.psg_h15.name	혼 깃들이기	魂宿し	Soul Infusion	魂靈附身	魂灵附身
+askill.psg_h15.desc	8초 동안 파티 전원의 피해 +25%, 치명타 확률 +15%.	8秒間、パーティ全員の与ダメージ+25%、クリティカル率+15%。	For 8s, the whole party deals +25% damage and gains +15% crit chance.	8秒內全隊伍傷害+25%、暴擊率+15%。	8秒内全队伤害+25%、暴击率+15%。
 askill.psg_h16.name	빛의 인력	光の引力	Light Pull	光之引力	光之引力
 askill.psg_h16.desc	적이 가장 많이 모인 곳에 마법진을 펼쳐 1.2초간 가운데로 끌어당긴 뒤 빛으로 폭발시킨다.	敵が最も集まった場所に魔法陣を広げ、1.2秒間中心へ引き寄せてから光で爆発させる。	Open a circle where foes crowd, pull them to the center for 1.2s, then burst in light.	在敵人最密集處展開魔法陣，1.2秒內將敵人吸向中心，最後以光芒引爆。	在敌人最密集处展开魔法阵，1.2秒内将敌人吸向中心，最后以光芒引爆。
 askill.psg_h17.name	사슬 결박	鎖縛り	Chain Bind	鎖鏈束縛	锁链束缚
@@ -109,8 +109,8 @@ pskill.psv_momentum.desc	치명타 피해 +30%.	クリティカルダメージ+3
 pskill.psv_commando_missile.name	표적 고정	ロックオン	Lock-On	目標鎖定	目标锁定
 pskill.psv_commando_missile.desc	같은 적을 연속으로 맞히면 피해가 10%씩 쌓인다(최대 50%).	同じ敵に連続で当てるとダメージが10%ずつ上がる（最大50%）。	Hitting the same foe in a row stacks +10% damage (max 50%).	連續擊中同一敵人時傷害每次+10%（最多50%）。	连续击中同一敌人时伤害每次+10%（最多50%）。
 pskill.psv_commando_missile.growth	겹마다 피해	1段ごとのダメージ	Damage per stack	每層傷害	每层伤害
-pskill.psv_medium.name	강령술	降霊術	Necromancy	降靈術	降灵术
-pskill.psv_medium.desc	소환물 최대 수 +2. 적 처치 시 30% 확률로 아군 해골을 소환한다.	召喚物の最大数+2。敵を倒すと30%の確率で味方の骸骨を召喚する。	+2 max summons. Kills have a 30% chance to raise an allied skeleton.	召喚物上限+2。擊倒敵人時30%機率召喚我方骷髏。	召唤物上限+2。击倒敌人时30%几率召唤我方骷髅。
+pskill.psv_medium.name	영매의 인도	霊媒の導き	Medium's Guidance	靈媒的引導	灵媒的引导
+pskill.psv_medium.desc	메인일 때 보조 스킬 간격 −25%. 보조일 때 메인의 피해 +10%.	メインの時、サブのスキル間隔−25%。サブの時、メインの与ダメージ+10%。	As main: sub skill interval −25%. As sub: main deals +10% damage.	主位時副手技能間隔−25%。副手時主位傷害+10%。	主位时副手技能间隔−25%。副手时主位伤害+10%。
 pskill.psv_white_wizard.name	빛의 가호	光の加護	Light's Blessing	光之加護	光之加护
 pskill.psv_white_wizard.desc	액티브로 적 3명 이상을 맞히면 최대 체력 15%만큼 쉴드를 얻는다.	アクティブで敵3体以上に当てると最大体力15%のシールドを得る。	Hit 3+ foes with your active to gain a Shield of 15% max HP.	主動技能擊中3名以上敵人時，獲得最大HP 15%的護盾。	主动技能击中3名以上敌人时，获得最大HP 15%的护盾。
 pskill.psv_white_wizard.growth	쉴드량	シールド量	Shield	護盾量	护盾值
@@ -680,7 +680,7 @@ pskill.psv_ninja.growth	회피 확률	回避	Dodge	閃避	闪避
 pskill.psv_leech.growth	흡혈량	吸血量	Lifesteal	吸血量	吸血量
 pskill.psv_gangster.growth	즉사 확률	即死確率	Execute chance	即死機率	即死概率
 pskill.psv_momentum.growth	치명타 피해	クリティカルダメージ	Crit damage	暴擊傷害	暴击伤害
-pskill.psv_medium.growth	해골 확률	骸骨確率	Skull chance	骷髏機率	骷髅概率
+pskill.psv_medium.growth	보조 간격 감소	サブ間隔短縮	Sub interval cut	副手間隔縮短	副手间隔缩短
 pskill.psv_spare_circuit.growth	피해 감소	被ダメージ減少	Damage taken down	減傷	减伤
 askill.psg_h01.growth	피해	ダメージ	Damage	傷害	伤害
 askill.psg_h03.growth	수류탄 피해	手榴弾ダメージ	Grenade damage	手榴彈傷害	手榴弹伤害
@@ -716,8 +716,8 @@ uskill.hopper.name	킬 포인트	キルポイント	Kill Point	擊殺點	击杀�
 uskill.hopper.en	Kill Point	Kill Point	Kill Point	Kill Point	Kill Point
 uskill.ninja_chain.name	사슬 돌격 연격	鎖突撃連撃	Chain Rush Combo	鎖鏈突擊連擊	锁链突击连击
 uskill.ninja_chain.en	Chain Rush Combo	Chain Rush Combo	Chain Rush Combo	Chain Rush Combo	Chain Rush Combo
-uskill.medium.name	거대 원혼	巨大怨霊	Giant Wraith	巨大怨靈	巨大怨灵
-uskill.medium.en	Giant Wraith	Giant Wraith	Giant Wraith	Giant Wraith	Giant Wraith
+uskill.medium.name	강신 의식	降神の儀	Possession Rite	降神儀式	降神仪式
+uskill.medium.en	Possession Rite	Possession Rite	Possession Rite	Possession Rite	Possession Rite
 uskill.death.name	망자 군단	亡者の軍団	Legion of the Dead	亡者軍團	亡者军团
 uskill.death.en	Legion of the Dead	Legion of the Dead	Legion of the Dead	Legion of the Dead	Legion of the Dead
 uskill.robot.name	로봇 특공대	ロボ特攻隊	Robo Strike Team	機器人特攻隊	机器人特攻队
@@ -1173,13 +1173,13 @@ ult.ninja_chain.short	강한 적에게 날아가 연타	強敵へ飛び込んで
 askill.ninja_chain.short	적 5명을 끌어와 한 번에 후려침	敵5体を引き寄せて薙ぎ払う	Pull 5 foes in and strike	拉來5名敵人一次橫掃	拉来5名敌人一次横扫
 pskill.ninja_chain.short	끌려온 적 3초간 받는 피해 +25%	引き寄せた敵の被ダメ3秒+25%	Pulled foes take +25% for 3s	被拉來的敵人3秒受傷+25%	被拉来的敌人3秒受伤+25%
 askill.ninja_chain.opt	끌어오는 적 5 → 7명	引き寄せる敵5→7体	Pull 5 → 7 foes	拉來敵人 5 → 7名	拉来敌人 5 → 7名
-host.medium.concept	강령술사 — 혼과 함께 싸운다	降霊術師 — 霊と共に戦う	Necromancer — spirit allies	降靈術師 — 與靈魂並肩作戰	降灵术师 — 与灵魂并肩作战
-ult.medium.name	거대 원혼	巨大怨霊	Giant Wraith	巨大怨靈	巨大怨灵
-ult.medium.desc	거대 원혼을 소환해 5초간 주변 적을 할퀸 뒤 크게 폭발시킨다.	巨大な怨霊を呼び、5秒間周囲の敵を引き裂かせ、最後に大爆発させる。	Summon a giant wraith that claws nearby foes for 5s, then explodes.	召喚巨大怨靈，抓撕周圍敵人5秒，最後大爆炸。	召唤巨大怨灵，撕抓周围敌人5秒，最后大爆炸。
-ult.medium.short	거대 원혼이 5초 할퀴고 폭발	巨大怨霊が5秒引き裂き爆発	Giant wraith claws, then explodes	巨大怨靈抓撕5秒後爆炸	巨大怨灵撕抓5秒后爆炸
-askill.medium.short	미니 골렘 소환 (10초)	ミニゴーレムと10秒共闘	Mini golem fights for 10s	迷你魔像協同作戰10秒	迷你魔像协同作战10秒
-pskill.medium.short	소환 +2 · 처치 시 30% 해골	召喚+2・撃破時30%で骸骨	+2 summons · 30% skeleton on kill	召喚+2 · 擊殺時30%骷髏	召唤+2 · 击杀时30%骷髅
-askill.medium.opt	미니 골렘 지속 +4초	ミニゴーレムの持続+4秒	Mini golem lasts +4s	迷你魔像持續 +4秒	迷你魔像持续 +4秒
+host.medium.concept	버프 마법사 — 파티를 강하게	バフ魔導師 — パーティを強化	Buff mage — empowers the party	增益法師 — 強化隊伍	增益法师 — 强化队伍
+ult.medium.name	강신 의식	降神の儀	Possession Rite	降神儀式	降神仪式
+ult.medium.desc	35초 동안 자신은 광폭화(피해 +50%, 공격 속도 +60%)하고, 파티 전원 공격 속도 +40%, 치명타 피해 +50%. 시전 순간 주변 적을 2초간 둔화시킨다.	35秒間、自身は狂暴化(与ダメージ+50%、攻撃速度+60%)し、パーティ全員の攻撃速度+40%、クリティカルダメージ+50%。発動時、周囲の敵を2秒間鈍化させる。	For 35s you go berserk (+50% damage, +60% attack speed), and the whole party gains +40% attack speed and +50% crit damage. Slows nearby enemies for 2s on cast.	35秒內自身狂暴化(傷害+50%、攻速+60%),全隊伍攻速+40%、暴擊傷害+50%。施放時使周圍敵人緩速2秒。	35秒内自身狂暴化(伤害+50%、攻速+60%),全队攻速+40%、暴击伤害+50%。施放时使周围敌人减速2秒。
+ult.medium.short	광폭화 + 파티 공속 · 치명 피해 35초	狂暴化+パーティ攻速・会心ダメ35秒	Berserk + party haste & crit dmg 35s	狂暴化+全隊攻速・暴傷35秒	狂暴化+全队攻速・暴伤35秒
+askill.medium.short	파티 피해 · 치명 증가 (8초)	パーティ火力・会心アップ(8秒)	Party damage & crit up (8s)	全隊傷害・暴擊提升(8秒)	全队伤害・暴击提升(8秒)
+pskill.medium.short	메인: 보조 간격 −25% · 보조: 메인 피해 +10%	メイン:サブ間隔−25%・サブ:メイン火力+10%	Main: sub interval −25% · Sub: main dmg +10%	主位:副手間隔−25%・副手:主位傷害+10%	主位:副手间隔−25%・副手:主位伤害+10%
+askill.medium.opt	혼 깃들이기 지속 +4초	魂宿しの持続+4秒	Soul Infusion lasts +4s	魂靈附身持續+4秒	魂灵附身持续+4秒
 host.death.concept	죽음의 군주	死の君主	Lord of Death	死亡君主	死亡君主
 ult.death.name	망자 군단	亡者の軍勢	Legion of the Dead	亡者軍團	亡者军团
 ult.death.desc	해골 · 유령 군단을 불러 돌격시키고, 군단이 사라질 때 혼불로 터진다.	骸骨と幽霊の軍勢を呼んで突撃させ、軍勢が消える時に鬼火となって爆発する。	Summon a legion of skeletons and ghosts to charge. They burst into soul fire as they vanish.	召喚骷髏 · 幽靈軍團衝鋒，軍團消失時化為鬼火爆炸。	召唤骷髅 · 幽灵军团冲锋，军团消失时化为鬼火爆炸。
@@ -1342,7 +1342,7 @@ ui.tower.sweep_preview	{0}층을 깨면 · {1} · 조각 ×{2}	{0}階クリア�
 ui.growth5.ghost_title	유령 육성	ゴースト育成	Ghost Training	幽靈培養	幽灵培养
 ui.growth5.path_done	받음	受取済	Claimed	已領取	已领取
 ui.growth5.path_locked	잠김	ロック	Locked	未解鎖	未解锁
-ui.summon.reveal.new	새 호스트!	新しいホスト!	New Host!	新宿主！	新宿主！
+ui.summon.reveal.new	NEW!	NEW!	NEW!	NEW!	NEW!
 ui.summon.reveal.pickup	PICK UP!	PICK UP!	PICK UP!	PICK UP!	PICK UP!
 ui.summon.reveal.jackpot	대박!	大当たり!	Jackpot!	大獎！	大奖！
 ui.summon.reveal.tap	화면을 눌러 계속	タップして続ける	Tap to continue	點擊畫面繼續	点击屏幕继续
@@ -1496,7 +1496,7 @@ ui.rb.summon.rates_title	확률 보기	確率を見る	Rates	機率一覽	概率
 ui.rb.summon.records_title	뽑기 기록	召喚記録	History	召喚紀錄	召唤记录
 ui.rb.summon.pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.	保底次數不會延續。	保底次数不会延续。
 ui.rb.summon.note	10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정	10回召喚はSR1回保証・50回以内に大当たりがなければ\n50回目は大当たり確定	10x summons guarantee one SR. No jackpot in 50 pulls?\nThe 50th is guaranteed.	10連召喚保證1個SR · 50次內未出大獎\n第50次必定大獎	10连召唤保证1个SR · 50次内未出大奖\n第50次必定大奖
-ui.rb.summon.new	새 호스트!	新しいホスト！	New Host!	新宿主！	新宿主！
+ui.rb.summon.new	NEW!	NEW!	NEW!	NEW!	NEW!
 ui.rb.summon.jackpot_card	대박 확정	大当たり確定	Jackpot	大獎確定	大奖确定
 ui.rb.shop.tab.best	추천	おすすめ	Featured	推薦	推荐
 ui.rb.shop.tab.today	오늘	本日	Today	今日	今日
@@ -1850,7 +1850,7 @@ inyeon.dragoon.name	업화	業火	Hellfire	業火	业火
 inyeon.dragon_blue.name	번개 사슬	雷の鎖	Lightning Chain	雷鏈	雷链
 inyeon.guru.name	결계 강령	結界降霊	Ward Summoning	結界降靈	结界降灵
 inyeon.white_wizard.name	빛과 얼음	光と氷	Light and Ice	光與冰	光与冰
-inyeon.medium.name	쌍골렘	ツインゴーレム	Twin Golems	雙魔像	双魔像
+inyeon.medium.name	공명 강령	共鳴降霊	Resonance	共鳴降靈	共鸣降灵
 inyeon.ninja.name	그림자 분신	影分身	Shadow Clone	影分身	影分身
 inyeon.ninja_chain.name	뇌전 사슬	雷電の鎖	Thunder Chain	雷電鎖鏈	雷电锁链
 inyeon.robot.name	레이저 포탑	レーザータレット	Laser Turret	雷射砲塔	激光炮塔
@@ -1932,7 +1932,7 @@ inyeon.dragoon.desc	불바다가 1.5배 커지고 밟은 적이 둔해진다	火
 inyeon.dragon_blue.desc	묶인 적은 낙뢰를 두 번 맞는다	拘束された敵に落雷が2回	Bound foes are struck by lightning twice	被束縛的敵人會遭落雷兩次	被束缚的敌人会遭落雷两次
 inyeon.guru.desc	묶인 적 곁에 해골 2기	拘束した敵のそばにスケルトン2体	2 skeletons rise beside bound foes	被束縛的敵人旁出現2具骷髏	被束缚的敌人旁出现2具骷髅
 inyeon.white_wizard.desc	끌어모은 적이 언 뒤 폭발(피해 +30%)	引き寄せた敵が凍った後に爆発（ダメージ+30%）	Pulled foes freeze, then explode (+30% damage)	被吸引的敵人凍結後爆炸（傷害+30%）	被吸引的敌人冻结后爆炸（伤害+30%）
-inyeon.medium.desc	미니 골렘이 두 기	ミニゴーレムが2体に	Two mini golems	迷你魔像變為兩具	迷你魔像变为两具
+inyeon.medium.desc	혼 깃들이기 지속 1.5배 · 짝은 피해 버프 두 배	魂宿しの持続1.5倍・相方は火力バフ2倍	Soul Infusion lasts 1.5x · partner gets double damage buff	魂靈附身持續1.5倍・搭檔傷害增益加倍	魂灵附身持续1.5倍・搭档伤害增益加倍
 inyeon.ninja.desc	베기 끝에 분신 하나가 4초 남아 싸운다	斬撃の後、分身1体が4秒残って戦う	A clone stays and fights for 4s after the slash	斬擊後留下一個分身戰鬥4秒	斩击后留下一个分身战斗4秒
 inyeon.ninja_chain.desc	끌어올 때 사슬에 번개가 흐른다	引き寄せる鎖に雷が流れる	Lightning runs through the chain as it pulls	拉扯時鎖鏈帶有雷電	拉扯时锁链带有雷电
 inyeon.robot.desc	포탑이 꿰뚫는 레이저를 쏜다	タレットが貫通レーザーを撃つ	Turret fires piercing lasers	砲塔發射貫穿雷射	炮塔发射贯穿激光

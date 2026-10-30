@@ -455,7 +455,7 @@ namespace Game.Module.InGame
                 case "gangster":         GangsterMarkAll(me);   break;   // 일제 표식 — 체력 높은 적 셋(PD 2026-10-29)
                 case "hopper":           HopperAimedShot(me);   break;   // 조준 사격(PD 2026-10-29)
                 case "commando_missile": MissileVolley(me);     break;   // 여러 적에게 한 발씩(PD 2026-10-21)
-                case "medium":           MediumMiniGolem(me);   break;   // 미니 골렘(PD 2026-10-21) — 필살기는 거대 원혼
+                case "medium":           MediumSoulInfuse(me);  break;   // 혼 깃들이기 — 파티 버프(PD 2026-10-30, BattleDirector.MediumBuff)
                 case "white_wizard":     GravityWell(me);       break;   // 빛의 인력(PD 2026-10-21 중력진)
                 case "commando_laser":   ChargeLaser(me);       break;   // 충전 레이저(PD 2026-10-29)
                 case "robot":            DeployTurret(me);      break;

@@ -38,7 +38,7 @@ namespace Game.Module.InGame
             ["dragon_blue"] = new() { Name = "번개 사슬", Partners = new[] { "ninja_chain" }, Desc = "묶인 적은 낙뢰를 두 번 맞는다" },
             ["guru"] = new() { Name = "결계 강령", Partners = new[] { "medium" }, Desc = "묶인 적 곁에 해골 2기" },
             ["white_wizard"] = new() { Name = "빛과 얼음", Partners = new[] { "snowwoman" }, Desc = "끌어모은 적이 언 뒤 폭발(피해 +30%)" },
-            ["medium"] = new() { Name = "쌍골렘", Partners = new[] { "guru", "white_wizard" }, Desc = "미니 골렘이 두 기" },
+            ["medium"] = new() { Name = "공명 강령", Partners = new[] { "guru", "white_wizard" }, Desc = "혼 깃들이기 지속 1.5배 · 짝은 피해 버프 두 배" },
             ["ninja"] = new() { Name = "그림자 분신", Partners = new[] { "amazon" }, Desc = "베기 끝에 분신 하나가 4초 남아 싸운다" },
             ["ninja_chain"] = new() { Name = "뇌전 사슬", Partners = new[] { "dragon_blue" }, Desc = "끌어올 때 사슬에 번개가 흐른다" },
             ["robot"] = new() { Name = "레이저 포탑", Partners = new[] { "commando_laser" }, Desc = "포탑이 꿰뚫는 레이저를 쏜다" },
