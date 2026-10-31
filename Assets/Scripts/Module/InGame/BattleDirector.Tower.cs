@@ -33,6 +33,9 @@ namespace Game.Module.InGame
         private const float TowerTrashTopY = 0.16f;
         private bool TowerOneShot => IsTowerRun && _towerDef != null && _towerDef.Rule == TowerRule.OneShot;
 
+        /// <summary>「빙의는 한 번」을 이미 썼다 — 메인 칸에 「호스트를 터치」 대신 남은 횟수 0 을 띄운다.</summary>
+        public bool TowerPossessSpent => TowerOneShot && _modePossessCount > 0;
+
         /// <summary>판 시작 — 층 정의 · 몸 후보를 정한다(방을 세우기 전).</summary>
         private void PrepareTowerFloor()
         {

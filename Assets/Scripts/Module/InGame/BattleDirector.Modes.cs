@@ -138,7 +138,7 @@ namespace Game.Module.InGame
         {
             if (!IsModeRun) return;
             _modePossessCount++;
-            if (IsTowerRun) TowerOnPossessed();
+            if (IsTowerRun) { TowerOnPossessed(); PublishTowerEnemiesLeft(); }   // 빼앗은 몸은 적에서 빠졌다
             if (IsNightRun) NightOnPossessed();
         }
 

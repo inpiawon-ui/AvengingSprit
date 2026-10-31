@@ -422,7 +422,9 @@ namespace Game.Module.InGame
         private void OpenPartyDeath(string lostKey, Vector2 pos)
         {
             if (_ghostHp <= 0) return;
-            if (TowerOneShot) return;   // 탑 「빙의는 한 번」 — 새 빙의 · 승격 · 되살림 없이 유령으로 남는다(예전 규칙 그대로)
+            // 탑 「빙의는 한 번」 — 하나뿐인 호스트를 잃으면 층 실패. 파티 구조는 유령 HP 가 저절로 줄지 않아
+            // 유령으로 남겨 두면 판이 끝나지 않는다 → 다음 틱(TickGhostState)에 패배로 넘긴다
+            if (TowerOneShot) { _ghostHp = 0; PublishHp(); return; }
             // 처음 메인이 쓰러지면 그림 설명부터 — 닫으면 이 창을 연다(설명이 판을 세워 시계도 안 간다)
             if (Ui != null && Ui.GuideBefore("g.main_down", () => OpenPartyDeath(lostKey, pos), "main_down")) return;
             var near = NearestHostEnemy(pos);

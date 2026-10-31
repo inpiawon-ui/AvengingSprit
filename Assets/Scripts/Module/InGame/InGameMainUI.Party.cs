@@ -183,7 +183,9 @@ namespace Game.Module.InGame
 
             string main = _battle.PartyMainKey;
             if (_partyMainName != null)
-                _partyMainName.text = main != null ? _battle.PartyHostName(main) : Game.Module.Common.Localize.Get("ui.party.hud.touch_host");
+                _partyMainName.text = main != null ? _battle.PartyHostName(main)
+                    : _battle.TowerPossessSpent ? Game.Module.Common.Localize.Format("ui.tower.possess_left", 0)
+                    : Game.Module.Common.Localize.Get("ui.party.hud.touch_host");
 
             for (int i = 0; i < 2; i++)
             {

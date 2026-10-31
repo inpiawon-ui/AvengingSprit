@@ -306,6 +306,7 @@ namespace Game.Module.InGame
             _enemies.Remove(target);
             _goldWeightLeft = Mathf.Max(0, _goldWeightLeft - GoldWeightOf(target));
             target.CancelWindup();
+            PublishTowerEnemiesLeft();   // 탑 위 띠 「남은 적」 — 보조로 데려간 몸도 적에서 빠진다
             return true;
         }
 

@@ -867,7 +867,8 @@ namespace Game.Module.InGame
         private Unit SpawnRoomUnit(HostEntry e, bool isHost, bool elite, Vector2 pixelPos, string name)
         {
             // 빙의 파티 — 호스트 자리에는 정본 호스트 대신 전체 호스트 중 랜덤(PD 2026-10-29 「빙의할 게 없다」)
-            if (isHost && !elite && PartyOn) e = PartyRandomHost(e);
+            // 탑 · 밤은 층 조건 · 요일 표로 몸을 골랐다 — 랜덤으로 바꾸면 「한 호스트의 층」 · 속성 층이 깨진다
+            if (isHost && !elite && PartyOn && !IsModeRun) e = PartyRandomHost(e);
             var u = NewUnit(name);
             NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
             u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, TrashSprite(e),

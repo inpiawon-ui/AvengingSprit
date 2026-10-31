@@ -97,7 +97,11 @@ namespace Game.Module.InGame
         }
 
         private void OnTowerPossessLeft(TowerPossessLeftEvent e)
-            => ShowModeBanner(null, Localize.Format("ui.tower.possess_left", e.RemainingPossess), null);
+        {
+            string left = Localize.Format("ui.tower.possess_left", e.RemainingPossess);
+            ShowModeBanner(null, left, null);
+            if (_reborn) _ui.SetText("RbModeBarLeft", left);   // 위 띠도 같이 — 안 고치면 빙의 뒤에도 「남음 1」
+        }
 
         private void OnTowerFinished(TowerFinishedEvent e)
         {
