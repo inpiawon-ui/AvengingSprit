@@ -6,6 +6,7 @@
 크롬 헤드리스로 인쇄한다. 표는 쪽을 넘어가도 머리줄이 다시 나온다.
 """
 import base64
+import datetime
 import html
 import os
 import re
@@ -87,7 +88,7 @@ def md_to_html(text):
 
 def main():
     pdf, title, items = sys.argv[1], sys.argv[2], sys.argv[3:]
-    parts = [f'<div class="cover"><h1>{html.escape(title)}</h1><p>AVSR 빙의 파티 · 2026-10-29</p></div>']
+    parts = [f'<div class="cover"><h1>{html.escape(title)}</h1><p>AVSR · {datetime.date.today():%Y-%m-%d}</p></div>']
     for p in items:
         if p.lower().endswith(('.png', '.jpg', '.jpeg')):
             data = base64.b64encode(open(p, 'rb').read()).decode()
