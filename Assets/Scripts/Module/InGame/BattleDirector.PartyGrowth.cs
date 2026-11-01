@@ -63,6 +63,20 @@ namespace Game.Module.InGame
             }
         }
 
+        /// <summary>
+        /// 지금 켜진 인연의 세기 배율 = 단계 배율(1 · 1.15 · 1.3) × 액티브 Lv10 인연형(×1.25).
+        /// 인연 덤의 피해 · 효과 % · 지속 시간에 곱한다. 발 수 · 간격 같은 동작 모양은 그대로 둔다.
+        /// </summary>
+        private float InyeonPower
+            => (_config != null ? _config.InyeonTierMul(InyeonActiveTier) : 1f) * ActiveInyeonBoostMul;
+
+        /// <summary>「1.5배 넓게」처럼 늘어나는 배율 — 늘어나는 몫에만 세기를 곱한다(2배가 2.3배로 커지는 식).</summary>
+        private float IyGrow(float mul) => 1f + (mul - 1f) * InyeonPower;
+
+        private float IyScale(float value) => value * InyeonPower;
+
+        private int IyScale(int percent) => Mathf.RoundToInt(percent * InyeonPower);
+
         // ── 이 판에 파티로 있던 호스트 · 켠 인연 ─────────────────
 
         private readonly List<string> _partyRunHosts = new();

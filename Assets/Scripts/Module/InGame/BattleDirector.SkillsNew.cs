@@ -189,7 +189,7 @@ namespace Game.Module.InGame
             //   시작할 때 한 번 터지던 같은 그림은 겹쳐 보이므로 뺀다.
             float fieldRadius = Meters(LavaRadiusMeters) * _buffs.AoeMul;
             bool iy = InyeonOn(me);   // 인연 「업화」 — 불바다 1.5배 · 밟은 적 둔화
-            if (iy) fieldRadius *= IyFireFieldMul;
+            if (iy) fieldRadius *= IyGrow(IyFireFieldMul);
             SpawnField(at, fieldRadius, 6f,
                        FieldEffect.Burn, tick, fromPlayer: true, artKey: FireFieldArt);
             QxFireBloom(at, fieldRadius);   // 퀄업(2026-10-07) — 불바다가 확 피어난다

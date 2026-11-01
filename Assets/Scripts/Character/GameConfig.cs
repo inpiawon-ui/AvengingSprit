@@ -1026,6 +1026,8 @@ namespace Game.Character
         [SerializeField] private int _inyeonFirstShards = 2;
         [Tooltip("인연 세기 단계가 오르는 성급(두 호스트 중 낮은 쪽) — 0~3 1단 · 4~7 2단 · 8~10 3단.")]
         [SerializeField] private int[] _inyeonTierFrom = { 4, 8 };
+        [Tooltip("인연 세기 1 · 2 · 3단의 인연형 배율 — 피해 · 효과 % · 지속 시간에 곱하고, 범위는 늘어나는 몫에만 곱한다(시험값).")]
+        [SerializeField] private float[] _inyeonTierMul = { 1f, 1.15f, 1.3f };
 
         /// <summary>유령 강화 한 단계 값. 치명타 · 받는 피해 감소는 %p, 나머지는 %. 줄이 없는 능력치는 0.</summary>
         public float GhostStepValue(HostStat stat)
@@ -1065,6 +1067,13 @@ namespace Game.Character
                 for (int i = 0; i < _inyeonTierFrom.Length; i++)
                     if (lowerMastery >= _inyeonTierFrom[i]) tier = i + 2;
             return tier;
+        }
+
+        /// <summary>인연 세기 단계(1~3) → 인연형 배율. 단계가 0(인연 꺼짐)이면 1단으로 본다.</summary>
+        public float InyeonTierMul(int tier)
+        {
+            if (_inyeonTierMul == null || _inyeonTierMul.Length == 0) return 1f;
+            return Mathf.Max(1f, _inyeonTierMul[Mathf.Clamp(tier - 1, 0, _inyeonTierMul.Length - 1)]);
         }
 
         /// <summary>방어력 상한(%). 강화를 다 해도 이 위로는 안 오른다 — 맞아도 안 아프면 피할 이유가 없다.</summary>

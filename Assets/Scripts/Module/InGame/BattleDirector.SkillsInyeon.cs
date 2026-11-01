@@ -169,7 +169,7 @@ namespace Game.Module.InGame
                     UltAfter(0.12f, () =>
                     {
                         if (e == null || !e.IsAlive) return;
-                        HitEnemyWith(e, SkillDamage(sub, IyContractHitMul), sub.Profile);
+                        HitEnemyWith(e, SkillDamage(sub, IyScale(IyContractHitMul)), sub.Profile);
                         PlayFx("crit", e.Position, 96f, loop: false);
                         Shake(2f);
                     });
@@ -180,7 +180,7 @@ namespace Game.Module.InGame
         /// <summary>보조 · 소환물이 직접 때릴 때(`_summonStriking`) 표식 적이면 더 아프다 — 갱스터 인연이 켜졌을 때만.</summary>
         private float IyContractMul(Unit victim)
             => _summonStriking && victim != null && victim.IsMarked
-               && _host != null && _host.Key == "gangster" && InyeonOn(_host) ? IyContractSubMul : 1f;
+               && _host != null && _host.Key == "gangster" && InyeonOn(_host) ? IyScale(IyContractSubMul) : 1f;
 
         // ═══════════════════════════════════════════════════════════
         //  아마존 「번개 도약」
@@ -199,7 +199,7 @@ namespace Game.Module.InGame
         private void IyLeapRing(Unit me)
         {
             float r = Meters(IyLeapRingMeters) * _buffs.AoeMul;
-            int dmg = SkillDamage(me, IyLeapRingMul);
+            int dmg = SkillDamage(me, IyScale(IyLeapRingMul));
             PlayFx("dscoil", me.Position, r * 1.6f, loop: false);
             _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, me.Position, 10, 240f, 24f, 0.4f, 0f);
             var list = new List<Unit>(EnemiesInRange(me.Position, r));
@@ -261,7 +261,7 @@ namespace Game.Module.InGame
                 {
                     float a = a0 + i * Mathf.PI * 2f / shots;
                     var at = ClampedInField(me, me.Position
-                             + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Meters(CarpetRingMeters * IyCarpetLapRingMul));
+                             + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Meters(CarpetRingMeters * IyGrow(IyCarpetLapRingMul)));
                     var near = NearestEnemy(at, Meters(CarpetSnapMeters));
                     if (near != null)
                     {
@@ -294,7 +294,7 @@ namespace Game.Module.InGame
             _iyCluster.Remove(shot);
             var me = _host;
             if (me == null || Time.time - firedAt > IyClusterTrackSeconds) return;
-            int dmg = SkillDamage(me, IyClusterMul);
+            int dmg = SkillDamage(me, IyScale(IyClusterMul));
             float r = Meters(IyClusterBlastMeters) * _buffs.AoeMul;
             float a0 = Random.Range(0f, Mathf.PI * 2f);
             for (int i = 0; i < IyClusterCount; i++)
@@ -329,7 +329,7 @@ namespace Game.Module.InGame
                 var host = _host;
                 if (host == null || host.Key != "salamander") return;
                 float r = Meters(IyVenomBurstMeters) * _buffs.AoeMul;
-                int dmg = SkillDamage(host, IyVenomBurstMul);
+                int dmg = SkillDamage(host, IyScale(IyVenomBurstMul));
                 PlayFx("burst", at, r * 2f, loop: false);
                 _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, at, 10, 220f, 30f, 0.5f, 0f);
                 var list = new List<Unit>(EnemiesInRange(at, r));
@@ -351,7 +351,7 @@ namespace Game.Module.InGame
                 UltAfter(t * IyFireSlowTick, () =>
                 {
                     var list = EnemiesInRange(at, radius);
-                    for (int i = 0; i < list.Count; i++) list[i].ApplySlow(IyFireSlowPercent, IyFireSlowTick + 0.15f);
+                    for (int i = 0; i < list.Count; i++) list[i].ApplySlow(IyScale(IyFireSlowPercent), IyFireSlowTick + 0.15f);
                 });
             }
         }
@@ -370,7 +370,7 @@ namespace Game.Module.InGame
             {
                 var e = bound[i];
                 if (e == null || !e.IsAlive) continue;
-                e.ApplyAmp(IyBindMarkPercent, rootSeconds + IyBindMarkExtraSeconds);
+                e.ApplyAmp(IyScale(IyBindMarkPercent), rootSeconds + IyBindMarkExtraSeconds);
                 PlayFx("soulripple", e.Position, Meters(1f), loop: false);
                 _pfx?.Spray(ParticleFxKind.GhostMote, e.Position, Vector2.up, 40f, 6, 50f, 120f,
                             new Vector2(9f, 9f), 0.7f, IyBindMarkColor, spread: 20f);
@@ -393,7 +393,7 @@ namespace Game.Module.InGame
                     var e = list[i];
                     if (e == null || !e.IsAlive) continue;
                     if (e.IsBoss) { e.ApplySlow(IyIceDriveBossSlow, IyLightIceFreezeSeconds); continue; }
-                    e.ApplyFreeze(IyLightIceFreezeSeconds);
+                    e.ApplyFreeze(IyScale(IyLightIceFreezeSeconds));
                     PlayFx("freeze", e.Position, 72f, loop: false);
                 }
             });
@@ -412,8 +412,8 @@ namespace Game.Module.InGame
                 var side = new Vector2(-me.Facing.y, me.Facing.x);
                 if (side.sqrMagnitude < 0.01f) side = Vector2.right;
                 var at = ClampedInField(me, me.Position + side.normalized * Meters(1.2f));
-                _cloneSeconds = Mathf.Max(_cloneSeconds, IyCloneSeconds);   // 안 켜면 `TickClones` 가 바로 거둔다
-                SpawnClone(at, IyCloneSeconds, SkillDamage(me, IyCloneMul), IyCloneInterval);
+                _cloneSeconds = Mathf.Max(_cloneSeconds, IyScale(IyCloneSeconds));   // 안 켜면 `TickClones` 가 바로 거둔다
+                SpawnClone(at, IyScale(IyCloneSeconds), SkillDamage(me, IyScale(IyCloneMul)), IyCloneInterval);
                 if (_clones.Count > 0)
                 {
                     var c = _clones[_clones.Count - 1];
@@ -434,7 +434,7 @@ namespace Game.Module.InGame
 
         private void IyChainShock(Unit me, List<Unit> pulled)
         {
-            int dmg = SkillDamage(me, IyChainShockMul);
+            int dmg = SkillDamage(me, IyScale(IyChainShockMul));
             for (int k = 0; k < 2; k++)
             {
                 UltAfter(k == 0 ? IyChainShockFirst : IyChainShockSecond, () =>
@@ -477,7 +477,7 @@ namespace Game.Module.InGame
                 bool known = false;
                 for (int k = 0; k < _iyLaserTurrets.Count; k++) if (_iyLaserTurrets[k].D == d) { known = true; break; }
                 if (known) continue;
-                _iyLaserTurrets.Add(new IyLaserTurret { D = d, Cd = 0f, Dmg = Mathf.Max(1, Mathf.RoundToInt(damage * IyTurretLaserMul)) });
+                _iyLaserTurrets.Add(new IyLaserTurret { D = d, Cd = 0f, Dmg = Mathf.Max(1, Mathf.RoundToInt(damage * IyScale(IyTurretLaserMul))) });
                 return;
             }
         }
@@ -519,7 +519,7 @@ namespace Game.Module.InGame
         {
             if (e == null || !e.IsAlive) return;
             if (e.IsBoss) { e.ApplySlow(IyIceDriveBossSlow, IyIceDriveFreezeSeconds); return; }
-            e.ApplyFreeze(IyIceDriveFreezeSeconds);
+            e.ApplyFreeze(IyScale(IyIceDriveFreezeSeconds));
             PlayFx("freeze", e.Position, 72f, loop: false);
         }
 
@@ -528,11 +528,11 @@ namespace Game.Module.InGame
         // ═══════════════════════════════════════════════════════════
 
         /// <summary>빨아 올 머릿수 — 적 하나에 박쥐 둘(×1.5), 중독된 적은 그 두 배.</summary>
-        private static float IyFeastCount(List<Unit> list)
+        private float IyFeastCount(List<Unit> list)
         {
             float n = 0f;
             for (int i = 0; i < list.Count; i++) n += IyFeastBatMul * (list[i].IsPoisoned ? IyFeastPoisonMul : 1f);
-            return n;
+            return n * InyeonPower;
         }
 
         /// <summary>적마다 두 번째 박쥐를 조금 비켜 날린다.</summary>

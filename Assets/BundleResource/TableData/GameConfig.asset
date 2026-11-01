@@ -1096,6 +1096,10 @@ MonoBehaviour:
   _partyClearShards: 2
   _inyeonFirstShards: 2
   _inyeonTierFrom: 0400000008000000
+  _inyeonTierMul:
+  - 1
+  - 1.15
+  - 1.3
   _userExpBase: 100
   _userExpStep: 60
   _chapterClearExp: 2c010000f401000020030000b0040000a4060000fc080000

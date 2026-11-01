@@ -268,7 +268,7 @@ namespace Game.Module.InGame
             int dmg = SkillDamage(me, SuppressShotMul * GrowRatio(SuppressTableBase));
             int slow = SpecOpen ? SuppressSpecSlowPercent : SuppressSlowPercent;
             bool iy = InyeonOn(me);   // 인연 「엄호 화망」 — 맞는 적 발밑에 수류탄
-            int iyGrenade = iy ? SkillDamage(me, IyCoverGrenadeMul) : 0;
+            int iyGrenade = iy ? SkillDamage(me, IyScale(IyCoverGrenadeMul)) : 0;
             for (int s = 0; s < steps; s++)
             {
                 bool slowTick = s % SuppressSlowEvery == 0;
@@ -539,8 +539,8 @@ namespace Game.Module.InGame
             float stun = SpecOpen ? WarCrySpecStunSeconds : WarCryStunSeconds;
             if (InyeonOn(me))   // 인연 「불굴의 함성」 — 범위 1.5배 · 기절 2.5초
             {
-                r *= IyWarCryRangeMul;
-                stun = Mathf.Max(stun, IyWarCryStunSeconds);
+                r *= IyGrow(IyWarCryRangeMul);
+                stun = Mathf.Max(stun, IyScale(IyWarCryStunSeconds));
             }
             var list = new List<Unit>(EnemiesInRange(me.Position, r));
             for (int i = 0; i < list.Count; i++)
@@ -740,7 +740,7 @@ namespace Game.Module.InGame
         private void SnowBlizzard(Unit me)
         {
             float r = Meters(BlizzardMeters) * _buffs.AoeMul;
-            if (InyeonOn(me)) r *= IyBlizzardRangeMul;   // 인연 「얼음 진」 — 눈보라 범위 2배
+            if (InyeonOn(me)) r *= IyGrow(IyBlizzardRangeMul);   // 인연 「얼음 진」 — 눈보라 범위 2배
             float seconds = (SpecOpen ? BlizzardSpecSeconds : BlizzardSeconds) * GrowRatio(BlizzardTableBase);
             me.PlayAttack();
             PlayFx("breath_ice", me.Position, r * 2f, loop: false);

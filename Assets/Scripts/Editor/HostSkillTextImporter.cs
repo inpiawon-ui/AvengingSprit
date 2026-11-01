@@ -183,6 +183,10 @@ namespace Game.EditorTools
             EditorUtility.SetDirty(passiveTable);
             AssetDatabase.SaveAssets();
             Debug.Log($"[스킬 문구] 액티브 {actDone}종 · 패시브 {Passives.Length}종 · 호스트 연결 {linked}명");
+
+            // 패시브 표를 통째로 다시 써서 성장 값(Lv1 → Lv5)이 0으로 비었다 — 바로 다시 굽는다.
+            // 안 구우면 패시브 레벨을 올려도 수치가 그대로다(2026-10-29 이렇게 덮여 사흘간 몰랐다)
+            Game.Editor.SkillGrowthImporter.Run();
         }
     }
 }

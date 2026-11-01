@@ -487,7 +487,7 @@ namespace Game.Module.InGame
             {
                 if (!IsLiveCaster(me)) return;
                 int dmg = SkillDamage(me, GravityBurstMul);
-                if (iy) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * IyLightIceMul));
+                if (iy) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * IyScale(IyLightIceMul)));
                 var hit = new List<Unit>(EnemiesInRange(c, r));
                 for (int i = 0; i < hit.Count; i++) HitEnemyWith(hit[i], dmg, me.Profile);
                 LightWardOnBurst(me, hit.Count);   // 패시브 「빛의 가호」 — 셋 이상 맞히면 쉴드(PD 2026-10-29)
