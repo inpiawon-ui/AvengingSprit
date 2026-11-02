@@ -148,13 +148,12 @@ namespace Game.Module.Common.Chest
 
         public ChestEntry Entry(string chestKey) => _table?.Find(chestKey);
 
-        public bool GrantChapterClear(string chestKey, IReadOnlyList<string> metHostKeys, out ChestReward reward)
+        public bool GrantChapterClear(int gold, int shards, IReadOnlyList<string> metHostKeys, out ChestReward reward)
         {
             reward = default;
             var p = Player;
-            if (p == null || !p.IsReady || _table == null) return false;
-            var e = _table.Find(chestKey);
-            if (e == null) return false;
+            if (p == null || !p.IsReady) return false;
+            gold = Mathf.Max(0, gold);
 
             // 만난 몸 — 중복 · 유령 · 히든(사신) · 모르는 키를 뺀다
             var met = new List<string>();
@@ -166,15 +165,14 @@ namespace Game.Module.Common.Chest
                     if (h == null || h.IsGhost || PlayerDataService.IsHiddenHost(k) || met.Contains(k)) continue;
                     met.Add(k);
                 }
-            if (met.Count == 0) return TryOpenImmediate(chestKey, out reward);
-
-            int gold = UnityEngine.Random.Range(e.GoldMin, e.GoldMax + 1);
-            int shards = Mathf.Max(met.Count, UnityEngine.Random.Range(e.ShardMin, e.ShardMax + 1));
-            // 모두 1개씩, 나머지는 고르게 돌려 얹는다(무작위로 몰리면 「만났는데 하나뿐」이 잦다)
-            var counts = new int[met.Count];
-            for (int i = 0; i < shards; i++) counts[i % met.Count]++;
-            var keys = met.ToArray();
-            reward = new ChestReward(e.Key, gold, keys, counts);
+            // 만난 몸이 없으면 골드만 — 조각은 나눌 대상이 없다
+            if (met.Count == 0 || shards <= 0) met.Clear();
+            // 고르게 돌려 얹는다(무작위로 몰리면 「만났는데 하나뿐」이 잦다). 만난 몸이 조각보다 많으면 앞에서부터 1개씩
+            int n = Mathf.Min(met.Count, Mathf.Max(0, shards));
+            var counts = new int[n];
+            for (int i = 0; i < shards && n > 0; i++) counts[i % n]++;
+            var keys = met.GetRange(0, n).ToArray();
+            reward = new ChestReward(string.Empty, gold, keys, counts);
             p.AddGrowthCurrency(gold, 0, 0, 0);
             for (int i = 0; i < keys.Length; i++) p.AddShards(keys[i], counts[i]);
             Save();

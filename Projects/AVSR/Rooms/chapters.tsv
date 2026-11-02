@@ -11,9 +11,7 @@
 #                     1챕터 hpMul · bossHp 는 2026-10-28 절반(0.40 · 825)으로 줄였다가 PD 2026-10-29 「너무 빨리 죽어 빙의할 시간이 없다」로 원래 값(0.80 · 1650)에 되돌렸다
 #                     PD 2026-10-30 「1챕터인데 생각보다 세다」 → 잡몹 · 보스 체력 · 공격력 모두 2/3(hpMul 0.53 · atkMul 0.67 · bossHp 1100 · bossAtk 24)
 #   bossHp bossAtk    15번 방 보스
-#   roomGold midGold bossGold   전투방 · 중간보스 · 보스가 떨구는 골드
-#   clearGold chest exp          깼을 때 계정에 들어오는 것 — ⚠ clearGold 는 0(클리어 골드 없음, PD 2026-10-13 · 결과 창은 판 골드 + 상자)
-#   priceMul          판 안 값(상점 · 이벤트)의 배율
+#   roomGold midGold bossGold · clearGold · exp · priceMul   ⚠ 적어도 읽지 않는다 — GameConfig 「경제 곡선」 공식이 챕터 번호로 채운다(PD 2026-11-02). chest 도 안 쓴다(클리어 몫 = 공식)
 #   music             음악을 빌려 쓰는 챕터(SoundTable 의 chapter.{n}.*) — 새 곡이 오면 제 번호로
 #   art bossArt chestArt   로비 그림을 빌려 쓰는 칸(1부터) — 챕터 그림 · 보스 얼굴 · 상자
 #   power powerStar   권장 전투력 — 그 챕터를 깨는 판에 들어설 때의 내 힘 배율 · 그때 성급 ← Tools/balance10.py(2026-10-13)

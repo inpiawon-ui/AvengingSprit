@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.Store.GachaTable
   _settings:
   - Key: cost_gem_1
-    Value: 60
+    Value: 100
   - Key: cost_gem_10
-    Value: 540
+    Value: 900
   - Key: cost_ticket_1
     Value: 1
   - Key: cost_ticket_10
@@ -25,21 +25,21 @@ MonoBehaviour:
     Value: 1
   - Key: ten_min_grade
     Value: A
-  - Key: pity_count
-    Value: 50
+  - Key: shards_B
+    Value: 8
+  - Key: shards_A
+    Value: 12
+  - Key: shards_S
+    Value: 16
   - Key: pickup_host
     Value: 
   - Key: pickup_share
     Value: 50
   _grades:
   - Key: B
-    Percent: 75
+    Percent: 79
   - Key: A
-    Percent: 25
-  _amounts:
-  - Shards: 2
-    Percent: 70
-  - Shards: 5
-    Percent: 25
-  - Shards: 20
-    Percent: 5
+    Percent: 18
+  - Key: S
+    Percent: 3
+  _amounts: []

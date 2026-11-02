@@ -63,10 +63,11 @@ namespace Game.Module.Common.Chest
         ChestEntry Entry(string chestKey);
 
         /// <summary>
-        /// 챕터 클리어 보상(PD 2026-10-17 「상자 대신 만난 호스트 조각 + 골드」) — 그 챕터 등급 상자의 골드 · 조각 총량을
-        /// **이번 판에서 만난 호스트**에게 나눠 바로 지급한다. 만난 몸이 없으면 예전 상자처럼 고를 수 있는 몸에서 뽑는다.
+        /// 챕터 클리어 보상(PD 2026-10-17 「상자 대신 만난 호스트 조각 + 골드」) — 골드와 조각 총량을
+        /// **이번 판에서 만난 호스트**에게 나눠 바로 지급한다. 양은 「경제 곡선」이 정한다(PD 2026-11-02 — 상자 등급 몫 대신).
+        /// 만난 몸이 없으면 골드만 준다.
         /// </summary>
-        bool GrantChapterClear(string chestKey, System.Collections.Generic.IReadOnlyList<string> metHostKeys, out ChestReward reward);
+        bool GrantChapterClear(int gold, int shards, System.Collections.Generic.IReadOnlyList<string> metHostKeys, out ChestReward reward);
 
         /// <summary>젬을 치르고 즉시 완료로. 젬이 모자라거나 열 게 없으면 false.</summary>
         bool TryOpenNow(int slot);

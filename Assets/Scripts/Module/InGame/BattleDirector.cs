@@ -10497,15 +10497,14 @@ namespace Game.Module.InGame
             //   보물상자는 없앴다(PD 2026-10-17 「인게임 보상에서도 상자 안 줌 · 추후 상점 판매만」).
             //   따로 붙는 클리어 골드는 없다(PD 2026-10-13 「특정 골드 보상은 없는 거야」 — 예전에는 챕터 표 clearGold 200~3,000 을 얹었다).
             // 이미 깬 챕터를 다시 깨도 준다(기획). 지금 넣는다 — 결과 창에서 확인을 누르기 전에 앱을 꺼도 받은 것은 남아야 한다.
+            //   양은 「경제 곡선」(GameConfig) — 클리어 골드는 챕터 줄에 굽힌 값 · 조각은 챕터와 무관한 고정량(PD 2026-11-02).
             int ch = Mathf.Clamp(_runChapter, 1, ChapterCount);
             var row = ChapterRow(ch);
-            int legacy = Mathf.Clamp(ch, 1, ChapterChestKey.Length) - 1;
             int gold = carried;
-            string chestKey = !string.IsNullOrEmpty(row.Chest) ? row.Chest : ChapterChestKey[legacy];
 
             int clearGold = 0;
             if (CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests)
-                && chests.GrantChapterClear(chestKey, _metHosts, out var reward))
+                && chests.GrantChapterClear(row.ClearGold, _config.ClearShards, _metHosts, out var reward))
             {
                 clearGold = reward.Gold;
                 // 결과 창의 조각 줄은 하나로 — 판에서 모은 조각과 클리어 보상 조각을 합쳐 많은 것부터
@@ -10558,10 +10557,6 @@ namespace Game.Module.InGame
             System.Array.Reverse(counts);
             System.Array.Reverse(keys);
         }
-
-        /// <summary>챕터 클리어 보상 등급(예전 상자 등급) — 1·2 은, 3·4 금, 5·6 백금 (기획 2026-09-18). 키는 `ChestTable`.</summary>
-        private static readonly string[] ChapterChestKey =
-            { "silver", "silver", "gold", "gold", "platinum", "platinum" };
 
         private void PublishHp()
         {

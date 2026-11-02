@@ -135,7 +135,8 @@ namespace Game.Module.Common.Store
         public string PickupHost => S("pickup_host", string.Empty);
         public int PickupSharePct => I("pickup_share", 50);
         public TimeSpan PickupLeft => CoreModule.TryGet<IResetClock>(out var c) ? c.UntilNextWeek : TimeSpan.Zero;
-        public int PityMax => I("pity_count", 50);
+        // 천장은 없다(PD 2026-11-02 「천장이라는 시스템을 넣지 말자」) — 표에 pity_count 가 없으면 0, 화면이 막대를 숨긴다
+        public int PityMax => I("pity_count", 0);
         public int PityCount => Player?.Store.gachaPity ?? 0;
 
         public bool FreeAvailable
@@ -147,7 +148,7 @@ namespace Game.Module.Common.Store
             }
         }
 
-        public int CostGem(int count) => count >= 10 ? I("cost_gem_10", 540) : I("cost_gem_1", 60);
+        public int CostGem(int count) => count >= 10 ? I("cost_gem_10", 900) : I("cost_gem_1", 100);
         public int CostTicket(int count) => count >= 10 ? I("cost_ticket_10", 10) : I("cost_ticket_1", 1);
 
         public async UniTask<(IReadOnlyList<GachaPull>, string)> PullAsync(int count, GachaPay pay)
@@ -171,12 +172,12 @@ namespace Game.Module.Common.Store
 
             var pool = Pool(p);
             var list = new List<GachaPull>(count);
-            bool hadA = false;
+            bool hadHigh = false;
             for (int i = 0; i < count; i++)
             {
-                bool forceA = count == 10 && i == count - 1 && !hadA && Grade("A") > 0;
+                bool forceA = count == 10 && i == count - 1 && !hadHigh && Grade("A") > 0;
                 var pull = Roll(p, pool, forceA);
-                if (Grade(p.GetHost(pull.HostKey)) == HostGrade.A) hadA = true;
+                if (Grade(p.GetHost(pull.HostKey)) != HostGrade.B) hadHigh = true;
                 list.Add(pull);
             }
             for (int i = 0; i < list.Count; i++) Remember(p, list[i], pay);
@@ -187,12 +188,12 @@ namespace Game.Module.Common.Store
 
         private GachaPull Roll(IPlayerDataService p, List<HostEntry> pool, bool forceA)
         {
-            // 등급 → 그 등급 안에서 같은 확률. A 면 픽업 몫
+            // 등급(R = B · SR = A · SSR = S) → 그 등급 안에서 같은 확률. SSR 이면 픽업 몫(경제 PD 2026-11-02)
             string pickup = PickupHost;
-            HostGrade grade = forceA ? HostGrade.A : (_rng.Next(0, 100) < Grade("B") ? HostGrade.B : HostGrade.A);
+            HostGrade grade = forceA ? RollHigh() : RollGrade();
             HostEntry host = null;
             bool isPickup = false;
-            if (grade == HostGrade.A && !string.IsNullOrEmpty(pickup) && _rng.Next(0, 100) < PickupSharePct)
+            if (grade == HostGrade.S && !string.IsNullOrEmpty(pickup) && _rng.Next(0, 100) < PickupSharePct)
             {
                 host = p.GetHost(pickup);
                 isPickup = host != null;
@@ -204,17 +205,10 @@ namespace Game.Module.Common.Store
                 host = same[_rng.Next(0, same.Count)];
             }
 
-            // 조각 수 — 천장이면 대박 확정
+            // 조각 수 = 그 등급 해금 몫 — 새 몸이면 바로 열리고, 가진 몸이면 조각으로 쌓인다. 천장은 없다
             var d = p.Store;
-            int shards;
-            bool jackpot;
-            if (d.gachaPity + 1 >= PityMax) { shards = JackpotAmount(); jackpot = true; }
-            else
-            {
-                shards = RollAmount();
-                jackpot = shards >= JackpotAmount();
-            }
-            d.gachaPity = jackpot ? 0 : d.gachaPity + 1;
+            int shards = ShardsOf(host.Grade);
+            bool jackpot = host.Grade == HostGrade.S;
             d.gachaTotal++;
 
             bool isNew = !p.IsHostOwned(host);
@@ -242,35 +236,32 @@ namespace Game.Module.Common.Store
             for (int i = 0; i < all.Count; i++)
             {
                 var e = all[i];
-                if (e == null || e.IsGhost || PlayerDataService.IsHiddenHost(e.HostKey) || e.Grade == HostGrade.S) continue;
+                if (e == null || e.IsGhost || PlayerDataService.IsHiddenHost(e.HostKey)) continue;   // SSR 도 나온다(경제 PD 2026-11-02)
                 pool.Add(e);
             }
             return pool;
         }
 
-        private int RollAmount()
+        private HostGrade RollGrade()
         {
-            int r = _rng.Next(0, 100), acc = 0;
-            var amounts = _table.Amounts;
-            for (int i = 0; i < amounts.Length; i++)
-            {
-                acc += Mathf.RoundToInt(amounts[i].Percent);
-                if (r < acc) return amounts[i].Shards;
-            }
-            return amounts.Length > 0 ? amounts[0].Shards : 2;
+            double r = _rng.NextDouble() * 100.0;
+            float b = Grade("B"), a = Grade("A");
+            return r < b ? HostGrade.B : r < b + a ? HostGrade.A : HostGrade.S;
         }
 
-        private int JackpotAmount()
+        /// <summary>10회 보장 칸 — SR 이상 안에서 표 비율대로.</summary>
+        private HostGrade RollHigh()
         {
-            int max = 0;
-            foreach (var a in _table.Amounts) max = Math.Max(max, a.Shards);
-            return max;
+            float a = Grade("A"), s = Grade("S");
+            return a + s <= 0f || _rng.NextDouble() * (a + s) < a ? HostGrade.A : HostGrade.S;
         }
 
-        private int Grade(string key)
+        private int ShardsOf(HostGrade g) => I(g == HostGrade.S ? "shards_S" : g == HostGrade.A ? "shards_A" : "shards_B", 8);
+
+        private float Grade(string key)
         {
-            foreach (var g in _table.Grades) if (g.Key == key) return Mathf.RoundToInt(g.Percent);
-            return 0;
+            foreach (var g in _table.Grades) if (g.Key == key) return g.Percent;
+            return 0f;
         }
 
         private static HostGrade Grade(HostEntry e) => e != null ? e.Grade : HostGrade.B;
@@ -283,15 +274,17 @@ namespace Game.Module.Common.Store
             var pool = Pool(p);
             string pickup = PickupHost;
             int nb = pool.FindAll(h => h.Grade == HostGrade.B).Count;
-            int na = pool.FindAll(h => h.Grade == HostGrade.A && h.HostKey != pickup).Count;
-            bool hasPickup = pool.Exists(h => h.HostKey == pickup);
-            float a = Grade("A"), b = Grade("B");
-            float pickPct = hasPickup ? a * PickupSharePct / 100f : 0f;
+            int na = pool.FindAll(h => h.Grade == HostGrade.A).Count;
+            int ns = pool.FindAll(h => h.Grade == HostGrade.S && h.HostKey != pickup).Count;
+            bool hasPickup = pool.Exists(h => h.HostKey == pickup && h.Grade == HostGrade.S);
+            float a = Grade("A"), b = Grade("B"), s = Grade("S");
+            float pickPct = hasPickup ? s * PickupSharePct / 100f : 0f;
             foreach (var h in pool)
             {
                 float pct = h.Grade == HostGrade.B ? (nb > 0 ? b / nb : 0f)
+                          : h.Grade == HostGrade.A ? (na > 0 ? a / na : 0f)
                           : h.HostKey == pickup ? pickPct
-                          : na > 0 ? (a - pickPct) / na : 0f;
+                          : ns > 0 ? (s - pickPct) / ns : 0f;
                 _rates.Add(new GachaRateLine(h.HostKey, h.Grade, pct, h.HostKey == pickup));
             }
             _rates.Sort((x, y) => y.Percent.CompareTo(x.Percent));
@@ -307,8 +300,11 @@ namespace Game.Module.Common.Store
 
         public IReadOnlyList<(int, float)> AmountRates()
         {
+            // 조각 수는 등급이 정한다 — 등급 확률이 곧 그 조각 수의 확률
             var list = new List<(int, float)>();
-            if (_table != null) foreach (var a in _table.Amounts) list.Add((a.Shards, a.Percent));
+            if (_table != null)
+                foreach (var g in _table.Grades)
+                    list.Add((ShardsOf(g.Key == "S" ? HostGrade.S : g.Key == "A" ? HostGrade.A : HostGrade.B), g.Percent));
             return list;
         }
 

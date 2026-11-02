@@ -484,14 +484,9 @@ namespace Game.User
         /// ⚠ 2026-10-04 에 S 1000 · A 600 · B 300 고정에서 바꿨다. 그 값은 무료(테스트)로 풀려 있어
         ///   아무도 낸 적이 없었는데, 라이브로 켜 보니 **1챕터를 깨고 받는 돈(478~664)의 절반이 입장료**였다.
         ///   수입의 10% 안팎이 되게 챕터에 묶는다 — 10챕터 B 438.
+        /// ⚠ 값은 `GameConfig` 「경제 곡선」 칸(경제 PD 2026-11-02 — 코드 상수에서 옮겼다).
         /// </summary>
-        public static int BaseHostEntryCost(HostGrade grade)
-            => grade switch
-            {
-                HostGrade.S => 200,
-                HostGrade.A => 120,
-                _           => 60,
-            };
+        public int BaseHostEntryCost(HostGrade grade) => _config != null ? _config.HostEntryGold(grade) : 0;
 
         /// <summary>랜덤 선택은 B 값의 80% — 제일 싸다(고를 이유를 값으로 만든다, 기획 2026-09-29).</summary>
         private const float RandomEntryRatio = 0.8f;

@@ -72,7 +72,7 @@ MonoBehaviour:
   _staminaMax: 20
   _staminaPerRun: 5
   _staminaRegenSeconds: 720
-  _staminaOnClear: 5
+  _staminaOnClear: 0
   _staminaCap: 999
   _staminaRefillGem: 100
   _staminaRefillPerDay: 6
@@ -134,6 +134,14 @@ MonoBehaviour:
   _ultCooldownMinSeconds: 60
   _rewardGoldPerRoom: 120
   _rewardGhostExpPerRoom: 8
+  _priceMulStep: 0.8
+  _roomGoldBase: 6
+  _midGoldBase: 20
+  _bossGoldBase: 60
+  _clearGoldBase: 120
+  _clearExpBase: 300
+  _clearShards: 6
+  _hostEntryGold: 3c00000078000000c8000000
   _chapters:
   - Chapter: 1
     Name: "\uC4F0\uB808\uAE30 \uC9D1\uC801\uC7A5"
@@ -158,7 +166,7 @@ MonoBehaviour:
     EnemyAtkMul: 0.67
     BossHp: 1100
     BossAtk: 24
-    ClearGold: 0
+    ClearGold: 120
     Chest: silver
     ClearExp: 300
     PriceMul: 1
@@ -198,11 +206,11 @@ MonoBehaviour:
     EnemyAtkMul: 1
     BossHp: 2731
     BossAtk: 38
-    ClearGold: 0
+    ClearGold: 216
     Chest: silver
-    ClearExp: 500
-    PriceMul: 1.3
-    RunGold: 298
+    ClearExp: 540
+    PriceMul: 1.8
+    RunGold: 444
     Music: 2
     Art: 2
     BossArt: 2
@@ -238,11 +246,11 @@ MonoBehaviour:
     EnemyAtkMul: 1
     BossHp: 3301
     BossAtk: 42
-    ClearGold: 0
+    ClearGold: 312
     Chest: silver
-    ClearExp: 800
-    PriceMul: 1.7
-    RunGold: 386
+    ClearExp: 780
+    PriceMul: 2.6
+    RunGold: 644
     Music: 3
     Art: 3
     BossArt: 3
@@ -279,11 +287,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.03
     BossHp: 3942
     BossAtk: 46
-    ClearGold: 0
+    ClearGold: 408
     Chest: gold
-    ClearExp: 1200
-    PriceMul: 2.2
-    RunGold: 508
+    ClearExp: 1020
+    PriceMul: 3.4
+    RunGold: 820
     Music: 4
     Art: 4
     BossArt: 4
@@ -323,11 +331,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.08
     BossHp: 4739
     BossAtk: 51
-    ClearGold: 0
+    ClearGold: 504
     Chest: gold
-    ClearExp: 1700
-    PriceMul: 2.8
-    RunGold: 664
+    ClearExp: 1260
+    PriceMul: 4.2
+    RunGold: 1020
     Music: 5
     Art: 5
     BossArt: 5
@@ -368,11 +376,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.2
     BossHp: 6141
     BossAtk: 59
-    ClearGold: 0
+    ClearGold: 600
     Chest: gold
-    ClearExp: 2300
-    PriceMul: 3.5
-    RunGold: 806
+    ClearExp: 1500
+    PriceMul: 5
+    RunGold: 1220
     Music: 6
     Art: 6
     BossArt: 6
@@ -411,11 +419,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.33
     BossHp: 7217
     BossAtk: 65
-    ClearGold: 0
+    ClearGold: 696
     Chest: platinum
-    ClearExp: 3000
-    PriceMul: 4.3
-    RunGold: 1006
+    ClearExp: 1740
+    PriceMul: 5.8
+    RunGold: 1420
     Music: 1
     Art: 1
     BossArt: 3
@@ -452,11 +460,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.41
     BossHp: 8599
     BossAtk: 72
-    ClearGold: 0
+    ClearGold: 792
     Chest: platinum
-    ClearExp: 3800
-    PriceMul: 5.2
-    RunGold: 1192
+    ClearExp: 1980
+    PriceMul: 6.6
+    RunGold: 1620
     Music: 2
     Art: 2
     BossArt: 4
@@ -494,11 +502,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.71
     BossHp: 11200
     BossAtk: 85
-    ClearGold: 0
+    ClearGold: 888
     Chest: platinum
-    ClearExp: 4700
-    PriceMul: 6.2
-    RunGold: 1436
+    ClearExp: 2220
+    PriceMul: 7.4
+    RunGold: 1796
     Music: 3
     Art: 3
     BossArt: 5
@@ -539,11 +547,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.8
     BossHp: 13152
     BossAtk: 93
-    ClearGold: 0
+    ClearGold: 984
     Chest: platinum
-    ClearExp: 5700
-    PriceMul: 7.3
-    RunGold: 1690
+    ClearExp: 2460
+    PriceMul: 8.2
+    RunGold: 1996
     Music: 4
     Art: 4
     BossArt: 6
@@ -580,11 +588,11 @@ MonoBehaviour:
     EnemyAtkMul: 1.85
     BossHp: 14455
     BossAtk: 95
-    ClearGold: 0
+    ClearGold: 1080
     Chest: platinum
-    ClearExp: 6306
-    PriceMul: 7.9
-    RunGold: 1851
+    ClearExp: 2700
+    PriceMul: 9
+    RunGold: 2196
     Music: 5
     Art: 5
     BossArt: 1
@@ -621,11 +629,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.08
     BossHp: 18939
     BossAtk: 106
-    ClearGold: 0
+    ClearGold: 1176
     Chest: platinum
-    ClearExp: 6977
-    PriceMul: 8.7
-    RunGold: 1993
+    ClearExp: 2940
+    PriceMul: 9.8
+    RunGold: 2396
     Music: 6
     Art: 6
     BossArt: 2
@@ -662,11 +670,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.07
     BossHp: 21390
     BossAtk: 110
-    ClearGold: 0
+    ClearGold: 1272
     Chest: platinum
-    ClearExp: 7720
-    PriceMul: 9.4
-    RunGold: 2189
+    ClearExp: 3180
+    PriceMul: 10.6
+    RunGold: 2596
     Music: 1
     Art: 1
     BossArt: 3
@@ -703,11 +711,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.14
     BossHp: 23891
     BossAtk: 113
-    ClearGold: 0
+    ClearGold: 1368
     Chest: platinum
-    ClearExp: 8541
-    PriceMul: 10.3
-    RunGold: 2369
+    ClearExp: 3420
+    PriceMul: 11.400001
+    RunGold: 2772
     Music: 2
     Art: 2
     BossArt: 4
@@ -744,11 +752,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.22
     BossHp: 26871
     BossAtk: 117
-    ClearGold: 0
+    ClearGold: 1464
     Chest: platinum
-    ClearExp: 9449
-    PriceMul: 11.2
-    RunGold: 2580
+    ClearExp: 3660
+    PriceMul: 12.2
+    RunGold: 2972
     Music: 3
     Art: 3
     BossArt: 5
@@ -784,11 +792,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.14
     BossHp: 28331
     BossAtk: 117
-    ClearGold: 0
+    ClearGold: 1560
     Chest: platinum
-    ClearExp: 10455
-    PriceMul: 12.2
-    RunGold: 2799
+    ClearExp: 3900
+    PriceMul: 13
+    RunGold: 3172
     Music: 4
     Art: 4
     BossArt: 6
@@ -825,11 +833,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.16
     BossHp: 29905
     BossAtk: 118
-    ClearGold: 0
+    ClearGold: 1656
     Chest: platinum
-    ClearExp: 11567
-    PriceMul: 13.2
-    RunGold: 3052
+    ClearExp: 4140
+    PriceMul: 13.8
+    RunGold: 3372
     Music: 5
     Art: 5
     BossArt: 1
@@ -866,11 +874,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.16
     BossHp: 31228
     BossAtk: 118
-    ClearGold: 0
+    ClearGold: 1752
     Chest: platinum
-    ClearExp: 12797
-    PriceMul: 14.4
-    RunGold: 3337
+    ClearExp: 4380
+    PriceMul: 14.6
+    RunGold: 3572
     Music: 6
     Art: 6
     BossArt: 2
@@ -906,11 +914,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.08
     BossHp: 32461
     BossAtk: 118
-    ClearGold: 0
+    ClearGold: 1848
     Chest: platinum
-    ClearExp: 14159
-    PriceMul: 15.7
-    RunGold: 3633
+    ClearExp: 4620
+    PriceMul: 15.400001
+    RunGold: 3748
     Music: 1
     Art: 1
     BossArt: 3
@@ -948,11 +956,11 @@ MonoBehaviour:
     EnemyAtkMul: 2.08
     BossHp: 33693
     BossAtk: 118
-    ClearGold: 0
+    ClearGold: 1944
     Chest: platinum
-    ClearExp: 15665
-    PriceMul: 17.1
-    RunGold: 3941
+    ClearExp: 4860
+    PriceMul: 16.2
+    RunGold: 3948
     Music: 2
     Art: 2
     BossArt: 4
@@ -973,7 +981,7 @@ MonoBehaviour:
   - {x: 1, y: 3}
   - {x: 2, y: 6}
   - {x: 10, y: 30}
-  _ghostLevelMax: 50
+  _ghostLevelMax: 120
   _statGrowthPrimary:
   - 2.4
   - 2
@@ -1065,7 +1073,7 @@ MonoBehaviour:
     Color: {r: 0.75, g: 0.35, b: 1, a: 1}
   - HostKey: robot
     Color: {r: 0.35, g: 1, b: 0.9, a: 1}
-  _ghostStatMax: 50
+  _ghostStatMax: 120
   _ghostStepValue:
   - 2
   - 2
@@ -1076,6 +1084,8 @@ MonoBehaviour:
   - 1
   - 0.3
   _ghostStatCostStep: 30
+  _ghostStatCostKnee: 100
+  _ghostStatCostAccel: 120
   _activeSkillMax: 10
   _passiveSkillMax: 5
   _ultSkillMax: 5
@@ -1101,12 +1111,13 @@ MonoBehaviour:
   - 1.15
   - 1.3
   _userExpBase: 100
-  _userExpStep: 60
+  _userExpStep: 0
+  _userExpQuad: 2
   _chapterClearExp: 2c010000f401000020030000b0040000a4060000fc080000
   _pathLevels: 0a000000140000001e0000002800000032000000
   _pathGold: 8813000010270000204e00003075000050c30000
   _pathGem: 3200000064000000c80000002c010000f4010000
-  _pathSpiritCore: 050000000a000000140000001e00000032000000
+  _pathSpiritCore: 0000000000000000000000000000000000000000
   _ghostStatPerLevel: 1
   _gradeStatMul:
   - 1
@@ -1116,8 +1127,3 @@ MonoBehaviour:
   - 1
   - 1.15
   - 1.3
-  _gachaRatePercent:
-  - 79
-  - 18
-  - 3
-  _gachaPity: 80

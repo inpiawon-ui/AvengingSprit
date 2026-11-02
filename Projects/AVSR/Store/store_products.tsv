@@ -28,12 +28,12 @@ chest_platinum	chest	chest	gem	320	none	always	chest:platinum		42		store.chest_p
 stamina_refill	currency	stamina	gem	100	daily:6	always	stamina:20		45		store.stamina_refill.name	store.stamina_refill.desc
 gold_s	currency	gold	gem	30	daily:3	always	goldrun:1		50		store.gold_s.name	store.gold_s.desc
 gold_m	currency	gold	gem	150	none	always	goldrun:6		51		store.gold_m.name	store.gold_m.desc
-gold_l	currency	gold	gem	450	none	always	goldrun:20		52		store.gold_l.name	store.gold_l.desc
+gold_l	currency	gold	gem	450	daily:2	always	goldrun:20		52		store.gold_l.name	store.gold_l.desc
 gem_60	currency	gem	iap	P1	none	always	gem:60	first_double	60	avsr.gem60	store.gem_60.name	store.gem_60.desc
 gem_320	currency	gem	iap	P3	none	always	gem:320	first_double	61	avsr.gem320	store.gem_320.name	store.gem_320.desc
 gem_680	currency	gem	iap	P4	none	always	gem:680	first_double	62	avsr.gem680	store.gem_680.name	store.gem_680.desc
-gem_2100	currency	gem	iap	P7	none	always	gem:2100	first_double	63	avsr.gem2100	store.gem_2100.name	store.gem_2100.desc
-gem_3600	currency	gem	iap	P8	none	always	gem:3600	first_double	64	avsr.gem3600	store.gem_3600.name	store.gem_3600.desc
-gem_7500	currency	gem	iap	P9	none	always	gem:7500	first_double	65	avsr.gem7500	store.gem_7500.name	store.gem_7500.desc
+gem_2100	currency	gem	iap	P7	none	always	gem:2300	first_double	63	avsr.gem2100	store.gem_2100.name	store.gem_2100.desc
+gem_3600	currency	gem	iap	P8	none	always	gem:4000	first_double	64	avsr.gem3600	store.gem_3600.name	store.gem_3600.desc
+gem_7500	currency	gem	iap	P9	none	always	gem:8200	first_double	65	avsr.gem7500	store.gem_7500.name	store.gem_7500.desc
 pass_premium	pass	pass	iap	P4	season	season_active	passpremium:1		70	avsr.pass.premium	store.pass_premium.name	store.pass_premium.desc
 pass_bundle	pass	pass	iap	P6	season	season_active	passpremium:1;passxp:1500		71	avsr.pass.bundle	store.pass_bundle.name	store.pass_bundle.desc

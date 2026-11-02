@@ -50,6 +50,12 @@ namespace Game.Module.Common.Modes
         int TodayIndex { get; }
         int NightBest(int dayIndex);
 
+        /// <summary>
+        /// 표의 골드(1챕터 기준) × 깬 최고 챕터의 값 배율 — 모드 골드가 챕터 판 수입과 같이 오른다(경제 PD 2026-11-02).
+        /// 화면에 미리 보이는 값도 이것을 거친다.
+        /// </summary>
+        int ScaleGold(int tableGold);
+
         /// <summary>그 처치 수로 받는 골드(판 끝 지급 · 로비 「오늘의 보상」 예상).</summary>
         int NightGold(int kills);
         /// <summary>밤 판 끝 — 기록 · 처치 보상. 돌려주는 값: 이전 최고.</summary>
@@ -221,7 +227,7 @@ namespace Game.Module.Common.Modes
             d.towerAllTimeBest = Mathf.Max(d.towerAllTimeBest, floor);
             var def = _table.FloorAt(floor);
             var reward = def != null && def.IsBoss ? _table.FirstClearBoss : _table.FirstClear;
-            gold = reward.Gold;
+            gold = ScaleGold(reward.Gold);
             GiveShards(fitHosts, reward.Shards, outKeys, outCounts);
             if (gold > 0) Player.AddCurrency(gold, 0);
             SaveAndPublish();
@@ -237,7 +243,7 @@ namespace Game.Module.Common.Modes
             var step = SweepNow;
             if (d == null || step == null || d.towerSweptToday) return false;
             d.towerSweptToday = true;
-            gold = step.Gold;
+            gold = ScaleGold(step.Gold);
             // 소탕 조각은 키운 몸 쪽에 무게 — 모든 플레이 가능한 몸에서
             GiveShards(HostsWhere(null), step.Shards, outKeys, outCounts);
             if (gold > 0) Player.AddCurrency(gold, 0);
@@ -279,7 +285,14 @@ namespace Game.Module.Common.Modes
                 ? 0 : d.nightBestKills[dayIndex];
         }
 
-        public int NightGold(int kills) => _table != null ? Mathf.Max(0, kills) * _table.NightGoldPerKill : 0;
+        public int NightGold(int kills) => _table != null ? ScaleGold(Mathf.Max(0, kills) * _table.NightGoldPerKill) : 0;
+
+        public int ScaleGold(int tableGold)
+        {
+            var p = Player;
+            float m = p != null && p.IsReady ? p.ChapterInfo(Mathf.Max(1, p.ClearedChapter)).PriceMul : 1f;
+            return Mathf.RoundToInt(Mathf.Max(0, tableGold) * Mathf.Max(1f, m));
+        }
 
         public int RecordNight(int dayIndex, int kills, float seconds, bool cleared, IReadOnlyList<string> dayHosts,
                                List<string> outKeys, List<int> outCounts)

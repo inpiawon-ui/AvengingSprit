@@ -17,6 +17,7 @@ namespace Game.EditorTools
     public static class ChapterTsv
     {
         public const string Path = "Projects/AVSR/Rooms/chapters.tsv";
+        private const string ConfigPath = "Assets/BundleResource/TableData/GameConfig.asset";
 
         public sealed class Row
         {
@@ -70,6 +71,21 @@ namespace Game.EditorTools
                 });
             }
             rows.Sort((a, b) => a.Ch.CompareTo(b.Ch));
+
+            // 경제 칸(값 배율 · 방 골드 · 클리어 골드 · 경험치)은 표에 적지 않는다 — GameConfig 「경제 곡선」 공식이 채운다(PD 2026-11-02).
+            //   한 자로 재야 챕터를 100개로 늘려도 곡선이 흔들리지 않는다.
+            var cfg = AssetDatabase.LoadAssetAtPath<GameConfig>(ConfigPath);
+            if (cfg == null) Debug.LogError("[챕터 표] GameConfig 없음 — 경제 칸을 못 채웠다: " + ConfigPath);
+            else
+                foreach (var r in rows)
+                {
+                    r.PriceMul = cfg.PriceMulAt(r.Ch);
+                    r.RoomGold = cfg.RoomGoldAt(r.Ch);
+                    r.MidGold = cfg.MidGoldAt(r.Ch);
+                    r.BossGold = cfg.BossGoldAt(r.Ch);
+                    r.ClearGold = cfg.ClearGoldAt(r.Ch);
+                    r.Exp = cfg.ClearExpAt(r.Ch);
+                }
             return rows;
         }
 

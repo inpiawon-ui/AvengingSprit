@@ -291,7 +291,7 @@ MonoBehaviour:
     Kind: gold
     PriceType: gem
     Price: 450
-    Limit: none
+    Limit: daily:2
     Show: always
     Rewards: goldrun:20
     Badge: 
@@ -345,7 +345,7 @@ MonoBehaviour:
     Price: P7
     Limit: none
     Show: always
-    Rewards: gem:2100
+    Rewards: gem:2300
     Badge: first_double
     Order: 63
     StoreId: avsr.gem2100
@@ -358,7 +358,7 @@ MonoBehaviour:
     Price: P8
     Limit: none
     Show: always
-    Rewards: gem:3600
+    Rewards: gem:4000
     Badge: first_double
     Order: 64
     StoreId: avsr.gem3600
@@ -371,7 +371,7 @@ MonoBehaviour:
     Price: P9
     Limit: none
     Show: always
-    Rewards: gem:7500
+    Rewards: gem:8200
     Badge: first_double
     Order: 65
     StoreId: avsr.gem7500

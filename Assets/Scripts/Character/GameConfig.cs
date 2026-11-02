@@ -693,9 +693,9 @@ namespace Game.Character
             public float EnemyAtkMul;
             public int BossHp;
             public int BossAtk;
-            [Tooltip("⚠ 쓰지 않는다(PD 2026-10-13 클리어 골드 없음 — 결과 창은 판에서 주운 골드 + 상자). 표 열이 남아 있어 칸만 둔다.")]
+            [Tooltip("깼을 때 받는 골드(옛 상자 골드 몫) — 「경제 곡선」 공식이 굽는다.")]
             public int ClearGold;
-            [Tooltip("깼을 때 받는 상자 키(ChestTable).")]
+            [Tooltip("⚠ 쓰지 않는다(경제 PD 2026-11-02 — 클리어 몫은 「경제 곡선」 공식). 표 열이 남아 있어 칸만 둔다.")]
             public string Chest;
             [Tooltip("깼을 때 받는 유저 경험치.")]
             public int ClearExp;
@@ -716,6 +716,36 @@ namespace Game.Character
             [Tooltip("그때 주력 몸의 성급(권장 전투력에 숙련도 몫으로 얹는다).")]
             public int PowerStar;
         }
+
+        [Header("경제 곡선 — 챕터 값 배율 하나로 골드를 묶는다(PD 2026-11-02)")]
+        // 값 배율 M(c) = 1 + 기울기 × (c − 1). 곱이 아니라 덧셈이라 100챕터에서도 80배에서 멈춘다.
+        // 판 골드 · 클리어 골드 · 클리어 경험치 · 출전비 · 상점 · 모드 보상이 전부 이 배율을 곱한다.
+        // 챕터 표 임포트가 이 공식으로 챕터 줄의 경제 칸(PriceMul · 방 골드 · ClearGold · ClearExp)을 굽는다 — chapters.tsv 에 적지 않는다.
+        // 근거 표: Projects/AVSR/Docs/AVSR_경제밸런스_라이브_2026-11-02 · 모델 Tools/economy_model.py
+        [SerializeField] private float _priceMulStep = 0.8f;
+        [Tooltip("1챕터 방 골드 — 전투방 · 중간보스 · 보스(× 값 배율).")]
+        [SerializeField] private int _roomGoldBase = 6;
+        [SerializeField] private int _midGoldBase = 20;
+        [SerializeField] private int _bossGoldBase = 60;
+        [Tooltip("1챕터 클리어 골드(× 값 배율).")]
+        [SerializeField] private int _clearGoldBase = 120;
+        [Tooltip("1챕터 클리어 유령 경험치(× 값 배율).")]
+        [SerializeField] private int _clearExpBase = 300;
+        [Tooltip("클리어 조각 — 이번 판에 만난 호스트에게 나눈다. 챕터와 무관(조각 값이 챕터와 무관하므로).")]
+        [SerializeField] private int _clearShards = 6;
+        [Tooltip("1챕터 출전비 R · SR · SSR(× 값 배율). 랜덤은 R 의 80%.")]
+        [SerializeField] private int[] _hostEntryGold = { 60, 120, 200 };
+
+        /// <summary>그 챕터의 값 배율 — 공식. 판에서는 굽힌 `ChapterOf(c).PriceMul` 을 읽는다(같은 값).</summary>
+        public float PriceMulAt(int chapter) => 1f + _priceMulStep * (Mathf.Max(1, chapter) - 1);
+        public int RoomGoldAt(int chapter) => Mathf.RoundToInt(_roomGoldBase * PriceMulAt(chapter));
+        public int MidGoldAt(int chapter) => Mathf.RoundToInt(_midGoldBase * PriceMulAt(chapter));
+        public int BossGoldAt(int chapter) => Mathf.RoundToInt(_bossGoldBase * PriceMulAt(chapter));
+        public int ClearGoldAt(int chapter) => Mathf.RoundToInt(_clearGoldBase * PriceMulAt(chapter));
+        public int ClearExpAt(int chapter) => Mathf.RoundToInt(_clearExpBase * PriceMulAt(chapter));
+        public int ClearShards => Mathf.Max(0, _clearShards);
+        public int HostEntryGold(HostGrade g) => _hostEntryGold == null || _hostEntryGold.Length == 0 ? 0
+            : _hostEntryGold[Mathf.Clamp((int)g, 0, _hostEntryGold.Length - 1)];
 
         [Header("챕터 표 — chapters.tsv 에서 굽는다")]
         [SerializeField] private ChapterDef[] _chapters = new ChapterDef[0];
@@ -995,6 +1025,10 @@ namespace Game.Character
         // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다(2026-10-13) — 개편 뒤 다시 잰다(TBD-BAL).
         [Tooltip("유령 강화 한 단계 골드 = 이 값 × 다음 레벨.")]
         [SerializeField] private int _ghostStatCostStep = 30;
+        [Tooltip("이 레벨부터 강화 값이 빨라진다 — 100챕터까지 골드가 남아돌지 않게(경제 PD 2026-11-02).")]
+        [SerializeField] private int _ghostStatCostKnee = 100;
+        [Tooltip("문턱 뒤 이만큼 레벨이 오를 때마다 값 배율 +1.")]
+        [SerializeField] private int _ghostStatCostAccel = 120;
 
         [Header("육성 — 호스트 스킬 레벨")]
         [Tooltip("스킬 레벨 상한 — 액티브 · 패시브 · 필살기.")]
@@ -1038,7 +1072,11 @@ namespace Game.Character
             => stat == HostStat.Crit || stat == HostStat.CritDamage || stat == HostStat.Defense;
 
         /// <summary>Lv <paramref name="level"/> → 다음 단계 골드.</summary>
-        public int GhostStatCostAt(int level) => _ghostStatCostStep * (level + 1);
+        public int GhostStatCostAt(int level)
+        {
+            float accel = 1f + Mathf.Max(0, level + 1 - _ghostStatCostKnee) / (float)Mathf.Max(1, _ghostStatCostAccel);
+            return Mathf.RoundToInt(_ghostStatCostStep * (level + 1) * accel / 10f) * 10;
+        }
 
         public int ActiveSkillMax => Mathf.Max(1, _activeSkillMax);
         public int PassiveSkillMax => Mathf.Max(1, _passiveSkillMax);
@@ -1080,9 +1118,10 @@ namespace Game.Character
         public const int DefenseCapPercent = 60;
 
         [Header("성장 — 유저(유령) 레벨")]
-        [Tooltip("다음 레벨까지 경험치 = 기본 + 증가폭 × (레벨 - 1).")]
+        [Tooltip("다음 레벨까지 경험치 = 기본 + 증가폭 × (레벨 - 1) + 제곱폭 × (레벨 - 1)². 10챕터 입장 ≈ Lv50(경제 PD 2026-11-02).")]
         [SerializeField] private int _userExpBase = 100;
-        [SerializeField] private int _userExpStep = 60;
+        [SerializeField] private int _userExpStep = 0;
+        [SerializeField] private float _userExpQuad = 2f;
         [Tooltip("챕터를 깼을 때 받는 경험치(챕터 1~). 죽으면 없다. 표가 짧으면 마지막 칸.")]
         [SerializeField] private int[] _chapterClearExp = { 300, 500, 800, 1200, 1700, 2300 };
 
@@ -1101,7 +1140,11 @@ namespace Game.Character
         public int GhostStatCap(int ghostLevel)
             => Mathf.Clamp(Mathf.Max(1, ghostLevel) * Mathf.Max(1, _ghostStatPerLevel), 1, GhostStatMax);
 
-        public int UserExpToNext(int level) => _userExpBase + _userExpStep * Mathf.Max(0, level - 1);
+        public int UserExpToNext(int level)
+        {
+            int n = Mathf.Max(0, level - 1);
+            return _userExpBase + _userExpStep * n + Mathf.RoundToInt(_userExpQuad * n * n);
+        }
 
         public int ChapterClearExp(int chapter)
             => HasChapters ? ChapterOf(chapter).ClearExp
@@ -1134,15 +1177,9 @@ namespace Game.Character
         [SerializeField] private float[] _gradeStatMul = { 1.0f, 1.1f, 1.2f };
         [Tooltip("등급별 필살기 위력 배율 (R · SR · SSR)")]
         [SerializeField] private float[] _gradeUltMul = { 1.0f, 1.15f, 1.3f };
-        [Tooltip("가챠 확률 % (R · SR · SSR) — 가챠가 들어오면 쓴다")]
-        [SerializeField] private float[] _gachaRatePercent = { 79f, 18f, 3f };
-        [Tooltip("가챠 천장 — 이 횟수 안에 SSR 확정")]
-        [SerializeField] private int _gachaPity = 80;
 
         public float GradeStatMul(HostGrade g) => ByGradeF(_gradeStatMul, g, 1f);
         public float GradeUltMul(HostGrade g) => ByGradeF(_gradeUltMul, g, 1f);
-        public float GachaRatePercent(HostGrade g) => ByGradeF(_gachaRatePercent, g, 0f);
-        public int GachaPity => _gachaPity;
 
         private static float ByGradeF(float[] a, HostGrade g, float fallback)
             => a == null || a.Length == 0 ? fallback : a[Mathf.Clamp((int)g, 0, a.Length - 1)];

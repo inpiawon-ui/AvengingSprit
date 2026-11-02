@@ -159,7 +159,7 @@ namespace Game.Module.Lobby
 
             var reward = cur != null && cur.IsBoss ? table.FirstClearBoss : table.FirstClear;
             _ui.SetText("TowerFirstClearText", Localize.Get("ui.tower.first_clear"));
-            _ui.SetText("TowerFirstClearGoldText", reward.Gold.ToString());
+            _ui.SetText("TowerFirstClearGoldText", _progress.ScaleGold(reward.Gold).ToString());
             _ui.SetText("TowerFirstClearShardText", Localize.Format("ui.tower.shard_count", reward.Shards));
             SetFace("TowerFirstClearFace", _fit.Count > 0 ? _fit[0] : null);
 
@@ -178,9 +178,9 @@ namespace Game.Module.Lobby
                     if (sw != null && (first == null || sw.FromFloor < first.FromFloor)) first = sw;
                 }
             _ui.SetText("TowerSweepGoldText", step != null
-                ? Localize.Format("ui.tower.sweep_reward", step.Gold, step.Shards)
+                ? Localize.Format("ui.tower.sweep_reward", _progress.ScaleGold(step.Gold), step.Shards)
                 : first != null
-                    ? Localize.Format("ui.tower.sweep_preview", Mathf.Max(1, first.FromFloor), first.Gold, first.Shards)
+                    ? Localize.Format("ui.tower.sweep_preview", Mathf.Max(1, first.FromFloor), _progress.ScaleGold(first.Gold), first.Shards)
                     : Localize.Get("ui.tower.sweep_locked"));
             _ui.SetText("TowerSweepButtonText", Localize.Get(swept ? "ui.tower.sweep_done" : "ui.tower.sweep_btn"));
             var sweepBtn = _ui.Get<Button>("TowerSweepButton");

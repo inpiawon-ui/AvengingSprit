@@ -145,7 +145,7 @@ namespace Game.Module.Lobby
             // 시안: 「2층」 + 「첫 클리어 보상 (매주 다시)」(고정 글자)
             _ui.SetText("ChlFloorTitle", string.Format(Localize.FromTable("ui.rb.chl.floor_n", "{0}층"), next));
             var reward = cur != null && cur.IsBoss ? table.FirstClearBoss : table.FirstClear;
-            _ui.SetText("ChlRewardGold", reward.Gold.ToString("N0"));
+            _ui.SetText("ChlRewardGold", _progress.ScaleGold(reward.Gold).ToString("N0"));
             _ui.SetText("ChlRewardShard", reward.Shards.ToString());
 
             var step = _progress.SweepNow;
@@ -207,7 +207,7 @@ namespace Game.Module.Lobby
             {
                 bool cur = now != null && st.FromFloor == now.FromFloor;
                 if (cur) sb.Append("<color=#3EE6FF>");
-                sb.Append(Localize.Format("ui.tower.sweep_preview", st.FromFloor, st.Gold.ToString("N0"), st.Shards));
+                sb.Append(Localize.Format("ui.tower.sweep_preview", st.FromFloor, _progress.ScaleGold(st.Gold).ToString("N0"), st.Shards));
                 if (cur) sb.Append("</color>");
                 sb.Append("\n");
             }

@@ -1,20 +1,21 @@
-# 조각 뽑기(PD 2026-10-15 「조각 가챠 넣는다」) — Tools/Game/로비 상점 표 임포트 (Store) → GachaTable.asset (주소 TableData/GachaTable)
-# 한 번 뽑으면 「몸 하나 + 조각 수」가 나온다. 몸은 등급 확률 → 그 등급 안에서 같은 확률(픽업 제외). 조각 수는 따로 굴린다.
-# 대상 = HostTable 전부 − 히든(사신). 다 키운 몸의 조각은 그 자리에서 정수로 바뀐다(이미 있는 규칙). 해금 안 된 몸도 나온다(조각으로 해금).
+# 호스트 뽑기(PD 2026-10-15 「조각 가챠 넣는다」 · 경제 개편 PD 2026-11-02) — Tools/Game/로비 상점 표 임포트 (Store) → GachaTable.asset (주소 TableData/GachaTable)
+# 한 번 뽑으면 「호스트 하나 + 그 등급 해금 몫 조각」이 나온다 — 새 호스트면 바로 해금, 가진 호스트면 조각. 호스트는 등급 확률 → 그 등급 안에서 같은 확률(픽업 제외).
+# 대상 = HostTable 전부 − 히든(사신). SSR 도 나온다. 다 키운 몸의 조각은 그 자리에서 정수로 바뀐다(이미 있는 규칙).
+# 천장은 없다(PD 2026-11-02 「천장이라는 시스템을 넣지 말자」) — pity_count 줄을 두지 않는다.
 # ⚠ 확률 공개 의무(한국 게임산업법 확률형 아이템 · 일본 업계 지침) — 화면 「확률 보기」가 이 표에서 몸별 % 를 계산해 그대로 보여 준다. 출시 전 법무 확인.
-# kind=setting: 값 하나 · kind=grade: 등급 확률(%) · kind=amount: 조각 수 확률(%)
+# kind=setting: 값 하나 · kind=grade: 등급 확률(%) — B = R · A = SR · S = SSR
 kind	key	value	note
-setting	cost_gem_1	60	1회 젬
-setting	cost_gem_10	540	10회 젬(10% 할인)
+setting	cost_gem_1	100	1회 젬
+setting	cost_gem_10	900	10회 젬(10% 할인)
 setting	cost_ticket_1	1	1회 소환권
 setting	cost_ticket_10	10	10회 소환권
 setting	free_per_day	1	하루 무료 1회(하루 경계 = GameConfig 하루 초기화)
-setting	ten_min_grade	A	10회에 A급 몸 1회 이상 보장(마지막 칸에서 채운다)
-setting	pity_count	50	대박(조각 x20)이 이 횟수 안에 안 나오면 이 번째에 확정. 대박이 나오면 0 부터 다시
-setting	pickup_host		이번 주 픽업 — 비우면 픽업 없음(PD 2026-10-17 기본 소환만). 새 캐릭터가 나올 때 키를 적는다
-setting	pickup_share	50	A급이 나오면 이 % 로 픽업 몸
-grade	B	75	B급 11명 — 한 명당 약 6.82%
-grade	A	25	A급 11명 — 픽업 12.5% · 나머지 10명 한 명당 1.25%
-amount	2	70	조각 x2
-amount	5	25	조각 x5
-amount	20	5	대박 조각 x20 (천장 대상)
+setting	ten_min_grade	A	10회에 SR 이상 1회 보장(마지막 칸에서 채운다)
+setting	shards_B	8	R 이 나오면 조각 수 = R 해금 몫
+setting	shards_A	12	SR 이 나오면 조각 수 = SR 해금 몫
+setting	shards_S	16	SSR 이 나오면 조각 수 = SSR 해금 몫
+setting	pickup_host		이번 주 픽업 SSR — 비우면 픽업 없음. 키를 적는다
+setting	pickup_share	50	SSR 이 나오면 이 % 로 픽업 호스트
+grade	B	79	R 11명 — 한 명당 약 7.18%
+grade	A	18	SR 6명 — 한 명당 3%
+grade	S	3	SSR 5명 — 한 명당 0.6%(픽업이 있으면 픽업 1.5% · 나머지 4명 0.375%)

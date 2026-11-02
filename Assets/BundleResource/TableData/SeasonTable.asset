@@ -175,7 +175,7 @@ MonoBehaviour:
     Type: daily_all_done
     Target: 6
     PassXp: 20
-    Rewards: gem:20;stamina:10
+    Rewards: gem:30;stamina:10
   - Id: w_clear
     Period: weekly
     Type: run_clear
@@ -211,7 +211,7 @@ MonoBehaviour:
     Type: weekly_all_done
     Target: 5
     PassXp: 50
-    Rewards: gem:100;stamina:20
+    Rewards: gem:150;stamina:20
   _profile:
   - Key: frame_default
     Type: frame
