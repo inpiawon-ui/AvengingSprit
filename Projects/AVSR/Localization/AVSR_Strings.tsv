@@ -1823,6 +1823,7 @@ ui.rb.pass.reward_lv	프리미엄 Lv 30 보상	プレミアム Lv 30 報酬	Prem
 ui.rb.pass.now	현재	現在	Now	目前	目前
 ui.rb.ghost.stat.hp	호스트 체력	ホスト体力	Host HP	宿主體力	宿主体力
 ui.rb.ghost.stat.def	받는 피해 감소	被ダメージ軽減	Damage Reduction	受到傷害減少	受到伤害减少
+ui.rb.ghost.stat.subpow	보조 위력	サブ威力	Sub Power	副手威力	副手威力
 ui.rb.growth.skill_header	◆ 스킬 레벨	◆ スキルレベル	◆ Skill Level	◆ 技能等級	◆ 技能等级
 ui.rb.growth.skill_hint	성급이 오르면 상한이 열려요	星級が上がると上限が開きます	Stars raise the level cap	星級提升後開放上限	星级提升后开放上限
 ui.rb.growth.skill_lv	{0} Lv {1}/{2}	{0} Lv {1}/{2}	{0} Lv {1}/{2}	{0} Lv {1}/{2}	{0} Lv {1}/{2}

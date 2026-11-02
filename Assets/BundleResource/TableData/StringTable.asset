@@ -13178,3 +13178,9 @@ MonoBehaviour:
     _en: Later
     _zhHant: "\u7A0D\u5F8C"
     _zhHans: "\u7A0D\u540E"
+  - _key: ui.rb.ghost.stat.subpow
+    _ko: "\uBCF4\uC870 \uC704\uB825"
+    _ja: "\u30B5\u30D6\u5A01\u529B"
+    _en: Sub Power
+    _zhHant: "\u526F\u624B\u5A01\u529B"
+    _zhHans: "\u526F\u624B\u5A01\u529B"

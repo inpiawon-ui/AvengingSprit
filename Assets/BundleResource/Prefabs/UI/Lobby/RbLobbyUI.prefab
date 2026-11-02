@@ -45247,6 +45247,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2ca538f8ada64884fa1a973d5bea66a5, type: 3}
   - {fileID: 21300000, guid: 03ef20f4ebc121248943fe37ef14485a, type: 3}
   - {fileID: 21300000, guid: 5aab1dabb71a493469385c18f58f63b4, type: 3}
+  - {fileID: 21300000, guid: f1aae46193557cd4a800874f5146b9b8, type: 3}
   _claimOn: {fileID: 21300000, guid: de0154b91134f614381e1e9ec4ebc668, type: 3}
   _claimOff: {fileID: 21300000, guid: fdcd2b8969b51fa4ca8ccd9dba785815, type: 3}
   _icons:

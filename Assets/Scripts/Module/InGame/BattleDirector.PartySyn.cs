@@ -193,9 +193,13 @@ namespace Game.Module.InGame
             return 0;
         }
 
-        /// <summary>보조 한 명의 공격력 배수 = 30% × (1 + 카드) × 자리 Lv(+25%/Lv).</summary>
+        /// <summary>보조 한 명의 공격력 배수 = (30% + 유령 「보조 위력」) × (1 + 카드) × 자리 Lv(+25%/Lv).</summary>
         private float SubPowerOf(string key)
-            => PartyRule.SubPower * (1f + _subPowCard) * (1f + 0.25f * SlotLvOf(key));
+            => SubPowerBase * (1f + _subPowCard) * (1f + 0.25f * SlotLvOf(key));
+
+        // 유령 강화 「보조 위력」(%p)을 바탕 30% 에 더한다(PD 2026-11-02)
+        private float SubPowerBase
+            => PartyRule.SubPower + (_player != null ? _player.StatBonusFlat(null, Game.Character.HostStat.SubPower) / 100f : 0f);
 
         /// <summary>보조 스킬 간격 — 6초 × 마도 시너지 × 자리 Lv(−8%/Lv).</summary>
         private float SubSkillCdOf(string key)
@@ -246,8 +250,8 @@ namespace Game.Module.InGame
             if (key == "party.subpow")
             {
                 name = Tx("ui.party.card.subpow.name");
-                desc = Tf("ui.party.card.subpow.desc", Mathf.RoundToInt(PartyRule.SubPower * (1f + _subPowCard) * 100),
-                          Mathf.RoundToInt(PartyRule.SubPower * (1f + _subPowCard + 0.1f) * 100));
+                desc = Tf("ui.party.card.subpow.desc", Mathf.RoundToInt(SubPowerBase * (1f + _subPowCard) * 100),
+                          Mathf.RoundToInt(SubPowerBase * (1f + _subPowCard + 0.1f) * 100));
                 icon = _subs.Count > 0 && _subs[0].U != null ? UnitGet(_subs[0].U.Key, "s") : null;
                 return true;
             }

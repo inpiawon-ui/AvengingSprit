@@ -1022,7 +1022,8 @@ namespace Game.Character
         // 치명타 · 받는 피해 감소는 **더하는 %p**, 나머지는 **곱하는 %** 다.
         [Tooltip("유령 강화 한 단계 값(HostStat 순서). 치명타 · 받는 피해 감소(Defense)는 %p, 나머지는 %.")]
         // 치명타 피해(+1%p) · 사거리(직업별 RangePercentPerLevel — 이 칸은 줄이 있다는 표시)를 되살렸다(PD 2026-10-29)
-        [SerializeField] private float[] _ghostStepValue = { 2f, 2f, 0.3f, 0.6f, 1f, 0.3f, 1f, 0.3f };
+        // 보조 위력(+0.1%p — 보조 공격 30% 에 더한다, 상한 120 이면 42%)을 더했다(PD 2026-11-02)
+        [SerializeField] private float[] _ghostStepValue = { 2f, 2f, 0.3f, 0.6f, 1f, 0.3f, 1f, 0.3f, 0.1f };
         // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다(2026-10-13) — 개편 뒤 다시 잰다(TBD-BAL).
         [Tooltip("유령 강화 한 단계 골드 = 이 값 × 다음 레벨.")]
         [SerializeField] private int _ghostStatCostStep = 30;
@@ -1070,7 +1071,7 @@ namespace Game.Character
 
         /// <summary>더하는 능력치인가(치명타 · 치명타 피해 · 받는 피해 감소). 곱하는 것과 화면 · 계산이 다르다.</summary>
         public static bool IsFlatStat(HostStat stat)
-            => stat == HostStat.Crit || stat == HostStat.CritDamage || stat == HostStat.Defense;
+            => stat == HostStat.Crit || stat == HostStat.CritDamage || stat == HostStat.Defense || stat == HostStat.SubPower;
 
         /// <summary>Lv <paramref name="level"/> → 다음 단계 골드.</summary>
         public int GhostStatCostAt(int level)

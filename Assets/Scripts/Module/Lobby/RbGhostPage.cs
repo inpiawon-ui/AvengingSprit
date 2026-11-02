@@ -26,11 +26,11 @@ namespace Game.Module.Lobby
         // 치명타 피해 · 사거리를 되살렸다(PD 2026-10-29 「치명타 피해도 있지 않았어? 스탯 종류가 너무 적다」) — 예전 8칸 그대로
         private static readonly HostStat[] StatOrder =
             { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.CritDamage, HostStat.AtkSpeed, HostStat.MoveSpeed,
-              HostStat.Range, HostStat.Defense };
+              HostStat.Range, HostStat.Defense, HostStat.SubPower };
         // 첨자는 `HostStat` 순서다
         private static readonly string[] StatKeys =
             { "ui.rb.ghost.stat.hp", "ui.stat.atk", "ui.stat.crit", "ui.stat.atkspeed", "ui.stat.range", "ui.stat.movespeed",
-              "ui.stat.critdmg", "ui.rb.ghost.stat.def" };
+              "ui.stat.critdmg", "ui.rb.ghost.stat.def", "ui.rb.ghost.stat.subpow" };
         private const float ColPitch = (550f - 25f) * 2f / 3f, RowPitch = 142f * 2f / 3f;
         private const int PathShown = 3;
 
@@ -64,6 +64,18 @@ namespace Game.Module.Lobby
                 _ui.Find(t, "GhoStatBuy")?.GetComponent<Button>()?.onClick.AddListener(() => Buy(stat));
                 _tiles.Add(t);
             }
+            FitRows();
+        }
+
+        // 빌더는 4줄(8칸) 자리만 잡아 두었다 — 보조 위력(PD 2026-11-02)으로 늘어난 줄만큼 경험치 칸을 내리고 스크롤을 늘린다
+        private const int BuiltRows = 4;
+
+        private void FitRows()
+        {
+            float push = RowPitch * ((StatOrder.Length + 1) / 2 - BuiltRows);
+            if (push <= 0f || !(_ui.Find("GhoExp") is RectTransform exp)) return;
+            exp.anchoredPosition -= new Vector2(0f, push);
+            if (exp.parent is RectTransform content) content.sizeDelta += new Vector2(0f, push);
         }
 
         /// <summary>backTab — 뒤로를 누르면 돌아갈 탭(도감에서 왔으면 Host).</summary>
@@ -139,6 +151,8 @@ namespace Game.Module.Lobby
         {
             // 사거리는 직업마다 다르게 붙는다(근거리가 가장 크다) — 「원거리 ~ 근거리」
             var c = _player.Config;
+            // 보조 위력은 바탕 30% 에 더한 값 그대로 — 「보조 공격 30% › 30.1%」
+            if (stat == HostStat.SubPower) return $"{Game.Module.InGame.PartyRule.SubPower * 100f + _player.GhostStatValue(stat, lv):0.#}%";
             if (stat != HostStat.Range || c == null) return $"{_player.GhostStatValue(stat, lv):0.#}%";
             return $"{c.RangePercentPerLevel(2) * lv:0.#}~{c.RangePercentPerLevel(0) * lv:0.#}%";
         }

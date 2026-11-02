@@ -111,10 +111,12 @@ namespace Game.Editor.ReBorn
 
             var view = page.gameObject.AddComponent<RbGhostPage>();
             var so = new SerializedObject(view);
-            string[] stat = { "hp", "attack", "crit", "attackspeed", "range", "movespeed", "critdamage", "defense" };
+            // 보조 위력(PD 2026-11-02)은 전용 그림이 없어 「동료 강화」 아이콘을 쓴다
+            string[] stat = { "stat_hp", "stat_attack", "stat_crit", "stat_attackspeed", "stat_range", "stat_movespeed", "stat_critdamage", "stat_defense",
+                              "ally_next" };
             var icons = so.FindProperty("_statIcons");
             icons.arraySize = stat.Length;
-            for (int i = 0; i < stat.Length; i++) icons.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Icons/rb_icon_stat_{stat[i]}_96");
+            for (int i = 0; i < stat.Length; i++) icons.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Icons/rb_icon_{stat[i]}_96");
             so.FindProperty("_claimOn").objectReferenceValue = KitSprite("Components/rb_panel_hero");
             so.FindProperty("_claimOff").objectReferenceValue = KitSprite("Components/rb_panel_base");
             Icons(so);

@@ -33,7 +33,8 @@ namespace Game.Character
     /// </summary>
     /// ⚠ **뒤에만 더한다.** 저장(`hostStatLevels`)이 [몸 × 능력치 수 + 능력치] 로 이 순서를 쓴다.
     ///   치명타 피해 · 방어력은 2026-10-06 에 더했다 — 옛 저장은 `UserData.NormalizeStats` 가 옮긴다.
-    public enum HostStat { Hp, Atk, Crit, AtkSpeed, Range, MoveSpeed, CritDamage, Defense }
+    ///   보조 위력(SubPower)은 2026-11-02 에 더했다 — 유령 강화 전용(빙의 파티 보조 공격 배수 %p).
+    public enum HostStat { Hp, Atk, Crit, AtkSpeed, Range, MoveSpeed, CritDamage, Defense, SubPower }
 
     /// <summary>
     /// 레벨 한 칸의 능력치. `HostEntry._levelStats` 의 원소다.
