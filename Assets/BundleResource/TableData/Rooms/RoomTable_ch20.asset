@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -301,8 +301,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -336,7 +336,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -568,8 +568,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -603,7 +603,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -952,8 +952,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -987,7 +987,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1081,8 +1081,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1147,8 +1147,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1182,7 +1182,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1357,8 +1357,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1392,7 +1392,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1778,8 +1778,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1813,7 +1813,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2170,8 +2170,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2281,7 +2281,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2368,8 +2368,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2403,7 +2403,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 342
+    _gold: 324
     _exp: 994
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2484,8 +2484,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2519,7 +2519,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3074,8 +3074,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3109,7 +3109,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3245,8 +3245,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3280,7 +3280,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3759,8 +3759,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3794,7 +3794,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3995,8 +3995,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4061,8 +4061,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4096,7 +4096,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4365,8 +4365,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4400,7 +4400,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4791,8 +4791,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4826,7 +4826,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5308,8 +5308,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5343,7 +5343,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6057,8 +6057,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6092,7 +6092,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 342
+    _gold: 324
     _exp: 994
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6173,8 +6173,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6208,7 +6208,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6524,8 +6524,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6559,7 +6559,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7163,8 +7163,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7198,7 +7198,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7654,8 +7654,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7689,7 +7689,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7981,8 +7981,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8047,8 +8047,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8082,7 +8082,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8398,8 +8398,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8433,7 +8433,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8717,8 +8717,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8752,7 +8752,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8961,8 +8961,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8996,7 +8996,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 93
+    _gold: 97
     _exp: 306
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9421,8 +9421,8 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 33693
-    _bossAtk: 118
+    _bossHp: 38511
+    _bossAtk: 131
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9456,7 +9456,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_sludge
     _eventPool: 
-    _gold: 1025
+    _gold: 972
     _exp: 1530
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -211,7 +211,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -595,7 +595,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -862,7 +862,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1312,7 +1312,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1600,7 +1600,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1992,7 +1992,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2278,7 +2278,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2400,7 +2400,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 86
+    _gold: 116
     _exp: 403
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2516,7 +2516,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2963,7 +2963,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3230,7 +3230,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3820,7 +3820,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4543,7 +4543,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4847,7 +4847,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5785,7 +5785,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6323,7 +6323,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6791,7 +6791,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 86
+    _gold: 116
     _exp: 403
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6907,7 +6907,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7601,7 +7601,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7952,7 +7952,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8492,7 +8492,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9049,7 +9049,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9351,7 +9351,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9691,7 +9691,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -10479,7 +10479,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyardv2
     _eventPool: 
-    _gold: 24
+    _gold: 35
     _exp: 124
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -10715,7 +10715,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_python
     _eventPool: 
-    _gold: 258
+    _gold: 348
     _exp: 620
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

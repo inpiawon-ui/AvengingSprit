@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 1650
-    _bossAtk: 36
+    _bossHp: 1100
+    _bossAtk: 24
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -140,7 +140,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_crusher
     _eventPool: 
-    _gold: 78
+    _gold: 108
     _exp: 270
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -206,7 +206,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_python
     _eventPool: 
-    _gold: 102
+    _gold: 156
     _exp: 340
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -272,7 +272,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_sludge
     _eventPool: 
-    _gold: 132
+    _gold: 204
     _exp: 410
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -338,7 +338,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_guardian
     _eventPool: 
-    _gold: 168
+    _gold: 252
     _exp: 480
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -404,7 +404,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_kingpin
     _eventPool: 
-    _gold: 210
+    _gold: 300
     _exp: 550
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -470,7 +470,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_python
     _eventPool: 
-    _gold: 258
+    _gold: 348
     _exp: 620
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -536,7 +536,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_sludge
     _eventPool: 
-    _gold: 312
+    _gold: 396
     _exp: 690
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -602,7 +602,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_guardian
     _eventPool: 
-    _gold: 372
+    _gold: 444
     _exp: 760
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -668,7 +668,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_kingpin
     _eventPool: 
-    _gold: 438
+    _gold: 492
     _exp: 830
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -699,8 +699,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -734,7 +734,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_robot_snakes
     _eventPool: 
-    _gold: 477
+    _gold: 540
     _exp: 900
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -765,8 +765,8 @@ MonoBehaviour:
     _bossId: B01
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -800,7 +800,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_crusher
     _eventPool: 
-    _gold: 519
+    _gold: 588
     _exp: 970
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -831,8 +831,8 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -866,7 +866,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_python
     _eventPool: 
-    _gold: 565
+    _gold: 636
     _exp: 1040
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -897,8 +897,8 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -932,7 +932,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_sludge
     _eventPool: 
-    _gold: 615
+    _gold: 684
     _exp: 1110
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -963,8 +963,8 @@ MonoBehaviour:
     _bossId: B02
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -998,7 +998,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_guardian
     _eventPool: 
-    _gold: 670
+    _gold: 732
     _exp: 1180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1029,8 +1029,8 @@ MonoBehaviour:
     _bossId: B03
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1064,7 +1064,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_kingpin
     _eventPool: 
-    _gold: 729
+    _gold: 780
     _exp: 1250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1095,8 +1095,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1130,7 +1130,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_robot_snakes
     _eventPool: 
-    _gold: 794
+    _gold: 828
     _exp: 1320
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1161,8 +1161,8 @@ MonoBehaviour:
     _bossId: B01
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1196,7 +1196,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_crusher
     _eventPool: 
-    _gold: 865
+    _gold: 876
     _exp: 1390
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1227,8 +1227,8 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1262,7 +1262,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_python
     _eventPool: 
-    _gold: 941
+    _gold: 924
     _exp: 1460
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1285,8 +1285,8 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 33693
-    _bossAtk: 118
+    _bossHp: 38511
+    _bossAtk: 131
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1320,7 +1320,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_sludge
     _eventPool: 
-    _gold: 1025
+    _gold: 972
     _exp: 1530
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

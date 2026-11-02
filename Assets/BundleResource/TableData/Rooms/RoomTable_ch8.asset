@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -336,7 +336,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -590,7 +590,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -974,7 +974,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1169,7 +1169,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1590,7 +1590,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1852,7 +1852,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2216,7 +2216,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2338,7 +2338,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 104
+    _gold: 132
     _exp: 448
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2454,7 +2454,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3044,7 +3044,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3306,7 +3306,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3542,7 +3542,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4055,7 +4055,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4445,7 +4445,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4871,7 +4871,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5419,7 +5419,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6168,7 +6168,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 104
+    _gold: 132
     _exp: 448
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6284,7 +6284,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6479,7 +6479,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7170,7 +7170,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7565,7 +7565,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7888,7 +7888,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8676,7 +8676,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9016,7 +9016,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9360,7 +9360,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_missilev2
     _eventPool: 
-    _gold: 28
+    _gold: 40
     _exp: 138
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9596,7 +9596,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_sludge
     _eventPool: 
-    _gold: 312
+    _gold: 396
     _exp: 690
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

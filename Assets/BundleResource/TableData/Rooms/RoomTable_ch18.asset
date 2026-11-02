@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -301,8 +301,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -336,7 +336,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -685,8 +685,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -720,7 +720,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1069,8 +1069,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1104,7 +1104,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1344,8 +1344,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1410,8 +1410,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1445,7 +1445,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1620,8 +1620,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1655,7 +1655,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1882,8 +1882,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1917,7 +1917,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2274,8 +2274,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2328,7 +2328,7 @@ MonoBehaviour:
       - {x: 3.182, y: 9.718}
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2597,8 +2597,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2632,7 +2632,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 288
+    _gold: 292
     _exp: 904
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2713,8 +2713,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2748,7 +2748,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3160,8 +3160,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3195,7 +3195,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3370,8 +3370,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3405,7 +3405,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3606,8 +3606,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3641,7 +3641,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4037,8 +4037,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4103,8 +4103,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4138,7 +4138,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4329,8 +4329,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4364,7 +4364,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4719,8 +4719,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4754,7 +4754,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5145,8 +5145,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5180,7 +5180,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5613,8 +5613,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5648,7 +5648,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 288
+    _gold: 292
     _exp: 904
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5729,8 +5729,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5764,7 +5764,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5924,8 +5924,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5959,7 +5959,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6615,8 +6615,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6650,7 +6650,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7155,8 +7155,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7190,7 +7190,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7516,8 +7516,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7582,8 +7582,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7617,7 +7617,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7884,8 +7884,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7919,7 +7919,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8672,8 +8672,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8707,7 +8707,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9036,8 +9036,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9071,7 +9071,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 79
+    _gold: 88
     _exp: 278
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9496,8 +9496,8 @@ MonoBehaviour:
     _bossId: B01
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9531,7 +9531,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_crusher
     _eventPool: 
-    _gold: 865
+    _gold: 876
     _exp: 1390
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

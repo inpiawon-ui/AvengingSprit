@@ -14,6 +14,8 @@ namespace Game.Module.InGame
     public sealed partial class BattleDirector
     {
         public static bool AutoPilot;
+        /// <summary>끄면 맞고 죽는다 — 난이도를 잴 때(밸런스 측정 PD 2026-11-02). 영상은 켠 채로.</summary>
+        public static bool AutoPilotInvuln = true;
         private float _apUiClock;
         private Vector2 _apLastPos;
         private float _apStuck;
@@ -26,7 +28,7 @@ namespace Game.Module.InGame
         private void TickAutoPilot()
         {
             if (!AutoPilot || !_running) return;
-            _invuln = Mathf.Max(_invuln, 0.5f);
+            if (AutoPilotInvuln) _invuln = Mathf.Max(_invuln, 0.5f);
 
             _apUiClock += Time.unscaledDeltaTime;
             if (_apUiClock >= 0.6f)

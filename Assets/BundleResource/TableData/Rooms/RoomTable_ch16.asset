@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -413,8 +413,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -448,7 +448,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -810,8 +810,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -845,7 +845,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1267,8 +1267,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1302,7 +1302,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1659,8 +1659,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1725,8 +1725,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1760,7 +1760,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2117,8 +2117,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2152,7 +2152,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2379,8 +2379,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2442,7 +2442,7 @@ MonoBehaviour:
       - {x: 0.455, y: 6.082}
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2513,8 +2513,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2624,7 +2624,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2711,8 +2711,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2746,7 +2746,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 243
+    _gold: 260
     _exp: 812
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2827,8 +2827,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2862,7 +2862,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3274,8 +3274,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3333,7 +3333,7 @@ MonoBehaviour:
       - {x: 0.455, y: 10.627}
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3667,8 +3667,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3702,7 +3702,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4111,8 +4111,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4146,7 +4146,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4685,8 +4685,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4751,8 +4751,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4786,7 +4786,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5141,8 +5141,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5176,7 +5176,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5367,8 +5367,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5402,7 +5402,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5850,8 +5850,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5885,7 +5885,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6310,8 +6310,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6345,7 +6345,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 243
+    _gold: 260
     _exp: 812
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6426,8 +6426,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6461,7 +6461,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6777,8 +6777,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6812,7 +6812,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7416,8 +7416,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7451,7 +7451,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7839,8 +7839,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7874,7 +7874,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8533,8 +8533,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8599,8 +8599,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8634,7 +8634,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8950,8 +8950,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8985,7 +8985,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9290,8 +9290,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9325,7 +9325,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9534,8 +9534,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9588,7 +9588,7 @@ MonoBehaviour:
       - {x: 3.182, y: 10.627}
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 66
+    _gold: 78
     _exp: 250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -10049,8 +10049,8 @@ MonoBehaviour:
     _bossId: B03
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -10084,7 +10084,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_kingpin
     _eventPool: 
-    _gold: 729
+    _gold: 780
     _exp: 1250
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

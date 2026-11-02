@@ -9171,8 +9171,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 1650
-    _bossAtk: 36
+    _bossHp: 1100
+    _bossAtk: 24
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1

@@ -41,6 +41,12 @@ namespace Game.EditorTools
     ///   AffinityDemo.queue     여러 판을 줄 세운다 — 「챕터|몸|힘」을 줄바꿈으로. 한 판이 끝나면 다음 판을 연다
     ///   결과는 `Library/BalanceRuns.tsv` 에 한 줄씩 쌓인다(챕터 · 도달 방 · 깼는가 · 걸린 초 · 판 골드)
     ///
+    /// ── 경제 개편 뒤 난이도 재기 (PD 2026-11-02) ───────────────────
+    ///   힘 칸이 「v2:유령Lv;유령 강화(8줄 같은 단계);호스트 성급(전원);스킬 레벨 몫(0~1)」 이면 지금 육성 구조로 넣는다.
+    ///   AffinityDemo.newPilot  켜면 빙의 파티를 아는 새 조종(`BattleDirector.AutoPilot`)을 쓴다 — 옛 `PromoPilot` 대신
+    ///   AffinityDemo.keepAlive 끄면 새 조종도 무적 없이 맞고 죽는다
+    ///   깼는가는 판 끝 이벤트(`StageFinishedEvent.IsCleared`)로 적는다 — 파티 판은 유령 에너지가 남은 채로 질 수 있다
+    ///
     /// ⚠ 힘을 넣으면 **저장이 바뀐다.** 돌리기 전에 저장 파일을 따로 떠 두고 끝나면 되돌린다.
     /// </summary>
     [InitializeOnLoad]
@@ -111,6 +117,7 @@ namespace Game.EditorTools
 
             string profile = SessionState.GetString("AffinityDemo.profile", string.Empty);
             if (string.IsNullOrEmpty(profile)) return;
+            if (profile.StartsWith("v2:")) { ApplyPowerV2(player, data, profile.Substring(3)); return; }
             var parts = profile.Split(';');
             int count = System.Enum.GetValues(typeof(Game.Character.HostStat)).Length;
             data.NormalizeStats(count);
@@ -123,6 +130,44 @@ namespace Game.EditorTools
             for (int i = 0; i < at.Length; i++) data.ghostStatLevels[at[i]] = int.Parse(g[i]);
             // 호스트 탭 능력치 강화(셋째 칸)는 없앴다(육성 개편 2026-10-29) — 프로필의 그 값은 읽지 않는다
         }
+
+        /// <summary>
+        /// 지금 육성 구조의 힘 — 유령 레벨 · 유령 강화 8줄 같은 단계 · 모든 호스트 성급 · 스킬 레벨(상한의 몫).
+        /// 경제 모델(`Tools/economy_model.py`)이 말한 「그 챕터에 들어설 때의 힘」을 넣는다.
+        /// </summary>
+        private static void ApplyPowerV2(Game.User.IPlayerDataService player, Game.User.UserData data, string power)
+        {
+            var t = power.Split(';');
+            int lv = int.Parse(t[0]), stat = int.Parse(t[1]), mastery = int.Parse(t[2]);
+            float skillFrac = float.Parse(t[3], System.Globalization.CultureInfo.InvariantCulture);
+            data.ghostLevel = Mathf.Max(1, lv);
+            int count = System.Enum.GetValues(typeof(Game.Character.HostStat)).Length;
+            data.NormalizeStats(count);
+            for (int i = 0; i < data.ghostStatLevels.Length; i++) data.ghostStatLevels[i] = stat;
+            var ensure = player.GetType().GetMethod("EnsureHost", F);
+            foreach (var e in player.PlayableHosts)
+            {
+                if (e == null || e.IsGhost || Game.User.PlayerDataService.IsHiddenHost(e.HostKey)) continue;
+                int at = (int)ensure.Invoke(player, new object[] { e.HostKey });
+                if (at < 0) continue;
+                data.hostMastery[at] = mastery;
+            }
+            data.NormalizeSkills(3);
+            foreach (var e in player.PlayableHosts)
+            {
+                if (e == null || e.IsGhost || mastery < 1) continue;
+                int at = (int)ensure.Invoke(player, new object[] { e.HostKey });
+                if (at < 0) continue;
+                for (int slot = 0; slot < 3; slot++)
+                {
+                    int cap = player.SkillLevelCap(e.HostKey, (Game.User.HostSkillSlot)slot);
+                    data.hostSkillLevels[at * 3 + slot] = Mathf.Clamp(Mathf.RoundToInt(cap * skillFrac), 1, cap);
+                }
+            }
+        }
+
+        private static System.IDisposable _finishToken;
+        private static int _finishCleared = -1;
 
         private static void Tick()
         {
@@ -180,6 +225,22 @@ namespace Game.EditorTools
 
             // 숨긴 몸(엘리트 아마존 · 사신)은 로비에서 못 고른다 — 판이 유령으로 선 뒤 그 몸을 직접 입힌다(호스트별 확인 영상)
             if (step == 2 && !EquipHiddenHost(director, bt)) { _wait = 5; return; }
+
+            if (step == 2 && SessionState.GetBool("AffinityDemo.newPilot", false))
+            {
+                BattleDirector.AutoPilotInvuln = SessionState.GetBool("AffinityDemo.keepAlive", true);
+                BattleDirector.AutoPilot = true;
+                PromoPilot.Log.Clear();
+                _finishCleared = -1;
+                _finishToken?.Dispose();
+                _finishToken = CoreModule.Get<GameFramework.Core.Module.EventBus.IEventBus>()
+                    .Subscribe<Game.Module.Events.StageFinishedEvent>(e => _finishCleared = e.IsCleared ? 1 : 0);
+                SessionState.SetInt(Key, 3);
+                SessionState.SetInt("AffinityDemo.startFrame", Time.frameCount);
+                SessionState.SetFloat("AffinityDemo.startTime", Time.time);
+                _wait = 10;
+                return;
+            }
 
             if (step == 2)
             {
@@ -241,15 +302,20 @@ namespace Game.EditorTools
                 StopRecording();
                 Debug.Log($"[AffinityDemo] 끝 — 방 {room + 1} · 장면 기록 {PromoPilot.Log}");
 
-                // 결과 한 줄 — 유령 에너지가 남아 있으면 깬 것이다(죽음은 0 에서만 난다).
+                // 결과 한 줄 — 새 조종은 판 끝 이벤트로, 옛 조종은 유령 에너지가 남아 있으면 깬 것으로 본다.
                 int ghostHp = (int)bt.GetField("_ghostHp", F).GetValue(director);
                 int frames = Time.frameCount - SessionState.GetInt("AffinityDemo.startFrame", Time.frameCount);
+                bool clear = _finishCleared >= 0 ? _finishCleared == 1 : over && ghostHp > 0;
+                _finishToken?.Dispose();
+                _finishToken = null;
+                BattleDirector.AutoPilot = false;
+                BattleDirector.AutoPilotInvuln = true;
                 File.AppendAllText(ResultPath, string.Join("\t",
                     SessionState.GetInt("AffinityDemo.chapter", 1),
                     SessionState.GetString("AffinityDemo.host", string.Empty),
                     SessionState.GetString("AffinityDemo.profile", string.Empty),
-                    room + 1, stuck ? "stuck" : over && ghostHp > 0 ? "clear" : "dead",
-                    Time.timeSinceLevelLoad.ToString("0"), director.RunGold, frames,
+                    room + 1, stuck ? "stuck" : clear ? "clear" : "dead",
+                    (Time.time - SessionState.GetFloat("AffinityDemo.startTime", 0f)).ToString("0"), director.RunGold, frames,
                     PromoPilot.Log.ToString()) + "\n");
 
                 // 줄 선 판이 남았으면 플레이를 끄고 다음 판으로 넘어간다

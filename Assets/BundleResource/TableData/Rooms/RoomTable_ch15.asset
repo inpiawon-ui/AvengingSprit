@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -431,8 +431,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -466,7 +466,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -560,8 +560,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -595,7 +595,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -827,8 +827,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -862,7 +862,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1081,8 +1081,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1147,8 +1147,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1182,7 +1182,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1357,8 +1357,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1392,7 +1392,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1749,8 +1749,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1784,7 +1784,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2011,8 +2011,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2122,7 +2122,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2209,8 +2209,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2244,7 +2244,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 223
+    _gold: 244
     _exp: 767
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2325,8 +2325,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2384,7 +2384,7 @@ MonoBehaviour:
       - {x: 0.455, y: 10.627}
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2718,8 +2718,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2753,7 +2753,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3188,8 +3188,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3223,7 +3223,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3424,8 +3424,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3459,7 +3459,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3868,8 +3868,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3934,8 +3934,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3969,7 +3969,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4160,8 +4160,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4195,7 +4195,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4708,8 +4708,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4743,7 +4743,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5012,8 +5012,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5047,7 +5047,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5761,8 +5761,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5796,7 +5796,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 223
+    _gold: 244
     _exp: 767
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5877,8 +5877,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5912,7 +5912,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6072,8 +6072,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6107,7 +6107,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6342,8 +6342,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6377,7 +6377,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6721,8 +6721,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6756,7 +6756,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7144,8 +7144,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7210,8 +7210,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7245,7 +7245,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7998,8 +7998,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8033,7 +8033,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8349,8 +8349,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8384,7 +8384,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8692,8 +8692,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8869,7 +8869,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 61
+    _gold: 73
     _exp: 236
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9044,8 +9044,8 @@ MonoBehaviour:
     _bossId: B02
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9079,7 +9079,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_guardian
     _eventPool: 
-    _gold: 670
+    _gold: 732
     _exp: 1180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

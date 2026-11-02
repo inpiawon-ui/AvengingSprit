@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -413,8 +413,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -448,7 +448,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -805,8 +805,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -840,7 +840,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1262,8 +1262,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1297,7 +1297,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1659,8 +1659,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1725,8 +1725,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1760,7 +1760,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2146,8 +2146,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2181,7 +2181,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2538,8 +2538,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2573,7 +2573,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2826,8 +2826,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2861,7 +2861,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3044,8 +3044,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3079,7 +3079,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 188
+    _gold: 212
     _exp: 676
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3160,8 +3160,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3219,7 +3219,7 @@ MonoBehaviour:
       - {x: 0.455, y: 10.627}
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3553,8 +3553,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3588,7 +3588,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3768,8 +3768,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3803,7 +3803,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4282,8 +4282,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4317,7 +4317,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4515,8 +4515,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4581,8 +4581,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4616,7 +4616,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4807,8 +4807,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4842,7 +4842,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5197,8 +5197,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5232,7 +5232,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5623,8 +5623,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5658,7 +5658,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6372,8 +6372,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6407,7 +6407,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 188
+    _gold: 212
     _exp: 676
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6488,8 +6488,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6523,7 +6523,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7182,8 +7182,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7217,7 +7217,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7561,8 +7561,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7596,7 +7596,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8101,8 +8101,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8136,7 +8136,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8324,8 +8324,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8390,8 +8390,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8425,7 +8425,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8741,8 +8741,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8776,7 +8776,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9529,8 +9529,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9564,7 +9564,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9848,8 +9848,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -10025,7 +10025,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 52
+    _gold: 64
     _exp: 208
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -10200,8 +10200,8 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -10235,7 +10235,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_python
     _eventPool: 
-    _gold: 565
+    _gold: 636
     _exp: 1040
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

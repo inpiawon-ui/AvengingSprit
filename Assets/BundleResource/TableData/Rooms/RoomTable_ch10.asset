@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -336,7 +336,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -694,7 +694,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1039,7 +1039,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1346,7 +1346,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1602,7 +1602,7 @@ MonoBehaviour:
       - {x: 4.091, y: 6.082}
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1708,7 +1708,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1852,7 +1852,7 @@ MonoBehaviour:
       - {x: 1.364, y: 13.355}
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2226,7 +2226,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 146
+    _gold: 164
     _exp: 540
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2342,7 +2342,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2646,7 +2646,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2913,7 +2913,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3076,7 +3076,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3508,7 +3508,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3724,7 +3724,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4207,7 +4207,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4815,7 +4815,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5382,7 +5382,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 146
+    _gold: 164
     _exp: 540
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5498,7 +5498,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5940,7 +5940,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6163,7 +6163,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6490,7 +6490,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7047,7 +7047,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7391,7 +7391,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7693,7 +7693,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8057,7 +8057,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_rooftopv2
     _eventPool: 
-    _gold: 40
+    _gold: 49
     _exp: 166
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8293,7 +8293,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_kingpin
     _eventPool: 
-    _gold: 438
+    _gold: 492
     _exp: 830
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

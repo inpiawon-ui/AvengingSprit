@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -349,7 +349,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -733,7 +733,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1117,7 +1117,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1437,7 +1437,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1647,7 +1647,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1935,7 +1935,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2403,7 +2403,7 @@ MonoBehaviour:
       - {x: 8.636, y: 3.355}
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2525,7 +2525,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 159
+    _gold: 180
     _exp: 585
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2665,7 +2665,7 @@ MonoBehaviour:
       - {x: 0.455, y: 10.627}
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3034,7 +3034,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3478,7 +3478,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3740,7 +3740,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4396,7 +4396,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4786,7 +4786,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5303,7 +5303,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5841,7 +5841,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6301,7 +6301,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 159
+    _gold: 180
     _exp: 585
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6417,7 +6417,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7111,7 +7111,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7381,7 +7381,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7768,7 +7768,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8185,7 +8185,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8973,7 +8973,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9217,7 +9217,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9581,7 +9581,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_labv2
     _eventPool: 
-    _gold: 44
+    _gold: 54
     _exp: 180
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9998,8 +9998,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -10033,7 +10033,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_robot_snakes
     _eventPool: 
-    _gold: 477
+    _gold: 540
     _exp: 900
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}

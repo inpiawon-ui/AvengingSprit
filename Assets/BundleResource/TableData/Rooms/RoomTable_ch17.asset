@@ -39,8 +39,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -249,8 +249,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -284,7 +284,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -706,8 +706,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -741,7 +741,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1072,8 +1072,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1107,7 +1107,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1464,8 +1464,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1530,8 +1530,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1565,7 +1565,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -1740,8 +1740,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -1775,7 +1775,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2028,8 +2028,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2063,7 +2063,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2449,8 +2449,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2503,7 +2503,7 @@ MonoBehaviour:
       - {x: 3.182, y: 9.718}
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2772,8 +2772,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2807,7 +2807,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 265
+    _gold: 276
     _exp: 858
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -2888,8 +2888,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -2923,7 +2923,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3335,8 +3335,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3370,7 +3370,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3597,8 +3597,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3632,7 +3632,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -3833,8 +3833,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -3868,7 +3868,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4423,8 +4423,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4489,8 +4489,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4524,7 +4524,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -4715,8 +4715,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -4750,7 +4750,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5105,8 +5105,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5140,7 +5140,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -5588,8 +5588,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -5623,7 +5623,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6056,8 +6056,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6091,7 +6091,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_holding
     _eventPool: 
-    _gold: 265
+    _gold: 276
     _exp: 858
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6172,8 +6172,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6207,7 +6207,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -6523,8 +6523,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -6558,7 +6558,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7014,8 +7014,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7049,7 +7049,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7708,8 +7708,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -7743,7 +7743,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -7991,8 +7991,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8057,8 +8057,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8092,7 +8092,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -8845,8 +8845,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -8880,7 +8880,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9307,8 +9307,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9342,7 +9342,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -9673,8 +9673,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -9708,7 +9708,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 72
+    _gold: 83
     _exp: 264
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
@@ -10125,8 +10125,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -10160,7 +10160,7 @@ MonoBehaviour:
     _tracks: []
     _floor: roomfloor_robot_snakes
     _eventPool: 
-    _gold: 794
+    _gold: 828
     _exp: 1320
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
