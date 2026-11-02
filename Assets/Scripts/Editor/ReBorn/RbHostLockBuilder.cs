@@ -102,9 +102,10 @@ namespace Game.Editor.ReBorn
 
             var view = page.gameObject.AddComponent<RbRevealPage>();
             var so = new SerializedObject(view);
-            // 성급 별 — 5성마다 큰 금별 · 그 사이는 작은 은별(PD 2026-10-16 StarRank, 2026-10-26 되돌림)
+            // 성급 별 — 1~5성 노란 · 6~9성 붉은 · 10성 무지개(PD 2026-11-02 시안, StarRank)
             so.FindProperty("_rankGold").objectReferenceValue = KitSprite("Icons/rb_icon_rank_gold_64");
-            so.FindProperty("_rankSilver").objectReferenceValue = KitSprite("Icons/rb_icon_rank_silver_64");
+            so.FindProperty("_rankRed").objectReferenceValue = KitSprite("Icons/rb_icon_rank_red_64");
+            so.FindProperty("_rankRainbow").objectReferenceValue = KitSprite("Icons/rb_icon_rank_rainbow_128");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);
         }

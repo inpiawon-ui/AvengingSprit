@@ -41,7 +41,8 @@ namespace Game.Editor.ReBorn
             Many(so, "_cardTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
             Many(so, "_affIcons", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
             so.FindProperty("_rankGold").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_rank_gold_64");
-            so.FindProperty("_rankSilver").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_rank_silver_64");
+            so.FindProperty("_rankRed").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_rank_red_64");
+            so.FindProperty("_rankRainbow").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_rank_rainbow_128");
             so.FindProperty("_shardIcon").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_shard_48");
             so.FindProperty("_badgeNew").objectReferenceValue = RbBuild.KitSprite("Components/rb_badge_new");
             so.FindProperty("_barTrack").objectReferenceValue = RbBuild.KitSprite("Components/rb_bar_track");

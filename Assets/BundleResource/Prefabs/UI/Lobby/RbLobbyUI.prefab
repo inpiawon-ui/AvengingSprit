@@ -81217,7 +81217,8 @@ MonoBehaviour:
   - {x: 0.007518797, y: 0.0057142857, z: 0.99248123, w: 0.9942857}
   - {x: 0.007518797, y: 0.0057142857, z: 0.99248123, w: 0.9942857}
   _rankGold: {fileID: 21300000, guid: 4d4d373da9ecac946b1299d7aa74de47, type: 3}
-  _rankSilver: {fileID: 21300000, guid: c846bb94f80587c4dac6a03768448636, type: 3}
+  _rankRed: {fileID: 21300000, guid: a9ce1f603e2247a096842c288deb8bf8, type: 3}
+  _rankRainbow: {fileID: 21300000, guid: df14d6a2e6024359a57ef6b22e09d4b9, type: 3}
 --- !u!1 &5232003283373904287
 GameObject:
   m_ObjectHideFlags: 0
@@ -103994,7 +103995,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 03ef20f4ebc121248943fe37ef14485a, type: 3}
   - {fileID: 21300000, guid: 5aab1dabb71a493469385c18f58f63b4, type: 3}
   _rankGold: {fileID: 21300000, guid: 4d4d373da9ecac946b1299d7aa74de47, type: 3}
-  _rankSilver: {fileID: 21300000, guid: c846bb94f80587c4dac6a03768448636, type: 3}
+  _rankRed: {fileID: 21300000, guid: a9ce1f603e2247a096842c288deb8bf8, type: 3}
+  _rankRainbow: {fileID: 21300000, guid: df14d6a2e6024359a57ef6b22e09d4b9, type: 3}
   _tileNormal: {fileID: 21300000, guid: fdcd2b8969b51fa4ca8ccd9dba785815, type: 3}
   _tileMax: {fileID: 21300000, guid: fdcd2b8969b51fa4ca8ccd9dba785815, type: 3}
   _tilePoor: {fileID: 21300000, guid: fdcd2b8969b51fa4ca8ccd9dba785815, type: 3}
@@ -140028,11 +140030,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 48f966e2e6a21de428e0d5c3b2a97424, type: 3}
   - {fileID: 21300000, guid: 4680fd9712ed0324484ea765c5d81a40, type: 3}
   _rankGold: {fileID: 21300000, guid: 4d4d373da9ecac946b1299d7aa74de47, type: 3}
-  _rankSilver: {fileID: 21300000, guid: c846bb94f80587c4dac6a03768448636, type: 3}
   _shardIcon: {fileID: 21300000, guid: 6266ccdb8d41f0a4e87a82cc1961d9d7, type: 3}
   _badgeNew: {fileID: 21300000, guid: 76612a0ca01f6f5458b344daf63f085d, type: 3}
   _barTrack: {fileID: 21300000, guid: cd72c47f5943e834b95711d05f40d830, type: 3}
   _barFill: {fileID: 21300000, guid: 91008f9315249e4439cd5628ad54da1a, type: 3}
+  _rankRed: {fileID: 21300000, guid: a9ce1f603e2247a096842c288deb8bf8, type: 3}
+  _rankRainbow: {fileID: 21300000, guid: df14d6a2e6024359a57ef6b22e09d4b9, type: 3}
   _stage: {fileID: 21300000, guid: 3003e91c5cc52ce4dbdbb48b215acc97, type: 3}
   _tank: {fileID: 21300000, guid: b34fe8e862f333e4ab851ec8653e2ccb, type: 3}
   _tankBroken: {fileID: 21300000, guid: cbe2e2c92b2ee454aad35a4c6a2f710f, type: 3}
@@ -141193,7 +141196,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.RbRevealPage
   _rankGold: {fileID: 21300000, guid: 4d4d373da9ecac946b1299d7aa74de47, type: 3}
-  _rankSilver: {fileID: 21300000, guid: c846bb94f80587c4dac6a03768448636, type: 3}
+  _rankRed: {fileID: 21300000, guid: a9ce1f603e2247a096842c288deb8bf8, type: 3}
+  _rankRainbow: {fileID: 21300000, guid: df14d6a2e6024359a57ef6b22e09d4b9, type: 3}
 --- !u!1 &8991866506694673287
 GameObject:
   m_ObjectHideFlags: 0

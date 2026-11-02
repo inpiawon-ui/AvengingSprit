@@ -28,7 +28,10 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _fitSprites = Array.Empty<Sprite>();
         [SerializeField] private Vector4[] _fitBodies = Array.Empty<Vector4>();
         // 성급 별 — 큰 금별(5성마다) · 작은 은별(StarRank)
-        [SerializeField] private Sprite _rankGold, _rankSilver;
+        // 성급 별 — 노란 · 붉은(6~9성) · 무지개(10성) (PD 2026-11-02 시안, StarRank)
+        [SerializeField] private Sprite _rankGold;
+        [SerializeField] private Sprite _rankRed;
+        [SerializeField] private Sprite _rankRainbow;
 
         private const float CardW = 328f * 2f / 3f;
         private static readonly float[] ColX = { (30f + 164f - 540f) * 2f / 3f, (375f + 164f - 540f) * 2f / 3f, (722f + 164f - 540f) * 2f / 3f };
@@ -261,19 +264,18 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>
-        /// 성급 별 줄 — 1~4성은 작은 은별을 하나씩 더하고 5성마다 큰 금별 하나(3성 = 은 3 · 7성 = 금 1 + 은 2 · 10성 = 금 2).
-        /// PD 2026-10-16 결정(StarRank)으로 되돌렸다 — 리뉴얼 때 「금별 5 + 각성 별」로 바뀌어 있었다(PD 2026-10-26 「전에 정리한 양식대로」).
-        /// 별 크기는 별 줄 칸 높이에 맞춘다(은별 0.75 · 금별은 그 1.6배) — 화면마다 칸 크기가 달라서다.
-        /// (0.62 는 도감 카드에서 은별이 점처럼 작았다 — 2026-10-26 캡처)
+        /// 성급 별 줄 — 1~5성 노란 별 · 6~9성 왼쪽부터 붉은 별 · 10성 무지개 별 하나(PD 2026-11-02 시안, StarRank).
+        /// 별 크기는 별 줄 칸 높이에 맞춘다(노란 별 0.75 · 무지개는 그 배수) — 화면마다 칸 크기가 달라서다.
+        /// (0.62 는 도감 카드에서 별이 점처럼 작았다 — 2026-10-26 캡처)
         /// </summary>
-        public static void Stars(Transform root, string prefix, int rank, Sprite gold, Sprite silver)
+        public static void Stars(Transform root, string prefix, int rank, Sprite yellow, Sprite red, Sprite rainbow)
         {
             if (root is not RectTransform r) return;
             float h = r.rect.height > 0f ? r.rect.height : r.sizeDelta.y;
-            StarRank.Apply(root, prefix, rank, gold, silver, Vector2.zero, h * 0.75f, h * 0.08f);
+            StarRank.Apply(root, prefix, rank, yellow, red, rainbow, Vector2.zero, h * 0.75f, h * 0.08f);
         }
 
-        private void ApplyStars(Transform root, string prefix, int rank) => Stars(root, prefix, rank, _rankGold, _rankSilver);
+        private void ApplyStars(Transform root, string prefix, int rank) => Stars(root, prefix, rank, _rankGold, _rankRed, _rankRainbow);
 
         /// <summary>「⚔ 3,230」 — 아이콘 + 글자 한 줄을 글자 폭을 재서 가운데에 세운다.</summary>
         private static void CenterRun(RectTransform icon, TextMeshProUGUI text, bool withIcon)

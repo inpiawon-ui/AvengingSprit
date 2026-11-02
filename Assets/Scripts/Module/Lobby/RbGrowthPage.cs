@@ -31,7 +31,10 @@ namespace Game.Module.Lobby
         [SerializeField] private SkillArt[] _arts = Array.Empty<SkillArt>();
         /// <summary>`HostStat` 순서의 아이콘.</summary>
         [SerializeField] private Sprite[] _statIcons = Array.Empty<Sprite>();
-        [SerializeField] private Sprite _rankGold, _rankSilver;   // 성급 별 — 큰 금별(5성마다) · 작은 은별(RbHostPage.Stars)
+        // 성급 별 — 노란 · 붉은(6~9성) · 무지개(10성) (PD 2026-11-02 시안, StarRank)
+        [SerializeField] private Sprite _rankGold;
+        [SerializeField] private Sprite _rankRed;
+        [SerializeField] private Sprite _rankRainbow;
         [SerializeField] private Sprite _tileNormal, _tileMax, _tilePoor;
         [SerializeField] private Sprite _btnReady, _btnShort;
         // 챕터 배경은 파일 이름만 — 보일 때 한 장만 주소로 읽는다(LazySpriteSlot, 2026-10-30 메모리)
@@ -207,7 +210,7 @@ namespace Game.Module.Lobby
             LayoutTags(tags);
 
             _ui.SetText("GrwPowerValue", _player.PowerOf(_key).ToString("N0"));
-            RbHostPage.Stars(_ui.Find("GrwStars"), "GrwStar", m, _rankGold, _rankSilver);
+            RbHostPage.Stars(_ui.Find("GrwStars"), "GrwStar", m, _rankGold, _rankRed, _rankRainbow);
         }
 
         /// <summary>「R  무기  원거리」 칩 — 글자 폭만큼 칩을 늘려 이름 가운데 아래에 나란히 세운다(언어마다 길이가 다르다).</summary>
@@ -675,14 +678,14 @@ namespace Game.Module.Lobby
                 show.Show(_key, Color.white);
             }
             _modals.SetText("GrwStarDoneName", host != null ? host.DisplayName : _key);
-            RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _rankGold, _rankSilver);
+            RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _rankGold, _rankRed, _rankRainbow);
             _modals.SetText("GrwStarDoneGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
             _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.done_line1", "{0}성 → {1}성 · 체력·공격 +7%"), from, m));
             _modals.SetText("GrwStarDoneLine2", string.Format(Localize.FromTable("ui.rb.growth.done_line2b", "스킬 상한 · 액티브 {0}→{1} · 패시브·필살기 {2}→{3}"),
                                                               capFrom, cap, 1 + from / 2, 1 + m / 2));
             _modals.SetActive("GrwStarDone", true);
-            // 새로 찬 별(1~5성은 m-1 째, 6~10성은 각성 별로 다시 m-6 째)이 작게 터진다
-            if (_shell.Fx != null && m > 0 && _modals.Find(_modals.Find("GrwStarDoneStars"), $"GrwStarDoneStar{(m - 1) % 5}") is RectTransform star)
+            // 막 바뀐 별(1~5성 새 노란 별 · 6~9성 붉게 바뀐 별 · 10성 무지개 별)이 작게 터진다
+            if (_shell.Fx != null && m > 0 && _modals.Find(_modals.Find("GrwStarDoneStars"), $"GrwStarDoneStar{StarRank.SlotOf(m)}") is RectTransform star)
                 _shell.Fx.StarFill(star);
         }
 

@@ -24,7 +24,10 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _cardTags = Array.Empty<Sprite>();
         /// <summary>속성 아이콘 — 무기 · 파워 · 마법(Affinity 값 − 1).</summary>
         [SerializeField] private Sprite[] _affIcons = Array.Empty<Sprite>();
-        [SerializeField] private Sprite _rankGold, _rankSilver, _shardIcon, _badgeNew, _barTrack, _barFill;
+        [SerializeField] private Sprite _rankGold, _shardIcon, _badgeNew, _barTrack, _barFill;
+        // 성급 별 — 노란 · 붉은(6~9성) · 무지개(10성) (PD 2026-11-02 시안, StarRank)
+        [SerializeField] private Sprite _rankRed;
+        [SerializeField] private Sprite _rankRainbow;
 
         // 시안 카드 빛 색(R #4fa3ff · SR #b67cff · SSR #ffc846) — 호스트 목록 GlowColors 와 같다
         private static readonly Color[] CardLine = { new(0.31f, 0.64f, 1f), new(0.71f, 0.49f, 1f), new(1f, 0.78f, 0.27f) };
@@ -89,7 +92,7 @@ namespace Game.Module.Lobby
             affText.text = string.Format(Localize.FromTable("ui.rb.summon.card.aff", "{0}형"), Localize.Get(AffKey(aff)));
             var stars = Box(dock, "Stars", x, M(98f), M(160f), M(24f));
             for (int i = 0; i < 5; i++) Box(stars, $"Star{i}", 0f, 0f, 1f, 1f).gameObject.AddComponent<Image>().raycastTarget = false;
-            StarRank.Apply(stars, "Star", player != null ? player.GetMastery(s.E.HostKey) : 0, _rankGold, _rankSilver,
+            StarRank.Apply(stars, "Star", player != null ? player.GetMastery(s.E.HostKey) : 0, _rankGold, _rankRed, _rankRainbow,
                            new Vector2(-M(80f) + StarRowWidth(player, s.E.HostKey) * 0.5f, 0f), M(20f), M(3f));
 
             float y = M(134f);
@@ -102,8 +105,7 @@ namespace Game.Module.Lobby
 
         private float StarRowWidth(IPlayerDataService player, string key)
         {
-            int rank = player != null ? player.GetMastery(key) : 0, golds = rank / StarRank.PerGold, silvers = rank % StarRank.PerGold;
-            return golds * M(20f) * StarRank.BigScale + silvers * M(20f) + Mathf.Max(0, golds + silvers - 1) * M(3f);
+            return StarRank.RowWidth(player != null ? player.GetMastery(key) : 0, M(20f), M(3f));
         }
 
         /// <summary>「조각 +5 · 17 / 30」 막대 — 가진 것(진한 색) 위에 이번에 받은 것(옅은 색)이 이어진다.</summary>
