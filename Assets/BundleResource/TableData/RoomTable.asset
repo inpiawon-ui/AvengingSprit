@@ -102317,8 +102317,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -102383,8 +102383,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -102775,8 +102775,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -103159,8 +103159,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -103413,8 +103413,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -103542,8 +103542,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -103608,8 +103608,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -104000,8 +104000,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -104421,8 +104421,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -104555,8 +104555,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -104753,8 +104753,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -104869,8 +104869,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -105262,8 +105262,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -105425,8 +105425,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -105872,8 +105872,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -106134,8 +106134,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -106200,8 +106200,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -106590,8 +106590,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -107203,8 +107203,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -107741,8 +107741,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -108209,8 +108209,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -108325,8 +108325,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -109019,8 +109019,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -109302,8 +109302,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -109559,8 +109559,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -109782,8 +109782,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -109848,8 +109848,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -110199,8 +110199,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -110501,8 +110501,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -110865,8 +110865,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 14455
-    _bossAtk: 95
+    _bossHp: 15452
+    _bossAtk: 100
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -111432,8 +111432,8 @@ MonoBehaviour:
     _bossId: B01
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -111498,8 +111498,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -111872,8 +111872,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -112264,8 +112264,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -112721,8 +112721,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -113118,8 +113118,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -113184,8 +113184,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -113605,8 +113605,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -113997,8 +113997,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -114285,8 +114285,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -114503,8 +114503,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -114619,8 +114619,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -115012,8 +115012,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -115227,8 +115227,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -115741,8 +115741,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -115974,8 +115974,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -116040,8 +116040,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -116266,8 +116266,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -116656,8 +116656,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -117082,8 +117082,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -117831,8 +117831,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -117947,8 +117947,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -118641,8 +118641,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -119020,8 +119020,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -119560,8 +119560,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -119783,8 +119783,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -119849,8 +119849,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -120200,8 +120200,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -120988,8 +120988,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -121307,8 +121307,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 18939
-    _bossAtk: 106
+    _bossHp: 20189
+    _bossAtk: 111
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -121659,8 +121659,8 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -121725,8 +121725,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -122078,8 +122078,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -122319,8 +122319,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -122607,8 +122607,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -122861,8 +122861,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -122927,8 +122927,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -123215,8 +123215,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -123451,8 +123451,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -123830,8 +123830,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -124126,8 +124126,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -124242,8 +124242,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -124546,8 +124546,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -124860,8 +124860,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -125226,8 +125226,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -125493,8 +125493,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -125559,8 +125559,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -125827,8 +125827,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -126365,8 +126365,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -126791,8 +126791,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -127189,8 +127189,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -127305,8 +127305,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -127638,8 +127638,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -127965,8 +127965,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -128388,8 +128388,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -128739,8 +128739,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -128805,8 +128805,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -129076,8 +129076,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -129538,8 +129538,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -129904,8 +129904,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 21390
-    _bossAtk: 110
+    _bossHp: 22738
+    _bossAtk: 115
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -130653,8 +130653,8 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -130719,8 +130719,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -131111,8 +131111,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -131240,8 +131240,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -131507,8 +131507,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -131761,8 +131761,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -131827,8 +131827,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -132037,8 +132037,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -132429,8 +132429,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -132691,8 +132691,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -132889,8 +132889,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -133005,8 +133005,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -133398,8 +133398,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -133868,8 +133868,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -134104,8 +134104,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -134548,8 +134548,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -134614,8 +134614,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -134840,8 +134840,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -135388,8 +135388,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -135692,8 +135692,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -136441,8 +136441,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -136557,8 +136557,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -136752,8 +136752,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -137022,8 +137022,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -137401,8 +137401,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -137824,8 +137824,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -137890,8 +137890,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -138678,8 +138678,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -139029,8 +139029,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -139372,8 +139372,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 23891
-    _bossAtk: 113
+    _bossHp: 25850
+    _bossAtk: 120
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -139724,8 +139724,8 @@ MonoBehaviour:
     _bossId: B02
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -139790,8 +139790,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -140164,8 +140164,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -140561,8 +140561,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -141018,8 +141018,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -141410,8 +141410,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -141476,8 +141476,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -141868,8 +141868,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -142130,8 +142130,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -142264,8 +142264,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -142462,8 +142462,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -142578,8 +142578,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -143025,8 +143025,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -143418,8 +143418,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -143862,8 +143862,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -144436,8 +144436,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -144502,8 +144502,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -144892,8 +144892,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -145118,8 +145118,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -145601,8 +145601,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -146061,8 +146061,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -146177,8 +146177,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -146528,8 +146528,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -147167,8 +147167,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -147590,8 +147590,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -148284,8 +148284,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -148350,8 +148350,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -148701,8 +148701,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -149041,8 +149041,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -149285,8 +149285,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 26871
-    _bossAtk: 117
+    _bossHp: 28994
+    _bossAtk: 124
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -149800,8 +149800,8 @@ MonoBehaviour:
     _bossId: B03
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -149866,8 +149866,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -150076,8 +150076,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -150533,8 +150533,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -150899,8 +150899,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -151291,8 +151291,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -151357,8 +151357,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -151567,8 +151567,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -151855,8 +151855,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -152276,8 +152276,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -152599,8 +152599,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -152715,8 +152715,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -153162,8 +153162,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -153424,8 +153424,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -153660,8 +153660,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -154250,8 +154250,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -154316,8 +154316,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -154542,8 +154542,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -154932,8 +154932,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -155415,8 +155415,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -155883,8 +155883,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -155999,8 +155999,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -156350,8 +156350,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -156841,8 +156841,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -157535,8 +157535,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -157818,8 +157818,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -157884,8 +157884,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -158672,8 +158672,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -159134,8 +159134,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -159500,8 +159500,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 28331
-    _bossAtk: 117
+    _bossHp: 31079
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -159952,8 +159952,8 @@ MonoBehaviour:
     _bossId: B05
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -160018,8 +160018,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -160280,8 +160280,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -160664,8 +160664,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -161048,8 +161048,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -161323,8 +161323,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -161389,8 +161389,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -161599,8 +161599,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -161861,8 +161861,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -162253,8 +162253,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -162576,8 +162576,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -162692,8 +162692,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -163139,8 +163139,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -163349,8 +163349,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -163585,8 +163585,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -164016,8 +164016,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -164082,8 +164082,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -164308,8 +164308,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -164698,8 +164698,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -165124,8 +165124,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -165592,8 +165592,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -165708,8 +165708,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -165903,8 +165903,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -166594,8 +166594,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -167134,8 +167134,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -167495,8 +167495,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -167561,8 +167561,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -167863,8 +167863,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -168651,8 +168651,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -169015,8 +169015,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Robot Snakes
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 29905
-    _bossAtk: 118
+    _bossHp: 32746
+    _bossAtk: 127
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -169475,8 +169475,8 @@ MonoBehaviour:
     _bossId: B01
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -169541,8 +169541,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -169816,8 +169816,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -170200,8 +170200,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -170454,8 +170454,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -170708,8 +170708,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -170774,8 +170774,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -171166,8 +171166,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -171454,8 +171454,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -171875,8 +171875,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -172198,8 +172198,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -172314,8 +172314,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -172904,8 +172904,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -173335,8 +173335,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -173728,8 +173728,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -173891,8 +173891,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -173957,8 +173957,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -174261,8 +174261,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -174687,8 +174687,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -175235,8 +175235,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -175703,8 +175703,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -175819,8 +175819,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -176014,8 +176014,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -176341,8 +176341,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -176728,8 +176728,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -177367,8 +177367,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -177433,8 +177433,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -178221,8 +178221,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -178465,8 +178465,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -178816,8 +178816,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 31228
-    _bossAtk: 118
+    _bossHp: 34101
+    _bossAtk: 126
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -179168,8 +179168,8 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -179234,8 +179234,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -179496,8 +179496,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -179763,8 +179763,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -180147,8 +180147,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -180276,8 +180276,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -180342,8 +180342,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -180552,8 +180552,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -180973,8 +180973,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -181365,8 +181365,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -181563,8 +181563,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -181679,8 +181679,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -182269,8 +182269,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -182440,8 +182440,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -182954,8 +182954,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -183190,8 +183190,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -183256,8 +183256,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -183560,8 +183560,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -183986,8 +183986,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -184503,8 +184503,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -185252,8 +185252,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -185368,8 +185368,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -185719,8 +185719,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -186358,8 +186358,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -186849,8 +186849,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -187176,8 +187176,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -187242,8 +187242,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -187593,8 +187593,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -187912,8 +187912,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -188156,8 +188156,8 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 32461
-    _bossAtk: 118
+    _bossHp: 35967
+    _bossAtk: 128
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
@@ -188616,8 +188616,8 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 33693
-    _bossAtk: 118
+    _bossHp: 38511
+    _bossAtk: 131
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
     - 1
