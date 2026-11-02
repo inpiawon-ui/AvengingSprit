@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: 290752e26bfdb8b43875e6215181871d
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 1385520197715180382
+    second: rb_pause_btn_primary_pressed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -108,7 +111,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: rb_pause_btn_primary_pressed_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 948
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5b31fd674b5a3310800000000000000
+      internalID: 1385520197715180382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []

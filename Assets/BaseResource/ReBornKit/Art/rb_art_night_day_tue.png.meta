@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: 69054035987f80b4fa4ebb2fcf4e736b
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 4502259058161327776
+    second: rb_art_night_day_tue_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -108,7 +111,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: rb_art_night_day_tue_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1032
+        height: 397
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ae9d7862cc3b7e30800000000000000
+      internalID: 4502259058161327776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []

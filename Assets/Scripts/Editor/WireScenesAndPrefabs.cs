@@ -89,8 +89,14 @@ namespace Game.Editor
             foreach (var (scenePath, address) in SceneUi)
             {
                 var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+#if UNITY_6000_4_OR_NEWER
                 var loaders = Object.FindObjectsByType<Game.Module.Common.SceneUILoader>(
                     FindObjectsInactive.Include);
+#else
+                // 6.3 LTS 에는 인자 하나짜리가 없다
+                var loaders = Object.FindObjectsByType<Game.Module.Common.SceneUILoader>(
+                    FindObjectsInactive.Include, FindObjectsSortMode.None);
+#endif
                 foreach (var l in loaders)
                 {
                     var so = new SerializedObject(l);

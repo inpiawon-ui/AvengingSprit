@@ -283,7 +283,12 @@ namespace Game.EditorTools
         /// <summary>꺼진 것까지 찾는다 — 되켤 때 `GameObject.Find` 는 꺼진 것을 못 찾는다.</summary>
         private static GameObject FindAny(string name)
         {
+#if UNITY_6000_4_OR_NEWER
             foreach (var rt in Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Include))
+#else
+            // 6.3 LTS 에는 인자 하나짜리가 없다
+            foreach (var rt in Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+#endif
                 if (rt.name == name) return rt.gameObject;
             return null;
         }

@@ -207,7 +207,13 @@ namespace Game.Module.Common
                 var target = Target;
                 if (target?.Gothic != null)
                 {
+#if UNITY_6000_4_OR_NEWER
                     var texts = UnityEngine.Object.FindObjectsByType<TMP_Text>(FindObjectsInactive.Include);
+#else
+                    // 6.3 LTS 에는 인자 하나짜리가 없다
+                    var texts = UnityEngine.Object.FindObjectsByType<TMP_Text>(
+                        FindObjectsInactive.Include, FindObjectsSortMode.None);
+#endif
                     for (int i = 0; i < texts.Length; i++) SwapFont(texts[i], target);
                 }
             }

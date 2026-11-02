@@ -102,7 +102,7 @@ namespace GameFramework.Core.Module.Resource
             }
 
             var go = handle.Result;
-            _instanceCache[EntityId.ToULong(go.GetEntityId())] = (handle, scope ?? string.Empty);
+            _instanceCache[InstanceKey(go)] = (handle, scope ?? string.Empty);
             return go;
         }
 
@@ -110,11 +110,21 @@ namespace GameFramework.Core.Module.Resource
         {
             if (instance == null) return;
 
-            var id = EntityId.ToULong(instance.GetEntityId());
+            var id = InstanceKey(instance);
             if (!_instanceCache.TryGetValue(id, out _)) return;
 
             Addressables.ReleaseInstance(instance);
             _instanceCache.Remove(id);
+        }
+
+        // 6.4 의 EntityId.ToULong 은 6.3 LTS 에 없다 — 두 버전 모두 컴파일되게 나눈다
+        private static ulong InstanceKey(GameObject go)
+        {
+#if UNITY_6000_4_OR_NEWER
+            return EntityId.ToULong(go.GetEntityId());
+#else
+            return unchecked((ulong)go.GetInstanceID());
+#endif
         }
 
         // ── IResourceManager : 선로드 ─────────────────────────────
