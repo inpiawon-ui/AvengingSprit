@@ -192,12 +192,13 @@ namespace Game.Character
         [SerializeField] private bool _powerTest;
 
         [Tooltip("새 계정이 처음부터 가진 몸. 나머지는 조각을 모아 해금한다.")]
-        [SerializeField] private string _starterHost = "gangster";
+        [SerializeField] private string _starterHost = "";
 
         public bool TestMode => _testMode;
         public bool OpenAllHosts => _openAllHosts;
         public bool PowerTest => _powerTest;
-        public string StarterHost => string.IsNullOrEmpty(_starterHost) ? "gangster" : _starterHost;
+        /// <summary>새 계정에 주는 시작 몸. 비어 있으면 아무것도 안 준다(PD 2026-11-02 「초기에는 아무것도 없어」 — 하루 무료 소환으로 모은다).</summary>
+        public string StarterHost => _starterHost ?? string.Empty;
 
         // ── 상점 · 정수 (2026-10-04) ───────────────────────────────
         //

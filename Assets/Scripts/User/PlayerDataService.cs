@@ -249,17 +249,17 @@ namespace Game.User
 
         /// <summary>
         /// 새 계정에 시작 몸 하나를 준다(숙련도 1). **한 번만** — 저장에 표시가 남는다.
-        ///
-        /// 유령만으로 시작하면 첫 판에 「몸을 골라 들어간다」를 못 해 보고, 몸의 스킬이 무엇인지도 모른다.
-        /// 몸 하나는 쥐고 시작하고, 나머지는 판에서 만나 써 보고 조각을 모아 연다.
+        /// `GameConfig` 의 시작 몸이 비어 있으면 아무것도 안 준다 — 지금 라이브 기준(PD 2026-11-02 「초기에는 아무것도 없어」).
+        /// 유령 · 랜덤 출전으로 판을 돌고, 하루 무료 소환과 판 조각으로 몸을 모은다.
         /// </summary>
         private void GrantStarter()
         {
             if (_data == null || _data.starterGranted) return;
-            string key = _config != null ? _config.StarterHost : "gangster";
+            string key = _config != null ? _config.StarterHost : string.Empty;
+            _data.starterGranted = true;
+            if (string.IsNullOrEmpty(key)) return;
             int at = EnsureHost(key);
             if (at >= 0 && _data.hostMastery[at] < 1) _data.hostMastery[at] = 1;
-            _data.starterGranted = true;
             if (string.IsNullOrEmpty(_data.selectedHostId)) _data.selectedHostId = key;
         }
 

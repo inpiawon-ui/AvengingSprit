@@ -22,6 +22,8 @@ namespace Game.Module.Lobby
     /// </summary>
     public sealed class RbSummonPage : MonoBehaviour
     {
+        private static readonly string[] PickupNodes = { "SumPickupLabel", "SumPickupHost", "SumPickupRule", "SumPickupLeft" };
+
         [SerializeField] private Sprite[] _cardFrames = Array.Empty<Sprite>();   // HostGrade 순서(R · SR · SSR)
         [SerializeField] private Sprite[] _rarityTags = Array.Empty<Sprite>();
         [SerializeField] private Sprite _iconGem, _iconTicket;
@@ -83,6 +85,9 @@ namespace Game.Module.Lobby
         private void Refresh()
         {
             if (!CoreModule.TryGet<IGachaService>(out var g) || !g.IsReady || _player == null) return;
+            // 픽업이 없으면(PD 2026-11-02 「픽업 없이 일반 뽑기」) 픽업 줄을 숨기고 띠 제목만 남긴다
+            bool hasPickup = !string.IsNullOrEmpty(g.PickupHost);
+            foreach (var n in PickupNodes) _ui.SetActive(n, hasPickup);
             var pick = _player.GetHost(g.PickupHost);
             // 픽업 몸이 아직 몸 목록에 없으면(히든 · 미보유 표 밖) 이름만 표에서 꺼낸다
             _ui.SetText("SumPickupHost", pick != null ? $"{HostGradeLabel.Of(pick.Grade)} {pick.DisplayName}"

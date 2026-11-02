@@ -59,7 +59,7 @@ MonoBehaviour:
   _testMode: 0
   _openAllHosts: 0
   _powerTest: 0
-  _starterHost: gangster
+  _starterHost: 
   _essencePerShard: 020000000300000005000000
   _shopShardCount: 060000000400000002000000
   _shopShardGold: 2800000050000000c8000000
