@@ -752,8 +752,8 @@ uskill.white_wizard.name	빛기둥 비	光柱の雨	Pillar Rain	光柱之雨	光
 uskill.white_wizard.en	Pillar Rain	Pillar Rain	Pillar Rain	Pillar Rain	Pillar Rain
 uskill.dragon_blue.name	천뢰	天雷	Heaven's Thunder	天雷	天雷
 uskill.dragon_blue.en	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder
-uskill.commando_mg.name	탄막 요새	弾幕要塞	Bullet Fortress	彈幕要塞	弹幕要塞
-uskill.commando_mg.en	Bullet Fortress	Bullet Fortress	Bullet Fortress	Bullet Fortress	Bullet Fortress
+uskill.commando_mg.name	거치 기관포	据え置き機関砲	Emplaced Cannon	架設機關砲	架设机关炮
+uskill.commando_mg.en	Emplaced Cannon	Emplaced Cannon	Emplaced Cannon	Emplaced Cannon	Emplaced Cannon
 uskill.amazon_elite.name	역린	逆鱗	Wrath Unleashed	逆鱗	逆鳞
 uskill.amazon_elite.en	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed
 ui.ingame.ultimate	필살기	必殺技	SPECIAL	必殺技	必杀技
@@ -1300,9 +1300,9 @@ askill.dragon_blue.short	둘레 적 5명에게 낙뢰	周囲の敵5体に落雷	
 pskill.dragon_blue.short	10% 확률로 근처 적에게 번개	10%で隣の敵に雷	10% chain lightning	10%機率雷擊鄰近敵人	10%概率雷击邻近敌人
 askill.dragon_blue.opt	낙뢰 5 → 8명	落雷5→8体	Bolts 5 → 8 foes	落雷 5 → 8名	落雷 5 → 8名
 host.commando_mg.concept	방패병 — 막으며 전진	盾兵 — 防ぎつつ前進	Shieldbearer — block & push	盾兵 — 邊擋邊推進	盾兵 — 边挡边推进
-ult.commando_mg.name	탄막 요새	弾幕要塞	Bullet Fortress	彈幕要塞	弹幕要塞
-ult.commando_mg.desc	3초간 제자리에 기관총을 거치해 받는 피해를 70% 줄이고 사방으로 연사한다.	3秒間その場に機関銃を据え、被ダメージを70%減らして全方向へ連射する。	Plant your machine gun for 3s: take 70% less damage and fire in every direction.	原地架設機槍3秒，受到傷害降低70%並向四面八方連射。	原地架设机枪3秒，受到伤害降低70%并向四面八方连射。
-ult.commando_mg.short	3초 고정 · 받는 피해 −70% · 사방 연사	3秒固定・被ダメ−70%・全方向連射	3s planted · −70% damage · all-round fire	固定3秒 · 受傷−70% · 全方位連射	固定3秒 · 受伤−70% · 全方位连射
+ult.commando_mg.name	거치 기관포	据え置き機関砲	Emplaced Cannon	架設機關砲	架设机关炮
+ult.commando_mg.desc	3초간 제자리에 기관총을 거치해 받는 피해를 70% 줄이고, 적이 가장 많은 쪽 앞 60°를 5줄 탄막으로 훑는다(사거리 9m · 둔화 35%).	3秒間その場に機関銃を据え、被ダメージを70%減らし、敵が最も多い方向の前方60°を5列の弾幕で掃射する(射程9m・鈍足35%)。	Plant your machine gun for 3s: take 70% less damage and sweep a 60° arc toward the most enemies with 5 streams of fire (9m range · 35% slow).	原地架設機槍3秒，受到傷害降低70%，朝敵人最多的方向以5道彈幕掃射前方60°（射程9m · 減速35%）。	原地架设机枪3秒，受到伤害降低70%，朝敌人最多的方向以5道弹幕扫射前方60°（射程9m · 减速35%）。
+ult.commando_mg.short	3초 고정 · 받는 피해 −70% · 앞 60° 5줄 탄막	3秒固定・被ダメ−70%・前方60°5列弾幕	3s planted · −70% damage · 5-stream 60° sweep	固定3秒 · 受傷−70% · 前方60° 5道彈幕	固定3秒 · 受伤−70% · 前方60° 5道弹幕
 askill.commando_mg.short	앞쪽 부채꼴 2초 연사 · 둔화	前方扇状に2秒連射・鈍足	2s forward spray · slows	向前扇形連射2秒 · 減速	向前扇形连射2秒 · 减速
 pskill.commando_mg.short	받는 피해 −15%	被ダメージ−15%	Damage taken −15%	受到傷害 −15%	受到伤害 −15%
 askill.commando_mg.opt	둔화 30 → 50%	鈍足30→50%	Slow 30 → 50%	減速 30 → 50%	减速 30 → 50%
@@ -1843,11 +1843,11 @@ inyeon.hopper.name	쌍권총	二丁拳銃	Twin Pistols	雙槍	双枪
 inyeon.hopper_smg.name	백스텝 탄막	バックステップ弾幕	Backstep Barrage	後撤彈幕	后撤弹幕
 inyeon.commando_mg.name	엄호 화망	援護射撃網	Covering Fire	掩護火網	掩护火网
 inyeon.commando_laser.name	과부하	オーバーロード	Overload	過載	过载
-inyeon.commando_grenade.name	융단 폭격	絨毯爆撃	Carpet Bombing	地毯轟炸	地毯轰炸
+inyeon.commando_grenade.name	이중 폭격	二重爆撃	Double Bombing	雙重轟炸	双重轰炸
 inyeon.commando_missile.name	집속탄	クラスター弾	Cluster Shot	集束彈	集束弹
 inyeon.salamander.name	불독	炎毒	Fire Venom	炎毒	炎毒
 inyeon.dragoon.name	업화	業火	Hellfire	業火	业火
-inyeon.dragon_blue.name	번개 사슬	雷の鎖	Lightning Chain	雷鏈	雷链
+inyeon.dragon_blue.name	벼락 불길	雷炎	Thunderflame	雷炎	雷炎
 inyeon.guru.name	혼 결박	魂縛り	Soul Bind	魂縛	魂缚
 inyeon.white_wizard.name	빛과 얼음	光と氷	Light and Ice	光與冰	光与冰
 inyeon.medium.name	공명 강령	共鳴降霊	Resonance	共鳴降靈	共鸣降灵
@@ -1855,7 +1855,7 @@ inyeon.ninja.name	그림자 분신	影分身	Shadow Clone	影分身	影分身
 inyeon.ninja_chain.name	뇌전 사슬	雷電の鎖	Thunder Chain	雷電鎖鏈	雷电锁链
 inyeon.robot.name	레이저 포탑	レーザータレット	Laser Turret	雷射砲塔	激光炮塔
 inyeon.baseball.name	얼음 장타	氷の長打	Frozen Drive	冰霜長打	冰霜长打
-inyeon.snowwoman.name	얼음 진	氷の陣	Ice Formation	冰之陣	冰之阵
+inyeon.snowwoman.name	설원	雪原	Snowfield	雪原	雪原
 inyeon.vampire.name	피의 연회	血の宴	Blood Feast	血之盛宴	血之盛宴
 ui.party.choice.title	{0} — 어떻게 할까?	{0} — どうする？	{0} — What now?	{0} — 要怎麼做？	{0} — 要怎么做？
 ui.party.ghost_left	남은 유령 HP {0}	残りゴーストHP {0}	Ghost HP left: {0}	剩餘幽靈HP {0}	剩余幽灵HP {0}
@@ -1920,7 +1920,7 @@ ui.party.hud.inyeon_tag	인연	絆	Bond	羈絆	羁绊
 inyeon.gangster.desc	표식 붙은 적을 보조가 우선 노리고 보조 피해 +50%	マークした敵をサブが優先して狙い、サブのダメージ+50%	Subs target marked foes first and deal +50% damage	副手優先攻擊被標記的敵人，副手傷害+50%	副手优先攻击被标记的敌人，副手伤害+50%
 inyeon.thug.desc	난사 탄이 가까운 적 쪽으로 살짝 휜다	乱射の弾が近くの敵へ少し曲がる	Spray shots curve slightly toward nearby foes	亂射子彈會微微彎向附近敵人	乱射子弹会微微弯向附近敌人
 inyeon.amazon.desc	한 번 더 도약 · 착지마다 번개 고리	もう一度跳躍・着地ごとに雷の輪	One extra leap · Lightning ring on each landing	多躍一次 · 每次落地產生雷環	多跃一次 · 每次落地产生雷环
-inyeon.amazon_elite.desc	함성 범위 1.5배 · 기절 2.5초	咆哮の範囲1.5倍・気絶2.5秒	Roar range ×1.5 · 2.5s stun	吶喊範圍1.5倍 · 暈眩2.5秒	呐喊范围1.5倍 · 晕眩2.5秒
+inyeon.amazon_elite.desc	함성 범위 1.5배 · 맞은 적이 받는 피해 +20%(4초)	咆哮の範囲1.5倍・命中した敵の被ダメージ+20%(4秒)	Roar range ×1.5 · foes hit take +20% damage (4s)	吶喊範圍1.5倍 · 命中的敵人受到傷害+20%（4秒）	呐喊范围1.5倍 · 命中的敌人受到伤害+20%（4秒）
 inyeon.hopper.desc	조준 사격이 6발	狙い撃ちが6発に	Aimed shot fires 6 rounds	瞄準射擊變為6發	瞄准射击变为6发
 inyeon.hopper_smg.desc	백스텝 연사가 적을 꿰뚫는다	バックステップ連射が敵を貫通する	Backstep fire pierces foes	後撤連射可貫穿敵人	后撤连射可贯穿敌人
 inyeon.commando_mg.desc	제압 사격에 맞은 적 발밑에 수류탄	制圧射撃が当たった敵の足元に手榴弾	Grenades drop under foes hit by suppressing fire	被壓制射擊命中的敵人腳下落下手榴彈	被压制射击命中的敌人脚下落下手榴弹
@@ -1929,7 +1929,7 @@ inyeon.commando_grenade.desc	수류탄 투하가 한 바퀴 더	手榴弾の投�
 inyeon.commando_missile.desc	미사일 한 발마다 작은 폭발	ミサイル1発ごとに小爆発	Each missile sets off small blasts	每發飛彈附帶小爆炸	每发导弹附带小爆炸
 inyeon.salamander.desc	중독된 적이 쓰러지면 불꽃으로 터진다	毒状態の敵が倒れると炎で爆発する	Poisoned foes burst into flames when they fall	中毒的敵人倒下時會爆出火焰	中毒的敌人倒下时会爆出火焰
 inyeon.dragoon.desc	불바다가 1.5배 커지고 밟은 적이 둔해진다	火の海が1.5倍に広がり、踏んだ敵が鈍る	Sea of fire grows ×1.5 and slows foes in it	火海擴大1.5倍，踩到的敵人會減速	火海扩大1.5倍，踩到的敌人会减速
-inyeon.dragon_blue.desc	묶인 적은 낙뢰를 두 번 맞는다	拘束された敵に落雷が2回	Bound foes are struck by lightning twice	被束縛的敵人會遭落雷兩次	被束缚的敌人会遭落雷两次
+inyeon.dragon_blue.desc	불바다 위의 적은 낙뢰를 두 번 맞는다	炎の海にいる敵に落雷が2回	Foes standing in flames are struck by lightning twice	站在火海中的敵人會遭落雷兩次	站在火海中的敌人会遭落雷两次
 inyeon.guru.desc	묶인 적이 받는 피해 +35%	縛った敵の被ダメージ+35%	Bound enemies take +35% damage	被束縛的敵人受到傷害+35%	被束缚的敌人受到伤害+35%
 inyeon.white_wizard.desc	끌어모은 적이 언 뒤 폭발(피해 +30%)	引き寄せた敵が凍った後に爆発（ダメージ+30%）	Pulled foes freeze, then explode (+30% damage)	被吸引的敵人凍結後爆炸（傷害+30%）	被吸引的敌人冻结后爆炸（伤害+30%）
 inyeon.medium.desc	혼 깃들이기 지속 1.5배 · 짝은 피해 버프 두 배	魂宿しの持続1.5倍・相方は火力バフ2倍	Soul Infusion lasts 1.5x · partner gets double damage buff	魂靈附身持續1.5倍・搭檔傷害增益加倍	魂灵附身持续1.5倍・搭档伤害增益加倍

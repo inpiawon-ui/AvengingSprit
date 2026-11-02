@@ -46,13 +46,6 @@ namespace Game.Module.InGame
         /// <summary>보조 칸 비용(「+ −10」) — 지금 칸에 들일 때 드는 유령 HP.</summary>
         public int PartySubCost => PartyRule.CostSub;
 
-        /// <summary>보조 칸을 눌렀다 — 그 보조와 메인을 바꿀지 묻는 창을 띄운다.</summary>
-        public void PartyTapSub(int slot)
-        {
-            if (!PartyOn || _partyHold || slot < 0 || slot >= _subs.Count) return;
-            OpenPartyPortraitSwap(slot);
-        }
-
         private static string SynIcon(string tag) => tag switch
         {
             "파워" => "syn_icon_force", "무기" => "syn_icon_blade", "마법" => "syn_icon_magic",

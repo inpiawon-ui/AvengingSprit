@@ -652,7 +652,7 @@ namespace Game.Module.InGame
                     SpawnField(at, Meters(1.2f) * _buffs.AoeMul, 3f,
                                FieldEffect.Burn, SkillDamage(me, 0.15f), fromPlayer: true);
             }
-            if (InyeonOn(me)) IyCarpetLap(me, shots, dmg);   // 인연 「융단 폭격」 — 한 바퀴 더
+            if (InyeonOn(me)) IyCarpetLap(me, shots, dmg);   // 인연 「이중 폭격」 — 한 바퀴 더
         }
 
         // ── 설녀 · 빙결 파쇄 ─────────────────────────────────────

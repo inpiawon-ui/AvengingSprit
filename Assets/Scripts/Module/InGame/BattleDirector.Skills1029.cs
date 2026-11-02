@@ -537,11 +537,8 @@ namespace Game.Module.InGame
         {
             float r = Meters(WarCryMeters) * _buffs.AoeMul;
             float stun = SpecOpen ? WarCrySpecStunSeconds : WarCryStunSeconds;
-            if (InyeonOn(me))   // 인연 「불굴의 함성」 — 범위 1.5배 · 기절 2.5초
-            {
-                r *= IyGrow(IyWarCryRangeMul);
-                stun = Mathf.Max(stun, IyScale(IyWarCryStunSeconds));
-            }
+            bool iy = InyeonOn(me);   // 인연 「불굴의 함성」 — 범위 1.5배 · 맞은 적이 받는 피해 +20%
+            if (iy) r *= IyGrow(IyWarCryRangeMul);
             var list = new List<Unit>(EnemiesInRange(me.Position, r));
             for (int i = 0; i < list.Count; i++)
             {
@@ -549,6 +546,7 @@ namespace Game.Module.InGame
                 if (e == null || !e.IsAlive) continue;
                 PushFrom(e, me.Position, WarCryPushMeters, 0f);
                 if (!e.IsBoss) e.ApplyStun(stun);
+                if (iy) e.ApplyAmp(IyScale(IyWarCryAmpPercent), IyScale(IyWarCryAmpSeconds));
             }
             // 메인이면 쉴드 — 보조가 외치면 적만 밀린다
             if (me == _host)
@@ -677,7 +675,7 @@ namespace Game.Module.InGame
             int dmg = SkillDamage(me, ThunderMul * GrowRatio(ThunderTableBase));
             me.PlayAttack();
             PlayFx("dscoil", me.Position, SsrBody * 1.2f, loop: false);
-            bool iy = InyeonOn(me);   // 인연 「번개 사슬」 — 묶인 적은 낙뢰를 두 번 맞는다
+            bool iy = InyeonOn(me);   // 인연 「벼락 불길」 — 불바다 위의 적은 낙뢰를 두 번 맞는다(짝 드라군)
             for (int i = 0; i < n; i++)
             {
                 var e = list[i];
@@ -691,7 +689,7 @@ namespace Game.Module.InGame
                     HitEnemyWith(e, dmg, me.Profile);
                     if (!QxSurgeSpark(at)) SpawnImpact(at, "thunder", ChainImpactSize);
                     Shake(2.5f);
-                    if (iy && e.IsAlive && (e.IsRooted || IsWrapped(e)))
+                    if (iy && e.IsAlive && StandsOnOwnFire(e.Position))
                         UltAfter(IyThunderAgainGap, () =>
                         {
                             if (!IsLiveCaster(me) || e == null || !e.IsAlive) return;
@@ -740,7 +738,7 @@ namespace Game.Module.InGame
         private void SnowBlizzard(Unit me)
         {
             float r = Meters(BlizzardMeters) * _buffs.AoeMul;
-            if (InyeonOn(me)) r *= IyGrow(IyBlizzardRangeMul);   // 인연 「얼음 진」 — 눈보라 범위 2배
+            if (InyeonOn(me)) r *= IyGrow(IyBlizzardRangeMul);   // 인연 「설원」 — 눈보라 범위 2배
             float seconds = (SpecOpen ? BlizzardSpecSeconds : BlizzardSeconds) * GrowRatio(BlizzardTableBase);
             me.PlayAttack();
             PlayFx("breath_ice", me.Position, r * 2f, loop: false);

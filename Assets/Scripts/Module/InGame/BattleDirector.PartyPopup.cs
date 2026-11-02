@@ -433,7 +433,8 @@ namespace Game.Module.InGame
                 new()
                 {
                     FaceKey = near != null ? near.Key : null, Title = Tx("ui.party.p2.death_new"), Cost = PartyRule.CostDeathNew,
-                    Enabled = _ghostHp > PartyRule.CostDeathNew, Act = () => _partyPossessCost = PartyRule.CostDeathNew,
+                    // 값은 빙의하는 순간 치른다 — 유령 빙의는 늘 −20(TryPossess)
+                    Enabled = _ghostHp > PartyRule.CostDeathNew, Act = () => { },
                 },
             };
             for (int i = 0; i < _subs.Count; i++)
@@ -460,10 +461,8 @@ namespace Game.Module.InGame
                 if (rows[i].Enabled && (best == null || rows[i].Cost < best.Cost)) best = rows[i];
             }
             if (!any) return;   // 고를 길이 없다 — 유령으로 남고 다음 틱 규칙대로
-            // 시간이 다 되면 고를 길 — 켜진 「보조를 메인으로」 중 첫 줄(보조 1)
-            _deathAutoAct = null;
-            for (int i = 1; i <= _subs.Count && i < rows.Count; i++)
-                if (rows[i].Enabled) { _deathAutoAct = rows[i].Act; break; }
+            // 시간이 다 되면 「추천」 줄(가장 싼 길)을 대신 고른다 — 값도 그대로 치른다(PD 2026-11-02)
+            _deathAutoAct = best?.Act;
             if (best != null) best.Best = true;   // 시안: 가장 싼 길(보조를 메인으로)에 「추천」
             BuildDeath(rows, PartyRule.DeathChoiceSeconds);
         }

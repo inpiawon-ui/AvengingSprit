@@ -106,8 +106,6 @@ namespace Game.Module.InGame
         private readonly List<PartySub> _subs = new();
         /// <summary>보조가 액티브를 자동으로 쓰는 동안 그 보조(스킬 레벨 · 배율이 보조 호스트를 따르게).</summary>
         private Unit _subCaster;
-        /// <summary>메인 사망 뒤 A(새 빙의)를 골랐다 — 다음 빙의에 이 값을 치른다.</summary>
-        private int _partyPossessCost;
         private bool _partyStartCharged;
         /// <summary>선택창이 떠 있는 동안 전투를 세운다.</summary>
         private bool _partyHold;
@@ -207,7 +205,6 @@ namespace Game.Module.InGame
             for (int i = 0; i < _subs.Count; i++) if (_subs[i].U != null) Destroy(_subs[i].U.gameObject);
             _subs.Clear();
             ClearPartyFx();
-            _partyPossessCost = 0;
             _partyStartCharged = false;
             System.Array.Clear(_slotLv, 0, _slotLv.Length);
             _subPowCard = 0f;
@@ -225,6 +222,15 @@ namespace Game.Module.InGame
             _partyStartCharged = true;
             _ghostHp = Mathf.Max(1, _ghostHp - PartyRule.CostFirst);
         }
+
+        /// <summary>
+        /// 메인 없는 유령의 빙의는 경로와 상관없이 늘 −20(PD 2026-11-02 「유령에서의 빙의는 무조건 −20」).
+        /// 판의 첫 몸은 `ChargePartyStart` 가 받으므로 여기서는 그 뒤만 받는다.
+        /// </summary>
+        private bool ChargesGhostPossess => PartyOn && _host == null && _partyStartCharged;
+
+        /// <summary>빙의할 값이 없는 유령 — 다음 틱에 패배로 간다(사망 창이 떠 있는 동안은 틱이 서 있다).</summary>
+        private bool GhostCannotPossess => _ghostHp <= (ChargesGhostPossess ? PartyRule.CostFirst : 0);
 
         private void PartySpend(int cost, Vector2 at)
         {
@@ -553,8 +559,7 @@ namespace Game.Module.InGame
             if (_partyTimerText != null) _partyTimerText.text = Tf("ui.party.p2.seconds", Mathf.Max(0f, _partyTimer));
             if (_partyTimerFill != null) _partyTimerFill.fillAmount = Mathf.Clamp01(_partyTimer / Mathf.Max(0.01f, _partyTimerTotal));
             if (_partyTimer > 0f) return;
-            // 시간이 다 돼도 판을 끝내지 않는다(PD 2026-10-30) — 보조가 있으면 보조 1 을 메인으로(고를 때와 같은 값),
-            // 없거나 유령 체력이 모자라면 유령으로 계속 간다(다음 빙의 · 유령 체력 규칙대로)
+            // 시간이 다 되면 추천 줄을 대신 고른다(PD 2026-11-02) — 공짜가 아니다. 새 빙의 줄이면 빙의할 때 −20
             var auto = _deathAutoAct;
             _deathAutoAct = null;
             ClosePartyPopup();

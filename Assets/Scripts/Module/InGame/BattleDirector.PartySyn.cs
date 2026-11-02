@@ -8,7 +8,7 @@ namespace Game.Module.InGame
     ///
     ///   · 태그 = 속성(파워 · 무기 · 마법, `AffinityRule.KindOf`) + 조직(아래 표). 같은 태그 2명 = 약 · 3명 = 강 · 스탯만 준다
     ///   · 레벨업 3장 안에 파티 카드가 랜덤으로 섞인다(따로 창을 두지 않는다 — PD 「3장 나오는 데서 메인과 파티가 랜덤으로」)
-    ///   · 화면: 위에 파티 초상화 M · 1 · 2(길게 누르면 메인과 자리 바꾸기) · 켜진 시너지 · 레시피(글자만, 실루엣 없음 — PD)
+    ///   · 화면: 위에 파티 초상화 M · 1 · 2(누르기 없음 — 메인을 바꾸는 길은 적 터치 → 빙의 선택창 하나, PD 2026-11-02) · 켜진 시너지 · 레시피(글자만, 실루엣 없음 — PD)
     ///
     /// ⚠ 초상화 · 시너지 · 레시피 판은 코드로 세운 임시 화면이다 — 시안이 나오면 발주해 갈아 끼운다.
     /// </summary>
@@ -284,43 +284,6 @@ namespace Game.Module.InGame
                 int want = Mathf.Max(1, Mathf.RoundToInt(s.BaseAtk * SubPowerOf(s.U.Key)));
                 if (want != s.U.Atk) s.U.ScaleAttack(want / (float)s.U.Atk);
             }
-        }
-
-        // ─────────────────────────────────────────
-        // 자리 바꾸기 — 초상화를 길게 누르면 메인과 보조가 서로 바뀐다(−25). 횟수 제한 없음 — 유령 HP 만 본다(PD 2026-10-30)
-        // ─────────────────────────────────────────
-        private void OpenPartyPortraitSwap(int slot)
-        {
-            if (!PartyOn || _host == null || slot >= _subs.Count || _partyHold || IsChanneling) return;
-            if (TowerLeaveLocked) return;   // 탑 「첫 몸으로 끝까지」 — 메인 자리를 바꾸지 않는다
-            string sub = HostName(_subs[slot].U.Key), main = HostName(_host.Key);
-            var opts = new List<PartyOption>
-            {
-                new PartyOption(Tf("ui.party.choice.main_swap_hp", PartyRule.CostMainSwap),
-                                Tf("ui.party.swap.desc", sub, main, slot + 1),
-                                _ghostHp > PartyRule.CostMainSwap, () => PartySwapWithSub(slot)),
-                new PartyOption(Tx("ui.party.cancel"), string.Empty, true, null),
-            };
-            ShowPartyPopup(Tf("ui.party.swap.title", slot + 1, sub), Tf("ui.party.ghost_left", _ghostHp), opts, -1f);
-        }
-
-        private void PartySwapWithSub(int slot)
-        {
-            if (_host == null || slot >= _subs.Count) return;
-            var s = _subs[slot];
-            string subKey = s.U.Key, mainKey = _host.Key;
-            var subAt = s.U.Position;
-            var mainAt = _host.Position;
-            PartySpend(PartyRule.CostMainSwap, mainAt);
-            Destroy(s.U.gameObject);
-            _subs[slot] = MakeSub(mainKey, subAt);
-            RefreshSubAtk();   // 새로 선 몸이 이 자리 Lv 을 받는다
-            var old = _host;
-            _host = null;
-            Destroy(old.gameObject);   // 쓰러진 것이 아니라 자리를 바꾼 것 — 사망 처리 · 조각은 없다
-            var entry = _player != null ? _player.GetHost(subKey) : null;
-            EnterHost(entry, subKey, subKey, mainAt, 100);
-            RefreshSubAtk();
         }
 
     }

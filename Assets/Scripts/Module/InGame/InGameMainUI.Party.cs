@@ -59,9 +59,6 @@ namespace Game.Module.InGame
                 _partySubFilled[i] = _ui.Get<RectTransform>($"PartySub{i}Frame")?.gameObject;
                 _partySubEmpty[i] = _ui.Get<RectTransform>($"PartySub{i}Empty")?.gameObject;
                 _partySubCost[i] = _ui.Get<TextMeshProUGUI>($"PartySub{i}Cost");
-                int slot = i;
-                var btn = _ui.Get<Button>($"PartySub{i}Frame");
-                if (btn != null) btn.onClick.AddListener(() => _battle?.PartyTapSub(slot));
             }
             _partySynColumn = _ui.Get<RectTransform>("PartySynColumn");
             _partySynGray = _ui.Get<Image>("PartySynGrayMat")?.material;

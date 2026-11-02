@@ -30,9 +30,11 @@ namespace Game.Module.InGame
         private const float IyLeapRingMeters = 2.2f;
         private const float IyLeapRingMul = 1.2f;
 
-        // 아마존 정예 「불굴의 함성」 — 범위 1.5배 · 기절 2.5초
+        // 아마존 정예 「불굴의 함성」 — 범위 1.5배 · 맞은 적이 받는 피해 +20%(4초)
+        // 기절 2.5초는 액티브 Lv5 옵션과 겹쳐 뺐다(PD 2026-11-02)
         private const float IyWarCryRangeMul = 1.5f;
-        private const float IyWarCryStunSeconds = 2.5f;
+        private const int IyWarCryAmpPercent = 20;
+        private const float IyWarCryAmpSeconds = 4f;
 
         // 호퍼 「쌍권총」 — 조준 사격 두 배(3 → 6발)
         private const int IyAimShotMul = 2;
@@ -66,7 +68,7 @@ namespace Game.Module.InGame
         private const float IyFireSlowTick = 0.5f;
         private const float IyFireFieldSeconds = 6f;          // DragoonFireField 의 장판 시간과 같다
 
-        // 청룡 「번개 사슬」 — 묶인 적은 낙뢰를 두 번 맞는다
+        // 청룡 「벼락 불길」 — 불바다 위의 적은 낙뢰를 두 번 맞는다
         private const float IyThunderAgainGap = 0.18f;
 
         // 구루 「결계 강령」 — 묶인 적 곁에 해골 2기

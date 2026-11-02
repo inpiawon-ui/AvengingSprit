@@ -3889,7 +3889,8 @@ namespace Game.Module.InGame
         private void TickGhostState(float dt)
         {
             // 빙의할 유령 체력이 없으면 판이 끝난다(PD 2026-10-28) — 몸을 잃거나 버려 0 이 된 다음 틱
-            if (_host == null && _ghostHp <= 0 && !SandboxKeepsGhost) { PublishHp(); Finish(false); return; }
+            // 빙의 파티는 빙의 값(−20)을 못 내도 끝난다(PD 2026-11-02) — 패배 연출(유령이 떠오름)은 Finish 가 띄운다
+            if (_host == null && GhostCannotPossess && !SandboxKeepsGhost) { PublishHp(); Finish(false); return; }
 
             if (_invuln > 0f) _invuln = Mathf.Max(0f, _invuln - dt);
             if (_hurtGrace > 0f) _hurtGrace = Mathf.Max(0f, _hurtGrace - dt);
@@ -6556,7 +6557,9 @@ namespace Game.Module.InGame
                 int price = HostPriceOf();
                 if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
                 if (_runGold < price) return;
+                if (ChargesGhostPossess && GhostCannotPossess) return;   // 유령이 사서 입는 것도 빙의다
                 AddRunGold(-price);
+                if (ChargesGhostPossess) PartySpend(PartyRule.CostFirst, Avatar != null ? Avatar.Position : Vector2.zero);
                 _shopBought++;
                 _hostOffers.RemoveAt(0);
                 // 그 자리에서 몸을 갈아탄다. 상점 방에는 적이 없으므로
@@ -9052,12 +9055,12 @@ namespace Game.Module.InGame
             if (_host != null) return;
 
             if (_possessTarget == null || _repossessLock > 0f) return;
+            if (ChargesGhostPossess && GhostCannotPossess) return;   // 값을 못 낸다 — 틱이 패배로 넘긴다
 
             var target = _possessTarget;
             var entry = _player.GetHost(target.Key);
             var pos = target.Position;
-            // 빙의 파티 — 사망 뒤 A(새 빙의)를 골랐으면 여기서 치른다
-            if (PartyOn && _partyPossessCost > 0) { _ghostHp = Mathf.Max(1, _ghostHp - _partyPossessCost); ShowGhostCost(pos, _partyPossessCost); _partyPossessCost = 0; }
+            if (ChargesGhostPossess) PartySpend(PartyRule.CostFirst, pos);
 
             // ⚠ 영혼이 출발하는 자리는 **지금 내가 서 있는 자리**다.
             //   `_ghost` 는 몸을 탄 동안 꺼져 있어 좌표가 마지막으로 유령이었던 곳
