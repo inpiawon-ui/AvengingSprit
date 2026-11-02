@@ -1854,7 +1854,7 @@ inyeon.medium.name	공명 강령	共鳴降霊	Resonance	共鳴降靈	共鸣降�
 inyeon.ninja.name	그림자 분신	影分身	Shadow Clone	影分身	影分身
 inyeon.ninja_chain.name	뇌전 사슬	雷電の鎖	Thunder Chain	雷電鎖鏈	雷电锁链
 inyeon.robot.name	레이저 포탑	レーザータレット	Laser Turret	雷射砲塔	激光炮塔
-inyeon.baseball.name	얼음 장타	氷の長打	Frozen Drive	冰霜長打	冰霜长打
+inyeon.baseball.name	함성 장타	咆哮の長打	Roaring Drive	咆哮長打	咆哮长打
 inyeon.snowwoman.name	설원	雪原	Snowfield	雪原	雪原
 inyeon.vampire.name	피의 연회	血の宴	Blood Feast	血之盛宴	血之盛宴
 ui.party.choice.title	{0} — 어떻게 할까?	{0} — どうする？	{0} — What now?	{0} — 要怎麼做？	{0} — 要怎么做？
@@ -1936,7 +1936,7 @@ inyeon.medium.desc	혼 깃들이기 지속 1.5배 · 짝은 피해 버프 두 �
 inyeon.ninja.desc	베기 끝에 분신 하나가 4초 남아 싸운다	斬撃の後、分身1体が4秒残って戦う	A clone stays and fights for 4s after the slash	斬擊後留下一個分身戰鬥4秒	斩击后留下一个分身战斗4秒
 inyeon.ninja_chain.desc	끌어올 때 사슬에 번개가 흐른다	引き寄せる鎖に雷が流れる	Lightning runs through the chain as it pulls	拉扯時鎖鏈帶有雷電	拉扯时锁链带有雷电
 inyeon.robot.desc	포탑이 꿰뚫는 레이저를 쏜다	タレットが貫通レーザーを撃つ	Turret fires piercing lasers	砲塔發射貫穿雷射	炮塔发射贯穿激光
-inyeon.baseball.desc	라인 드라이브에 맞은 적이 언다	ライナーが当たった敵が凍る	Foes hit by the line drive freeze	被平飛球擊中的敵人會凍結	被平飞球击中的敌人会冻结
+inyeon.baseball.desc	라인 드라이브에 맞은 적이 1.5초 기절(보스는 받는 피해 +20%)	ライナーが当たった敵が1.5秒気絶（ボスは被ダメージ+20%）	Foes hit by the line drive are stunned 1.5s (bosses take +20% damage)	被平飛球擊中的敵人暈眩1.5秒（首領改為承受傷害+20%）	被平飞球击中的敌人眩晕1.5秒（首领改为承受伤害+20%）
 inyeon.snowwoman.desc	눈보라 범위 2배	吹雪の範囲2倍	Blizzard range ×2	暴風雪範圍2倍	暴风雪范围2倍
 inyeon.vampire.desc	박쥐가 두 배 · 중독된 적에게서 더 빨아 온다	コウモリが2倍・毒状態の敵からさらに吸い取る	Twice the bats · Drain more from poisoned foes	蝙蝠數量兩倍 · 從中毒敵人身上吸取更多	蝙蝠数量两倍 · 从中毒敌人身上吸取更多
 ui.party.p2.main_swap	<color=#FFC94A>메인</color>과 바꾸기	<color=#FFC94A>メイン</color>と交代	Swap with <color=#FFC94A>Main</color>	與<color=#FFC94A>主控</color>交換	与<color=#FFC94A>主控</color>交换

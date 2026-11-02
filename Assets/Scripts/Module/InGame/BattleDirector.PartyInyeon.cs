@@ -44,7 +44,7 @@ namespace Game.Module.InGame
             ["ninja"] = new() { Name = "그림자 분신", Partners = new[] { "amazon" }, Desc = "베기 끝에 분신 하나가 4초 남아 싸운다" },
             ["ninja_chain"] = new() { Name = "뇌전 사슬", Partners = new[] { "ninja" }, Desc = "끌어올 때 사슬에 번개가 흐른다" },
             ["robot"] = new() { Name = "레이저 포탑", Partners = new[] { "commando_laser" }, Desc = "포탑이 꿰뚫는 레이저를 쏜다" },
-            ["baseball"] = new() { Name = "얼음 장타", Partners = new[] { "amazon_elite" }, Desc = "라인 드라이브에 맞은 적이 언다" },
+            ["baseball"] = new() { Name = "함성 장타", Partners = new[] { "amazon_elite" }, Desc = "라인 드라이브에 맞은 적이 1.5초 기절(보스는 받는 피해 +20%)" },
             ["snowwoman"] = new() { Name = "설원", Partners = new[] { "white_wizard" }, Desc = "눈보라 범위 2배" },
             ["vampire"] = new() { Name = "피의 연회", Partners = new[] { "salamander", "dragon_blue" }, Desc = "박쥐가 두 배 · 중독된 적에게서 더 빨아 온다" },
         };

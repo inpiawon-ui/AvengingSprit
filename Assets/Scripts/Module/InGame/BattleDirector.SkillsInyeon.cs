@@ -96,11 +96,14 @@ namespace Game.Module.InGame
         private const float IyTurretLaserInterval = 1.2f;
         private const float IyTurretLaserMul = 1.3f;          // 포탑 한 발 대비(관통이라 간격을 조금 늘렸다)
 
-        // 슬러거 「얼음 장타」 — 라인 드라이브에 맞은 적이 언다
-        private const float IyIceDriveFreezeSeconds = 1.5f;
-        private const int IyIceDriveBossSlow = 35;
+        // 슬러거 「함성 장타」 — 라인 드라이브에 맞은 적이 기절한다(보스는 받는 피해 +20%).
+        // 짝이 설녀에서 아마존 정예로 바뀌어 얼음 대신 함성과 같은 결로 맞췄다(PD 2026-11-02)
+        private const float IyShoutDriveStunSeconds = 1.5f;
+        private const int IyShoutDriveBossAmpPercent = 20;
+        private const float IyShoutDriveBossAmpSeconds = 4f;
+        private const int IyIceBossSlow = 35;                 // 백마법사 「빛과 얼음」 — 보스는 얼지 않고 느려진다
 
-        // 설녀 「얼음 진」 — 눈보라 범위 2배
+        // 설녀 「설원」 — 눈보라 범위 2배
         private const float IyBlizzardRangeMul = 2f;
 
         // 흡혈귀 「피의 연회」 — 박쥐 두 배 · 중독된 적에게서 두 배로 빨아 온다
@@ -394,7 +397,7 @@ namespace Game.Module.InGame
                 {
                     var e = list[i];
                     if (e == null || !e.IsAlive) continue;
-                    if (e.IsBoss) { e.ApplySlow(IyIceDriveBossSlow, IyLightIceFreezeSeconds); continue; }
+                    if (e.IsBoss) { e.ApplySlow(IyIceBossSlow, IyLightIceFreezeSeconds); continue; }
                     e.ApplyFreeze(IyScale(IyLightIceFreezeSeconds));
                     PlayFx("freeze", e.Position, 72f, loop: false);
                 }
@@ -514,15 +517,18 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  슬러거 「얼음 장타」
+        //  슬러거 「함성 장타」
         // ═══════════════════════════════════════════════════════════
 
-        private void IyIceDrive(Unit e)
+        private void IyShoutDrive(Unit e)
         {
             if (e == null || !e.IsAlive) return;
-            if (e.IsBoss) { e.ApplySlow(IyIceDriveBossSlow, IyIceDriveFreezeSeconds); return; }
-            e.ApplyFreeze(IyScale(IyIceDriveFreezeSeconds));
-            PlayFx("freeze", e.Position, 72f, loop: false);
+            if (e.IsBoss)
+            {
+                e.ApplyAmp(IyScale(IyShoutDriveBossAmpPercent), IyScale(IyShoutDriveBossAmpSeconds));
+                return;
+            }
+            e.ApplyStun(IyScale(IyShoutDriveStunSeconds));
         }
 
         // ═══════════════════════════════════════════════════════════

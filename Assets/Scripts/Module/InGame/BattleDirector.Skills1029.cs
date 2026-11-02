@@ -623,14 +623,14 @@ namespace Game.Module.InGame
 
             var hit = new List<Unit>(EnemiesInPath(from, dir, length, width));
             var bumped = new HashSet<Unit>(hit);   // 타구에 맞은 적은 부딪혀 다시 맞지 않는다
-            bool iy = InyeonOn(me);   // 인연 「얼음 장타」 — 맞은 적이 언다
+            bool iy = InyeonOn(me);   // 인연 「함성 장타」 — 맞은 적이 기절한다(보스는 받는 피해 +20%)
             for (int i = 0; i < hit.Count; i++)
             {
                 var e = hit[i];
                 HitEnemyWith(e, dmg, me.Profile);
                 PlayFx("crit", e.Position, 96f, loop: false);
                 if (e.IsAlive && !e.IsBoss) LaunchDrive(me, e, dir, fly, bump, bumped);
-                if (iy) IyIceDrive(e);
+                if (iy) IyShoutDrive(e);
             }
             Shake(5f);
             HitStop(0.05f);
