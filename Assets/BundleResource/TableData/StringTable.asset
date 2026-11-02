@@ -4475,17 +4475,17 @@ MonoBehaviour:
     _zhHant: Heaven's Thunder
     _zhHans: Heaven's Thunder
   - _key: uskill.commando_mg.name
-    _ko: "\uD0C4\uB9C9 \uC694\uC0C8"
-    _ja: "\u5F3E\u5E55\u8981\u585E"
-    _en: Bullet Fortress
-    _zhHant: "\u5F48\u5E55\u8981\u585E"
-    _zhHans: "\u5F39\u5E55\u8981\u585E"
+    _ko: "\uAC70\uCE58 \uAE30\uAD00\uD3EC"
+    _ja: "\u636E\u3048\u7F6E\u304D\u6A5F\u95A2\u7832"
+    _en: Emplaced Cannon
+    _zhHant: "\u67B6\u8A2D\u6A5F\u95DC\u7832"
+    _zhHans: "\u67B6\u8BBE\u673A\u5173\u70AE"
   - _key: uskill.commando_mg.en
-    _ko: Bullet Fortress
-    _ja: Bullet Fortress
-    _en: Bullet Fortress
-    _zhHant: Bullet Fortress
-    _zhHans: Bullet Fortress
+    _ko: Emplaced Cannon
+    _ja: Emplaced Cannon
+    _en: Emplaced Cannon
+    _zhHant: Emplaced Cannon
+    _zhHans: Emplaced Cannon
   - _key: uskill.amazon_elite.name
     _ko: "\uC5ED\uB9B0"
     _ja: "\u9006\u9C57"
@@ -7927,26 +7927,32 @@ MonoBehaviour:
     _zhHant: "\u76FE\u5175 \u2014 \u908A\u64CB\u908A\u63A8\u9032"
     _zhHans: "\u76FE\u5175 \u2014 \u8FB9\u6321\u8FB9\u63A8\u8FDB"
   - _key: ult.commando_mg.name
-    _ko: "\uD0C4\uB9C9 \uC694\uC0C8"
-    _ja: "\u5F3E\u5E55\u8981\u585E"
-    _en: Bullet Fortress
-    _zhHant: "\u5F48\u5E55\u8981\u585E"
-    _zhHans: "\u5F39\u5E55\u8981\u585E"
+    _ko: "\uAC70\uCE58 \uAE30\uAD00\uD3EC"
+    _ja: "\u636E\u3048\u7F6E\u304D\u6A5F\u95A2\u7832"
+    _en: Emplaced Cannon
+    _zhHant: "\u67B6\u8A2D\u6A5F\u95DC\u7832"
+    _zhHans: "\u67B6\u8BBE\u673A\u5173\u70AE"
   - _key: ult.commando_mg.desc
     _ko: "3\uCD08\uAC04 \uC81C\uC790\uB9AC\uC5D0 \uAE30\uAD00\uCD1D\uC744 \uAC70\uCE58\uD574
-      \uBC1B\uB294 \uD53C\uD574\uB97C 70% \uC904\uC774\uACE0 \uC0AC\uBC29\uC73C\uB85C
-      \uC5F0\uC0AC\uD55C\uB2E4."
-    _ja: "3\u79D2\u9593\u305D\u306E\u5834\u306B\u6A5F\u95A2\u9283\u3092\u636E\u3048\u3001\u88AB\u30C0\u30E1\u30FC\u30B8\u309270%\u6E1B\u3089\u3057\u3066\u5168\u65B9\u5411\u3078\u9023\u5C04\u3059\u308B\u3002"
-    _en: 'Plant your machine gun for 3s: take 70% less damage and fire in every direction.'
-    _zhHant: "\u539F\u5730\u67B6\u8A2D\u6A5F\u69CD3\u79D2\uFF0C\u53D7\u5230\u50B7\u5BB3\u964D\u4F4E70%\u4E26\u5411\u56DB\u9762\u516B\u65B9\u9023\u5C04\u3002"
-    _zhHans: "\u539F\u5730\u67B6\u8BBE\u673A\u67AA3\u79D2\uFF0C\u53D7\u5230\u4F24\u5BB3\u964D\u4F4E70%\u5E76\u5411\u56DB\u9762\u516B\u65B9\u8FDE\u5C04\u3002"
+      \uBC1B\uB294 \uD53C\uD574\uB97C 70% \uC904\uC774\uACE0, \uC801\uC774 \uAC00\uC7A5
+      \uB9CE\uC740 \uCABD \uC55E 60\xB0\uB97C 5\uC904 \uD0C4\uB9C9\uC73C\uB85C \uD6D1\uB294\uB2E4(\uC0AC\uAC70\uB9AC
+      9m \xB7 \uB454\uD654 35%)."
+    _ja: "3\u79D2\u9593\u305D\u306E\u5834\u306B\u6A5F\u95A2\u9283\u3092\u636E\u3048\u3001\u88AB\u30C0\u30E1\u30FC\u30B8\u309270%\u6E1B\u3089\u3057\u3001\u6575\u304C\u6700\u3082\u591A\u3044\u65B9\u5411\u306E\u524D\u65B960\xB0\u30925\u5217\u306E\u5F3E\u5E55\u3067\u6383\u5C04\u3059\u308B(\u5C04\u7A0B9m\u30FB\u920D\u8DB335%)\u3002"
+    _en: "Plant your machine gun for 3s: take 70% less damage and sweep a 60\xB0
+      arc toward the most enemies with 5 streams of fire (9m range \xB7 35% slow)."
+    _zhHant: "\u539F\u5730\u67B6\u8A2D\u6A5F\u69CD3\u79D2\uFF0C\u53D7\u5230\u50B7\u5BB3\u964D\u4F4E70%\uFF0C\u671D\u6575\u4EBA\u6700\u591A\u7684\u65B9\u5411\u4EE55\u9053\u5F48\u5E55\u6383\u5C04\u524D\u65B960\xB0\uFF08\u5C04\u7A0B9m
+      \xB7 \u6E1B\u901F35%\uFF09\u3002"
+    _zhHans: "\u539F\u5730\u67B6\u8BBE\u673A\u67AA3\u79D2\uFF0C\u53D7\u5230\u4F24\u5BB3\u964D\u4F4E70%\uFF0C\u671D\u654C\u4EBA\u6700\u591A\u7684\u65B9\u5411\u4EE55\u9053\u5F39\u5E55\u626B\u5C04\u524D\u65B960\xB0\uFF08\u5C04\u7A0B9m
+      \xB7 \u51CF\u901F35%\uFF09\u3002"
   - _key: ult.commando_mg.short
-    _ko: "3\uCD08 \uACE0\uC815 \xB7 \uBC1B\uB294 \uD53C\uD574 \u221270% \xB7 \uC0AC\uBC29
-      \uC5F0\uC0AC"
-    _ja: "3\u79D2\u56FA\u5B9A\u30FB\u88AB\u30C0\u30E1\u221270%\u30FB\u5168\u65B9\u5411\u9023\u5C04"
-    _en: "3s planted \xB7 \u221270% damage \xB7 all-round fire"
-    _zhHant: "\u56FA\u5B9A3\u79D2 \xB7 \u53D7\u50B7\u221270% \xB7 \u5168\u65B9\u4F4D\u9023\u5C04"
-    _zhHans: "\u56FA\u5B9A3\u79D2 \xB7 \u53D7\u4F24\u221270% \xB7 \u5168\u65B9\u4F4D\u8FDE\u5C04"
+    _ko: "3\uCD08 \uACE0\uC815 \xB7 \uBC1B\uB294 \uD53C\uD574 \u221270% \xB7 \uC55E
+      60\xB0 5\uC904 \uD0C4\uB9C9"
+    _ja: "3\u79D2\u56FA\u5B9A\u30FB\u88AB\u30C0\u30E1\u221270%\u30FB\u524D\u65B960\xB05\u5217\u5F3E\u5E55"
+    _en: "3s planted \xB7 \u221270% damage \xB7 5-stream 60\xB0 sweep"
+    _zhHant: "\u56FA\u5B9A3\u79D2 \xB7 \u53D7\u50B7\u221270% \xB7 \u524D\u65B960\xB0
+      5\u9053\u5F48\u5E55"
+    _zhHans: "\u56FA\u5B9A3\u79D2 \xB7 \u53D7\u4F24\u221270% \xB7 \u524D\u65B960\xB0
+      5\u9053\u5F39\u5E55"
   - _key: askill.commando_mg.short
     _ko: "\uC55E\uCABD \uBD80\uCC44\uAF34 2\uCD08 \uC5F0\uC0AC \xB7 \uB454\uD654"
     _ja: "\u524D\u65B9\u6247\u72B6\u306B2\u79D2\u9023\u5C04\u30FB\u920D\u8DB3"
@@ -11890,11 +11896,11 @@ MonoBehaviour:
     _zhHant: "\u904E\u8F09"
     _zhHans: "\u8FC7\u8F7D"
   - _key: inyeon.commando_grenade.name
-    _ko: "\uC735\uB2E8 \uD3ED\uACA9"
-    _ja: "\u7D68\u6BEF\u7206\u6483"
-    _en: Carpet Bombing
-    _zhHant: "\u5730\u6BEF\u8F5F\u70B8"
-    _zhHans: "\u5730\u6BEF\u8F70\u70B8"
+    _ko: "\uC774\uC911 \uD3ED\uACA9"
+    _ja: "\u4E8C\u91CD\u7206\u6483"
+    _en: Double Bombing
+    _zhHant: "\u96D9\u91CD\u8F5F\u70B8"
+    _zhHans: "\u53CC\u91CD\u8F70\u70B8"
   - _key: inyeon.commando_missile.name
     _ko: "\uC9D1\uC18D\uD0C4"
     _ja: "\u30AF\u30E9\u30B9\u30BF\u30FC\u5F3E"
@@ -11914,11 +11920,11 @@ MonoBehaviour:
     _zhHant: "\u696D\u706B"
     _zhHans: "\u4E1A\u706B"
   - _key: inyeon.dragon_blue.name
-    _ko: "\uBC88\uAC1C \uC0AC\uC2AC"
-    _ja: "\u96F7\u306E\u9396"
-    _en: Lightning Chain
-    _zhHant: "\u96F7\u93C8"
-    _zhHans: "\u96F7\u94FE"
+    _ko: "\uBCBC\uB77D \uBD88\uAE38"
+    _ja: "\u96F7\u708E"
+    _en: Thunderflame
+    _zhHant: "\u96F7\u708E"
+    _zhHans: "\u96F7\u708E"
   - _key: inyeon.guru.name
     _ko: "\uD63C \uACB0\uBC15"
     _ja: "\u9B42\u7E1B\u308A"
@@ -11956,17 +11962,17 @@ MonoBehaviour:
     _zhHant: "\u96F7\u5C04\u7832\u5854"
     _zhHans: "\u6FC0\u5149\u70AE\u5854"
   - _key: inyeon.baseball.name
-    _ko: "\uC5BC\uC74C \uC7A5\uD0C0"
-    _ja: "\u6C37\u306E\u9577\u6253"
-    _en: Frozen Drive
-    _zhHant: "\u51B0\u971C\u9577\u6253"
-    _zhHans: "\u51B0\u971C\u957F\u6253"
+    _ko: "\uD568\uC131 \uC7A5\uD0C0"
+    _ja: "\u5486\u54EE\u306E\u9577\u6253"
+    _en: Roaring Drive
+    _zhHant: "\u5486\u54EE\u9577\u6253"
+    _zhHans: "\u5486\u54EE\u957F\u6253"
   - _key: inyeon.snowwoman.name
-    _ko: "\uC5BC\uC74C \uC9C4"
-    _ja: "\u6C37\u306E\u9663"
-    _en: Ice Formation
-    _zhHant: "\u51B0\u4E4B\u9663"
-    _zhHans: "\u51B0\u4E4B\u9635"
+    _ko: "\uC124\uC6D0"
+    _ja: "\u96EA\u539F"
+    _en: Snowfield
+    _zhHant: "\u96EA\u539F"
+    _zhHans: "\u96EA\u539F"
   - _key: inyeon.vampire.name
     _ko: "\uD53C\uC758 \uC5F0\uD68C"
     _ja: "\u8840\u306E\u5BB4"
@@ -12397,11 +12403,12 @@ MonoBehaviour:
     _zhHant: "\u591A\u8E8D\u4E00\u6B21 \xB7 \u6BCF\u6B21\u843D\u5730\u7522\u751F\u96F7\u74B0"
     _zhHans: "\u591A\u8DC3\u4E00\u6B21 \xB7 \u6BCF\u6B21\u843D\u5730\u4EA7\u751F\u96F7\u73AF"
   - _key: inyeon.amazon_elite.desc
-    _ko: "\uD568\uC131 \uBC94\uC704 1.5\uBC30 \xB7 \uAE30\uC808 2.5\uCD08"
-    _ja: "\u5486\u54EE\u306E\u7BC4\u56F21.5\u500D\u30FB\u6C17\u7D762.5\u79D2"
-    _en: "Roar range \xD71.5 \xB7 2.5s stun"
-    _zhHant: "\u5436\u558A\u7BC4\u570D1.5\u500D \xB7 \u6688\u77292.5\u79D2"
-    _zhHans: "\u5450\u558A\u8303\u56F41.5\u500D \xB7 \u6655\u77292.5\u79D2"
+    _ko: "\uD568\uC131 \uBC94\uC704 1.5\uBC30 \xB7 \uB9DE\uC740 \uC801\uC774 \uBC1B\uB294
+      \uD53C\uD574 +20%(4\uCD08)"
+    _ja: "\u5486\u54EE\u306E\u7BC4\u56F21.5\u500D\u30FB\u547D\u4E2D\u3057\u305F\u6575\u306E\u88AB\u30C0\u30E1\u30FC\u30B8+20%(4\u79D2)"
+    _en: "Roar range \xD71.5 \xB7 foes hit take +20% damage (4s)"
+    _zhHant: "\u5436\u558A\u7BC4\u570D1.5\u500D \xB7 \u547D\u4E2D\u7684\u6575\u4EBA\u53D7\u5230\u50B7\u5BB3+20%\uFF084\u79D2\uFF09"
+    _zhHans: "\u5450\u558A\u8303\u56F41.5\u500D \xB7 \u547D\u4E2D\u7684\u654C\u4EBA\u53D7\u5230\u4F24\u5BB3+20%\uFF084\u79D2\uFF09"
   - _key: inyeon.hopper.desc
     _ko: "\uC870\uC900 \uC0AC\uACA9\uC774 6\uBC1C"
     _ja: "\u72D9\u3044\u6483\u3061\u304C6\u767A\u306B"
@@ -12454,11 +12461,12 @@ MonoBehaviour:
     _zhHant: "\u706B\u6D77\u64F4\u59271.5\u500D\uFF0C\u8E29\u5230\u7684\u6575\u4EBA\u6703\u6E1B\u901F"
     _zhHans: "\u706B\u6D77\u6269\u59271.5\u500D\uFF0C\u8E29\u5230\u7684\u654C\u4EBA\u4F1A\u51CF\u901F"
   - _key: inyeon.dragon_blue.desc
-    _ko: "\uBB36\uC778 \uC801\uC740 \uB099\uB8B0\uB97C \uB450 \uBC88 \uB9DE\uB294\uB2E4"
-    _ja: "\u62D8\u675F\u3055\u308C\u305F\u6575\u306B\u843D\u96F7\u304C2\u56DE"
-    _en: Bound foes are struck by lightning twice
-    _zhHant: "\u88AB\u675F\u7E1B\u7684\u6575\u4EBA\u6703\u906D\u843D\u96F7\u5169\u6B21"
-    _zhHans: "\u88AB\u675F\u7F1A\u7684\u654C\u4EBA\u4F1A\u906D\u843D\u96F7\u4E24\u6B21"
+    _ko: "\uBD88\uBC14\uB2E4 \uC704\uC758 \uC801\uC740 \uB099\uB8B0\uB97C \uB450
+      \uBC88 \uB9DE\uB294\uB2E4"
+    _ja: "\u708E\u306E\u6D77\u306B\u3044\u308B\u6575\u306B\u843D\u96F7\u304C2\u56DE"
+    _en: Foes standing in flames are struck by lightning twice
+    _zhHant: "\u7AD9\u5728\u706B\u6D77\u4E2D\u7684\u6575\u4EBA\u6703\u906D\u843D\u96F7\u5169\u6B21"
+    _zhHans: "\u7AD9\u5728\u706B\u6D77\u4E2D\u7684\u654C\u4EBA\u4F1A\u906D\u843D\u96F7\u4E24\u6B21"
   - _key: inyeon.guru.desc
     _ko: "\uBB36\uC778 \uC801\uC774 \uBC1B\uB294 \uD53C\uD574 +35%"
     _ja: "\u7E1B\u3063\u305F\u6575\u306E\u88AB\u30C0\u30E1\u30FC\u30B8+35%"
@@ -12499,11 +12507,12 @@ MonoBehaviour:
     _zhHant: "\u7832\u5854\u767C\u5C04\u8CAB\u7A7F\u96F7\u5C04"
     _zhHans: "\u70AE\u5854\u53D1\u5C04\u8D2F\u7A7F\u6FC0\u5149"
   - _key: inyeon.baseball.desc
-    _ko: "\uB77C\uC778 \uB4DC\uB77C\uC774\uBE0C\uC5D0 \uB9DE\uC740 \uC801\uC774 \uC5B8\uB2E4"
-    _ja: "\u30E9\u30A4\u30CA\u30FC\u304C\u5F53\u305F\u3063\u305F\u6575\u304C\u51CD\u308B"
-    _en: Foes hit by the line drive freeze
-    _zhHant: "\u88AB\u5E73\u98DB\u7403\u64CA\u4E2D\u7684\u6575\u4EBA\u6703\u51CD\u7D50"
-    _zhHans: "\u88AB\u5E73\u98DE\u7403\u51FB\u4E2D\u7684\u654C\u4EBA\u4F1A\u51BB\u7ED3"
+    _ko: "\uB77C\uC778 \uB4DC\uB77C\uC774\uBE0C\uC5D0 \uB9DE\uC740 \uC801\uC774 1.5\uCD08
+      \uAE30\uC808(\uBCF4\uC2A4\uB294 \uBC1B\uB294 \uD53C\uD574 +20%)"
+    _ja: "\u30E9\u30A4\u30CA\u30FC\u304C\u5F53\u305F\u3063\u305F\u6575\u304C1.5\u79D2\u6C17\u7D76\uFF08\u30DC\u30B9\u306F\u88AB\u30C0\u30E1\u30FC\u30B8+20%\uFF09"
+    _en: Foes hit by the line drive are stunned 1.5s (bosses take +20% damage)
+    _zhHant: "\u88AB\u5E73\u98DB\u7403\u64CA\u4E2D\u7684\u6575\u4EBA\u6688\u77291.5\u79D2\uFF08\u9996\u9818\u6539\u70BA\u627F\u53D7\u50B7\u5BB3+20%\uFF09"
+    _zhHans: "\u88AB\u5E73\u98DE\u7403\u51FB\u4E2D\u7684\u654C\u4EBA\u7729\u66551.5\u79D2\uFF08\u9996\u9886\u6539\u4E3A\u627F\u53D7\u4F24\u5BB3+20%\uFF09"
   - _key: inyeon.snowwoman.desc
     _ko: "\uB208\uBCF4\uB77C \uBC94\uC704 2\uBC30"
     _ja: "\u5439\u96EA\u306E\u7BC4\u56F22\u500D"
